@@ -1,0 +1,389 @@
+/* 메인 그린 (#2E6F4E) */
+/* 메인 그린 호버 */
+
+/* 서브 그린 */
+/* 서브 그린 호버 */
+
+/* 화이트 호버 */
+
+/* 정상 */
+/* 주의 */
+/* 위험 */
+/* 정보 */
+
+==================
+
+/* 헤더(높이 60px, sticky로 고정), 사이드바(높이 1vh-60px, sticky로 고정), 컨텐츠(width 100%만) */
+
+/* 맨 위로 */
+
+/* 모달 (오버레이, 창) */
+
+/* 메인버튼 */
+/* 서브버튼 */
+/* 화이트버튼 */
+
+/* 페이지 타이틀 */
+/* 페이지 서브타이틀 */
+/* 카드 타이틀 */
+/* 카드 서브타이틀 */
+
+/* 테이블 */
+
+/* 페이지네이션 */
+
+===========================
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100%
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  
+  border: none;
+}
+
+li {
+	list-style : none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* ==============================
+   색상
+============================== */
+
+:root {
+    --main-green: #2E6F4E;
+    --main-green-hover: #255B40;
+
+    --sub-green: #6C9A8B;
+    --sub-green-hover: #5C8678;
+
+    --white-hover: #F4F7F5;
+	
+
+    --dark-gray: #ccc;
+    --gray: #ddd;
+    --light-gray: #eee;
+
+    --success: #2E7D32;
+    --warning: #F9A825;
+    --danger: #D32F2F;
+    --info: #607D8B;
+
+    --fin: #2B8EFF;
+
+    --main-red: #D32F2F;
+    --main-red-hover: #C22828;
+    --sub-red: #FFD0D0;
+}
+
+
+/* ==============================
+   HEADER / SIDEBAR / CONTENT
+============================== */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    height: 60px;
+    padding: 0 24px;
+
+    display: flex;
+    align-items: center;
+
+    background-color: var(--main-green);
+    color: #fff;
+}
+
+.snb {
+    position: sticky;
+    top: 60px;
+
+    width: 240px;
+    height: calc(100vh - 60px);
+
+    background-color: #fff;
+    border-right: 1px solid var(--gray);
+
+    overflow-y: auto;
+}
+
+.content {
+    width: 100%;
+    padding: 24px;
+}
+
+
+/* ==============================
+   TOP BUTTON
+============================== */
+
+.btn-top {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1000;
+
+    width: 44px;
+    height: 44px;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: var(--main-green);
+    color: #fff;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.btn-top:hover {
+    background-color: var(--main-green-hover);
+}
+
+
+/* ==============================
+   BUTTON
+============================== */
+
+.btn {
+    min-width: 80px;
+    height: 36px;
+    padding: 0 14px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.btn-main {
+    background-color: var(--main-green);
+    color: #fff;
+}
+
+.btn-main:hover {
+    background-color: var(--main-green-hover);
+}
+
+.btn-sub {
+    background-color: var(--sub-green);
+    color: #fff;
+}
+
+.btn-sub:hover {
+    background-color: var(--sub-green-hover);
+}
+
+.btn-white {
+    border: 1px solid var(--dark-gray);
+    background-color: #fff;
+    color: var(--dark-gray);
+}
+
+.btn-white:hover {
+    background-color: var(--white-hover);
+    border-color: var(--main-green);
+    color: var(--main-green);
+}
+
+
+/* ==============================
+   TITLE
+============================== */
+
+.page-title {
+    margin: 0 0 6px;
+
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.page-subtitle {
+    margin: 0 0 24px;
+
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+
+    color: var(--dark-gray);
+}
+
+.card {
+    padding: 10px;
+
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+}
+
+.card-title {
+    margin: 0 0 6px;
+
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.card-subtitle {
+    margin: 0;
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+
+    color: var(--dark-gray);
+}
+
+
+/* ==============================
+   STATUS
+============================== */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 54px;
+    height: 26px;
+    padding: 0 10px;
+	
+    border: 1px solid var(--gray);
+    border-radius: 13px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-success {
+    color: var(--success);
+}
+
+.status-warning {
+    color: var(--warning);
+}
+
+.status-danger {
+    color: var(--danger);
+}
+
+.status-info {
+    color: var(--info);
+}
+
+
+/* ==============================
+   TABLE
+============================== */
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    font-size: 14px;
+}
+
+.table th {
+    height: 42px;
+    padding: 0 12px;
+
+    background-color: var(--sub-green);
+
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+}
+
+.table td {
+    height: 42px;
+    padding: 0 12px;
+
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.table tbody tr:hover {
+    background-color: var(--white-hover);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ==============================
+   PAGINATION
+============================== */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+
+    margin-top: 24px;
+}
+
+.pagination a,
+.pagination button {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    background-color: #fff;
+    color: #333;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pagination a:hover,
+.pagination button:hover {
+    background-color: var(--white-hover);
+    border-color: var(--main-green);
+    color: var(--main-green);
+}
+
+.pagination .active {
+    background-color: var(--main-green);
+    border-color: var(--main-green);
+    color: #fff;
+}
+
+.pagination .disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
