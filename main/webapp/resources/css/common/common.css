@@ -387,3 +387,68 @@ a:hover {
     opacity: 0.4;
     pointer-events: none;
 }
+
+/* ==============================
+   SEARCH
+============================== */
+
+.search-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    margin-bottom: 24px;
+    padding: 20px;
+
+    border: 1px solid var(--gray);
+    border-radius: 8px;
+
+    background-color: #fff;
+}
+
+.search-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.search-item label {
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #555;
+}
+
+.search-item input,
+.search-item select {
+    min-width: 180px;
+    height: 36px;
+    padding: 0 12px;
+
+    border: 1px solid var(--gray);
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    background-color: #fff;
+}
+
+.search-item input:focus,
+.search-item select:focus {
+    outline: none;
+    border-color: var(--main-green);
+}
+
+.search-item.keyword {
+    flex: 1;
+}
+
+.search-item.keyword input {
+    width: 100%;
+}
+
+.search-btn-area {
+    display: flex;
+    gap: 8px;
+}

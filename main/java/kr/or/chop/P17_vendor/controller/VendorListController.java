@@ -23,7 +23,8 @@ public class VendorListController {
     @RequestMapping("/list")
     public String vendorList(
             VendorDTO vendorDTO,
-            @RequestParam(value = "page", defaultValue = "1") int currentPage,
+            @RequestParam(value = "page", defaultValue = "1") 
+            int currentPage,
             Model model) {
 
         int listCount = vendorService.selectVendorCount(vendorDTO);
