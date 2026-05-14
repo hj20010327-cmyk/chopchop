@@ -4,11 +4,13 @@
 <header class="header">
     <div class="header-left">
         <a href="${pageContext.request.contextPath}/dashboard" class="header-logo">
-            <span class="logo-icon">◇</span>
-            <span class="logo-text">MES SYSTEM</span>
+            <img
+		        src="${pageContext.request.contextPath}/resources/img/CHOP_FOOD__WHITE_.png"
+		        alt="CHOP FOOD"
+		        class="header-logo-img"
+    		>
         </a>
 
-        <button type="button" class="btn-menu">☰</button>
     </div>
 
     <div class="header-right">

@@ -3,8 +3,10 @@
 ============================== */
 
 .header {
+	height: 60px;
     justify-content: space-between;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
 }
 
 .header-left,
@@ -22,29 +24,23 @@
 }
 
 .header-logo {
+	height: 60px;
     display: flex;
     align-items: center;
-    gap: 8px;
-
-    font-size: 15px;
-    font-weight: 700;
 }
 
-.logo-icon {
-    width: 28px;
-    height: 28px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    border-radius: 6px;
-
-    font-size: 14px;
+.header-logo-img {
+    width: 150px;
+    height: auto;
+    display: block;
+    object-fit: contain;
 }
 
-.btn-menu,
+.logo-icon,
+.logo-text {
+    display: none;
+}
+
 .header-icon {
     color: #fff;
     font-size: 18px;
