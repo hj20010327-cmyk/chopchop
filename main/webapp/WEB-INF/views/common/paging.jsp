@@ -70,20 +70,3 @@
 	</c:choose>
 
 </div>
-
-<!-- <div class="pagination"> -->
-
-<!--     <a href="#">&laquo;</a> -->
-<!--     <a href="#">&lt;</a> -->
-
-<!--     <button class="active">1</button> -->
-
-<!--     <a href="#">2</a> -->
-<!--     <a href="#">3</a> -->
-<!--     <a href="#">4</a> -->
-<!--     <a href="#">5</a> -->
-
-<!--     <a href="#">&gt;</a> -->
-<!--     <a href="#">&raquo;</a> -->
-
-<!-- </div> -->

@@ -23,7 +23,7 @@ public class PageInfo {
     private int maxPage;
 
     // 시작 페이지
-    private int startPage = 1;
+    private int startPage;
 
     // 끝 페이지
     private int endPage;
