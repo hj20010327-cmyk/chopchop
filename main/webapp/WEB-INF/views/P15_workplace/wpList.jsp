@@ -26,47 +26,47 @@
 		<div class="search-item">
 			<label>유형</label>
 			
-			<select name="wpTypeId">
+			<select name="wpTypeNo">
 				<option value="">전체</option>
 			
 				<option value="10"
-					${search.wpTypeId == '10' ? 'selected' : ''}>
+					${search.wpTypeNo == '10' ? 'selected' : ''}>
 					전처리
 				</option>
 				<option value="20"
-					${search.wpTypeId == '20' ? 'selected' : ''}>
+					${search.wpTypeNo == '20' ? 'selected' : ''}>
 					배합
 				</option>
 				<option value="30"
-					${search.wpTypeId == '30' ? 'selected' : ''}>
+					${search.wpTypeNo == '30' ? 'selected' : ''}>
 					반죽
 				</option>
 				<option value="40"
-					${search.wpTypeId == '40' ? 'selected' : ''}>
+					${search.wpTypeNo == '40' ? 'selected' : ''}>
 					제피
 				</option>
 				<option value="50"
-					${search.wpTypeId == '50' ? 'selected' : ''}>
+					${search.wpTypeNo == '50' ? 'selected' : ''}>
 					성형
 				</option>
 				<option value="60"
-					${search.wpTypeId == '60' ? 'selected' : ''}>
+					${search.wpTypeNo == '60' ? 'selected' : ''}>
 					증숙
 				</option>
 				<option value="70"
-					${search.wpTypeId == '70' ? 'selected' : ''}>
+					${search.wpTypeNo == '70' ? 'selected' : ''}>
 					냉각
 				</option>
 				<option value="80"
-					${search.wpTypeId == '80' ? 'selected' : ''}>
+					${search.wpTypeNo == '80' ? 'selected' : ''}>
 					급속냉동
 				</option>
 				<option value="90"
-					${search.wpTypeId == '90' ? 'selected' : ''}>
+					${search.wpTypeNo == '90' ? 'selected' : ''}>
 					포장
 				</option>
 				<option value="100"
-					${search.wpTypeId == '100' ? 'selected' : ''}>
+					${search.wpTypeNo == '100' ? 'selected' : ''}>
 					검사
 				</option>
 			</select>
@@ -93,28 +93,28 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th>작업장 번호</th>
-						<th>작업장명</th>
-						<th>유형</th>
-						<th>관리 기준</th>
-						<th>설명</th>
+						<th style="width: 130px;">작업장 번호</th>
+						<th style="width: 200px;">작업장명</th>
+						<th style="width: 100px;">유형</th>
+						<th style="width: 130px;">관리 기준</th>
+						<th style="width: 300px;">설명</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="wp" items="${wpList}">
-						<tr>
-							<td>${wp.wpId}</td>
+						<tr class="wpList">
+							<td class="wpId">${wp.wpId}</td>
 							<td>${wp.wpName}</td>
 							<td>${wp.wpType}</td>
-							<td>${item.safetyStock}</td>
-							<td>${item.unit}</td>
+							<td>${wp.wpTypeSG}</td>
+							<td>${wp.wpTypeContent}</td>
 						</tr>	
 					</c:forEach>
 					
-					<c:if test="${empty itemList}">
+					<c:if test="${empty wpList}">
 						<tr>
 							<td colspan="7" style="text-align: center;">
-								조회된 거래처가 없습니다.
+								조회된 내역이 없습니다.
 							</td>
 						</tr>
 					</c:if>				
@@ -127,3 +127,36 @@
 		
 	</div>
 </div>
+
+<script>
+	
+	window.addEventListener ("load", () => {
+		init();
+	})
+	
+	function init() {
+		bind();
+	}
+	
+	function bind() {
+		moveDetail();
+	}
+	
+	function moveDetail() {
+		const wpLists = document.querySelectorAll(".wpList");
+		
+		for (let i=0; i<wpLists.length; i++) {
+			
+			wpLists[i].addEventListener("click", () => {
+				const wpId = wpLists[i].querySelector(".wpId").textContent.trim();
+				console.log ("wpId : " + wpId);
+				
+				const url = `${pageContext.request.contextPath}/workplace/detail?wpId=` + wpId;
+				console.log ("url : " + url);
+				
+				window.location.href = url;
+			})
+		}
+	}
+	
+</script>

@@ -7,10 +7,13 @@ public class WPDTO {
 	
 	String wpId;
 	String wpName;
-	int wpTypeId;
+	int wpTypeNo;
 	String wpType;
 	String wpUsage;
 	String wpImg;
+	
+	String wpTypeSG;
+	String wpTypeContent;
 	
 	String wpKeyword;
 	

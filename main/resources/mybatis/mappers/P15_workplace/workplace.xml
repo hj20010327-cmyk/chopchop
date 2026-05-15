@@ -25,13 +25,15 @@
 					SELECT	
 						wp.wp_id as wpId,
 						wp.wp_name as wpName,
-						wp.wp_type as wpTypeId,
+						wp.wp_type as wpTypeNo,
 						wt.wp_type_name as wpType,
-						wp.wp_img as wpImg
+						wp.wp_img as wpImg,
+						wt.wp_type_sg as wpTypeSg,
+						wt.wp_type_content as wpTypeContent
 					FROM workplace wp
-						LEFT OUTER JOIN wp_type wt ON wp.wp_type = wt.wp_type_id
+						LEFT OUTER JOIN wp_type wt ON wp.wp_type = wt.wp_type_no
 					WHERE wp_usage = 'Y'
-					ORDER BY wp_id DESC
+					ORDER BY wp_type_no, wp_id
 				) p
 			)
 		WHERE RN BETWEEN #{page.startRow}
