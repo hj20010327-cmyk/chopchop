@@ -12,9 +12,12 @@ public class WPDTO {
 	String wpUsage;
 	String wpImg;
 	
-	String wpTypeSG;
 	String wpTypeContent;
 	
-	String wpKeyword;
+	String ghpId;
+	String ghpName;
+	
+	String searchType;
+	String searchKeyword;
 	
 }

@@ -29,6 +29,7 @@ public class WPListController {
 		) {
 		
 		System.out.println("/workplace/list controller.list");
+		System.out.println("wpDTO 초기 : " + wpDTO);
 		
 		// 개수 가져와서 페이징
 		int listCount = wpService.selectWPCount(wpDTO);

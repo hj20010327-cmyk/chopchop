@@ -10,6 +10,13 @@
 		select count(*)
 		from workplace
 		where wp_usage = 'Y'	
+			<if test="searchType != null and searchType != ''">
+				and wp_type = #{searchType}
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				and ( upper(wp_name) like trim(upper('%' || #{searchKeyword} || '%')) 
+					or upper(wp_id) like trim(upper('%' || #{searchKeyword} || '%')) ) 
+			</if>
 		
 	</select>
 	
@@ -28,11 +35,20 @@
 						wp.wp_type as wpTypeNo,
 						wt.wp_type_name as wpType,
 						wp.wp_img as wpImg,
-						wt.wp_type_sg as wpTypeSg,
+						ghp.ghp_id AS ghpId,
+						ghp.GHP_NAME AS ghpName,
 						wt.wp_type_content as wpTypeContent
 					FROM workplace wp
 						LEFT OUTER JOIN wp_type wt ON wp.wp_type = wt.wp_type_no
+						LEFT OUTER JOIN ghp ghp ON wp.wp_id = ghp.GHP_WPID
 					WHERE wp_usage = 'Y'
+						<if test="wpDTO.searchType != null and wpDTO.searchType != ''">
+							and wp_type = #{wpDTO.searchType}
+						</if>
+						<if test="wpDTO.searchKeyword != null and wpDTO.searchKeyword != ''">
+							and ( upper(wp_name) like trim(upper('%' || #{wpDTO.searchKeyword} || '%')) 
+								or upper(wp_id) like trim(upper('%' || #{wpDTO.searchKeyword} || '%')) ) 
+						</if>
 					ORDER BY wp_type_no, wp_id
 				) p
 			)

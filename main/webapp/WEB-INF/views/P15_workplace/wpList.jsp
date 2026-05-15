@@ -26,47 +26,47 @@
 		<div class="search-item">
 			<label>유형</label>
 			
-			<select name="wpTypeNo">
+			<select name="searchType">
 				<option value="">전체</option>
 			
 				<option value="10"
-					${search.wpTypeNo == '10' ? 'selected' : ''}>
+					${search.searchType == '10' ? 'selected' : ''}>
 					전처리
 				</option>
 				<option value="20"
-					${search.wpTypeNo == '20' ? 'selected' : ''}>
+					${search.searchType == '20' ? 'selected' : ''}>
 					배합
 				</option>
 				<option value="30"
-					${search.wpTypeNo == '30' ? 'selected' : ''}>
+					${search.searchType == '30' ? 'selected' : ''}>
 					반죽
 				</option>
 				<option value="40"
-					${search.wpTypeNo == '40' ? 'selected' : ''}>
+					${search.searchType == '40' ? 'selected' : ''}>
 					제피
 				</option>
 				<option value="50"
-					${search.wpTypeNo == '50' ? 'selected' : ''}>
+					${search.searchType == '50' ? 'selected' : ''}>
 					성형
 				</option>
 				<option value="60"
-					${search.wpTypeNo == '60' ? 'selected' : ''}>
+					${search.searchType == '60' ? 'selected' : ''}>
 					증숙
 				</option>
 				<option value="70"
-					${search.wpTypeNo == '70' ? 'selected' : ''}>
+					${search.searchType == '70' ? 'selected' : ''}>
 					냉각
 				</option>
 				<option value="80"
-					${search.wpTypeNo == '80' ? 'selected' : ''}>
+					${search.searchType == '80' ? 'selected' : ''}>
 					급속냉동
 				</option>
 				<option value="90"
-					${search.wpTypeNo == '90' ? 'selected' : ''}>
+					${search.searchType == '90' ? 'selected' : ''}>
 					포장
 				</option>
 				<option value="100"
-					${search.wpTypeNo == '100' ? 'selected' : ''}>
+					${search.searchType == '100' ? 'selected' : ''}>
 					검사
 				</option>
 			</select>
@@ -76,17 +76,19 @@
 			<label>작업장 번호/작업장명 검색</label>
 			
 			<input type="text"
-				name="wpKeyword"
-				value="${search.wpKeyword}"
+				name="searchKeyword"
+				value="${search.searchKeyword}"
 				placeholder="내용을 입력하세요.">
 		</div>
 		
 		<div class="search-btn-area">
-			<button type="button" class="btn btn-main">
+			<button type="submit" class="btn btn-main" >
 				검색
 			</button>
 		</div>
 	</form>
+	
+	
 	
 	<div>
 		<div class="table-wrap">
@@ -106,7 +108,7 @@
 							<td class="wpId">${wp.wpId}</td>
 							<td>${wp.wpName}</td>
 							<td>${wp.wpType}</td>
-							<td>${wp.wpTypeSG}</td>
+							<td>${wp.ghpId}</td>
 							<td>${wp.wpTypeContent}</td>
 						</tr>	
 					</c:forEach>
