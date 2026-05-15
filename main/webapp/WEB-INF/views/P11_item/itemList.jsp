@@ -11,7 +11,7 @@
 		</div>
 		
 		<div>
-		<p class="page-subtitle">홈 > 품목 관리</p>
+		<p class="page-route">홈 > 품목 관리</p>
 		<a class="btn btn-white"
 			href="${pageContext.request.contextPath}/item/add">
 			품목 등록	
@@ -62,7 +62,7 @@
 		</div>
 	</form>
 	
-	<div class="card">
+	<div>
 		<div class="table-wrap">
 			<table class="table">
 				<thead>

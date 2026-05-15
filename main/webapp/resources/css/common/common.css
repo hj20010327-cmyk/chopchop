@@ -102,6 +102,11 @@ a:hover {
     color: #fff;
 }
 
+.header-row {
+	display: flex;
+	justify-content: space-between;
+}
+
 .snb {
     position: sticky;
     top: 60px;
@@ -156,14 +161,15 @@ a:hover {
 ============================== */
 
 .btn {
-    min-width: 80px;
-    height: 36px;
-    padding: 0 14px;
+    min-width: 45px;
+    height: 26px;
+    padding: 5px 15px;
 
     border-radius: 6px;
 
     font-size: 14px;
     font-weight: 600;
+    text-align: center;
 
     cursor: pointer;
 }
@@ -213,11 +219,17 @@ a:hover {
 
 .page-subtitle {
     margin: 0 0 24px;
-
     font-size: 15px;
     font-weight: 400;
     line-height: 1.5;
+    color: var(--dark-gray);
+}
 
+.page-route {
+	margin: 0 0 24px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
     color: var(--dark-gray);
 }
 
@@ -304,7 +316,7 @@ a:hover {
     height: 42px;
     padding: 0 12px;
 
-    background-color: var(--sub-green);
+    background-color: var(--main-green);
 
     color: #fff;
     font-weight: 700;
@@ -387,8 +399,6 @@ a:hover {
     margin-bottom: 24px;
     padding: 20px;
 
-    border: 1px solid var(--gray);
-    border-radius: 8px;
 
     background-color: #fff;
 }
