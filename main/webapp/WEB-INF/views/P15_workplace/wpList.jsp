@@ -26,32 +26,58 @@
 		<div class="search-item">
 			<label>유형</label>
 			
-			<select name="wpType">
+			<select name="wpTypeId">
 				<option value="">전체</option>
 			
 				<option value="10"
-					${search.wpType == '10' ? 'selected' : ''}>
-					원자재
+					${search.wpTypeId == '10' ? 'selected' : ''}>
+					전처리
 				</option>
-				
 				<option value="20"
-					${search.wpType == '20' ? 'selected' : ''}>
-					반제품
+					${search.wpTypeId == '20' ? 'selected' : ''}>
+					배합
 				</option>
-				
 				<option value="30"
-					${search.wpType == '30' ? 'selected' : ''}>
-					완제품
+					${search.wpTypeId == '30' ? 'selected' : ''}>
+					반죽
+				</option>
+				<option value="40"
+					${search.wpTypeId == '40' ? 'selected' : ''}>
+					제피
+				</option>
+				<option value="50"
+					${search.wpTypeId == '50' ? 'selected' : ''}>
+					성형
+				</option>
+				<option value="60"
+					${search.wpTypeId == '60' ? 'selected' : ''}>
+					증숙
+				</option>
+				<option value="70"
+					${search.wpTypeId == '70' ? 'selected' : ''}>
+					냉각
+				</option>
+				<option value="80"
+					${search.wpTypeId == '80' ? 'selected' : ''}>
+					급속냉동
+				</option>
+				<option value="90"
+					${search.wpTypeId == '90' ? 'selected' : ''}>
+					포장
+				</option>
+				<option value="100"
+					${search.wpTypeId == '100' ? 'selected' : ''}>
+					검사
 				</option>
 			</select>
 		</div>
 		
 		<div class="search-item keyword">
-			<label>품목코드/품목명 검색</label>
+			<label>작업장 번호/작업장명 검색</label>
 			
 			<input type="text"
-				name="itemName"
-				value="${search.itemName}"
+				name="wpKeyword"
+				value="${search.wpKeyword}"
 				placeholder="내용을 입력하세요.">
 		</div>
 		
@@ -67,40 +93,21 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th>품목 코드</th>
-						<th>품목명</th>
-						<th>품목유형</th>
-						<th>안전재고</th>
-						<th>단위</th>
-						<th>규격</th>
-						<th>단가</th>
+						<th>작업장 번호</th>
+						<th>작업장명</th>
+						<th>유형</th>
+						<th>관리 기준</th>
+						<th>설명</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach var="item" items="${itemList}">
+					<c:forEach var="wp" items="${wpList}">
 						<tr>
-							<td>${item.itemId}</td>
-							<td>${item.itemName}</td>
-							<td>
-								<c:choose>
-									<c:when test="${item.itemType == '10'}">
-										원자재
-									</c:when>
-									<c:when test="${item.itemType == '20'}">
-										반제품
-									</c:when>
-									<c:when test="${item.itemType == '30'}">
-										완제품
-									</c:when>
-									<c:otherwise>
-										-
-									</c:otherwise>
-								</c:choose>
-							</td>
+							<td>${wp.wpId}</td>
+							<td>${wp.wpName}</td>
+							<td>${wp.wpType}</td>
 							<td>${item.safetyStock}</td>
 							<td>${item.unit}</td>
-							<td>${item.spec}</td>
-							<td>${item.unitPrice}</td>
 						</tr>	
 					</c:forEach>
 					
