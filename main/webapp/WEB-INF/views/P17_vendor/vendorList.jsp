@@ -15,7 +15,7 @@
 		
 		<div>
 			<p class="page-route">
-				홈 > 거래처 관리
+				홈 &gt; 거래처 관리
 			</p>
 			<a class="btn btn-white"
 				href="${pageContext.request.contextPath}/vendor/add">

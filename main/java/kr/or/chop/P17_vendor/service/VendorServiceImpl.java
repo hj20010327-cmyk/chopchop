@@ -27,5 +27,10 @@ public class VendorServiceImpl implements VendorService {
 
         return vendorDAO.selectVendorList(vendorDTO, pageInfo);
     }
+    
+    @Override
+    public int insertVendor(VendorDTO vendorDTO) {
+        return vendorDAO.insertVendor(vendorDTO);
+    }
 	
 }

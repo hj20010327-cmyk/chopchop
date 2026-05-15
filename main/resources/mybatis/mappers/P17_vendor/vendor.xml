@@ -42,6 +42,33 @@
 		AND #{page.endRow}
 
 	</select>
+	
+	<!-- 거래처 등록 -->
+	<insert id="insertVendor"
+	    parameterType="kr.or.chop.P17_vendor.dto.VendorDTO">
+	
+	    INSERT INTO vendor
+	    (
+	        vendor_id,
+	        vendor_name,
+	        vendor_type,
+	        vendor_tel,
+	        vendor_email,
+	        vendor_address,
+	        vendor_usage
+	    )
+	    VALUES
+	    (
+	        'VD' || LPAD(SEQ_VENDOR.NEXTVAL, 4, '0'),
+	        #{vendorName},
+	        #{vendorType},
+	        #{vendorTel},
+	        #{vendorEmail},
+	        #{vendorAddress},
+	        'Y'
+	    )
+	
+	</insert>
 
 </mapper>
 

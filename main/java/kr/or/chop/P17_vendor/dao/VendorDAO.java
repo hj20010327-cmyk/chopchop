@@ -11,4 +11,5 @@ public interface VendorDAO {
 
     List<VendorDTO> selectVendorList(VendorDTO vendorDTO, PageInfo pageInfo);
 	
+    int insertVendor(VendorDTO vendorDTO);
 }
