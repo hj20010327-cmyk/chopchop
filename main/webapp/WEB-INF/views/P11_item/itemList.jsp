@@ -10,10 +10,13 @@
 			<p class="page-subtitle">품목 목록을 조회할 수 있습니다.</p>
 		</div>
 		
+		<div>
+		<p class="page-subtitle">홈 > 품목 관리</p>
 		<a class="btn btn-white"
 			href="${pageContext.request.contextPath}/item/add">
 			품목 등록	
 		</a>
+		</div>
 	</div>
 	
 	<form class="search-box"
