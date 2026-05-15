@@ -7,7 +7,7 @@
 	<!-- 첫 페이지 -->
 	<c:choose>
 		<c:when test="${page.currentPage == 1}">
-			<button class="disabled">&laquo;</button>
+			<a class="disabled">&laquo;</a>
 		</c:when>
 
 		<c:otherwise>
@@ -19,7 +19,7 @@
 	<!-- 이전 -->
 	<c:choose>
 		<c:when test="${page.currentPage == 1}">
-			<button class="disabled">&lt;</button>
+			<a class="disabled">&lt;</a>
 		</c:when>
 
 		<c:otherwise>
@@ -34,7 +34,7 @@
 		<c:choose>
 
 			<c:when test="${i == page.currentPage}">
-				<button class="active">${i}</button>
+				<a class="active">${i}</a>
 			</c:when>
 
 			<c:otherwise>
@@ -49,7 +49,7 @@
 	<!-- 다음 -->
 	<c:choose>
 		<c:when test="${page.currentPage == page.maxPage}">
-			<button class="disabled">&gt;</button>
+			<a class="disabled">&gt;</a>
 		</c:when>
 
 		<c:otherwise>
@@ -61,7 +61,7 @@
 	<!-- 마지막 -->
 	<c:choose>
 		<c:when test="${page.currentPage == page.maxPage}">
-			<button class="disabled">&raquo;</button>
+			<a class="disabled">&raquo;</a>
 		</c:when>
 
 		<c:otherwise>

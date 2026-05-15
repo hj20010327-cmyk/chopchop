@@ -355,8 +355,8 @@ a:hover {
 
 .pagination a,
 .pagination button {
-    min-width: 34px;
-    height: 34px;
+    min-width: 35px;
+    height: 35px;
     padding: 0 10px;
 
     border: 1px solid #ccc;
@@ -364,9 +364,14 @@ a:hover {
 
     background-color: #fff;
     color: #333;
+    
+    text-align: center;
 
     font-size: 14px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pagination a:hover,
@@ -374,6 +379,7 @@ a:hover {
     background-color: var(--white-hover);
     border-color: var(--main-green);
     color: var(--main-green);
+    text-decoration: none;
 }
 
 .pagination .active {
