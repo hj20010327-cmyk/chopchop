@@ -9,8 +9,12 @@ public class Pagination {
             int boardLimit) {
 
         // 전체 페이지 수
-        int maxPage =
-                (int)Math.ceil((double)listCount / boardLimit);
+    	int maxPage =
+    		    (int)Math.ceil((double)listCount / boardLimit);
+
+    		if(maxPage == 0) {
+    		    maxPage = 1;
+    		}
 
         // 시작 페이지
         int startPage =
