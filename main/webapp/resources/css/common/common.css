@@ -186,6 +186,11 @@ a:hover {
 
 .btn-red {
 	background-color: var(--red);
+	color: #fff;
+}
+
+.btn-red:hover {
+	background-color: var(--red-hover);
 }
 
 
