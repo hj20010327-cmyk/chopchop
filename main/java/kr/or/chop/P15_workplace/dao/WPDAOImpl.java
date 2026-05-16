@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.chop.P11_item.dto.ItemDTO;
 import kr.or.chop.P15_workplace.dto.WPDTO;
+import kr.or.chop.P19_ghp.dto.GlogDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Repository
@@ -39,6 +40,20 @@ public class WPDAOImpl implements WPDAO {
 		System.out.println("paramMap : " + paramMap);
 		
 		return sqlSession.selectList("mapper.P15_workplace.selectAllWP", paramMap);
+	}
+
+	@Override
+	public WPDTO selectWPDTO(WPDTO wpDTO) {
+		System.out.println("/workplace/detail dao.selectWPDTO");
+		
+		return sqlSession.selectOne("mapper.P15_workplace.selectWPDTO", wpDTO);
+	}
+
+	@Override
+	public List<GlogDTO> selectGlogList(WPDTO wpDTO) {
+		System.out.println("/workplace/detail dao.selectGlogList");
+		
+		return sqlSession.selectOne("mapper.P15_workplace.selectGlogList", wpDTO);
 	}
 
 }

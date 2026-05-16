@@ -56,6 +56,50 @@
 		AND #{page.endRow}
 		
 	</select>
+	
+	<select id="selectWPDTO" parameterType="wpDTO" resultType="wpDTO">
+		SELECT
+			wp.wp_id as wpId,
+			wp.wp_name as wpName,
+			wp.wp_type as wpTypeNo,
+			wt.wp_type_name as wpType,
+			wp.wp_img as wpImg,
+			ghp.ghp_id AS ghpId,
+			ghp.GHP_NAME AS ghpName,
+			wt.wp_type_content as wpTypeContent
+		FROM workplace wp
+			LEFT OUTER JOIN wp_type wt ON wp.wp_type = wt.wp_type_no
+			LEFT OUTER JOIN ghp ghp ON wp.wp_id = ghp.ghp_wpid
+		WHERE upper(wp.WP_ID) = upper(#{wpId})
+	</select>
+	
+	<select id="selectGlogList" parameterType="wpDTO" resultType="glogDTO">
+		SELECT
+			glog.glog_id glogId,
+			glog.glog_date glogDate,
+			glog.glog_worker glogWorker,
+			glog.glog_value glogValue,
+			glog.glog_result glogResult,
+			glog.glog_action glogAction,
+			glog.glog_adate glogAdate,
+			glog.glog_img glogImg,
+			glog.glog_memo glogMemo,
+			glog.glog_cdate glogCdate,
+			ghp.ghp_id ghpId,
+			ghp.ghp_name ghpName,
+			ghp.ghp_category ghpCategory,
+			ghp.ghp_standard ghpStandard,
+			ghp.ghp_check_method ghpCheckMethod,
+			ghp.ghp_cycle ghpCycle,
+			ghp.ghp_whid ghpWhId,
+			ghp.ghp_wpid ghpWpId,
+			ghp.GHP_MIN_VALUE ghpMinValue,
+			ghp.GHP_MAX_VALUE ghpMaxValue,
+			ghp.ghp_unit ghpUnit
+		FROM ghp_log glog
+			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
+		WHERE upper(ghp.ghp_wpid) = upper(#{wpId})
+	</select>
 
 </mapper>
 

@@ -23,7 +23,7 @@
 		</div>
 		<div class="right">
 			<a class="btn btn-main"
-				href="${pageContext.request.contextPath}/workplace/edit?wpId=${wpId}">
+				href="${pageContext.request.contextPath}/workplace/edit?wpId=${wpDTO.wpId}">
 				수정
 			</a>
 			<a class="btn btn-red"
@@ -43,15 +43,20 @@
 					<tbody>
 						<tr>
 							<th>작업장명</th>
-							<td>${wpName}조리구역 A</td>
+							<td>${wpDTO.wpName}</td>
 							<th>작업장 코드</th>
-							<td>${wpId}</td>
+							<td>${wpDTO.wpId}</td>
 						</tr>
 						<tr>
 							<th>작업장 유형</th>
-							<td>${wpType}</td>
+							<td>${wpDTO.wpType}</td>
 							<th>관리 기준</th>
-							<td>${wpTypeContent}</td>
+							<c:if test="${not empty wpDTO.ghpId}">
+								<td>${wpDTO.ghpName} (${wpDTO.ghpId})</td>
+							</c:if>
+							<c:if test="${empty wpDTO.ghpId}">
+								<td>-</td>
+							</c:if>
 						</tr>
 					</tbody>
 				</table>
