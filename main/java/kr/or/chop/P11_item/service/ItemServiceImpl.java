@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.chop.P11_item.dao.ItemDAO;
 import kr.or.chop.P11_item.dto.ItemDTO;
+import kr.or.chop.P17_vendor.dto.VendorDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Service
@@ -25,6 +26,16 @@ public class ItemServiceImpl implements ItemService {
 	public int selectItemCount(ItemDTO itemDTO) {
 
 		return itemDAO.selectItemCount(itemDTO);
+	}
+
+	@Override
+	public int insertItem(ItemDTO itemDTO) {
+		return itemDAO.insertItem(itemDTO);
+	}
+
+	@Override
+	public List<VendorDTO> selectVendors(VendorDTO vendorDTO) {
+		return itemDAO.selectVendors(vendorDTO);
 	}
 
 }

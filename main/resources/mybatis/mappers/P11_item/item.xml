@@ -10,11 +10,12 @@
 		select count(*)
 		from item
 			<where>
-					<if test="itemType != null and itemType != ''">
-						and item_type = #{itemType}
+					<if test="searchType != null and searchType != ''">
+						and item_type = #{searchType}
 					</if>
-					<if test="itemName != null and itemName != ''">
-						and upper(item_name) like upper(('%' || #{itemName} || '%')) 
+					<if test="searchKeyword != null and searchKeyword != ''">
+						and (upper(item_name) like upper(('%' || #{searchKeyword} || '%'))) or
+						 (upper(item_id) like upper(('%' || #{searchKeyword} || '%')))
 					</if>
 						and item_usage = 'Y'
 			</where>	
@@ -45,11 +46,12 @@
 		item_usage AS itemUsage
 		FROM item
 			<where>
-					<if test="itemType != null and itemType != ''">
-						and item_type = #{itemType}
+					<if test="searchType != null and searchType != ''">
+						and item_type = #{searchType}
 					</if>
-					<if test="itemName != null and itemName != ''">
-						and upper(item_name) like upper(('%' || #{itemName} || '%')) 
+					<if test="searchKeyword != null and searchKeyword != ''">
+						and (upper(item_name) like upper(('%' || #{searchKeyword} || '%'))) or
+						 (upper(item_id) like upper(('%' || #{searchKeyword} || '%'))) 
 					</if>
 						and item_usage = 'Y'
 			</where>
@@ -60,6 +62,52 @@
 		AND #{page.endRow}
 		
 	</select>
+	
+	<select id="selectVendors" resultType="vendorDTO">
+		select vendor_id as vendorId, vendor_name as vendorName from vendor
+		where vendor_usage = 'Y'
+	</select>
+	
+	<insert id="insertItem"
+		parameterType="itemDTO">
+	
+		insert into item (
+			item_id,
+			item_name,
+			item_type,
+			item_unit,
+			item_spec,
+			item_unit_price,
+			item_storage,
+			item_vendor,
+			item_usedate,
+			item_safety_stock,
+			item_usage
+		)
+		values
+		(
+			<if test="itemType == 10">
+				'RAW' || raw_seq.nextval
+			</if>
+			<if test="itemType == 20">
+				'SEMI' || semi_seq.nextval
+			</if>
+			<if test="itemType == 30">
+				'FIN' || fin_seq.nextval
+			</if>,
+			#{itemName},
+			#{itemType},
+			#{unit},
+			#{spec},
+			#{unitPrice},
+			#{itemStorage},
+			#{itemVendor},
+			#{useDate},
+			#{safetyStock},
+			'Y'
+		)
+		
+	</insert>
 
 </mapper>
 

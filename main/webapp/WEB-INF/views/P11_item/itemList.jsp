@@ -26,21 +26,21 @@
 		<div class="search-item">
 			<label>품목유형</label>
 			
-			<select name="itemType">
+			<select name="searchType">
 				<option value="">전체</option>
 			
 				<option value="10"
-					${search.itemType == '10' ? 'selected' : ''}>
+					${search.searchType == '10' ? 'selected' : ''}>
 					원자재
 				</option>
 				
 				<option value="20"
-					${search.itemType == '20' ? 'selected' : ''}>
+					${search.searchType == '20' ? 'selected' : ''}>
 					반제품
 				</option>
 				
 				<option value="30"
-					${search.itemType == '30' ? 'selected' : ''}>
+					${search.searchType == '30' ? 'selected' : ''}>
 					완제품
 				</option>
 			</select>
@@ -50,8 +50,8 @@
 			<label>품목코드/품목명 검색</label>
 			
 			<input type="text"
-				name="itemName"
-				value="${search.itemName}"
+				name="searchKeyword"
+				value="${search.searchKeyword}"
 				placeholder="내용을 입력하세요.">
 		</div>
 		
