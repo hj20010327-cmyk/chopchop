@@ -15,4 +15,5 @@ public class SuggDTO {
     private Date sugg_cdate; // 작성일
     private Date sugg_mdate; // 수정일
     private String sugg_usage; // 유효여부
+    private String keyword;
 }

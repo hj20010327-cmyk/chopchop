@@ -39,7 +39,7 @@
                 sugg_usage
             FROM suggestion
             WHERE sugg_usage = 'Y'
-            ORDER BY sugg_no DESC
+            ORDER BY sugg_no asc
         ) S
     )
     WHERE RN BETWEEN #{page.startRow}
@@ -80,12 +80,12 @@
         sugg_usage
     )
     VALUES (
-        seq_suggestion.NEXTVAL,
+        SUGG_SEQ.NEXTVAL,
         #{sugg_title},
         #{sugg_content},
         #{sugg_writer},
         #{sugg_pw},
-        '대기',
+        'N',
         SYSDATE,
         'Y'
     )

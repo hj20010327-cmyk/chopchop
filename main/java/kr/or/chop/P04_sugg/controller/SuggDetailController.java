@@ -20,8 +20,11 @@ public class SuggDetailController {
     public String detail(Integer sugg_no,
                          Model model) {
     	System.out.println("/sugg/detail 실행");
+    	System.out.println("sugg_no : " + sugg_no);
 
         SuggDTO dto = suggService.selectSuggDetail(sugg_no);
+        
+        System.out.println("dto : " + dto);
 
         if(dto == null) {
             return "redirect:/sugg/list";
@@ -29,6 +32,6 @@ public class SuggDetailController {
 
         model.addAttribute("dto", dto);
 
-        return "P04_sugg/suggDetail.tlies";
+        return "P04_sugg/suggDetail.tiles";
     }
 }
