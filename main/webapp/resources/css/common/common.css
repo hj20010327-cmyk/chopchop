@@ -51,7 +51,6 @@ a:hover {
 }
 
 
-
 /* ==============================
    색상
 ============================== */
@@ -213,7 +212,7 @@ a:hover {
 }
 
 .page-subtitle {
-    margin: 0 0 24px;
+    margin: 0 0 10px;
     font-size: 15px;
     font-weight: 400;
     line-height: 1.5;
@@ -441,7 +440,7 @@ a:hover {
     border-color: var(--main-green);
 }
 
-.search-item.keyword input {
+.search-item input {
     min-width: 260px;
 }
 
@@ -523,3 +522,89 @@ a:hover {
 	background-color: #fff;
 }
 
+
+
+
+/* ==============================
+   grid
+============================== */
+
+.grid-form {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+	padding: 0 20px;
+}
+
+.grid-wrap {
+	display: flex;
+	gap: 25px;
+}
+
+.grid input {
+	min-width: 400px;
+}
+
+.grid select {
+	min-width: 200px;
+}
+
+.red {
+	color: var(--main-red);
+}
+
+
+
+
+/* ==============================
+   readonly
+============================== */
+
+input[readonly],
+textarea[readonly] {
+    background-color: var(--light-gray);
+    color: #000;
+    cursor: not-allowed;
+    outline: none;
+}
+
+input[readonly]:focus,
+textarea[readonly]:focus {
+	border-color: var(--dark-gray);
+    box-shadow: none;
+}
+
+
+
+
+
+/* ==============================
+   addImg
+============================== */
+
+#imgPreviewBox {
+    width: 100%;
+    display: none;
+    
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+#noImg {
+	padding: 0 15px;
+}
+
+#imgPreviewBox img {
+    display: none;
+    width: 80%;
+    height: 100%;
+    object-fit: cover;
+    
+    margin: 0 auto;
+}
+
+#delImgBtn {
+	display: none;
+}
