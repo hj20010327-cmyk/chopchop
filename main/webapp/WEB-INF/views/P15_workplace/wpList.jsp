@@ -130,6 +130,18 @@
 	</div>
 </div>
 
+
+
+
+
+
+<style>
+	.table tbody tr:hover .wpId {
+	    color: var(--main-green);
+	    text-decoration: underline;
+	}
+</style>
+
 <script>
 	
 	window.addEventListener ("load", () => {
