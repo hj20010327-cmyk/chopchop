@@ -13,11 +13,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
     
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 3000;
 }
 
 .header-row {
@@ -37,6 +37,7 @@
 
 .header-right {
     gap: 18px;
+    position: relative;
 }
 
 .header-logo {
@@ -58,8 +59,29 @@
 }
 
 .header-icon {
-    color: #fff;
-    font-size: 18px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #222;
+    transition: 0.2s;
+}
+
+.header-icon:hover {
+    background: #f1f5f3;
+    color: #2f6f4f;
+}
+
+.header-bell-icon {
+    width: 22px;
+    height: 22px;
 }
 
 .header-profile {
@@ -81,4 +103,70 @@
 
 .profile-arrow {
     font-size: 12px;
+}
+
+.alarm-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alarm-panel {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: -20px;
+
+    width: 360px;
+    padding: 24px 22px;
+
+    background: #fff;
+    border: 1px solid #bdbdbd;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+    z-index: 4000;
+}
+
+.alarm-panel.active {
+    display: block;
+}
+
+.alarm-title {
+    margin: 0 0 20px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+}
+
+.alarm-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 16px 0;
+    border-bottom: 1px solid #bdbdbd;
+}
+
+.alarm-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.alarm-item p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: #111;
+}
+
+.alarm-close {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+
+    font-size: 22px;
+    line-height: 1;
+    color: #111;
 }
