@@ -123,7 +123,7 @@
 	    SET WP_IMG = #{wpImg}
 	    WHERE WP_ID = #{wpId}
 	</update>
-
+	
 </mapper>
 
 

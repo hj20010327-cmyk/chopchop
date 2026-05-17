@@ -580,36 +580,3 @@ textarea[readonly]:focus {
 }
 
 
-
-
-
-/* ==============================
-   addImg
-============================== */
-
-#imgPreviewBox {
-    width: 100%;
-    display: none;
-    
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    margin-top: 8px;
-}
-
-#noImg {
-	padding: 0 15px;
-}
-
-#imgPreviewBox img {
-    display: none;
-    width: 80%;
-    height: 100%;
-    object-fit: cover;
-    
-    margin: 0 auto;
-}
-
-#delImgBtn {
-	display: none;
-}

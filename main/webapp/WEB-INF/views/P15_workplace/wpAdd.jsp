@@ -57,25 +57,61 @@
 			</div>
 		</div>
 		
-		<!-- 이미지 등록 어떡하지? -->
-		<label style="font-size: 13px; font-weight: 600; color: #555;">
-   			작업장 이미지 (선택)
-   		</label>
-   		<div>
-			<input type="file" name="wpImgFile" id="wpImgFile" accept="image/*">
-			<button type="button" id="delImgBtn" onclick="delImg()">x</button>
-   		</div>
-		
-		<div id="noImg">
-			등록된 사진 없음
+		<div class="search-item">
+			<label style="font-size: 13px; font-weight: 600; color: #555;">
+	   			작업장 이미지 (선택)
+	   		</label>
+	   		<div style="display: flex; gap: 15px;">
+				<input type="file" name="wpImgFile" id="wpImgFile" accept="image/*" style="display: none;">
+				<input type="text" id="fileName" placeholder="선택된 파일 없음" readonly>
+				<div style="display: flex; gap: 10px;">
+					<label type="button" class="btn btn-main" for="wpImgFile"
+							style="color: white; font-size: 14px;">이미지 선택</label>
+					<button type="button" class="btn btn-red" id="delImgBtn" onclick="delImg()">삭제</button>
+				</div>
+	   		</div>
+			
+			<div id="imgPreviewBox" style="display: none;">
+		        <img id="previewImg" src="" alt="이미지 미리보기"
+		        >
+			</div>
+			
+			<div id="noImg"
+			     style="font-size:12px; display: block; margin-top: 8px;">
+			    등록된 사진 없음
+			</div>
 		</div>
-	    <div id="imgPreviewBox">
-	        <img id="previewImg" src="" alt="이미지 미리보기">
-	    </div>
 
     </form>
 
 </div>
+
+<style>
+	/* ==============================
+	   addImg
+	============================== */
+	
+	#imgPreviewBox {
+	    width: 100%;
+	    display: none;
+	    
+	    align-items: center;
+	    justify-content: flex-start;
+	    overflow: hidden;
+	    margin-top: 8px;
+	}
+	
+	#noImg {
+		padding: 0 15px;
+	}
+	
+	#imgPreviewBox img {
+	    display: none;
+	    width: 80%;
+	    height: 100%;
+	    object-fit: cover;
+	}
+</style>
 
 <script>
 	window.addEventListener("load", () => {
@@ -94,7 +130,6 @@
 		const wpImgFile = document.querySelector("#wpImgFile");
 		const previewImg = document.querySelector("#previewImg");
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
-		const delImgBtn = document.querySelector("#delImgBtn");
 		const noImg = document.querySelector("#noImg");
 
 		wpImgFile.addEventListener("change", function () {
@@ -124,7 +159,6 @@
 		        previewImg.src = e.target.result;
 		        imgPreviewBox.style.display = "flex";
 		        previewImg.style.display = "block";
-		        delImgBtn.style.display = "inline";
 		        noImg.style.display = "none";
 		    };
 
@@ -136,14 +170,12 @@
 		const wpImgFile = document.querySelector("#wpImgFile");
 		const previewImg = document.querySelector("#previewImg");
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
-		const delImgBtn = document.querySelector("#delImgBtn");
 		const noImg = document.querySelector("#noImg");
 		
 		previewImg.src = "";
 		previewImg.style.display = "none";
 		imgPreviewBox.style.display = "none";
 		wpImgFile.value = "";
-		delImgBtn.style.display = "none";
 		noImg.style.display = "block";
 	}
 
