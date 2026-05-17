@@ -62,7 +62,7 @@ a:hover {
     --sub-green: #6C9A8B;
     --sub-green-hover: #5C8678;
 
-    --white-hover: #F4F7F5;
+    --white-hover: #eee;
 	
 
     --dark-gray: #aaa;
@@ -329,6 +329,7 @@ a:hover {
 
 .table tbody tr:hover {
     background-color: var(--white-hover);
+    cursor: pointer;
 }
 
 .table tbody tr:last-child td {
