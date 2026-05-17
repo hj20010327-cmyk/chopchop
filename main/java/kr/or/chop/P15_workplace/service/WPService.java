@@ -1,6 +1,9 @@
 package kr.or.chop.P15_workplace.service;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.chop.P15_workplace.dto.WPDTO;
 import kr.or.chop.P19_ghp.dto.GlogDTO;
@@ -14,5 +17,7 @@ public interface WPService {
 	public WPDTO selectWpDTO(WPDTO wpDTO);
 	public int selectGlogCount(WPDTO wpDTO);
 	public List<GlogDTO> selectGlogList(WPDTO wpDTO);
+	
+	public void insertWP(WPDTO wpDTO, MultipartFile wpImgFile, String uploadPath, String contextPath) throws IllegalStateException, IOException;
 
 }

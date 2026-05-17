@@ -67,11 +67,16 @@
 			<div class="content-content-content-title">
 				작업장 상세 이미지
 			</div>
-			<div class="info-image" style="padding: 10px 40px;">
-				<img src="${wpDTO.wpImg}"
-					title="${wpDTO.wpId}_img" alt="${wpDTO.wpId}_img"
-					 style="min-width: 400px; max-width: 800px; min-height: 300px; margin: 0 auto;">
-			</div>
+			<c:if test="${empty wpDTO.wpImg or wpDTO.wpImg == null}">
+				<div style="padding: 10px 40px;">상세 이미지 없음</div>
+			</c:if>
+			<c:if test="${not empty wpDTO.wpImg and wpDTO.wpImg != null }">
+				<div class="info-image" style="padding: 10px 40px;">
+					<img src="${wpDTO.wpImg}"
+						title="${wpDTO.wpId}_img" alt="${wpDTO.wpId}_img"
+						 style="min-width: 400px; max-width: 800px; min-height: 300px; margin: 0 auto;">
+				</div>
+			</c:if>
 		</div>
 		
 		<div class="content-content-content">

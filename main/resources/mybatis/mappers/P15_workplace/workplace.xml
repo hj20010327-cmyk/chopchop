@@ -107,6 +107,22 @@
 			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
 		WHERE upper(ghp.ghp_wpid) = upper(#{wpId})
 	</select>
+	
+	<insert id="insertWP" parameterType="wpDTO">
+		<selectKey keyProperty="wpId" resultType="string" order="BEFORE">
+	        SELECT 'WP' || WP_SEQ.NEXTVAL
+	        FROM DUAL
+	    </selectKey>
+		
+		INSERT INTO WORKPLACE (WP_ID, WP_NAME, WP_TYPE, WP_USAGE)
+		VALUES (#{wpId}, #{wpName}, #{wpType}, 'Y')
+	</insert>
+	
+	<update id="updateWpImg" parameterType="wpDTO">
+	    UPDATE WORKPLACE
+	    SET WP_IMG = #{wpImg}
+	    WHERE WP_ID = #{wpId}
+	</update>
 
 </mapper>
 

@@ -63,4 +63,16 @@ public class WPDAOImpl implements WPDAO {
 		return sqlSession.selectOne("mapper.P15_workplace.selectGlogList", wpDTO);
 	}
 
+	@Override
+	public int insertWP(WPDTO wpDTO) {
+		System.out.println("/workplace/detail dao.insertWP");
+		
+		return sqlSession.insert("mapper.P15_workplace.insertWP", wpDTO);
+	}
+	
+	@Override
+	public int updateWpImg(WPDTO wpDTO) {
+	    return sqlSession.update("mapper.P15_workplace.updateWpImg", wpDTO);
+	}
+
 }

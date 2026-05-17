@@ -1,9 +1,12 @@
 package kr.or.chop.P15_workplace.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.chop.P15_workplace.dao.WPDAO;
 import kr.or.chop.P15_workplace.dto.WPDTO;
@@ -54,6 +57,48 @@ public class WPServiceImpl implements WPService {
 		System.out.println("/workplace/detail service.selectGlogList");
 		
 		return wpDAO.selectGlogList(wpDTO);
+	}
+
+	@Override
+	public void insertWP(WPDTO wpDTO, MultipartFile wpImgFile, String uploadPath, String contextPath)
+			throws IllegalStateException, IOException {
+		
+		System.out.println("/workplace/add service.insertWP");
+		
+		// 1. 이미지 없이 먼저 INSERT
+	    // insert 후 wpDTO 안에 wpId가 들어오게 만들어야 함
+	    wpDAO.insertWP(wpDTO);
+
+	    String wpId = wpDTO.getWpId();
+
+	    // 2. 이미지 없으면 여기서 종료
+	    if (wpImgFile == null || wpImgFile.isEmpty()) {
+	        return;
+	    }
+
+	    // 3. 업로드 폴더 생성
+	    File uploadDir = new File(uploadPath);
+	    if (!uploadDir.exists()) {
+	        uploadDir.mkdirs();
+	    }
+
+	    // 4. 확장자 추출
+	    String originalName = wpImgFile.getOriginalFilename();
+	    String ext = originalName.substring(originalName.lastIndexOf("."));
+
+	    // 5. 파일명을 wpId로 생성
+	    String savedName = wpId + ext;
+
+	    File saveFile = new File(uploadPath, savedName);
+
+	    // 6. 실제 파일 저장
+	    wpImgFile.transferTo(saveFile);
+
+	    // 7. DB에 이미지 파일명 UPDATE
+	    String imgUrl = contextPath + "/resources/img/P15_workplace/" + savedName;
+	    
+	    wpDTO.setWpImg(imgUrl);
+	    wpDAO.updateWpImg(wpDTO);
 	}
 
 }
