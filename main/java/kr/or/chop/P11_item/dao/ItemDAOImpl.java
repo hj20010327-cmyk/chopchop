@@ -41,7 +41,6 @@ public class ItemDAOImpl implements ItemDAO {
 		return sqlSession.insert("mapper.P11_item.insertItem",itemDTO);
 	}
 
-<<<<<<< HEAD
 	@Override
 	public List<VendorDTO> selectVendors(VendorDTO vendorDTO) {
 		System.out.println("DAO"+sqlSession.selectList("mapper.P11_item.selectVendors"));
@@ -49,6 +48,4 @@ public class ItemDAOImpl implements ItemDAO {
 		return sqlSession.selectList("mapper.P11_item.selectVendors",vendorDTO);
 	}
 
-=======
->>>>>>> acb2384 (시발)
 }

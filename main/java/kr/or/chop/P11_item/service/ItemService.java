@@ -12,7 +12,6 @@ public interface ItemService {
 	public int selectItemCount(ItemDTO itemDTO);
 	public int insertItem(ItemDTO itemDTO);
 	
-	public int insertItem(ItemDTO itemDTO);
 	
 	public List<VendorDTO> selectVendors(VendorDTO vendorDTO);
 	

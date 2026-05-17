@@ -51,13 +51,5 @@ public class ItemListController {
         return "P11_item/itemAdd.tiles";
     }
 	
-	@PostMapping("/insert")
-    public String insertVendor(
-            @ModelAttribute ItemDTO itemDTO) {
-
-        itemService.insertItem(itemDTO);
-
-        return "redirect:/vendor/list";
-    }
 	
 }
