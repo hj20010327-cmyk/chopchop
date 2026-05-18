@@ -24,7 +24,7 @@
 		<typeAlias type="kr.or.chop.P10_io.dto.IoDTO" alias="ioDTO" />
 		<typeAlias type="kr.or.chop.P11_item.dto.ItemDTO" alias="itemDTO" />
 <!-- 		<typeAlias type="kr.or.chop.P12_rout.dto.RoutDTO" alias="routDTO" /> -->
-<!-- 		<typeAlias type="kr.or.chop.P13_bom.dto.BOMDTO" alias="bomDTO" /> -->
+		<typeAlias type="kr.or.chop.P13_bom.dto.BOMDTO" alias="bomDTO" />
 <!-- 		<typeAlias type="kr.or.chop.P14_warehouse.dto.WHDTO" alias="whDTO" /> -->
 		<typeAlias type="kr.or.chop.P15_workplace.dto.WPDTO" alias="wpDTO" />
 		<typeAlias type="kr.or.chop.P16_equip.dto.EqDTO" alias="eqDTO" />
