@@ -73,9 +73,12 @@ a:hover {
     --success-back: #D0F4D1;
     --warning: #F9A825;
     --warning-back: #FFE5BC;
-    --danger: #FFD2D2;
+    --danger: #D32F2F;
+    --danger-back: #FFD2D2;
     --safe: #2B8EFF;
     --safe-back: #C7E1FF;
+    --info: #aaa;
+    --info-back: #e8e8e8;
 
     --fin: #2B8EFF;
 
