@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.P09_lot">
+
+	<select id="selectlotList" parameterType="map"
+		resultType="lotDTO">
+
+		select *
+		from
+		(
+		select rownum rn,
+		I.*
+		from
+		(
+		select
+		lot_id as lotId,
+		lot_item
+		as lotItem,
+		lot_vendor as lotVendor,
+		lot_work as lotWork,
+		lot_iqty as
+		lotIqty,
+		lot_fqty as lotFqty,
+		lot_mfd as lotMfd,
+		lot_etw as lotEtw,
+		lot_exp as lotExp,
+		lot_qc as lotQc,
+		lot_status as lotStatus,
+		lot_memo as
+		lotMemo,
+		lot_bwhsec as lotBwhsec,
+		lot_awhsec as lotAwhsec
+		from lot
+		<where>
+			<if test="lotStatus != null and lotStatus != ''">
+				AND lot_status = #{lotStatus}
+			</if>
+
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (
+				UPPER(lot_id) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
+				OR UPPER(lot_item) LIKE UPPER('%' || #{searchKeyword} || '%')
+				)
+			</if>
+		</where>
+		ORDER BY lot_id DESC
+		) I
+		)
+
+	</select>
+
+	<select id="selectLotDetail" parameterType="string"
+		resultType="lotDTO">
+
+		SELECT
+		lot_id AS lotId,
+		lot_item AS lotItem,
+		lot_vendor AS lotVendor,
+		lot_work AS lotWork,
+		lot_iqty AS lotIqty,
+		lot_fqty AS lotFqty,
+		lot_mfd AS lotMfd,
+		lot_etw AS lotEtw,
+		lot_exp AS lotExp,
+		lot_qc AS lotQc,
+		lot_status AS lotStatus,
+		lot_memo AS lotMemo,
+		lot_bwhsec AS lotBwhsec,
+		lot_awhsec AS lotAwhsec
+		FROM lot
+		WHERE lot_id = #{lotId}
+
+	</select>
+
+</mapper>

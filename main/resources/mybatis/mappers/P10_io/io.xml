@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P10_io">
+
+    <select id="selectIoList"
+        parameterType="map"
+        resultType="ioDTO">
+
+        SELECT
+            io_id AS ioId,
+            io_type AS ioType,
+            io_reason AS ioReason,
+            io_vendor AS ioVendor,
+            io_lot AS ioLot,
+            io_qty AS ioQty,
+            io_date AS ioDate,
+            io_worker AS ioWorker,
+            io_msg AS ioMsg
+        FROM io
+        <where>
+            <if test="ioType != null and ioType != ''">
+                AND io_type = #{ioType}
+            </if>
+
+            <if test="startDate != null and startDate != ''">
+                AND io_date &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+            </if>
+
+            <if test="endDate != null and endDate != ''">
+                AND io_date &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+            </if>
+
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (
+                    UPPER(io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
+                    OR UPPER(io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
+                    OR UPPER(io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
+                )
+            </if>
+        </where>
+        ORDER BY io_date DESC
+
+    </select>
+
+</mapper>
