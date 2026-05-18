@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P11_item.dao.ItemDAO;
 import kr.or.chop.P11_item.dto.ItemDTO;
 import kr.or.chop.P17_vendor.dto.VendorDTO;
@@ -36,6 +37,11 @@ public class ItemServiceImpl implements ItemService {
 	@Override
 	public List<VendorDTO> selectVendors(VendorDTO vendorDTO) {
 		return itemDAO.selectVendors(vendorDTO);
+	}
+
+	@Override
+	public int selectLotCount(LotDTO lotDTO) {
+		return itemDAO.selectLotCount(lotDTO);
 	}
 
 }

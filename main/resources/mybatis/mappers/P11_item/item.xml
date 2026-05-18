@@ -22,6 +22,19 @@
 		
 	</select>
 	
+	<select id="selectLotCount"
+		parameterType="lotDTO" resultType="int">
+		
+		select count(*)
+		from lot
+			<where>
+				<if test="">
+					
+				</if>
+			</where>
+		
+	</select>
+	
 	<select id="selectitemList"
 		parameterType="map" resultType="kr.or.chop.P11_item.dto.ItemDTO">
 	

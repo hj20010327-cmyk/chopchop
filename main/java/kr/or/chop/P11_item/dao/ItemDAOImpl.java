@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P11_item.dto.ItemDTO;
 import kr.or.chop.P17_vendor.dto.VendorDTO;
 import kr.or.chop.common.pagination.PageInfo;
@@ -46,6 +47,11 @@ public class ItemDAOImpl implements ItemDAO {
 		System.out.println("DAO"+sqlSession.selectList("mapper.P11_item.selectVendors"));
 	
 		return sqlSession.selectList("mapper.P11_item.selectVendors",vendorDTO);
+	}
+
+	@Override
+	public int selectLotCount(LotDTO lotDTO) {
+		return sqlSession.selectOne("mapper.P11_item.selectLotCount", lotDTO);
 	}
 
 }
