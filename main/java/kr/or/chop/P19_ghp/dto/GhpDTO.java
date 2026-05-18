@@ -1,17 +1,20 @@
 package kr.or.chop.P19_ghp.dto;
 
+import lombok.Data;
+
+@Data
 public class GhpDTO {
 	
-	String ghpId;
-	String ghpName;
-	String ghpCategory;
-	String ghpStandard;
-	String ghpCheckMethod;
-	String ghpCycle;
-	String ghpWhId;
-	String ghpWpId;
-	Integer ghpMinValue;
-	Integer ghpMaxValue;
-	String ghpUnit;
+	private String ghpId;
+	private String ghpName;
+	private String ghpCategory;
+	private String ghpStandard;
+	private String ghpCheckMethod;
+	private String ghpCycle;
+	private int ghpWhType;
+	private int ghpWpType;
+	private Integer ghpMinValue;
+	private Integer ghpMaxValue;
+	private String ghpUnit;
 	
 }

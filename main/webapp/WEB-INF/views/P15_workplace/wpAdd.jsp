@@ -131,6 +131,7 @@
 		const previewImg = document.querySelector("#previewImg");
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
 		const noImg = document.querySelector("#noImg");
+		const fileName = document.querySelector("#fileName");
 
 		wpImgFile.addEventListener("change", function () {
 		    const file = this.files[0];
@@ -160,6 +161,7 @@
 		        imgPreviewBox.style.display = "flex";
 		        previewImg.style.display = "block";
 		        noImg.style.display = "none";
+		        fileName.value = e.target.result;
 		    };
 
 		    reader.readAsDataURL(file);

@@ -27,16 +27,19 @@ public class GlogDTO {
 	
 	private Date glogCdate;
 	
+	private String glogWhId;
+	private String glogWpId;
+	
 	private String ghpId;
 	private String ghpName;
 	private String ghpCategory;
 	private String ghpStandard;
 	private String ghpCheckMethod;
 	private String ghpCycle;
-	private String ghpWhId;
-	private String ghpWpId;
-	private int ghpMinValue = -9999;
-	private int ghpMaxvalue = -9999;
+	private int ghpWhType;
+	private int  ghpWpType;
+	private Integer ghpMinValue;
+	private Integer ghpMaxvalue;
 	private String ghpUnit;
 	
 }
