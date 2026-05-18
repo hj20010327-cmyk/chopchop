@@ -10,38 +10,28 @@
             resultType="int">
 
         SELECT COUNT(*)
-        FROM emp
+        FROM emp e
+        LEFT JOIN dept d
+            ON e.emp_deptno = d.deptno
         WHERE 1 = 1
 
-        <if test="searchType != null and searchType != ''">
-            <choose>
-                <when test="searchType == 'id'">
-                    AND UPPER(emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                </when>
-
-                <when test="searchType == 'name'">
-                    AND UPPER(emp_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                </when>
-
-                <when test="searchType == 'auth'">
-                    AND TO_CHAR(emp_auth) LIKE '%' || #{searchKeyword} || '%'
-                </when>
-
-                <otherwise>
-                    AND (
-                        UPPER(emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                        OR UPPER(emp_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                        OR TO_CHAR(emp_auth) LIKE '%' || #{searchKeyword} || '%'
-                    )
-                </otherwise>
-            </choose>
+        <if test="searchDeptno != null">
+            AND e.emp_deptno = #{searchDeptno}
         </if>
 
-        <if test="(searchType == null or searchType == '') and searchKeyword != null and searchKeyword != ''">
+        <if test="searchAuth != null">
+            AND e.emp_auth = #{searchAuth}
+        </if>
+
+        <if test="searchStatus != null">
+            AND e.emp_inoffice = #{searchStatus}
+        </if>
+
+        <if test="searchKeyword != null and searchKeyword != ''">
             AND (
-                UPPER(emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                OR UPPER(emp_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                OR TO_CHAR(emp_auth) LIKE '%' || #{searchKeyword} || '%'
+                UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+                OR UPPER(e.emp_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+                OR UPPER(d.dname) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
             )
         </if>
 
@@ -59,52 +49,43 @@
             FROM
             (
                 SELECT
-                    emp_id AS empId,
-                    emp_name AS empName,
-                    emp_pw AS empPw,
-                    emp_tel AS empTel,
-                    emp_email AS empEmail,
-                    emp_deptno AS empDeptno,
-                    emp_auth AS empAuth,
-                    emp_first AS empFirst,
-                    emp_inoffice AS empInOffice,
-                    emp_hiredate AS empHiredate
-                FROM emp
+                    e.emp_id AS empId,
+                    e.emp_name AS empName,
+                    e.emp_pw AS empPw,
+                    e.emp_tel AS empTel,
+                    e.emp_email AS empEmail,
+                    e.emp_deptno AS empDeptno,
+                    d.dname AS deptName,
+                    e.emp_auth AS empAuth,
+                    e.emp_first AS empFirst,
+                    e.emp_inoffice AS empInOffice,
+                    e.emp_hiredate AS empHiredate
+                FROM emp e
+                LEFT JOIN dept d
+                    ON e.emp_deptno = d.deptno
                 WHERE 1 = 1
 
-                <if test="adminDTO.searchType != null and adminDTO.searchType != ''">
-                    <choose>
-                        <when test="adminDTO.searchType == 'id'">
-                            AND UPPER(emp_id) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                        </when>
-
-                        <when test="adminDTO.searchType == 'name'">
-                            AND UPPER(emp_name) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                        </when>
-
-                        <when test="adminDTO.searchType == 'auth'">
-                            AND TO_CHAR(emp_auth) LIKE '%' || #{adminDTO.searchKeyword} || '%'
-                        </when>
-
-                        <otherwise>
-                            AND (
-                                UPPER(emp_id) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                                OR UPPER(emp_name) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                                OR TO_CHAR(emp_auth) LIKE '%' || #{adminDTO.searchKeyword} || '%'
-                            )
-                        </otherwise>
-                    </choose>
+                <if test="adminDTO.searchDeptno != null">
+                    AND e.emp_deptno = #{adminDTO.searchDeptno}
                 </if>
 
-                <if test="(adminDTO.searchType == null or adminDTO.searchType == '') and adminDTO.searchKeyword != null and adminDTO.searchKeyword != ''">
+                <if test="adminDTO.searchAuth != null">
+                    AND e.emp_auth = #{adminDTO.searchAuth}
+                </if>
+
+                <if test="adminDTO.searchStatus != null">
+                    AND e.emp_inoffice = #{adminDTO.searchStatus}
+                </if>
+
+                <if test="adminDTO.searchKeyword != null and adminDTO.searchKeyword != ''">
                     AND (
-                        UPPER(emp_id) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                        OR UPPER(emp_name) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                        OR TO_CHAR(emp_auth) LIKE '%' || #{adminDTO.searchKeyword} || '%'
+                        UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
+                        OR UPPER(e.emp_name) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
+                        OR UPPER(d.dname) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
                     )
                 </if>
 
-                ORDER BY emp_id DESC
+                ORDER BY e.emp_id DESC
             ) A
         )
         WHERE RN BETWEEN #{page.startRow}
