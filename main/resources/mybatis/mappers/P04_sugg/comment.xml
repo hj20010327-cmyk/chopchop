@@ -1,13 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.P04_comment">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.comment">
+
+    <!-- 댓글 목록 -->
+    <select id="selectCommentList"
+            parameterType="int"
+            resultType="kr.or.chop.P04_sugg.dto.CommentDTO">
+    SELECT
+        comm_no,
+        comm_sugg_no,
+        comm_parent,
+        comm_content,
+        comm_cdate,
+        comm_mdate,
+        comm_usage,
+        comm_writer,
+        comm_level
+    FROM sugg_comment
+    WHERE comm_sugg_no = #{comm_sugg_no}
+      AND comm_usage = 'Y'
+    START WITH comm_parent IS NULL
+    CONNECT BY PRIOR comm_no = comm_parent
+    ORDER SIBLINGS BY comm_cdate ASC
+
+</select>
 
 
+    <!-- 댓글 등록 -->
+    <insert id="insertComment"
+            parameterType="kr.or.chop.P04_sugg.dto.CommentDTO">
+
+        INSERT INTO sugg_comment (
+        comm_no,
+        comm_sugg_no,
+        comm_parent,
+        comm_content,
+        comm_cdate,
+        comm_usage,
+        comm_writer,
+        comm_level
+    )
+    VALUES (
+        COMM_SEQ.NEXTVAL,
+        #{comm_sugg_no},
+        #{comm_parent},
+        #{comm_content},
+        SYSDATE,
+        'Y',
+        #{comm_writer},
+        #{comm_level}
+    )
+
+
+    </insert>
+
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment"
+            parameterType="kr.or.chop.P04_sugg.dto.CommentDTO">
+
+        UPDATE sugg_comment
+        SET
+            comm_content = #{comm_content},
+            comm_mdate = SYSDATE
+        WHERE comm_no = #{comm_no}
+          AND comm_usage = 'Y'
+
+    </update>
+
+
+    <!-- 댓글 삭제 -->
+    <update id="deleteComment"
+            parameterType="int">
+
+        UPDATE sugg_comment
+        SET
+            comm_usage = 'N',
+            comm_mdate = SYSDATE
+        WHERE comm_no = #{comm_no}
+          AND comm_usage = 'Y'
+
+    </update>
 
 </mapper>
-
-
-
-

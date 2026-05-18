@@ -16,4 +16,10 @@ public class SuggDTO {
     private Date sugg_mdate; // 수정일
     private String sugg_usage; // 유효여부
     private String keyword;
+    private int sugg_view; // 조회수 
+    private int comment_count; // 댓글 수 
+    private String startDate; // 검색 시작일
+    private String endDate; // 검색 종료일
+    private String file_origin_name;
+    private String file_save_name;
 }

@@ -12,6 +12,7 @@ public class CommentDTO {
     private Date comm_cdate; // 작성일
     private Date comm_mdate; // 수정일
     private String comm_usage; // 유효여부 
-    private String emp_id; // FK
+    private String comm_writer; // FK
+    private int comm_level;
 
 }

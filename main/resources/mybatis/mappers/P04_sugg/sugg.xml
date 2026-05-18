@@ -27,6 +27,20 @@
 	            LIKE '%' || UPPER(#{keyword}) || '%'
 	    )
 	</if>
+	
+	<if test="startDate != null and startDate != ''">
+    <![CDATA[
+    AND sugg_cdate >= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+    ]]>
+	</if>
+
+	<if test="endDate != null and endDate != ''">
+	    <![CDATA[
+	    AND sugg_cdate < TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+	    ]]>
+	</if>
+	
+	
 
 </select>
 
@@ -43,34 +57,53 @@
         FROM
         (
             SELECT
-                sugg_no,
-                sugg_title,
-                sugg_content,
-                sugg_writer,
-                sugg_pw,
-                sugg_answer,
-                sugg_cdate,
-                sugg_mdate,
-                sugg_usage
-            FROM suggestion
-            WHERE sugg_usage = 'Y'
+                s.sugg_no,
+                s.sugg_title,
+                s.sugg_content,
+                s.sugg_writer,
+                s.sugg_pw,
+                s.sugg_answer,
+                s.sugg_cdate,
+                s.sugg_mdate,
+                s.sugg_usage,
+                s.file_origin_name,
+                s.file_save_name,
+                NVL((
+                    SELECT COUNT(*)
+                    FROM sugg_comment c
+                    WHERE c.comm_sugg_no = s.sugg_no
+                      AND c.comm_usage = 'Y'
+                ), 0) AS comment_count
+            FROM suggestion s
+            WHERE s.sugg_usage = 'Y'
             
-             <if test="search.sugg_answer != null and search.sugg_answer != ''">
-                AND sugg_answer = #{search.sugg_answer}
+            <if test="search.sugg_answer != null and search.sugg_answer != ''">
+                AND s.sugg_answer = #{search.sugg_answer}
             </if>
 
-	         <if test="search.keyword != null and search.keyword != ''">
-			    AND (
-			        UPPER(sugg_title)
-			            LIKE '%' || UPPER(#{search.keyword}) || '%'
-			        OR
-			        UPPER(sugg_writer)
-			            LIKE '%' || UPPER(#{search.keyword}) || '%'
-			    )
+            <if test="search.keyword != null and search.keyword != ''">
+                AND (
+                    UPPER(s.sugg_title)
+                        LIKE '%' || UPPER(#{search.keyword}) || '%'
+                    OR
+                    UPPER(s.sugg_writer)
+                        LIKE '%' || UPPER(#{search.keyword}) || '%'
+                )
+            </if>
+            
+			<if test="search.startDate != null and search.startDate != ''">
+			    <![CDATA[
+			    AND s.sugg_cdate >= TO_DATE(#{search.startDate}, 'YYYY-MM-DD')
+			    ]]>
+			</if>
+			
+			<if test="search.endDate != null and search.endDate != ''">
+			    <![CDATA[
+			    AND s.sugg_cdate < TO_DATE(#{search.endDate}, 'YYYY-MM-DD') + 1
+			    ]]>
 			</if>
             
-            
-            ORDER BY sugg_no asc
+            ORDER BY s.sugg_no ASC
         ) S
     )
     WHERE RN BETWEEN #{page.startRow}
@@ -91,16 +124,17 @@
         sugg_answer,
         sugg_cdate,
         sugg_mdate,
-        sugg_usage
+        sugg_usage,
+        file_origin_name,
+        file_save_name
     FROM suggestion
     WHERE sugg_no = #{sugg_no}
      AND sugg_usage = 'Y'
 </select>
 
-<insert id="insertSugg" 
-		parameterType="suggDTO">
-	
-	  INSERT INTO suggestion (
+<insert id="insertSugg" parameterType="suggDTO">
+
+    INSERT INTO suggestion (
         sugg_no,
         sugg_title,
         sugg_content,
@@ -108,32 +142,42 @@
         sugg_pw,
         sugg_answer,
         sugg_cdate,
-        sugg_usage
+        sugg_usage,
+        file_origin_name,
+        file_save_name
     )
     VALUES (
         SUGG_SEQ.NEXTVAL,
         #{sugg_title},
         #{sugg_content},
-        #{sugg_writer},
+        'EMP1001', 
         #{sugg_pw},
         'N',
         SYSDATE,
-        'Y'
+        'Y',
+        #{file_origin_name},
+        #{file_save_name}
     )
+
 </insert>
 
-<update id="updateSugg" 
-		parameterType="suggDTO">
-	
+<update id="updateSugg" parameterType="suggDTO">
+
     UPDATE suggestion
     SET
         sugg_title = #{sugg_title},
         sugg_content = #{sugg_content},
         sugg_pw = #{sugg_pw},
-        sugg_answer = #{sugg_answer},
+        
+        <if test="file_origin_name != null and file_origin_name != ''">
+            file_origin_name = #{file_origin_name},
+            file_save_name = #{file_save_name},
+        </if>
+        
         sugg_mdate = SYSDATE
     WHERE sugg_no = #{sugg_no}
-     AND sugg_usage = 'Y'
+      AND sugg_usage = 'Y'
+
 </update>
 
 <update id="deleteSugg" 

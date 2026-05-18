@@ -7,19 +7,18 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">건의사항 상세</h2>
-            <p class="page-subtitle">선택한 건의사항의 상세 정보를 확인하세요.</p>
         </div>
 
         <div>
-            <p class="page-route">홈 > 건의사항 관리 > 상세</p>
+            <p class="page-route">홈 > 건의사항 > 상세</p>
         </div>
     </div>
 
-    <div class="btn-row">
+    <div class="btn-row" style="margin-top:30px;">
         <div class="left">
             <a class="btn btn-white"
                href="${pageContext.request.contextPath}/sugg/list">
-                목록으로
+                목록
             </a>
         </div>
 
@@ -29,132 +28,299 @@
                 수정
             </a>
 
-           <form action="${pageContext.request.contextPath}/sugg/delete"
-		      method="post"
-		      style="display:inline;">
+            <form action="${pageContext.request.contextPath}/sugg/delete"
+                  method="post"
+                  style="display:inline;">
 
-		    <input type="hidden"
-		           name="sugg_no"
-		           value="${dto.sugg_no}">
-		
-		    <button type="submit"
-		            class="btn btn-red"
-		            onclick="return confirm('삭제하시겠습니까?');">
-		        삭제
-		    </button>
+                <input type="hidden"
+                       name="sugg_no"
+                       value="${dto.sugg_no}">
 
-			</form>
+                <button type="submit"
+                        class="btn btn-red"
+                        onclick="return confirm('삭제하시겠습니까?');">
+                    삭제
+                </button>
+
+            </form>
         </div>
     </div>
 
     <div class="content-content">
 
+        <!-- 상세 -->
         <div class="content-content-content">
-            <div class="content-content-content-title">
-                건의사항 기본정보
-            </div>
 
-            <div class="info-table-wrap">
-                <table class="info-table">
-                    <tbody>
-                        <tr>
-                            <th>건의사항 번호</th>
-                            <td>${dto.sugg_no}</td>
-                            <th>작성자</th>
-                            <td>${dto.sugg_writer}</td>
-                        </tr>
+            <div class="info-table-wrap"
+                 style="
+                    border:1px solid #d9d9d9;
+                    border-radius:4px;
+                    background:#fff;
+                    overflow:hidden;
+                    margin-top:10px;">
 
-                        <tr>
-                            <th>제목</th>
-                            <td colspan="3">${dto.sugg_title}</td>
-                        </tr>
+                <!-- 제목 -->
+                <div style="padding:24px 24px 14px;">
 
-                        <tr>
-                            <th>답변 여부</th>
-                            <td>${dto.sugg_answer}</td>
-                            <th>유효 여부</th>
-                            <td>${dto.sugg_usage}</td>
-                        </tr>
+                    <div style="
+                            display:flex;
+                            justify-content:space-between;
+                            align-items:flex-start;">
 
-                        <tr>
-                            <th>작성일</th>
-                            <td>${dto.sugg_cdate}</td>
-                            <th>수정일</th>
-                            <td>${dto.sugg_mdate}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        <div style="
+                                font-size:30px;
+                                font-weight:700;
+                                color:#222;">
+                            ${dto.sugg_title}
+                        </div>
 
-        <div class="content-content-content">
-            <div class="content-content-content-title">
-                건의 내용
-            </div>
+                        <div style="
+                                font-size:13px;
+                                margin-top:6px;">
 
-            <div class="info-table-wrap">
-                <table class="info-table">
-                    <tbody>
-                        <tr>
-                            <th>내용</th>
-                            <td style="white-space: pre-line;">
-                                ${dto.sugg_content}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                            <c:choose>
+                                <c:when test="${dto.sugg_answer eq 'Y'}">
+                                  <span style="color:var(--success);">• 답변완료</span>  
+                                </c:when>
+                                <c:otherwise>
+                                   <span style="color:var(--dark-gray);">• 답변대기</span>
+                                </c:otherwise>
+                            </c:choose>
 
-        <div class="content-content-content">
-            <div class="btn-row">
-                <div class="left content-content-content-title">
-                    댓글 목록
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="right">
-                    <a class="btn btn-main"
-                       href="${pageContext.request.contextPath}/sugg/comment/add?sugg_no=${dto.sugg_no}">
-                        댓글 등록
-                    </a>
+                <!-- 작성 정보 -->
+                <div style="
+                        border-top:1px solid #ddd;
+                        border-bottom:1px solid #ddd;
+                        padding:10px 24px;
+                        font-size:12px;
+                        color:#555;">
+
+                    <span style="margin-right:28px;">
+                        작성자 ${dto.sugg_writer}
+                    </span>
+
+                    <span style="margin-right:28px;">
+                        등록일 ${dto.sugg_cdate}
+                    </span>
+
+                    <span style="margin-right:28px;">
+                        조회수 ${dto.sugg_view}
+                    </span>
+
+                    <span style="float:right; cursor:pointer;">
+                        URL 복사
+                    </span>
+
                 </div>
+
+                <!-- 내용 -->
+                <div style="
+                        min-height:260px;
+                        padding:26px 24px;
+                        font-size:13px;
+                        line-height:1.8;
+                        white-space:pre-line;
+                        color:#333;">
+
+                    ${dto.sugg_content}
+
+                </div>
+                
+				<!-- 첨부파일 -->
+				<c:if test="${not empty dto.file_origin_name}">
+				    <div style="
+				            border-top:1px solid #ddd;
+				            padding:12px 24px;
+				            font-size:13px;
+				            color:#555;">
+				
+				        첨부파일 :
+				        <a href="${pageContext.request.contextPath}/resources/upload/sugg/${dto.file_save_name}"
+				           download="${dto.file_origin_name}">
+				            ${dto.file_origin_name}
+				        </a>
+				
+				    </div>
+				</c:if>
+                
+                
+
             </div>
 
+        </div>
+
+
+        <!-- 댓글 -->
+        <div class="content-content-content"
+             style="margin-top:24px;">
+
+            <div class="content-content-content-title"
+                 style="margin-bottom:14px;">
+                댓글 (${commList.size()})
+            </div>
+
+
+            <!-- 일반 댓글 입력 -->
+            <form action="${pageContext.request.contextPath}/sugg/comment/add"
+                  method="post"
+                  style="
+                        display:flex;
+                        gap:8px;
+                        margin-bottom:25px;">
+
+                <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
+                <input type="hidden" name="comm_parent" value="">
+                <input type="hidden" name="comm_level" value="0">
+                <input type="hidden" name="comm_writer" value="EMP1001">
+
+                <input type="text"
+                       name="comm_content"
+                       placeholder="댓글을 입력하세요."
+                       required
+                       style="
+                            flex:1;
+                            height:40px;
+                            border:1px solid #ddd;
+                            padding:0 14px;
+                            border-radius:2px;">
+
+                <button type="submit"
+                        class="btn btn-main">
+                    등록
+                </button>
+
+            </form>
+
+
+            <!-- 댓글 목록 -->
             <div class="table-wrap">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 120px">댓글 번호</th>
-                            <th>댓글 내용</th>
-                            <th style="width: 160px">작성자</th>
-                            <th style="width: 180px">작성일</th>
-                            <th style="width: 180px">수정일</th>
-                        </tr>
-                    </thead>
+
+                <table class="table"
+                       style="border:none;">
 
                     <tbody>
+
                         <c:forEach var="comm" items="${commList}">
+
                             <tr>
-                                <td>${comm.comm_no}</td>
-                                <td style="text-align: left;">
-                                    ${comm.comm_content}
+                                <td style="
+                                        border-left:none;
+                                        border-right:none;
+                                        padding:18px 12px;
+                                        text-align:left;
+                                        padding-left:${comm.comm_level * 35 + 12}px;">
+
+                                    <div style="
+                                            display:flex;
+                                            justify-content:space-between;
+                                            margin-bottom:8px;">
+
+                                        <strong>
+                                            <c:if test="${comm.comm_level > 0}">
+                                                ㄴ
+                                            </c:if>
+                                            ${comm.comm_writer}
+                                        </strong>
+
+                                        <span style="
+                                                font-size:13px;
+                                                color:#777;">
+                                            ${comm.comm_cdate}
+                                        </span>
+
+                                    </div>
+
+                                    <div style="
+                                            padding-left:8px;
+                                            line-height:1.7;">
+                                        ${comm.comm_content}
+                                    </div>
+
+
+                                    <!-- 대댓글 / 대대댓글 입력 -->
+                                    <c:if test="${comm.comm_level < 2}">
+
+                                        <form action="${pageContext.request.contextPath}/sugg/comment/add"
+                                              method="post"
+                                              style="
+                                                    display:flex;
+                                                    gap:8px;
+                                                    margin-top:10px;">
+
+                                            <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
+                                            <input type="hidden" name="comm_parent" value="${comm.comm_no}">
+                                            <input type="hidden" name="comm_level" value="${comm.comm_level + 1}">
+                                            <input type="hidden" name="comm_writer" value="EMP1001">
+
+                                            <input type="text"
+                                                   name="comm_content"
+                                                   placeholder="답글을 입력하세요."
+                                                   required
+                                                   style="
+                                                        flex:1;
+                                                        height:34px;
+                                                        border:1px solid #ddd;
+                                                        padding:0 10px;">
+
+                                            <button type="submit"
+                                                    class="btn btn-main">
+                                                작성
+                                            </button>
+
+                                        </form>
+
+                                    </c:if>
+
+
+                                    <!-- 댓글 삭제 -->
+                                    <div style="margin-top:10px; text-align:right;">
+
+                                        <form action="${pageContext.request.contextPath}/sugg/comment/delete"
+                                              method="post"
+                                              style="display:inline;">
+
+                                            <input type="hidden" name="comm_no" value="${comm.comm_no}">
+                                            <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
+
+                                            <button type="submit"
+                                                    class="btn btn-red"
+                                                    onclick="return confirm('댓글을 삭제하시겠습니까?');">
+                                                삭제
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
                                 </td>
-                                <td>${comm.comm_writer}</td>
-                                <td>${comm.comm_cdate}</td>
-                                <td>${comm.comm_mdate}</td>
                             </tr>
+
                         </c:forEach>
+
 
                         <c:if test="${empty commList}">
                             <tr>
-                                <td colspan="5" style="text-align: center;">
+                                <td style="
+                                        text-align:center;
+                                        padding:35px;
+                                        color:#999;">
                                     등록된 댓글이 없습니다.
                                 </td>
                             </tr>
                         </c:if>
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
 
     </div>
