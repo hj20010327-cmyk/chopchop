@@ -11,8 +11,12 @@ public class BOMDTO {
 	private String bomContent;
 	private String bomUsage;
 
+	private String itemId;
 	private String itemName;
-	private String itemType;
+	private int itemType;
+	private int itemPrice;
+	private String itemSpec;
+	private String itemUnit;
 
 	private String searchType;
 	private String searchKeyword;

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P13_bom">
+
+    <select id="selectBomCount"
+            parameterType="bomDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM bom b
+        LEFT JOIN item i
+            ON b.bom_item = i.item_id
+        WHERE b.bom_usage = 'Y'
+
+        <if test="searchType != null and searchType != ''">
+            AND i.item_type = #{searchType}
+        </if>
+
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (
+                UPPER(b.bom_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                OR UPPER(b.bom_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                OR UPPER(i.item_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                OR UPPER(i.item_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+            )
+        </if>
+
+    </select>
+
+
+    <select id="selectBomList"
+            parameterType="map"
+            resultType="bomDTO">
+
+        SELECT *
+        FROM
+        (
+            SELECT ROWNUM RN, A.*
+            FROM
+            (
+                SELECT
+                    b.bom_id AS bomId,
+                    b.bom_item AS bomItem,
+                    b.bom_name AS bomName,
+                    b.bom_content AS bomContent,
+                    b.bom_usage AS bomUsage,
+
+                    i.item_id AS itemId,
+                    i.item_name AS itemName,
+                    i.item_type AS itemType
+
+                FROM bom b
+                LEFT JOIN item i
+                    ON b.bom_item = i.item_id
+
+                WHERE b.bom_usage = 'Y'
+
+                <if test="bomDTO.searchType != null and bomDTO.searchType != ''">
+                    AND i.item_type = #{bomDTO.searchType}
+                </if>
+
+                <if test="bomDTO.searchKeyword != null and bomDTO.searchKeyword != ''">
+                    AND (
+                        UPPER(b.bom_id) LIKE '%' || UPPER(#{bomDTO.searchKeyword}) || '%'
+                        OR UPPER(b.bom_name) LIKE '%' || UPPER(#{bomDTO.searchKeyword}) || '%'
+                        OR UPPER(i.item_id) LIKE '%' || UPPER(#{bomDTO.searchKeyword}) || '%'
+                        OR UPPER(i.item_name) LIKE '%' || UPPER(#{bomDTO.searchKeyword}) || '%'
+                    )
+                </if>
+
+                ORDER BY b.bom_id DESC
+
+            ) A
+        )
+        WHERE RN BETWEEN #{page.startRow}
+        AND #{page.endRow}
+
+    </select>
+    
+    <select id="selectBomDetail"
+	        parameterType="string"
+	        resultType="bomDTO">
+	
+	    SELECT
+	        b.bom_id AS bomId,
+	        b.bom_item AS bomItem,
+	        b.bom_name AS bomName,
+	        b.bom_content AS bomContent,
+	        b.bom_usage AS bomUsage,
+	
+	        i.item_id AS itemId,
+	        i.item_name AS itemName,
+	        i.item_type AS itemType
+	
+	    FROM bom b
+	    LEFT JOIN item i
+	        ON b.bom_item = i.item_id
+	
+	    WHERE b.bom_id = #{bomId}
+	
+	</select>
+	
+	
+	<select id="selectBomDetailList"
+	        parameterType="string"
+	        resultType="bomDetailDTO">
+	
+	    SELECT
+	        bd.bom_dtl_id AS bomDtlId,
+	        bd.bom_dtl_bom AS bomDtlBom,
+	        bd.bom_dtl_item AS bomDtlItem,
+	        bd.bom_dtl_qty AS bomDtlQty,
+	        bd.bom_dtl_usage AS bomDtlUsage,
+	
+	        i.item_name AS itemName,
+	        i.item_type AS itemType
+	
+	    FROM bom_detail bd
+	    LEFT JOIN item i
+	        ON bd.bom_dtl_item = i.item_id
+	
+	    WHERE bd.bom_dtl_bom = #{bomId}
+	    AND bd.bom_dtl_usage = 'Y'
+	
+	    ORDER BY bd.bom_dtl_id
+	
+	</select>
+	
+	<insert id="insertBom"
+	        parameterType="bomDTO">
+	
+	    INSERT INTO bom
+	    (
+	        bom_id,
+	        bom_item,
+	        bom_name,
+	        bom_content,
+	        bom_usage
+	    )
+	    VALUES
+	    (
+	        'BOM' || SEQ_BOM.NEXTVAL,
+	        #{bomItem},
+	        #{bomName},
+	        #{bomContent},
+	        'Y'
+	    )
+	
+	</insert>
+	
+	<select id="selectFinishItemList"
+	        resultType="bomDTO">
+	
+	    SELECT
+	        item_id AS itemId,
+	        item_name AS itemName,
+	        item_type AS itemType,
+	        item_unit AS itemUnit,
+	        item_spec AS itemSpec,
+	        item_unit_price AS itemPrice
+	
+	    FROM item
+	
+	    WHERE item_usage = 'Y'
+	    AND item_type = 30
+	
+	    ORDER BY item_id
+	
+	</select>
+	
+	
+	<select id="selectMaterialItemList"
+	        resultType="bomDTO">
+	
+	    SELECT
+	        item_id AS itemId,
+	        item_name AS itemName,
+	        item_type AS itemType,
+	        item_unit AS itemUnit,
+	        item_spec AS itemSpec,
+	        item_unit_price AS itemPrice
+	
+	    FROM item
+	
+	    WHERE item_usage = 'Y'
+	    AND item_type IN (10, 20)
+	
+	    ORDER BY item_id
+	
+	</select>
+	
+	<insert id="insertBom"
+	        parameterType="bomDTO">
+	
+	    <selectKey
+	            keyProperty="bomId"
+	            resultType="string"
+	            order="BEFORE">
+	
+	        SELECT
+	            'BOM' || SEQ_BOM.NEXTVAL
+	        FROM dual
+	
+	    </selectKey>
+	
+	    INSERT INTO bom
+	    (
+	        bom_id,
+	        bom_item,
+	        bom_name,
+	        bom_content,
+	        bom_usage
+	    )
+	    VALUES
+	    (
+	        #{bomId},
+	        #{bomItem},
+	        #{bomName},
+	        #{bomContent},
+	        'Y'
+	    )
+	
+	</insert>
+	
+	<insert id="insertBomDetail"
+	        parameterType="bomDetailDTO">
+	
+	    INSERT INTO bom_detail
+	    (
+	        bom_dtl_id,
+	        bom_dtl_bom,
+	        bom_dtl_item,
+	        bom_dtl_qty,
+	        bom_dtl_usage
+	    )
+	    VALUES
+	    (
+	        'BD' || SEQ_BOM_DETAIL.NEXTVAL,
+	        #{bomDtlBom},
+	        #{bomDtlItem},
+	        #{bomDtlQty},
+	        'Y'
+	    )
+	
+	</insert>
+
+</mapper>
