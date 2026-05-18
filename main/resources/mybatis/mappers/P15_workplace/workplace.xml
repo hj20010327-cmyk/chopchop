@@ -139,7 +139,7 @@
 		FROM ghp_log glog
 			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
 			LEFT OUTER JOIN EMP E ON glog.GLOG_WORKER = E.EMP_ID
-		WHERE upper(glog.glog_wpid) = upper(#{wpId})
+		WHERE glog.glog_usage = 'Y' and upper(glog.glog_wpid) = upper(#{wpId})
 	</select>
 	
 	<insert id="insertWP" parameterType="wpDTO">

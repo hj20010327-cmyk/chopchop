@@ -20,6 +20,8 @@
           enctype="multipart/form-data"
           class="grid-form">
 		
+		<input type="hidden" name="glogId" value="${glog.glogId}">
+			
 		<div class="btn-row">
 			<div class="left"></div>
 			<div class="right">
@@ -29,7 +31,7 @@
 	            </a>
 	
 	            <button type="submit" class="btn btn-main">
-	                등록
+	                수정
 	            </button>
 			</div>
 		</div>
@@ -39,10 +41,10 @@
 				<label>점검 결과 <span class="red">*</span></label>
 				<div style="display: flex; justify-content: flex-start; gap: 20px; font-size: 14px;">
 					<div style="display: flex; align-items: center; gap: 7px;">
-						<input type="radio" name="glogResult" value="pass" checked> 적합
+						<input type="radio" name="glogResult" value="pass" ${glog.glogResult == 'pass' ? 'checked' : ''}> 적합
 					</div>
 					<div style="display: flex; align-items: center; gap: 7px;">
-						<input type="radio" name="glogResult" value="fail"> 부적합
+						<input type="radio" name="glogResult" value="fail" ${glog.glogResult == 'fail' ? 'checked' : ''}> 부적합
 					</div>
 				</div>
 			</div>
@@ -81,12 +83,12 @@
 		<div class="grid-wrap">
 			<div class="grid search-item">
 				<label>최솟값</label>
-				<input type="text" id="ghpMinValue" placeholder="최솟값 기준 없음" readonly>
+				<input type="text" id="ghpMinValue" value="${glog.ghpMinValue}" placeholder="최솟값 기준 없음" readonly>
 			</div>
 			
 			<div class="grid search-item">
 				<label>최댓값</label>
-				<input type="text" id="ghpMaxValue" placeholder="최댓값 기준 없음" readonly>
+				<input type="text" id="ghpMaxValue" value="${glog.ghpMaxValue}" placeholder="최댓값 기준 없음" readonly>
 			</div>
 		</div>
 		
@@ -117,7 +119,7 @@
 		<div class="grid-wrap">
 			<div class="grid search-item" style="width: 90%;">
 				<label>비고 </label>
-				<textarea name="glogMemo" id="glogMemo" value="${glog.glogMemo}" placeholder="특이사항 입력 (선택)" style="height: 200px;"></textarea>
+				<textarea name="glogMemo" id="glogMemo" placeholder="특이사항 입력 (선택)" style="height: 200px;">${glog.glogMemo}</textarea>
 			</div>
 		</div>
 		
@@ -126,22 +128,24 @@
 	   			점검 결과 이미지 (선택)
 	   		</label>
 	   		<div style="display: flex; gap: 15px;">
+	   			<input type="hidden" name="delImg" id="delImg" value="N">
 				<input type="file" name="ghpImgFile" id="ghpImgFile" accept="image/*" style="display: none;">
-				<input type="text" id="fileName" placeholder="선택된 파일 없음" readonly>
+				<input type="text" id="fileName" value="${glog.glogImg}" placeholder="선택된 파일 없음" readonly>
 				<div style="display: flex; gap: 10px;">
 					<label type="button" class="btn btn-main" for="ghpImgFile"
 							style="color: white; font-size: 14px;">이미지 선택</label>
-					<button type="button" class="btn btn-red" id="delImgBtn" onclick="delImg()">삭제</button>
+					<button type="button" class="btn btn-red" id="delImgBtn" onclick="delImgFn()">삭제</button>
 				</div>
 	   		</div>
 			
-			<div id="imgPreviewBox" style="display: none;">
-		        <img id="previewImg" src="" alt="이미지 미리보기"
-		        >
+			<div id="imgPreviewBox"
+				style="${not empty glog.glogImg or glog.glogImg != null ? 'display:block;' : 'display:none;'}">
+		        <img id="previewImg" src="${glog.glogImg}" alt="이미지 미리보기"
+		        	style="${not empty glog.glogImg or glog.glogImg != null ? 'display:block;' : 'display:none;'}">
 			</div>
 			
 			<div id="noImg"
-			     style="font-size:12px; display: block; margin-top: 8px;">
+			     style="font-size:12px; ${not empty glog.glogImg or glog.glogImg != null ? 'display:none;' : 'display:block;'}">
 			    등록된 사진 없음
 			</div>
 		</div>
@@ -151,8 +155,8 @@
 			<div class="grid search-item">
 				<label>조치 일시 (선택)</label>
 				<div style="display: flex; gap: 10px;">
-					<input type="date" name="glogAday" id="ghpAday">
-					<input type="time" name="glogAtime" id="ghpAtime">
+					<input type="date" name="glogAday" id="glogAday" value="${glog.glogAday}">
+					<input type="time" name="glogAtime" id="glogAtime" value="${glog.glogAtime}">
 				</div>
 			</div>			
 		</div>
@@ -160,7 +164,7 @@
 		<div class="grid-wrap">
 			<div class="grid search-item" style="width: 90%;">
 				<label>조치 내용 </label>
-				<textarea name="glogAction" id="glogAction" placeholder="조치 내용 입력 (선택)" style="height: 200px;"></textarea>
+				<textarea name="glogAction" id="glogAction" placeholder="조치 내용 입력 (선택)" style="height: 200px;">${glog.glogAction}</textarea>
 			</div>
 		</div>
 
@@ -222,6 +226,7 @@
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
 		const noImg = document.querySelector("#noImg");
 		const fileName = document.querySelector("#fileName");
+		const delImg = document.querySelector("#delImg");
 
 		ghpImgFile.addEventListener("change", function () {
 		    const file = this.files[0];
@@ -243,6 +248,8 @@
 		        noImg.style.display = "block";
 		        return;
 		    }
+		    
+		    delImg.value = "N";
 
 		    const reader = new FileReader();
 
@@ -258,17 +265,21 @@
 		});
 	}
 	
-	function delImg() {
+	function delImgFn() {
 		const ghpImgFile = document.querySelector("#ghpImgFile");
 		const previewImg = document.querySelector("#previewImg");
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
 		const noImg = document.querySelector("#noImg");
+		const fileName = document.querySelector("#fileName");
+		const delImg = document.querySelector("#delImg");
 		
 		previewImg.src = "";
 		previewImg.style.display = "none";
 		imgPreviewBox.style.display = "none";
 		ghpImgFile.value = "";
 		noImg.style.display = "block";
+		fileName.value = "";
+		delImg.value = "Y";
 	}
 	
 	function fillGhp() {

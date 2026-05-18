@@ -17,5 +17,7 @@ public interface GlogDAO {
 	public GlogDTO selectGlog (GlogDTO glogDTO);
 	
 	public int deleteGlog (GlogDTO glogDTO);
+	
+	public int updateGlog (GlogDTO glogDTO);
 
 }

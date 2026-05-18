@@ -35,8 +35,20 @@
 	
 	<div class="content-content">
 		<div class="content-content-content">
-			<div class="content-content-content-title">
-				위생점검 결과 상세정보
+			<div style="display: flex; justify-content: space-between; align-items: flex-end;">
+				<div class="content-content-content-title">
+					위생점검 결과 상세정보
+				</div>
+				<c:if test="${glog.glogResult == 'pass'}">
+					<div class="status-back status-back-success">
+						• 적합
+					</div>
+				</c:if>
+				<c:if test="${glog.glogResult == 'fail'}">
+					<div class="status-back status-back-danger">
+						• 부적합
+					</div>
+				</c:if>
 			</div>
 			<div class="info-table-wrap">
 				<table class="info-table">

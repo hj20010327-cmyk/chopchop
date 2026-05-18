@@ -96,20 +96,14 @@ public class GlogAddController {
 //		}
 		
 		// 점검 일시
-	    if (glogDTO.getGlogDay() != null && !glogDTO.getGlogDay().isEmpty()
-	            && glogDTO.getGlogTime() != null && !glogDTO.getGlogTime().isEmpty()) {
+		glogDTO.setGlogDate(
+		    toTimestamp(glogDTO.getGlogDay(), glogDTO.getGlogTime())
+		);
 
-	        String dateTime = glogDTO.getGlogDay() + " " + glogDTO.getGlogTime() + ":00";
-	        glogDTO.setGlogDate(Timestamp.valueOf(dateTime));
-	    }
-
-	    // 조치 일시
-	    if (glogDTO.getGlogAday() != null && !glogDTO.getGlogAday().isEmpty()
-	            && glogDTO.getGlogAtime() != null && !glogDTO.getGlogAtime().isEmpty()) {
-
-	        String adateTime = glogDTO.getGlogAday() + " " + glogDTO.getGlogAtime() + ":00";
-	        glogDTO.setGlogAdate(Timestamp.valueOf(adateTime));
-	    }
+		// 조치 일시
+		glogDTO.setGlogAdate(
+		    toTimestamp(glogDTO.getGlogAday(), glogDTO.getGlogAtime())
+		);
 		
 		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/img/P15_workplace/glog");
 		String contextPath = request.getContextPath();
@@ -117,6 +111,24 @@ public class GlogAddController {
 		glogService.insertGlog(glogDTO, ghpImgFile, uploadPath, contextPath);
 		
 		return "redirect:/workplace/detail?wpId=" + glogDTO.getGlogWpId();
+	}
+	
+	private Timestamp toTimestamp(String day, String time) {
+	    if (day == null || day.isEmpty() || time == null || time.isEmpty()) {
+	        return null;
+	    }
+
+	    // 0:00 -> 00:00
+	    if (time.length() == 4) {
+	        time = "0" + time;
+	    }
+
+	    // 00:00:00 -> 00:00
+	    if (time.length() >= 5) {
+	        time = time.substring(0, 5);
+	    }
+
+	    return Timestamp.valueOf(day + " " + time + ":00");
 	}
 
 }

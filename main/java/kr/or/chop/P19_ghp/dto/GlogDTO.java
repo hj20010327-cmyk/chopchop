@@ -45,4 +45,6 @@ public class GlogDTO {
 	private Integer ghpMaxValue;
 	private String ghpUnit;
 	
+	private String delImg;
+	
 }

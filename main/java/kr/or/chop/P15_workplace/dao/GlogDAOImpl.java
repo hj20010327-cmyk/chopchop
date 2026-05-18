@@ -58,4 +58,10 @@ public class GlogDAOImpl implements GlogDAO {
 		return sqlSession.update("mapper.P15_workplace.glog.deleteGlog", glogDTO);
 	}
 
+	@Override
+	public int updateGlog(GlogDTO glogDTO) {
+		System.out.println("/workplace/glog/edit dao.updateGlog");
+		return sqlSession.update("mapper.P15_workplace.glog.updateGlog", glogDTO);
+	}
+
 }

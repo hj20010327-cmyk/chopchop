@@ -173,12 +173,15 @@
 		const previewImg = document.querySelector("#previewImg");
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
 		const noImg = document.querySelector("#noImg");
+		const fileName = document.querySelector("#fileName");
 		
 		previewImg.src = "";
 		previewImg.style.display = "none";
 		imgPreviewBox.style.display = "none";
 		wpImgFile.value = "";
 		noImg.style.display = "block";
+		fileName.value = "";
+		delImg.value = "Y";
 	}
 
 </script>

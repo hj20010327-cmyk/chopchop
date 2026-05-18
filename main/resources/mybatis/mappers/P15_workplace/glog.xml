@@ -121,6 +121,18 @@
 		SET GLOG_USAGE = 'N'
 		WHERE upper(GLOG_ID) = upper(#{glogId})
 	</update>
+	
+	<update id="updateGlog" parameterType="glogDTO">
+		UPDATE GHP_LOG
+		SET
+			GLOG_DATE = #{glogDate},
+			GLOG_VALUE = #{glogValue},
+			GLOG_RESULT = #{glogResult},
+			GLOG_ACTION = #{glogAction},
+			GLOG_ADATE = #{glogAdate},
+			GLOG_MEMO = #{glogMemo}
+		WHERE GLOG_ID = #{glogId}
+	</update>
 
 </mapper>
 

@@ -15,6 +15,7 @@ public interface GlogService {
 	public GhpDTO selectGhp (GhpDTO ghpDTO);
 	
 	public void insertGlog (GlogDTO glogDTO, MultipartFile ghpImgFile, String uploadPath, String contextPath) throws IllegalStateException, IOException;
+	public void updateGlog (GlogDTO glogDTO, MultipartFile ghpImgFile, String uploadPath, String contextPath) throws IllegalStateException, IOException;
 	
 	public GlogDTO selectGlog (GlogDTO glogDTO);
 

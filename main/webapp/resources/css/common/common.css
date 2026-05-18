@@ -331,6 +331,36 @@ textarea:focus {
 }
 
 
+
+.status-back {
+	font-size: 12px;
+	padding: 5px 10px;
+	border-radius: 37px;
+	
+	background-color: var(--light-gray);
+}
+
+.status-back-success {
+	color: var(--success);
+	background-color: var(--success-back);
+}
+
+.status-back-warning {
+	color: var(--warning);
+	background-color: var(--warning-back);
+}
+
+.status-back-danger {
+	color: var(--danger);
+	background-color: var(--danger-back);
+}
+
+.status-back-info {
+	color: var(--info);
+	background-color: var(--info-back);
+}
+
+
 /* ==============================
    TABLE
 ============================== */
