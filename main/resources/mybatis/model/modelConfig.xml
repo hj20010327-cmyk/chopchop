@@ -30,7 +30,7 @@
 <!-- 		<typeAlias type="kr.or.chop.P16_equipment.dto.EquipDTO" alias="equipDTO" /> -->
 		<typeAlias type="kr.or.chop.P17_vendor.dto.VendorDTO" alias="vendorDTO" />
 		<typeAlias type="kr.or.chop.P18_defect.dto.DefDTO" alias="defDTO" />
-<!-- 		<typeAlias type="kr.or.chop.P19_ghp.dto.GHPDTO" alias="ghpDTO" /> -->
+		<typeAlias type="kr.or.chop.P19_ghp.dto.GHPDTO" alias="ghpDTO" />
 		<typeAlias type="kr.or.chop.P19_ghp.dto.GlogDTO" alias="glogDTO" />
     </typeAliases>
 
