@@ -129,28 +129,6 @@
 	
 	</select>
 	
-	<insert id="insertBom"
-	        parameterType="bomDTO">
-	
-	    INSERT INTO bom
-	    (
-	        bom_id,
-	        bom_item,
-	        bom_name,
-	        bom_content,
-	        bom_usage
-	    )
-	    VALUES
-	    (
-	        'BOM' || SEQ_BOM.NEXTVAL,
-	        #{bomItem},
-	        #{bomName},
-	        #{bomContent},
-	        'Y'
-	    )
-	
-	</insert>
-	
 	<select id="selectFinishItemList"
 	        resultType="bomDTO">
 	
