@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.P15_workplace.glog">
+
+	<select id="selectAllGhp" parameterType="wpDTO" resultType="GhpDTO">
+		SELECT
+			GHP_ID ghpId,
+			GHP_NAME ghpName,
+			GHP_CATEGORY ghpCategory,
+			GHP_STANDARD ghpStandard,
+			GHP_CHECK_METHOD ghpCheckMethod,
+			GHP_CYCLE ghpCycle,
+			GHP_WH_TYPE ghpWhType,
+			GHP_WP_TYPE ghpWpType,
+			GHP_MIN_VALUE ghpMinValue,
+			GHP_MAX_VALUE ghpMaxValue,
+			GHP_UNIT ghpUnit
+		FROM GHP
+		WHERE GHP_USAGE = 'Y' AND GHP_WP_TYPE = #{wpTypeNo}
+		ORDER BY GHP_ID
+	</select>
+	
+	<select id="selectGhp" parameterType="ghpDTO" resultType="GhpDTO">
+		SELECT
+			GHP_ID ghpId,
+			GHP_NAME ghpName,
+			GHP_CATEGORY ghpCategory,
+			GHP_STANDARD ghpStandard,
+			GHP_CHECK_METHOD ghpCheckMethod,
+			GHP_CYCLE ghpCycle,
+			GHP_WH_TYPE ghpWhType,
+			GHP_WP_TYPE ghpWpType,
+			GHP_MIN_VALUE ghpMinValue,
+			GHP_MAX_VALUE ghpMaxValue,
+			GHP_UNIT ghpUnit
+		FROM GHP
+		WHERE GHP_USAGE = 'Y' AND GHP_ID = #{ghpId}
+	</select>
+	
+	<insert id="insertGlog" parameterType="glogDTO">
+		<selectKey keyProperty="glogId" resultType="string" order="BEFORE">
+	        SELECT 'GLOG' || GLOG_SEQ.NEXTVAL
+	        FROM DUAL
+	    </selectKey>
+	
+		INSERT INTO GHP_LOG (
+			GLOG_ID,
+			GLOG_GHP,
+			GLOG_DATE,
+			GLOG_WORKER,
+			GLOG_VALUE,
+			GLOG_RESULT,
+			GLOG_ACTION,
+			GLOG_ADATE,
+			GLOG_IMG,
+			GLOG_MEMO,
+			GLOG_CDATE,
+			GLOG_WHID,
+			GLOG_WPID)
+		VALUES (
+			#{glogId},
+			#{ghpId},
+			#{glogDate},
+			#{glogWorker},
+			#{glogValue},
+			#{glogResult},
+			#{glogAction},
+			#{glogAdate},
+			null ,
+			#{glogMemo},
+			sysdate,
+			#{glogWhId},
+			#{glogWpId}
+		)
+	</insert>
+	
+	<update id="updateGhpImg" parameterType="glogDTO">
+		UPDATE GHP_LOG
+		SET GLOG_IMG = #{glogImg}
+		WHERE upper(GLOG_ID) = upper(#{glogId})
+	</update>
+	
+	<select id="selectGlog" parameterType="glogDTO" resultType="glogDTO">
+		SELECT
+			glog.glog_id glogId,
+			glog.glog_date glogDate,
+			glog.glog_worker glogWorker,
+			E.emp_name glogWName,
+			glog.glog_value glogValue,
+			glog.glog_result glogResult,
+			glog.glog_action glogAction,
+			glog.glog_adate glogAdate,
+			glog.glog_img glogImg,
+			glog.glog_memo glogMemo,
+			glog.glog_cdate glogCdate,
+			glog.glog_whid glogWhId,
+			glog.glog_wpid glogWpId,
+			wp.wp_name glogWpName,
+			ghp.ghp_id ghpId,
+			ghp.ghp_name ghpName,
+			ghp.ghp_category ghpCategory,
+			ghp.ghp_standard ghpStandard,
+			ghp.ghp_check_method ghpCheckMethod,
+			ghp.ghp_cycle ghpCycle,
+			ghp.ghp_wh_type ghpWhType,
+			ghp.ghp_wp_type ghpWpType,
+			ghp.GHP_MIN_VALUE ghpMinValue,
+			ghp.GHP_MAX_VALUE ghpMaxValue,
+			ghp.ghp_unit ghpUnit
+		FROM ghp_log glog
+			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
+			LEFT OUTER JOIN EMP E ON glog.GLOG_WORKER = E.EMP_ID
+			LEFT OUTER JOIN WORKPLACE wp ON wp.wp_id = glog.glog_wpid
+		WHERE upper(glog.glog_id) = upper(#{glogId})
+	</select>
+	
+	<update id="deleteGlog" parameterType="glogDTO">
+		UPDATE GHP_LOG
+		SET GLOG_USAGE = 'N'
+		WHERE upper(GLOG_ID) = upper(#{glogId})
+	</update>
+
+</mapper>
+
+
+
+

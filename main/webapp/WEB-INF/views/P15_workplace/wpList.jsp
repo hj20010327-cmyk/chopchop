@@ -98,7 +98,7 @@
 						<th style="width: 130px;">작업장 번호</th>
 						<th style="width: 200px;">작업장명</th>
 						<th style="width: 100px;">유형</th>
-						<th style="width: 130px;">관리 기준</th>
+						<th style="width: 200px;">마지막 점검일</th>
 						<th style="width: 300px;">설명</th>
 					</tr>
 				</thead>
@@ -108,7 +108,7 @@
 							<td class="wpId">${wp.wpId}</td>
 							<td>${wp.wpName}</td>
 							<td>${wp.wpType}</td>
-							<td>${wp.ghpId}</td>
+							<td>${wp.lastGlogDate}</td>
 							<td>${wp.wpTypeContent}</td>
 						</tr>	
 					</c:forEach>

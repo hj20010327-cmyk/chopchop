@@ -50,11 +50,11 @@
 						<tr>
 							<th>작업장 유형</th>
 							<td>${wpDTO.wpType}</td>
-							<th>관리 기준</th>
-							<c:if test="${not empty wpDTO.ghpId}">
-								<td>${wpDTO.ghpName} (${wpDTO.ghpId})</td>
+							<th>마지막 점검일</th>
+							<c:if test="${not empty wpDTO.lastGlogDate}">
+								<td>${wpDTO.lastGlogDate}</td>
 							</c:if>
-							<c:if test="${empty wpDTO.ghpId}">
+							<c:if test="${empty wpDTO.lastGlogDate}">
 								<td>-</td>
 							</c:if>
 						</tr>
@@ -97,9 +97,9 @@
 					<thead>
 						<tr>
 							<th style="width: 150px">점검 이력 번호</th>
-							<th style="width: 210px">점검자</th>
-							<th style="width: 100px">측정값</th>
-							<th style="width: 150px">점검 결과</th>
+							<th style="width: 180px">점검자</th>
+							<th style="width: 250px">점검 기준</th>
+							<th style="width: 120px">점검 결과</th>
 							<th style="width: 230px">점검 일시</th>
 						</tr>
 					</thead>
@@ -107,9 +107,17 @@
 						<c:forEach var="glog" items="${glogList}">
 							<tr class="glogList">
 								<td class="glogId">${glog.glogId}</td>
-								<td>${glog.glogWorker}</td>
-								<td>${glog.glogValue}</td>
-								<td>${glog.glogResult}</td>
+								<td>${glog.glogWName} (${glog.glogWorker})</td>
+								<td>${glog.ghpName} (${glog.ghpId})</td>
+								<c:if test="${glog.glogResult eq 'pass'}">
+									<td>적합</td>
+								</c:if>
+								<c:if test="${glog.glogResult eq 'fail'}">
+									<td>부적합</td>
+								</c:if>
+								<c:if test="${glog.glogResult != 'fail' && glog.glogResult != 'pass'}">
+									<td>-</td>
+								</c:if>
 								<td>${glog.glogDate}</td>
 							</tr>	
 						</c:forEach>
@@ -137,3 +145,36 @@
 	    text-decoration: underline;
 	}
 </style>
+
+<script>
+	
+	window.addEventListener ("load", () => {
+		init();
+	})
+	
+	function init() {
+		bind();
+	}
+	
+	function bind() {
+		moveGlog();
+	}
+	
+	function moveGlog() {
+		const glogLists = document.querySelectorAll(".glogList");
+		
+		for (let i=0; i<glogLists.length; i++) {
+			
+			glogLists[i].addEventListener("click", () => {
+				const glogId = glogLists[i].querySelector(".glogId").textContent.trim();
+				console.log ("glogId : " + glogId);
+				
+				const url = `${pageContext.request.contextPath}/workplace/glog/detail?glogId=` + glogId;
+				console.log ("url : " + url);
+				
+				window.location.href = url;
+			})
+		}
+	}
+	
+</script>

@@ -1,6 +1,6 @@
 package kr.or.chop.P19_ghp.dto;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.Data;
 
@@ -9,26 +9,29 @@ public class GlogDTO {
 	
 	private String glogId;
 	
-	private Date glogDate;
+	private Timestamp glogDate;
 	private String glogDay;
 	private String glogTime;
 	
 	private String glogWorker;
+	private String glogWName;
 	private int glogValue = -9999;
 	private String glogResult;
 	
 	private	String glogAction;
-	private Date glogAdate;
+	private Timestamp glogAdate;
 	private String glogAday;
 	private String glogAtime;
 	
 	private String glogImg;
 	private String glogMemo;
 	
-	private Date glogCdate;
+	private Timestamp glogCdate;
 	
 	private String glogWhId;
+	private String glogWhName;
 	private String glogWpId;
+	private String glogWpName;
 	
 	private String ghpId;
 	private String ghpName;
@@ -36,10 +39,10 @@ public class GlogDTO {
 	private String ghpStandard;
 	private String ghpCheckMethod;
 	private String ghpCycle;
-	private int ghpWhType;
-	private int  ghpWpType;
+	private Integer ghpWhType;
+	private Integer  ghpWpType;
 	private Integer ghpMinValue;
-	private Integer ghpMaxvalue;
+	private Integer ghpMaxValue;
 	private String ghpUnit;
 	
 }

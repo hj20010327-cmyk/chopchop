@@ -37,9 +37,24 @@
 						wp.wp_img as wpImg,
 <!-- 						ghp.ghp_id AS ghpId, -->
 <!-- 						ghp.GHP_NAME AS ghpName, -->
-						wt.wp_type_content as wpTypeContent
+						wt.wp_type_content as wpTypeContent,
+						glog.glog_date lastGlogDate
 					FROM workplace wp
 						LEFT OUTER JOIN wp_type wt ON wp.wp_type = wt.wp_type_no
+						LEFT OUTER JOIN (
+							SELECT *
+							FROM (
+								SELECT 
+									glog.*,
+									ROW_NUMBER() OVER (
+										PARTITION BY glog.glog_wpid
+										ORDER BY glog.glog_date desc
+									) AS rn
+								FROM ghp_log glog
+							)
+							WHERE rn = 1
+						) glog 
+							ON wp.wp_id = glog.glog_wpid
 <!-- 						LEFT OUTER JOIN ghp_log glog on wp.wp_id = glog.glog_wpid -->
 <!-- 						LEFT OUTER JOIN ghp ghp ON wp.wp_id = ghp.GHP_WPID -->
 					WHERE wp_usage = 'Y'
@@ -67,9 +82,24 @@
 			wp.wp_img as wpImg,
 <!-- 			ghp.ghp_id AS ghpId, -->
 <!-- 			ghp.GHP_NAME AS ghpName, -->
-			wt.wp_type_content as wpTypeContent
+			wt.wp_type_content as wpTypeContent,
+			glog.glog_date as lastGlogDate
 		FROM workplace wp
 			LEFT OUTER JOIN wp_type wt ON wp.wp_type = wt.wp_type_no
+			LEFT OUTER JOIN (
+							SELECT *
+							FROM (
+								SELECT 
+									glog.*,
+									ROW_NUMBER() OVER (
+										PARTITION BY glog.glog_wpid
+										ORDER BY glog.glog_date desc
+									) AS rn
+								FROM ghp_log glog
+							)
+							WHERE rn = 1
+						) glog 
+							ON wp.wp_id = glog.glog_wpid
 <!-- 			LEFT OUTER JOIN ghp ghp ON wp.wp_id = ghp.ghp_wpid -->
 		WHERE upper(wp.WP_ID) = upper(#{wpId})
 	</select>
@@ -85,6 +115,7 @@
 			glog.glog_id glogId,
 			glog.glog_date glogDate,
 			glog.glog_worker glogWorker,
+			E.emp_name glogWName,
 			glog.glog_value glogValue,
 			glog.glog_result glogResult,
 			glog.glog_action glogAction,
@@ -107,6 +138,7 @@
 			ghp.ghp_unit ghpUnit
 		FROM ghp_log glog
 			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
+			LEFT OUTER JOIN EMP E ON glog.GLOG_WORKER = E.EMP_ID
 		WHERE upper(glog.glog_wpid) = upper(#{wpId})
 	</select>
 	

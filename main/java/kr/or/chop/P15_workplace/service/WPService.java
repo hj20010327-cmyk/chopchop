@@ -22,4 +22,5 @@ public interface WPService {
 	public void updateWP(WPDTO wpDTO, MultipartFile wpImgFile, String uploadPath, String contextPath) throws IllegalStateException, IOException;
 	
 	public int deleteWp(WPDTO wpDTO);
+	
 }
