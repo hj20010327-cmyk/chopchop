@@ -5,19 +5,21 @@ import lombok.Data;
 @Data
 public class WPDTO {
 	
-	String wpId;
-	String wpName;
-	int wpTypeNo;
-	String wpType;
-	String wpUsage;
-	String wpImg;
+	private String wpId;
+	private String wpName;
+	private int wpTypeNo;
+	private String wpType;
+	private String wpUsage;
+	private String wpImg;
 	
-	String wpTypeContent;
+	private String delImg;
 	
-	String ghpId;
-	String ghpName;
+	private String wpTypeContent;
 	
-	String searchType;
-	String searchKeyword;
+	private String ghpId;
+	private String ghpName;
+	
+	private String searchType;
+	private String searchKeyword;
 	
 }

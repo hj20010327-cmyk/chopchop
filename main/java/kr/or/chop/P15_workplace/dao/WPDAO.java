@@ -16,7 +16,10 @@ public interface WPDAO {
 	public List<GlogDTO> selectGlogList(WPDTO wpDTO);
 	
 	public int insertWP(WPDTO wpDTO);
-
 	public int updateWpImg(WPDTO wpDTO);
+
+	public int updateWp(WPDTO wpDTO);
+	
+	public int deleteWp(WPDTO wpDTO);
 
 }

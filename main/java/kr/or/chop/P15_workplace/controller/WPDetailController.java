@@ -28,7 +28,7 @@ public class WPDetailController {
 			@RequestParam(value="page", defaultValue="1") int currentPage,
 			@RequestParam(value="wpId") String wpId
 		) {
-		System.out.println("/workplace/list controller.list");
+		System.out.println("/workplace/detail controller.detail");
 		
 		wpDTO.setWpId(wpId);
 		
@@ -48,6 +48,20 @@ public class WPDetailController {
 		model.addAttribute("glogList", glogList);
 		
 		return "P15_workplace/wpDetail.tiles";
+	}
+	
+	@RequestMapping("/delete")
+	public String delete(
+			WPDTO wpDTO,
+			@RequestParam(value="wpId") String wpId
+			) {
+		System.out.println("/workplace/delete controller.delete");
+		
+		wpDTO.setWpId(wpId);
+		
+		wpService.deleteWp(wpDTO);
+		
+		return "redirect:/workplace/list";
 	}
 	
 }

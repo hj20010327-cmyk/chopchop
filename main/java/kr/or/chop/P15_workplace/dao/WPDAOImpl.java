@@ -65,14 +65,30 @@ public class WPDAOImpl implements WPDAO {
 
 	@Override
 	public int insertWP(WPDTO wpDTO) {
-		System.out.println("/workplace/detail dao.insertWP");
+		System.out.println("/workplace/add dao.insertWP");
 		
 		return sqlSession.insert("mapper.P15_workplace.insertWP", wpDTO);
 	}
 	
 	@Override
 	public int updateWpImg(WPDTO wpDTO) {
+		System.out.println("/workplace/add dao.updateWpImg");
+		
 	    return sqlSession.update("mapper.P15_workplace.updateWpImg", wpDTO);
+	}
+
+	@Override
+	public int updateWp(WPDTO wpDTO) {
+		System.out.println("/workplace/edit dao.updateWP");
+
+		return sqlSession.update("mapper.P15_workplace.updateWp", wpDTO);
+	}
+
+	@Override
+	public int deleteWp(WPDTO wpDTO) {
+		System.out.println("/workplace/delete dao.deleteWp");
+
+		return sqlSession.update("mapper.P15_workplace.deleteWp", wpDTO);
 	}
 
 }

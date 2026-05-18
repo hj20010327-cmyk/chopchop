@@ -15,11 +15,11 @@
         </div>
     </div>
 
-    <form action="${pageContext.request.contextPath}/workplace/insert"
+    <form action="${pageContext.request.contextPath}/workplace/update"
           method="post"
           enctype="multipart/form-data"
           class="grid-form">
-		
+        <input type="hidden" name="wpId" value="${wpDTO.wpId}">
 		<div class="btn-row">
 			<div class="left"></div>
 			<div class="right">
@@ -89,6 +89,8 @@
 		</div>
 		
 		<div class="search-item">
+			<input type="hidden" name="wpImg" value="${wpDTO.wpImg}">
+			<input type="hidden" name="delImg" id="delImg" value="N">
 			<label style="font-size: 13px; font-weight: 600; color: #555;">
 	   			작업장 이미지 (선택)
 	   		</label>
@@ -98,25 +100,24 @@
 				<div style="display: flex; gap: 10px;">
 					<label type="button" class="btn btn-main" for="wpImgFile"
 							style="color: white; font-size: 14px;">이미지 선택</label>
-					<button type="button" class="btn btn-red" id="delImgBtn" onclick="delImg()">삭제</button>
+					<button type="button" class="btn btn-red" id="delImgBtn" onclick="delImgFn()">삭제</button>
 				</div>
 	   		</div>
 			
 			<div id="imgPreviewBox"
 			     style="${not empty wpDTO.wpImg and wpDTO.wpImg != null ? 'display:flex;' : 'display:none;'}">
 			
-			    <c:if test="${not empty wpDTO.wpImg and wpDTO.wpImg != null}">
-			        <img 
-			            id="previewImg"
-			            src="${wpDTO.wpImg}"
-			            alt="이미지 미리보기"
-			        >
-			    </c:if>
+			    <img 
+			        id="previewImg"
+			        src="${wpDTO.wpImg}"
+			        alt="이미지 미리보기"
+			        style="${not empty wpDTO.wpImg or wpDTO.wpImg != null ? 'display:block;' : 'display:none;'}"
+			    >
 			
 			</div>
 			
 			<div id="noImg"
-			     style="font-size:12px; ${not empty wpDTO.wpImg or wpDTO.wpImg == null ? 'display:none;' : 'display:block;'}">
+			     style="font-size:12px; ${not empty wpDTO.wpImg or wpDTO.wpImg != null ? 'display:none;' : 'display:block;'}">
 			    등록된 사진 없음
 			</div>
 		</div>
@@ -166,57 +167,61 @@
 	}
 	
 	function bind() {
-// 		addImg();
+		addImg();
 	}
 	
-// 	function addImg() {
-// 		const wpImgFile = document.querySelector("#wpImgFile");
-// 		const previewImg = document.querySelector("#previewImg");
-// 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
-// 		const delImgBtn = document.querySelector("#delImgBtn");
-// 		const noImg = document.querySelector("#noImg");
-
-// 		wpImgFile.addEventListener("change", function () {
-// 		    const file = this.files[0];
-
-// 		    if (!file) {
-// 		        previewImg.src = "";
-// 		        previewImg.style.display = "none";
-// 		        imgPreviewBox.style.display = "none";
-// 		        noImg.style.display = "block";
-// 		        return;
-// 		    }
-
-// 		    if (!file.type.startsWith("image/")) {
-// 		        alert("이미지 파일만 등록할 수 있습니다.");
-// 		        this.value = "";
-// 		        previewImg.src = "";
-// 		        previewImg.style.display = "none";
-// 		        imgPreviewBox.style.display = "none";
-// 		        noImg.style.display = "block";
-// 		        return;
-// 		    }
-
-// 		    const reader = new FileReader();
-
-// 		    reader.onload = function (e) {
-// 		        previewImg.src = e.target.result;
-// 		        imgPreviewBox.style.display = "flex";
-// 		        previewImg.style.display = "block";
-// 		        delImgBtn.style.display = "inline";
-// 		        noImg.style.display = "none";
-// 		    };
-
-// 		    reader.readAsDataURL(file);
-// 		});
-// 	}
-	
-	function delImg() {
+	function addImg() {
 		const wpImgFile = document.querySelector("#wpImgFile");
 		const previewImg = document.querySelector("#previewImg");
 		const imgPreviewBox = document.querySelector("#imgPreviewBox");
 		const noImg = document.querySelector("#noImg");
 		const fileName = document.querySelector("#fileName");
+		const delImg = document.querySelector("#delImg");
+
+		wpImgFile.addEventListener("change", function () {
+		    const file = this.files[0];
+
+		    if (!file) {
+		        previewImg.src = "";
+		        previewImg.style.display = "none";
+		        imgPreviewBox.style.display = "none";
+		        noImg.style.display = "block";
+		        return;
+		    }
+
+		    if (!file.type.startsWith("image/")) {
+		        alert("이미지 파일만 등록할 수 있습니다.");
+		        this.value = "";
+		        previewImg.src = "";
+		        previewImg.style.display = "none";
+		        imgPreviewBox.style.display = "none";
+		        noImg.style.display = "block";
+		        return;
+		    }
+		    
+		    delImg.value = "N";
+
+		    const reader = new FileReader();
+
+		    reader.onload = function (e) {
+		        previewImg.src = e.target.result;
+		        imgPreviewBox.style.display = "flex";
+		        previewImg.style.display = "block";
+		        noImg.style.display = "none";
+		        fileName.value = e.target.result;
+		    };
+
+		    reader.readAsDataURL(file);
+		});
+	}
+	
+	function delImgFn() {
+		const wpImgFile = document.querySelector("#wpImgFile");
+		const previewImg = document.querySelector("#previewImg");
+		const imgPreviewBox = document.querySelector("#imgPreviewBox");
+		const noImg = document.querySelector("#noImg");
+		const fileName = document.querySelector("#fileName");
+		const delImg = document.querySelector("#delImg");
 		
 		previewImg.src = "";
 		previewImg.style.display = "none";
@@ -224,6 +229,7 @@
 		wpImgFile.value = "";
 		noImg.style.display = "block";
 		fileName.value = "";
+		delImg.value = "Y";
 	}
 
 </script>

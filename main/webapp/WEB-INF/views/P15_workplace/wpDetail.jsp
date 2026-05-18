@@ -27,7 +27,7 @@
 				수정
 			</a>
 			<a class="btn btn-red"
-				href="${pageContext.request.contextPath}/workplace/delete">
+				href="${pageContext.request.contextPath}/workplace/delete?wpId=${wpDTO.wpId}">
 				삭제
 			</a>
 		</div>

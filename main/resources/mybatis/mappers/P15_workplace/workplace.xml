@@ -124,6 +124,18 @@
 	    WHERE WP_ID = #{wpId}
 	</update>
 	
+	<update id="updateWp" parameterType="wpDTO">
+		UPDATE WORKPLACE
+		SET WP_NAME = #{wpName}, WP_TYPE = #{wpType}
+		WHERE WP_ID = #{wpId}
+	</update>
+	
+	<update id="deleteWp" parameterType="wpDTO">
+		UPDATE WORKPLACE
+		SET WP_USAGE = 'N'
+		WHERE WP_ID = #{wpId}
+	</update>
+	
 </mapper>
 
 
