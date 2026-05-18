@@ -65,7 +65,7 @@
 
         <!-- 재고 -->
         <div class="snb-group">
-            <a href="${pageContext.request.contextPath}/stock/list" class="snb-menu snb-toggle">
+            <a href="${pageContext.request.contextPath}/io/list" class="snb-menu snb-toggle">
                 <span class="snb-icon">
                     <!-- stock svg -->
                     <svg class="snb-svg" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +81,7 @@
             <div class="snb-submenu">
                 <a href="${pageContext.request.contextPath}/stock/list" class="snb-submenu-link">재고 관리</a>
                 <a href="${pageContext.request.contextPath}/lot/list" class="snb-submenu-link">LOT 관리</a>
-                <a href="${pageContext.request.contextPath}/inout/list" class="snb-submenu-link">입출고 관리</a>
+                <a href="${pageContext.request.contextPath}/io/list" class="snb-submenu-link">입출고 관리</a>
             </div>
         </div>
 
@@ -137,7 +137,7 @@
 
         <!-- 관리자 -->
         <div class="snb-group">
-            <a href="${pageContext.request.contextPath}/employee/list" class="snb-menu snb-toggle">
+            <a href="${pageContext.request.contextPath}/admin/list" class="snb-menu snb-toggle">
                 <span class="snb-icon">
                     <!-- admin svg -->
                     <svg class="snb-svg" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -151,7 +151,7 @@
             </a>
 
             <div class="snb-submenu">
-                <a href="${pageContext.request.contextPath}/employee/list" class="snb-submenu-link">회원 관리</a>
+                <a href="${pageContext.request.contextPath}/admin/list" class="snb-submenu-link">회원 관리</a>
                 <a href="${pageContext.request.contextPath}/alarm/add" class="snb-submenu-link">알람 생성</a>
             </div>
         </div>
