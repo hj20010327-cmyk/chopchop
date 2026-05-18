@@ -5,44 +5,157 @@
 
 <mapper namespace="mapper.P10_io">
 
-    <select id="selectIoList"
-        parameterType="map"
-        resultType="ioDTO">
+	<select id="selectIoList" parameterType="map" resultType="ioDTO">
 
-        SELECT
-            io_id AS ioId,
-            io_type AS ioType,
-            io_reason AS ioReason,
-            io_vendor AS ioVendor,
-            io_lot AS ioLot,
-            io_qty AS ioQty,
-            io_date AS ioDate,
-            io_worker AS ioWorker,
-            io_msg AS ioMsg
-        FROM io
-        <where>
-            <if test="ioType != null and ioType != ''">
-                AND io_type = #{ioType}
-            </if>
+		SELECT
+		io_id AS ioId,
+		io_type AS ioType,
+		io_reason AS ioReason,
+		io_vendor
+		AS ioVendor,
+		io_lot AS ioLot,
+		io_qty AS ioQty,
+		io_date AS ioDate,
+		io_worker AS ioWorker,
+		io_msg AS ioMsg
+		FROM io
+		<where>
+			<if test="ioType != null and ioType != ''">
+				AND io_type = #{ioType}
+			</if>
 
-            <if test="startDate != null and startDate != ''">
-                AND io_date &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
-            </if>
+			<if test="startDate != null and startDate != ''">
+				AND io_date &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+			</if>
 
-            <if test="endDate != null and endDate != ''">
-                AND io_date &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
-            </if>
+			<if test="endDate != null and endDate != ''">
+				AND io_date &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+			</if>
 
-            <if test="searchKeyword != null and searchKeyword != ''">
-                AND (
-                    UPPER(io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
-                    OR UPPER(io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
-                    OR UPPER(io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
-                )
-            </if>
-        </where>
-        ORDER BY io_date DESC
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (
+				UPPER(io_id) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
+				OR UPPER(io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR
+				UPPER(io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
+				)
+			</if>
+		</where>
+		ORDER BY io_date DESC
 
-    </select>
+	</select>
+
+	<select id="selectIoDetail" parameterType="string"
+		resultType="ioDTO">
+
+		SELECT
+		io_id AS ioId,
+		io_type AS ioType,
+		io_reason AS
+		ioReason,
+		io_vendor AS ioVendor,
+		io_lot AS ioLot,
+		io_qty AS ioQty,
+		io_date AS ioDate,
+		io_worker AS ioWorker,
+		io_msg AS ioMsg
+		FROM io
+		WHERE
+		io_id = #{ioId}
+
+	</select>
+
+	<select id="selectInId" resultType="string">
+
+		SELECT
+		'IN' || IN_SEQ.NEXTVAL
+		FROM dual
+
+	</select>
+
+	<select id="selectOutId" resultType="string">
+
+		SELECT
+		'OUT' ||
+		OUT_SEQ.NEXTVAL
+		FROM dual
+
+	</select>
+
+	<select id="selectItemListByType" parameterType="string"
+		resultType="itemDTO">
+
+		SELECT
+		item_id AS itemId,
+		item_name AS itemName,
+		item_type AS
+		itemType
+		FROM item
+		WHERE item_type = #{itemType}
+		AND item_usage = 'Y'
+		ORDER BY item_name ASC
+
+	</select>
+
+	<select id="selectVendorList" resultType="vendorDTO">
+
+		SELECT
+		vendor_id AS
+		vendorId,
+		vendor_name AS vendorName
+		FROM vendor
+		WHERE vendor_usage = 'Y'
+		ORDER BY vendor_name ASC
+
+	</select>
+
+	<select id="selectLotListByItem" parameterType="string"
+		resultType="lotDTO">
+
+		SELECT
+		LOT_ID AS lotId,
+		LOT_ITEM AS lotItem,
+		LOT_FQTY AS lotFqty,
+		LOT_EXP AS lotExp,
+		LOT_STATUS AS lotStatus
+		FROM LOT
+		WHERE LOT_ITEM = #{itemId}
+		AND LOT_FQTY > 0
+		AND LOT_STATUS IN (10, 20)
+		ORDER BY LOT_EXP ASC, LOT_ID ASC
+
+	</select>
+
+
+	<insert id="insertIo" parameterType="ioDTO">
+
+		INSERT INTO io (
+		io_id,
+		io_type,
+		io_reason,
+		io_vendor,
+		io_lot,
+		io_qty,
+		io_date,
+		io_worker,
+		io_msg
+		)
+		VALUES (
+		#{ioId},
+		#{ioType},
+		#{ioReason},
+		#{ioVendor},
+		#{ioLot},
+		#{ioQty},
+		SYSDATE,
+		#{ioWorker},
+		#{ioMsg}
+		)
+
+	</insert>
+
+
+
 
 </mapper>

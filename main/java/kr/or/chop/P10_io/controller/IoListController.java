@@ -29,7 +29,7 @@ public class IoListController {
         model.addAttribute("search", ioDTO);
         model.addAttribute("pageInfo", pageInfo);
 
-        return "P10_io/ioList";
+        return "P10_io/ioList.tiles";
     }
 	
 }

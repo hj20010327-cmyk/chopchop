@@ -9,6 +9,7 @@ import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P09_lot.service.LotService;
 
 @Controller
+@RequestMapping("/lot")
 public class LotDetailController {
 
 	 @Autowired
@@ -21,7 +22,7 @@ public class LotDetailController {
 
 	        model.addAttribute("lot", lot);
 
-	        return "P09_lot/lotDetail";
+	        return "P09_lot/lotDetail.tiles";
 	    }
 	
 }

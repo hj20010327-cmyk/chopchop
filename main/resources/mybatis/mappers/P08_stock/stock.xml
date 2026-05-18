@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P08_stock">
+
+	<select id="selectStockList" parameterType="map"
+		resultType="stockDTO">
+
+		SELECT *
+		FROM (
+		SELECT
+		S.STOCK_ID AS stockId,
+		S.STOCK_ITEM AS stockItem,
+		S.STOCK_PREV_QTY AS stockPrevQty,
+		S.STOCK_AVAIL_QTY AS stockAvailQty,
+		S.STOCK_RESERVE_QTY AS stockReserveQty,
+
+		I.ITEM_NAME AS itemName,
+		I.ITEM_TYPE AS itemType,
+		I.ITEM_SAFETY_STOCK AS itemSafetyStock,
+
+		CASE
+		WHEN S.STOCK_AVAIL_QTY &lt;= I.ITEM_SAFETY_STOCK THEN '부족'
+		WHEN
+		S.STOCK_AVAIL_QTY &lt;= I.ITEM_SAFETY_STOCK * 1.2 THEN '위험'
+		ELSE '안전'
+		END AS stockStatus
+
+		FROM STOCK S
+		JOIN ITEM I
+		ON S.STOCK_ITEM = I.ITEM_ID
+		)
+		<where>
+			<if test="itemType != null and itemType != ''">
+				AND itemType = #{itemType}
+			</if>
+
+			<if test="stockStatus != null and stockStatus != ''">
+				AND stockStatus = #{stockStatus}
+			</if>
+
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (
+				UPPER(stockId) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
+				OR UPPER(stockItem) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(itemName) LIKE UPPER('%' || #{searchKeyword} || '%')
+				)
+			</if>
+		</where>
+		ORDER BY stockId DESC
+
+	</select>
+
+
+	<select id="selectStockTotalCount" parameterType="stockDTO"
+		resultType="int">
+
+		SELECT COUNT(*)
+		FROM STOCK
+
+	</select>
+
+
+	<select id="selectStockSafeCount" resultType="int">
+
+		SELECT COUNT(*)
+		FROM STOCK S
+		JOIN ITEM I
+		ON S.STOCK_ITEM = I.ITEM_ID
+		WHERE
+		S.STOCK_AVAIL_QTY &gt; I.ITEM_SAFETY_STOCK * 1.2
+
+	</select>
+
+
+	<select id="selectStockWarningCount" resultType="int">
+
+		SELECT COUNT(*)
+		FROM STOCK S
+		JOIN ITEM I
+		ON S.STOCK_ITEM = I.ITEM_ID
+		WHERE
+		S.STOCK_AVAIL_QTY &gt; I.ITEM_SAFETY_STOCK
+		AND S.STOCK_AVAIL_QTY &lt;=
+		I.ITEM_SAFETY_STOCK * 1.2
+
+	</select>
+
+
+	<select id="selectStockDangerCount" resultType="int">
+
+		SELECT COUNT(*)
+		FROM STOCK S
+		JOIN ITEM I
+		ON S.STOCK_ITEM = I.ITEM_ID
+		WHERE
+		S.STOCK_AVAIL_QTY &lt;= I.ITEM_SAFETY_STOCK
+
+	</select>
+
+	<select id="selectStockDetail" parameterType="string"
+		resultType="kr.or.chop.P08_stock.dto.StockDTO">
+
+		SELECT
+		S.STOCK_ID AS stockId,
+		S.STOCK_ITEM AS stockItem,
+		S.STOCK_PREV_QTY AS stockPrevQty,
+		S.STOCK_AVAIL_QTY AS stockAvailQty,
+		S.STOCK_RESERVE_QTY AS stockReserveQty,
+
+		I.ITEM_NAME AS itemName,
+		I.ITEM_TYPE AS itemType,
+		I.ITEM_UNIT AS itemUnit,
+		I.ITEM_SPEC AS
+		itemSpec,
+		I.ITEM_SAFETY_STOCK AS itemSafetyStock,
+
+		CASE
+		WHEN
+		S.STOCK_AVAIL_QTY &lt;= I.ITEM_SAFETY_STOCK THEN '부족'
+		WHEN
+		S.STOCK_AVAIL_QTY &lt;= I.ITEM_SAFETY_STOCK * 1.2 THEN '위험'
+		ELSE '안전'
+		END AS stockStatus
+
+		FROM STOCK S
+		JOIN ITEM I
+		ON S.STOCK_ITEM = I.ITEM_ID
+		WHERE S.STOCK_ID = #{stockId}
+
+	</select>
+
+
+	<select id="selectStockIoList" parameterType="map"
+		resultType="kr.or.chop.P10_io.dto.IoDTO">
+
+		SELECT
+		IO_ID AS ioId,
+		IO_TYPE AS ioType,
+		IO_REASON AS ioReason,
+		IO_LOT AS ioLot,
+		IO_QTY AS ioQty,
+		IO_DATE AS ioDate
+		FROM IO
+		WHERE IO_LOT IN (
+
+		SELECT LOT_ID
+		FROM LOT
+		WHERE LOT_ITEM = (
+
+		SELECT STOCK_ITEM
+		FROM STOCK
+		WHERE STOCK_ID = #{stockId}
+
+		)
+
+		)
+		ORDER BY IO_DATE DESC
+
+	</select>
+
+</mapper>
