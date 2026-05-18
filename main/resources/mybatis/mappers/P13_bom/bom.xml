@@ -179,7 +179,7 @@
 	            order="BEFORE">
 	
 	        SELECT
-	            'BOM' || SEQ_BOM.NEXTVAL
+	            'BOM' || BOM_SEQ.NEXTVAL
 	        FROM dual
 	
 	    </selectKey>
@@ -216,7 +216,7 @@
 	    )
 	    VALUES
 	    (
-	        'BD' || SEQ_BOM_DETAIL.NEXTVAL,
+	        'BD' || BDTL_SEQ.NEXTVAL,
 	        #{bomDtlBom},
 	        #{bomDtlItem},
 	        #{bomDtlQty},

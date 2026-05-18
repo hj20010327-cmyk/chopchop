@@ -76,6 +76,13 @@
 
         </div>
 
+        <div class="search-item bom-content-box">
+            <label>BOM 설명</label>
+
+            <textarea name="bomContent"
+                      placeholder="BOM 설명을 입력하세요."></textarea>
+        </div>
+
         <div class="bom-section-title-row">
             <div class="content-content-content-title">
                 투입 품목
@@ -151,7 +158,7 @@
         justify-content: center;
         gap: 60px;
 
-        margin: 44px 0 46px;
+        margin: 44px 0 24px;
     }
 
     .bom-form-item {
@@ -172,6 +179,18 @@
     .bom-form-item select {
         width: 360px;
         height: 42px;
+    }
+
+    .bom-content-box {
+        margin: 0 0 42px;
+    }
+
+    .bom-content-box label {
+        margin-bottom: 6px;
+    }
+
+    .bom-content-box textarea {
+        min-height: 110px;
     }
 
     .bom-section-title-row {
@@ -244,37 +263,37 @@
     }
 
     function addBomDetailRow() {
-        const bomDetailBody = document.querySelector("#bomDetailBody");
+
+        const bomDetailBody =
+            document.querySelector("#bomDetailBody");
 
         const tr = document.createElement("tr");
 
-        tr.innerHTML = `
-            <td>
-                <select name="bomDtlItemList"
-                        class="bom-detail-select"
-                        required>
-                    ${materialOptions}
-                </select>
-            </td>
+        tr.innerHTML =
+            '<td>' +
+                '<select name="bomDtlItemList" ' +
+                        'class="bom-detail-select" required>' +
+                    materialOptions +
+                '</select>' +
+            '</td>' +
 
-            <td>
-                <input type="number"
-                       name="bomDtlQtyList"
-                       min="1"
-                       required
-                       placeholder="수량">
-            </td>
+            '<td>' +
+                '<input type="number" ' +
+                       'name="bomDtlQtyList" ' +
+                       'min="1" ' +
+                       'required ' +
+                       'placeholder="수량">' +
+            '</td>' +
 
-            <td class="item-spec">-</td>
-            <td class="item-price">-</td>
+            '<td class="item-spec">-</td>' +
+            '<td class="item-price">-</td>' +
 
-            <td>
-                <button type="button"
-                        class="btn btn-white remove-row-btn">
-                    삭제
-                </button>
-            </td>
-        `;
+            '<td>' +
+                '<button type="button" ' +
+                        'class="btn btn-white remove-row-btn">' +
+                    '삭제' +
+                '</button>' +
+            '</td>';
 
         bomDetailBody.appendChild(tr);
     }

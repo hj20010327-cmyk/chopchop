@@ -58,16 +58,19 @@
                         <th>품목 유형</th>
                         <td>
                             <c:choose>
-                                <c:when test="${bom.itemType == 'FIN'}">
-                                    완제품
-                                </c:when>
-                                <c:when test="${bom.itemType == 'MAT'}">
-                                    원자재
-                                </c:when>
-                                <c:otherwise>
-                                    ${bom.itemType}
-                                </c:otherwise>
-                            </c:choose>
+							    <c:when test="${bom.itemType == 10}">
+							        원자재
+							    </c:when>
+							    <c:when test="${bom.itemType == 20}">
+							        반제품
+							    </c:when>
+							    <c:when test="${bom.itemType == 30}">
+							        완제품
+							    </c:when>
+							    <c:otherwise>
+							        ${bom.itemType}
+							    </c:otherwise>
+							</c:choose>
                         </td>
 
                         <th>사용 여부</th>
