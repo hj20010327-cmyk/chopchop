@@ -157,3 +157,11 @@ button.snb-menu {
     padding-top: 16px;
     border-top: 1px solid var(--light-gray);
 }
+
+.snb-group.open .snb-submenu {
+    display: flex;
+}
+
+.snb-group.open .snb-arrow {
+    transform: rotate(90deg);
+}

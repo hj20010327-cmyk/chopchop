@@ -49,12 +49,20 @@ function setSnbActiveMenu() {
         link.classList.remove("active");
     });
 
-    let matched = false;
+    const groups = snb.querySelectorAll(".snb-group");
+
+    groups.forEach(function (group) {
+        group.classList.remove("open");
+    });
 
     subLinks.forEach(function (link) {
         const linkPath = new URL(link.href).pathname;
 
-        if (currentPath === linkPath || currentPath.startsWith(linkPath + "/")) {
+        // /chop/admin/list -> /chop/admin
+        const pathParts = linkPath.split("/");
+        const rootPath = "/" + pathParts[1] + "/" + pathParts[2];
+
+        if (currentPath === linkPath || currentPath.startsWith(rootPath + "/")) {
             link.classList.add("active");
 
             const group = link.closest(".snb-group");
@@ -68,18 +76,13 @@ function setSnbActiveMenu() {
                     parentMenu.classList.add("active");
                 }
             }
-
-            matched = true;
         }
     });
 
-    if (matched) return;
-
     menuLinks.forEach(function (link) {
-        const dataPath = link.dataset.snbPath;
-        const linkPath = dataPath ? dataPath : new URL(link.href).pathname;
+        const linkPath = new URL(link.href).pathname;
 
-        if (currentPath === linkPath || currentPath.startsWith(linkPath + "/")) {
+        if (currentPath === linkPath) {
             link.classList.add("active");
         }
     });
