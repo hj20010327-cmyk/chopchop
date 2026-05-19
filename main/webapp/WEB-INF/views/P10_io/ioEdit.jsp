@@ -24,40 +24,27 @@
 
 	<form action="${pageContext.request.contextPath}/io/updateDo"
 		method="post"
-		style="
-			width:100%;
-			max-width:1050px;
-		">
+		style="width:100%; max-width:1050px;">
 
-		<input type="hidden"
-			name="ioId"
-			value="${io.ioId}">
+		<input type="hidden" name="ioId" value="${io.ioId}">
 
-		<div style="
-			display:flex;
-			justify-content:flex-end;
-			gap:12px;
-		">
+		<div style="display:flex; justify-content:flex-end; gap:12px;">
 
 			<a class="btn btn-white"
 				href="${pageContext.request.contextPath}/io/detail?ioId=${io.ioId}">
 				취소
 			</a>
 
-			<button type="submit"
-				class="btn btn-main">
+			<button type="submit" class="btn btn-main">
 				수정
 			</button>
 
 		</div>
 
-		<div style="
-			display:flex;
-			gap:40px;
-			margin-bottom:26px;
-		">
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
 
 			<div class="grid-wrap">
+
 				<div class="grid search-item"
 					style="display:flex; flex-direction:row; align-items:center; gap:25px;">
 
@@ -84,23 +71,17 @@
 						</div>
 
 					</div>
+
 				</div>
+
 			</div>
 
 		</div>
 
-		<div style="
-			display:flex;
-			gap:40px;
-			margin-bottom:26px;
-		">
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
 
 			<div class="search-item"
-				style="
-					display:flex;
-					flex-direction:column;
-					flex:1;
-				">
+				style="display:flex; flex-direction:column; flex:1;">
 
 				<label>
 					입출고 사유 <span class="red">*</span>
@@ -110,47 +91,41 @@
 					name="ioReason"
 					value="${io.ioReason}"
 					placeholder="입출고 사유 입력">
-					</div>
-					<div class="search-item"
-				style="
-					display:flex;
-					flex-direction:column;
-					flex:1;
-				">
-					
+
+			</div>
+
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+
 				<label>
 					담당자 <span class="red">*</span>
 				</label>
 
-				<input type="text"
-					name="ioWorker"
-					value="${io.ioWorker}"
-					placeholder="담당자 코드 입력">
-					
+				<div style="display:flex; gap:10px;">
+
+					<input type="text"
+						id="ioWorker"
+						name="ioWorker"
+						value="${io.workerName} (${io.ioWorker})"
+						placeholder="담당자 선택"
+						readonly>
+
 					<button type="button"
 						class="btn btn-main"
 						id="workerSearchBtn">
-				
 						작업자 조회
-				
 					</button>
+
+				</div>
 
 			</div>
 
 		</div>
 
-		<div style="
-			display:flex;
-			gap:40px;
-			margin-bottom:26px;
-		">
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
 
 			<div class="search-item"
-				style="
-					display:flex;
-					flex-direction:column;
-					flex:1;
-				">
+				style="display:flex; flex-direction:column; flex:1;">
 
 				<label>
 					LOT
@@ -159,16 +134,13 @@
 				<input type="text"
 					name="ioLot"
 					value="${io.ioLot}"
-					placeholder="LOT 번호 입력" readonly>
+					placeholder="LOT 번호 입력"
+					readonly>
 
 			</div>
 
 			<div class="search-item"
-				style="
-					display:flex;
-					flex-direction:column;
-					flex:1;
-				">
+				style="display:flex; flex-direction:column; flex:1;">
 
 				<label>
 					수량
@@ -177,24 +149,17 @@
 				<input type="text"
 					name="ioQty"
 					value="${io.ioQty}"
-					placeholder="수량 입력" readonly>
+					placeholder="수량 입력"
+					readonly>
 
 			</div>
 
 		</div>
 
-		<div style="
-			display:flex;
-			gap:40px;
-			margin-bottom:26px;
-		">
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
 
 			<div class="search-item"
-				style="
-					display:flex;
-					flex-direction:column;
-					flex:1;
-				">
+				style="display:flex; flex-direction:column; flex:1;">
 
 				<label>
 					거래처 타입 <span class="red">*</span>
@@ -226,11 +191,7 @@
 			</div>
 
 			<div class="search-item"
-				style="
-					display:flex;
-					flex-direction:column;
-					flex:1;
-				">
+				style="display:flex; flex-direction:column; flex:1;">
 
 				<label>
 					거래처 <span class="red">*</span>
@@ -249,13 +210,8 @@
 
 		</div>
 
-
 		<div class="search-item"
-			style="
-				display:flex;
-				flex-direction:column;
-				margin-bottom:26px;
-			">
+			style="display:flex; flex-direction:column; margin-bottom:26px;">
 
 			<label>
 				일시
@@ -278,10 +234,7 @@
 		</div>
 
 		<div class="search-item"
-			style="
-				display:flex;
-				flex-direction:column;
-			">
+			style="display:flex; flex-direction:column;">
 
 			<label>
 				비고
@@ -289,15 +242,14 @@
 
 			<textarea name="ioMsg"
 				placeholder="비고를 입력하세요."
-				style="
-					height:220px;
-				">${io.ioMsg}</textarea>
+				style="height:220px;">${io.ioMsg}</textarea>
 
 		</div>
 
 	</form>
 
 </div>
+
 <!-- 작업자 조회 모달 -->
 <div id="workerModal"
 	style="
@@ -350,9 +302,7 @@
 			<button type="button"
 				class="btn btn-main"
 				id="workerSearchSubmit">
-
 				검색
-
 			</button>
 
 		</div>
@@ -368,7 +318,6 @@
 			</thead>
 
 			<tbody id="workerTbody">
-
 			</tbody>
 
 		</table>
@@ -383,17 +332,13 @@
 			<button type="button"
 				class="btn btn-white"
 				id="workerModalClose">
-
 				취소
-
 			</button>
 
 			<button type="button"
 				class="btn btn-main"
 				id="workerSelectBtn">
-
 				선택
-
 			</button>
 
 		</div>
@@ -421,6 +366,14 @@ window.addEventListener("load", function() {
 
 	const currentVendorType = "${vendorType}";
 	const currentVendorId = "${io.ioVendor}";
+
+	const workerModal = document.querySelector("#workerModal");
+	const workerSearchBtn = document.querySelector("#workerSearchBtn");
+	const workerModalClose = document.querySelector("#workerModalClose");
+	const workerSearchSubmit = document.querySelector("#workerSearchSubmit");
+	const workerTbody = document.querySelector("#workerTbody");
+	const workerSelectBtn = document.querySelector("#workerSelectBtn");
+	const ioWorkerInput = document.querySelector("#ioWorker");
 
 	function loadVendorList(vendorType, selectedVendorId) {
 
@@ -470,6 +423,80 @@ window.addEventListener("load", function() {
 		loadVendorList(this.value, "");
 	});
 
+	workerSearchBtn.addEventListener("click", function() {
+		workerModal.style.display = "flex";
+		loadWorkerList("");
+	});
+
+	workerModalClose.addEventListener("click", function() {
+		workerModal.style.display = "none";
+	});
+
+	workerSearchSubmit.addEventListener("click", function() {
+
+		const keyword =
+			document.querySelector("#workerKeyword").value;
+
+		loadWorkerList(keyword);
+	});
+
+	function loadWorkerList(keyword) {
+
+		fetch(
+			"${pageContext.request.contextPath}/io/workerList?keyword="
+			+ encodeURIComponent(keyword)
+		)
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(result) {
+
+			let html = "";
+
+			for (let i = 0; i < result.length; i++) {
+
+				html += "<tr>";
+
+				html += "<td>" + result[i].empId + "</td>";
+
+				html += "<td>" + result[i].empName + "</td>";
+
+				html += "<td>";
+				html += "<input type='radio' ";
+				html += "name='workerRadio' ";
+				html += "value='" + result[i].empId + "' ";
+				html += "data-name='" + result[i].empName + "'>";
+				html += "</td>";
+
+				html += "</tr>";
+			}
+
+			workerTbody.innerHTML = html;
+		})
+		.catch(function() {
+			alert("작업자 목록 조회 실패");
+		});
+	}
+
+	workerSelectBtn.addEventListener("click", function() {
+
+		const checked =
+			document.querySelector("input[name='workerRadio']:checked");
+
+		if (!checked) {
+			alert("작업자를 선택하세요.");
+			return;
+		}
+
+		const empId = checked.value;
+		const empName = checked.getAttribute("data-name");
+
+		ioWorkerInput.value =
+			empName + " (" + empId + ")";
+
+		workerModal.style.display = "none";
+	});
+
 	function formatComma(inputTag) {
 
 		let firstValue = inputTag.value.replace(/[^0-9]/g, "");
@@ -506,113 +533,12 @@ window.addEventListener("load", function() {
 	preventNegative(qtyInput);
 
 	form.addEventListener("submit", function() {
-		qtyInput.value = qtyInput.value.replace(/,/g, "");
-	});
-	
-	const workerModal =
-		document.querySelector("#workerModal");
 
-	const workerSearchBtn =
-		document.querySelector("#workerSearchBtn");
-
-	const workerModalClose =
-		document.querySelector("#workerModalClose");
-
-	const workerSearchSubmit =
-		document.querySelector("#workerSearchSubmit");
-
-	const workerTbody =
-		document.querySelector("#workerTbody");
-
-	const workerSelectBtn =
-		document.querySelector("#workerSelectBtn");
-
-	const ioWorkerInput =
-		document.querySelector("#ioWorker");
-
-	workerSearchBtn.addEventListener("click", function() {
-
-		workerModal.style.display = "flex";
-
-		loadWorkerList("");
-
-	});
-
-	workerModalClose.addEventListener("click", function() {
-
-		workerModal.style.display = "none";
-
-	});
-
-	workerSearchSubmit.addEventListener("click", function() {
-
-		const keyword =
-			document.querySelector("#workerKeyword").value;
-
-		loadWorkerList(keyword);
-
-	});
-
-	function loadWorkerList(keyword) {
-
-		fetch(
-			"${pageContext.request.contextPath}/employee/search?keyword="
-			+ encodeURIComponent(keyword)
-		)
-		.then(function(response) {
-			return response.json();
-		})
-		.then(function(result) {
-
-			let html = "";
-
-			for (let i = 0; i < result.length; i++) {
-
-				html += "<tr>";
-
-				html += "<td>" + result[i].empId + "</td>";
-
-				html += "<td>" + result[i].empName + "</td>";
-
-				html += "<td>";
-				html += "<input type='radio' ";
-				html += "name='workerRadio' ";
-				html += "value='" + result[i].empId + "' ";
-				html += "data-name='" + result[i].empName + "'>";
-				html += "</td>";
-
-				html += "</tr>";
-
-			}
-
-			workerTbody.innerHTML = html;
-
-		});
-
-	}
-
-	workerSelectBtn.addEventListener("click", function() {
-
-		const checked =
-			document.querySelector("input[name='workerRadio']:checked");
-
-		if (!checked) {
-
-			alert("작업자를 선택하세요.");
-			return;
-
-		}
-
-		const empId =
-			checked.value;
-
-		const empName =
-			checked.getAttribute("data-name");
+		qtyInput.value =
+			qtyInput.value.replace(/,/g, "");
 
 		ioWorkerInput.value =
-			empName + "(" + empId + ")";
-
-		workerModal.style.display = "none";
+			ioWorkerInput.value.replace(/^.*\((.*)\)$/, "$1");
 
 	});
 

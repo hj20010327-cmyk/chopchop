@@ -159,7 +159,7 @@
 
 								<c:forEach var="io" items="${ioList}">
 
-									<tr>
+									<tr onclick="location.href='${pageContext.request.contextPath}/io/detail?ioId=${io.ioId}'">
 										<td>${io.ioId}</td>
 
 										<td>${io.ioQty}EA</td>

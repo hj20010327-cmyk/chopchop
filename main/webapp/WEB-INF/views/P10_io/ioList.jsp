@@ -46,13 +46,13 @@
             <select name="ioType">
                 <option value="">전체</option>
 
-                <option value="입고"
-                    ${search.ioType == '입고' ? 'selected' : ''}>
+                <option value="IN"
+                    ${search.ioType == 'IN' ? 'selected' : ''}>
                     입고
                 </option>
 
-                <option value="출고"
-                    ${search.ioType == '출고' ? 'selected' : ''}>
+                <option value="OUT"
+                    ${search.ioType == 'OUT' ? 'selected' : ''}>
                     출고
                 </option>
             </select>
@@ -99,11 +99,11 @@
 
                         <td>
                             <c:choose>
-                                <c:when test="${io.ioType == '입고'}">
+                                <c:when test="${io.ioType == 'IN'}">
                                     <span class="status status-safe">입고</span>
                                 </c:when>
 
-                                <c:when test="${io.ioType == '출고'}">
+                                <c:when test="${io.ioType == 'OUT'}">
                                     <span class="status status-warning">출고</span>
                                 </c:when>
 

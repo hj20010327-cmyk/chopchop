@@ -284,7 +284,8 @@
 			display:flex;
 			gap:10px;
 			margin-bottom:20px;
-		">
+			flex-direction: row;
+		" class="search-item">
 
 			<input type="text"
 				id="workerKeyword"
@@ -301,7 +302,7 @@
 
 		</div>
 
-		<table class="list-table">
+		<table class="list-table table">
 
 			<thead>
 				<tr>
