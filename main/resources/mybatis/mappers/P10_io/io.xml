@@ -219,7 +219,7 @@
 
 	<select id="selectWorkerList"
 	parameterType="string"
-	resultType="kr.or.chop.P10_io.dto.EmpDTO">
+	resultType="adminDTO">
 
 		SELECT
 			emp_id AS empId,
@@ -227,7 +227,7 @@
 		FROM emp
 	
 		<where>
-			emp_usage = 'Y'
+			emp_inoffice = 0
 	
 			<if test="_parameter != null and _parameter != ''">
 				AND (
