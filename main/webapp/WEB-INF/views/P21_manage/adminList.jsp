@@ -29,9 +29,9 @@
 
             <select name="searchDeptno">
                 <option value="">부서 선택</option>
-                <option value="10" ${search.searchDeptno == 10 ? 'selected' : ''}>생산관리</option>
-                <option value="20" ${search.searchDeptno == 20 ? 'selected' : ''}>품질검사</option>
-                <option value="30" ${search.searchDeptno == 30 ? 'selected' : ''}>설비관리</option>
+                <option value="10" ${search.searchDeptno eq '10' ? 'selected' : ''}>생산관리</option>
+                <option value="20" ${search.searchDeptno eq '20' ? 'selected' : ''}>품질검사</option>
+                <option value="30" ${search.searchDeptno eq '30' ? 'selected' : ''}>설비관리</option>
             </select>
         </div>
 
@@ -40,10 +40,10 @@
 
             <select name="searchAuth">
                 <option value="">권한 선택</option>
-                <option value="0" ${search.searchAuth == 0 ? 'selected' : ''}>퇴사자</option>
-                <option value="10" ${search.searchAuth == 10 ? 'selected' : ''}>작업자</option>
-                <option value="20" ${search.searchAuth == 20 ? 'selected' : ''}>관리자</option>
-                <option value="30" ${search.searchAuth == 30 ? 'selected' : ''}>최고관리자</option>
+                <option value="0" ${search.searchAuth eq '0' ? 'selected' : ''}>퇴사자</option>
+                <option value="10" ${search.searchAuth eq '10' ? 'selected' : ''}>작업자</option>
+                <option value="20" ${search.searchAuth eq '20' ? 'selected' : ''}>관리자</option>
+                <option value="30" ${search.searchAuth eq '30' ? 'selected' : ''}>최고관리자</option>
             </select>
         </div>
 
@@ -52,9 +52,9 @@
 
             <select name="searchStatus">
                 <option value="">재직 선택</option>
-                <option value="0" ${search.searchStatus == 0 ? 'selected' : ''}>재직</option>
-                <option value="10" ${search.searchStatus == 10 ? 'selected' : ''}>휴직</option>
-                <option value="50" ${search.searchStatus == 50 ? 'selected' : ''}>퇴사</option>
+                <option value="0" ${search.searchStatus eq '0' ? 'selected' : ''}>재직</option>
+                <option value="10" ${search.searchStatus eq '10' ? 'selected' : ''}>휴직</option>
+                <option value="50" ${search.searchStatus eq '50' ? 'selected' : ''}>퇴사</option>
             </select>
         </div>
 
