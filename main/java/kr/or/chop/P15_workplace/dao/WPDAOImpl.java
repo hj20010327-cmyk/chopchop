@@ -57,10 +57,16 @@ public class WPDAOImpl implements WPDAO {
 	}
 
 	@Override
-	public List<GlogDTO> selectGlogList(WPDTO wpDTO) {
+	public List<GlogDTO> selectGlogList(WPDTO wpDTO, PageInfo pageInfo) {
 		System.out.println("/workplace/detail dao.selectGlogList");
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("wpDTO", wpDTO);
+		paramMap.put("page", pageInfo);
+
+		System.out.println("paramMap : " + paramMap);
 		
-		return sqlSession.selectList("mapper.P15_workplace.selectGlogList", wpDTO);
+		return sqlSession.selectList("mapper.P15_workplace.selectGlogList", paramMap);
 	}
 
 	@Override

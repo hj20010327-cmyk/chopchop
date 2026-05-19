@@ -42,7 +42,7 @@ public class WHDetailController {
 		PageInfo pageInfo = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		
 		// glog 가져오기
-		List<GlogDTO> glogList = whService.selectGlogList(whDTO);
+		List<GlogDTO> glogList = whService.selectGlogList(whDTO, pageInfo);
 		
 		// sec 가져오기
 		List<SecDTO> secList = whService.selectSecList(whDTO);

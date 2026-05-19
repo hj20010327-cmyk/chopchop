@@ -62,11 +62,11 @@ public class WHServiceImpl implements WHService {
 	}
 
 	@Override
-	public List<GlogDTO> selectGlogList(WHDTO whDTO) {
+	public List<GlogDTO> selectGlogList(WHDTO whDTO, PageInfo pageInfo) {
 
 		System.out.println("/warehouse/detail service.selectGlogList");
 
-		return whDAO.selectGlogList(whDTO);
+		return whDAO.selectGlogList(whDTO, pageInfo);
 	}
 
 	@Override

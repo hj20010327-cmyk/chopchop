@@ -4,11 +4,99 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.P14_warehouse.section">
 	
-<!-- 	<select id="selectWhSecDTO" parameterType="secDTO" resultType="secDTO"> -->
-<!-- 		SELECT  -->
-<!-- 			ws.WH_SEC_ID -->
-<!-- 		FROM WH_SEC ws -->
-<!-- 		WHERE upper(ws.WH_SEC_ID) = upper(#{whSecId}) -->
-<!-- 	</select> -->
+	<select id="selectSecDTO" parameterType="secDTO" resultType="secDTO">
+		SELECT 
+			ws.WH_SEC_ID secId,
+			ws.WH_SEC_WHID secWhId,
+			wh.WH_NAME secWhName,
+			ws.WH_SEC_QTY secQty,
+			NVL(lot_sum.currentLotCnt, 0) AS secPrevQty,
+	        CASE
+	            WHEN ws.wh_sec_qty > 0 THEN
+	                ROUND(NVL(lot_sum.currentLotCnt, 0) / ws.wh_sec_qty * 100, 2)
+	            ELSE 0
+	        END AS secUsageRate,
+			ws.WH_SEC_IMG secImg
+		FROM WH_SEC ws
+			LEFT OUTER JOIN warehouse wh ON wh.WH_ID = ws.WH_SEC_WHID
+			LEFT OUTER JOIN (
+	            SELECT
+	                lot_location.secId AS secId,
+	                COUNT(lot_location.lotId) AS currentLotCnt
+	            FROM (
+	                SELECT
+	                    lot.lot_id AS lotId,
+	                    CASE
+	                        WHEN lot.lot_qc = 'N' THEN lot.lot_bwhsec
+	                        WHEN lot.lot_qc = 'Y' THEN lot.lot_awhsec
+	                    END AS secId
+	                FROM lot lot
+	
+	                    LEFT OUTER JOIN (
+	                        SELECT
+	                            lu.use_lot AS lotId,
+	                            SUM(NVL(lu.use_qty, 0)) AS totalUseQty
+	                        FROM lot_use lu
+	                        GROUP BY lu.use_lot
+	                    ) use_sum
+	                        ON lot.lot_id = use_sum.lotId
+	
+	                WHERE lot.lot_status IN (10, 20)
+	                  AND (
+	                        NVL(lot.lot_fqty, 0) - NVL(use_sum.totalUseQty, 0)
+	                      ) > 0
+	            ) lot_location
+	            GROUP BY lot_location.secId
+	        ) lot_sum
+	            ON ws.wh_sec_id = lot_sum.secId
+		WHERE upper(ws.WH_SEC_ID) = upper(#{secId})
+	</select>
+	
+	<select id="selectLotCount" parameterType="secDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM LOT
+		WHERE LOT_STATUS IN (10, 20)
+		  AND (
+		        (LOT_QC = 'N' AND LOT_BWHSEC = #{secId})
+		     OR (LOT_QC = 'Y' AND LOT_AWHSEC = #{secId})
+		  )
+	</select>
+	
+	<select id="selectLotList" parameterType="map" resultType="lotDTO">
+		SELECT *
+		FROM
+			(
+				SELECT ROWNUM RN, l.*
+				FROM
+					(
+						SELECT
+							l.LOT_ID       AS lotId,
+							l.LOT_ITEM     AS lotItem,
+							l.LOT_VENDOR   AS lotVendor,
+							l.LOT_WORK     AS lotWork,
+							l.LOT_IQTY     AS lotIqty,
+							l.LOT_FQTY     AS lotFqty,
+							l.LOT_MFD      AS lotMfd,
+							l.LOT_ETW      AS lotEtw,
+							l.LOT_EXP      AS lotExp,
+							l.LOT_QC       AS lotQc,
+							l.LOT_STATUS   AS lotStatus,
+							l.LOT_MEMO     AS lotMemo,
+							l.LOT_BWHSEC   AS lotBwhsec,
+							l.LOT_AWHSEC   AS lotAwhsec,
+							i.ITEM_TYPE    AS itemType
+						FROM LOT l
+							LEFT OUTER JOIN ITEM i on i.ITEM_ID = l.LOT_ITEM
+						WHERE l.LOT_STATUS IN (10, 20)
+						  AND (
+						        (l.LOT_QC = 'N' AND l.LOT_BWHSEC = #{secDTO.secId})
+						     OR (l.LOT_QC = 'Y' AND l.LOT_AWHSEC = #{secDTO.secId})
+						  )
+						ORDER BY l.LOT_ID, l.LOT_EXP
+					) l
+				WHERE ROWNUM &lt;= #{page.endRow}
+			)
+		WHERE RN &gt;= #{page.startRow}
+	</select>
 
 </mapper>

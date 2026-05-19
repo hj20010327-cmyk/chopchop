@@ -91,7 +91,7 @@
 			</div>
 			
 			<div style="display: flex; align-items: flex-start; gap: 15px;">
-				<div class="card" style="width: 600px; padding: 20px;">
+				<div class="card" style="min-width: 50%; padding: 20px;">
 					<div class="content-content-content-title">창고 영역도</div>
 					<c:if test="${empty whDTO.whImg or whDTO.whImg == ''}">
 						<div style="font-size: 14px; color: var(--dark-gray);">창고 영역도가 없습니다</div>
@@ -118,27 +118,27 @@
 						<tbody>
 							<c:forEach var="sec" items="${secList}">
 								<tr class="secList">
-									<td class="secId">${sec.whSecId}</td>
-									<td>${sec.whSecQty}</td>
-									<td>${sec.whSecPrevQty}</td>
+									<td class="secId">${sec.secId}</td>
+									<td>${sec.secQty}</td>
+									<td>${sec.secPrevQty}</td>
 									<td id="qtyPer"
 										style="font-weight: 700; 
-										<c:if test="${sec.whSecUsageRate <= 0}">
+										<c:if test="${sec.secUsageRate <= 0}">
 											color: var(--info);
 										</c:if>
-										<c:if test="${sec.whSecUsageRate > 0 && sec.whSecUsageRate < 80}">
+										<c:if test="${sec.secUsageRate > 0 && sec.secUsageRate < 80}">
 											color: var(--safe);
 										</c:if>
-										<c:if test="${sec.whSecUsageRate >= 80 && sec.whSecUsageRate < 100}">
+										<c:if test="${sec.secUsageRate >= 80 && sec.secUsageRate < 100}">
 											color: var(--warning);
 										</c:if>
-										<c:if test="${sec.whSecUsageRate > 100}">
+										<c:if test="${sec.secUsageRate > 100}">
 											color: var(--danger);
 										</c:if>
 									">
 									    <c:choose>
 										    <c:when test="${wh.whQty != 0}">
-										        <fmt:formatNumber value="${sec.whSecUsageRate}" pattern="0.00" />
+										        <fmt:formatNumber value="${sec.secUsageRate}" pattern="0.00" />
 										    </c:when>
 										    <c:otherwise>
 										        0.00

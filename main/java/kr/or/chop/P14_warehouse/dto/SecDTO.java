@@ -5,12 +5,13 @@ import lombok.Data;
 @Data
 public class SecDTO {
 	
-	private String whSecId;
-	private String whSecWhid;
-	private int whSecQty;
-	private int whSecPrevQty;
-	private double whSecUsageRate;
-	private String whSecUsage;
-	private String whSecImg;
+	private String secId;
+	private String secWhId;
+	private String secWhName;
+	private int secQty;
+	private int secPrevQty;
+	private double secUsageRate;
+	private String secUsage;
+	private String secImg;
 
 }

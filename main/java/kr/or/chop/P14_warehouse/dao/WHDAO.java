@@ -16,7 +16,7 @@ public interface WHDAO {
 	
 	public WHDTO selectWHDTO(WHDTO whDTO);
 	public int selectGlogCount(WHDTO whDTO);
-	public List<GlogDTO> selectGlogList(WHDTO whDTO);
+	public List<GlogDTO> selectGlogList(WHDTO whDTO, PageInfo pageInfo);
 	public List<SecDTO> selectSecList(WHDTO whDTO);
 	
 	public int insertWH(WHDTO whDTO);

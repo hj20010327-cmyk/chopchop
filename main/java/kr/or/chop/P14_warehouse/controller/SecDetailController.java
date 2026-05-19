@@ -18,7 +18,7 @@ import kr.or.chop.common.pagination.PageInfo;
 import kr.or.chop.common.pagination.Pagination;
 
 @Controller
-@RequestMapping("/section")
+@RequestMapping("/warehouse/section")
 public class SecDetailController {
 	
 
@@ -35,17 +35,17 @@ public class SecDetailController {
 		) {
 		System.out.println("/warehouse/sec/detail controller.detail");
 		
-		secDTO.setWhSecId(secId);
+		secDTO.setSecId(secId);
 		
 		// secDTO 가져오기
-		secDTO = secService.selectWhSecDTO(secDTO);
+		secDTO = secService.selectSecDTO(secDTO);
 		
 		// LOT 개수 가져와서 페이징
 		int listCount = secService.selectLotCount(secDTO);
 		PageInfo pageInfo = Pagination.getPageInfo(listCount, currentPage, 5, 10);
 		
 		// LOT 가져오기
-		List<LotDTO> lotList = secService.selectLotList(secDTO);
+		List<LotDTO> lotList = secService.selectLotList(secDTO, pageInfo);
 		
 		model.addAttribute("secDTO", secDTO);
 		model.addAttribute("page", pageInfo);

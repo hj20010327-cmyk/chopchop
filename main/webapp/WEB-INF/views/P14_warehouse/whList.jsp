@@ -42,14 +42,14 @@
 	        <div class="card-subtitle">적재율 80% 미만</div>
 	    </div>
 	
-	    <div class="card warning ${search.cardType == 'danger' ? 'active' : ''}"
+	    <div class="card warning ${search.cardType == 'warning' ? 'active' : ''}"
 	         data-card-type="warning">
 	        <div class="card-title">위험 창고</div>
 	        <div class="card-value">${whCard.dangerWhCnt}</div>
 	        <div class="card-subtitle">80% 이상 100% 미만</div>
 	    </div>
 	
-	    <div class="card danger ${search.cardType == 'over' ? 'active' : ''}"
+	    <div class="card danger ${search.cardType == 'danger' ? 'active' : ''}"
 	         data-card-type="danger">
 	        <div class="card-title">초과 적재 창고</div>
 	        <div class="card-value">${whCard.overWhCnt}</div>

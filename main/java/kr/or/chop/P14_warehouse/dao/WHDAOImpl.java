@@ -63,10 +63,14 @@ public class WHDAOImpl implements WHDAO {
 	}
 
 	@Override
-	public List<GlogDTO> selectGlogList(WHDTO whDTO) {
+	public List<GlogDTO> selectGlogList(WHDTO whDTO, PageInfo pageInfo) {
 		System.out.println("/warehouse/detail dao.selectGlogList");
 
-		return sqlSession.selectList("mapper.P14_warehouse.selectGlogList", whDTO);
+	    Map map = new HashMap();
+	    map.put("whDTO", whDTO);
+	    map.put("page", pageInfo);
+
+		return sqlSession.selectList("mapper.P14_warehouse.selectGlogList", map);
 	}
 
 	@Override

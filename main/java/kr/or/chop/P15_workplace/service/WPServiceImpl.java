@@ -52,11 +52,11 @@ public class WPServiceImpl implements WPService {
 	}
 
 	@Override
-	public List<GlogDTO> selectGlogList(WPDTO wpDTO) {
+	public List<GlogDTO> selectGlogList(WPDTO wpDTO, PageInfo pageInfo) {
 		
 		System.out.println("/workplace/detail service.selectGlogList");
 		
-		return wpDAO.selectGlogList(wpDTO);
+		return wpDAO.selectGlogList(wpDTO, pageInfo);
 	}
 
 	@Override

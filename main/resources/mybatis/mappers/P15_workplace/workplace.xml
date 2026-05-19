@@ -110,36 +110,48 @@
 		where upper(glog.glog_wpid) = upper(#{wpId})
 	</select>
 	
-	<select id="selectGlogList" parameterType="wpDTO" resultType="glogDTO">
-		SELECT
-			glog.glog_id glogId,
-			glog.glog_date glogDate,
-			glog.glog_worker glogWorker,
-			E.emp_name glogWName,
-			glog.glog_value glogValue,
-			glog.glog_result glogResult,
-			glog.glog_action glogAction,
-			glog.glog_adate glogAdate,
-			glog.glog_img glogImg,
-			glog.glog_memo glogMemo,
-			glog.glog_cdate glogCdate,
-			glog.glog_whid glogWhId,
-			glog.glog_wpid glogWpId,
-			ghp.ghp_id ghpId,
-			ghp.ghp_name ghpName,
-			ghp.ghp_category ghpCategory,
-			ghp.ghp_standard ghpStandard,
-			ghp.ghp_check_method ghpCheckMethod,
-			ghp.ghp_cycle ghpCycle,
-			ghp.ghp_wh_type ghpWhType,
-			ghp.ghp_wp_type ghpWpType,
-			ghp.GHP_MIN_VALUE ghpMinValue,
-			ghp.GHP_MAX_VALUE ghpMaxValue,
-			ghp.ghp_unit ghpUnit
-		FROM ghp_log glog
-			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
-			LEFT OUTER JOIN EMP E ON glog.GLOG_WORKER = E.EMP_ID
-		WHERE glog.glog_usage = 'Y' and upper(glog.glog_wpid) = upper(#{wpId})
+	<select id="selectGlogList" parameterType="map" resultType="glogDTO">
+		SELECT *
+		FROM
+			(
+				SELECT ROWNUM RN, g.*
+				FROM
+				(
+					SELECT
+						glog.glog_id glogId,
+						glog.glog_date glogDate,
+						glog.glog_worker glogWorker,
+						E.emp_name glogWName,
+						glog.glog_value glogValue,
+						glog.glog_result glogResult,
+						glog.glog_action glogAction,
+						glog.glog_adate glogAdate,
+						glog.glog_img glogImg,
+						glog.glog_memo glogMemo,
+						glog.glog_cdate glogCdate,
+						glog.glog_whid glogWhId,
+						glog.glog_wpid glogWpId,
+						ghp.ghp_id ghpId,
+						ghp.ghp_name ghpName,
+						ghp.ghp_category ghpCategory,
+						ghp.ghp_standard ghpStandard,
+						ghp.ghp_check_method ghpCheckMethod,
+						ghp.ghp_cycle ghpCycle,
+						ghp.ghp_wh_type ghpWhType,
+						ghp.ghp_wp_type ghpWpType,
+						ghp.GHP_MIN_VALUE ghpMinValue,
+						ghp.GHP_MAX_VALUE ghpMaxValue,
+						ghp.ghp_unit ghpUnit
+					FROM ghp_log glog
+						LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
+						LEFT OUTER JOIN EMP E ON glog.GLOG_WORKER = E.EMP_ID
+					WHERE glog.glog_usage = 'Y'
+						AND upper(glog.glog_wpid) = upper(#{wpDTO.wpId})
+					ORDER BY glog.glog_date DESC, glog.glog_id DESC
+				) g
+			)
+		WHERE RN BETWEEN #{page.startRow}
+		AND #{page.endRow}
 	</select>
 	
 	<insert id="insertWP" parameterType="wpDTO">
