@@ -92,9 +92,23 @@
 					담당자 <span class="red">*</span>
 				</label>
 
-				<input type="text"
-					name="ioWorker"
-					placeholder="담당자 코드 입력">
+				<div style="display:flex; gap:10px;">
+
+					<input type="text"
+						id="ioWorker"
+						name="ioWorker"
+						placeholder="작업자 선택"
+						readonly>
+
+					<button type="button"
+						class="btn btn-main"
+						id="workerSearchBtn">
+
+						작업자 조회
+
+					</button>
+
+				</div>
 
 			</div>
 
@@ -228,6 +242,110 @@
 
 </div>
 
+<!-- 작업자 조회 모달 -->
+<div id="workerModal"
+	style="
+		display:none;
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,0.35);
+		z-index:9999;
+		justify-content:center;
+		align-items:center;
+	">
+
+	<div style="
+		width:620px;
+		background:white;
+		border-radius:10px;
+		padding:30px;
+		box-sizing:border-box;
+	">
+
+		<h2 style="
+			margin-bottom:10px;
+			font-size:28px;
+			font-weight:700;
+		">
+			작업자 조회
+		</h2>
+
+		<p style="
+			color:#888;
+			margin-bottom:25px;
+		">
+			작업자를 조회 후 선택해주세요.
+		</p>
+
+		<div style="
+			display:flex;
+			gap:10px;
+			margin-bottom:20px;
+		">
+
+			<input type="text"
+				id="workerKeyword"
+				placeholder="이름/사원번호 검색"
+				style="flex:1;">
+
+			<button type="button"
+				class="btn btn-main"
+				id="workerSearchSubmit">
+
+				검색
+
+			</button>
+
+		</div>
+
+		<table class="list-table">
+
+			<thead>
+				<tr>
+					<th>사원번호</th>
+					<th>사원명</th>
+					<th>선택</th>
+				</tr>
+			</thead>
+
+			<tbody id="workerTbody">
+
+			</tbody>
+
+		</table>
+
+		<div style="
+			display:flex;
+			justify-content:center;
+			gap:10px;
+			margin-top:25px;
+		">
+
+			<button type="button"
+				class="btn btn-white"
+				id="workerModalClose">
+
+				취소
+
+			</button>
+
+			<button type="button"
+				class="btn btn-main"
+				id="workerSelectBtn">
+
+				선택
+
+			</button>
+
+		</div>
+
+	</div>
+
+</div>
+
 <style>
 	input[type="radio"] {
 		width:15px;
@@ -254,6 +372,27 @@ window.addEventListener("load", function() {
 	const qtyLabel = qtyInput.closest(".search-item").querySelector("label");
 
 	const form = document.querySelector("form");
+
+	const workerModal =
+		document.querySelector("#workerModal");
+
+	const workerSearchBtn =
+		document.querySelector("#workerSearchBtn");
+
+	const workerModalClose =
+		document.querySelector("#workerModalClose");
+
+	const workerSearchSubmit =
+		document.querySelector("#workerSearchSubmit");
+
+	const workerTbody =
+		document.querySelector("#workerTbody");
+
+	const workerSelectBtn =
+		document.querySelector("#workerSelectBtn");
+
+	const ioWorkerInput =
+		document.querySelector("#ioWorker");
 
 	function getIoType() {
 		return document.querySelector("input[name='ioType']:checked").value;
@@ -467,6 +606,92 @@ window.addEventListener("load", function() {
 
 	});
 
+	workerSearchBtn.addEventListener("click", function() {
+
+		workerModal.style.display = "flex";
+
+		loadWorkerList("");
+
+	});
+
+	workerModalClose.addEventListener("click", function() {
+
+		workerModal.style.display = "none";
+
+	});
+
+	workerSearchSubmit.addEventListener("click", function() {
+
+		const keyword =
+			document.querySelector("#workerKeyword").value;
+
+		loadWorkerList(keyword);
+
+	});
+
+	function loadWorkerList(keyword) {
+
+		fetch(
+			"${pageContext.request.contextPath}/io/workerList?keyword="
+			+ encodeURIComponent(keyword)
+		)
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(result) {
+
+			let html = "";
+
+			for (let i = 0; i < result.length; i++) {
+
+				html += "<tr>";
+
+				html += "<td>" + result[i].empId + "</td>";
+
+				html += "<td>" + result[i].empName + "</td>";
+
+				html += "<td>";
+				html += "<input type='radio' ";
+				html += "name='workerRadio' ";
+				html += "value='" + result[i].empId + "' ";
+				html += "data-name='" + result[i].empName + "'>";
+				html += "</td>";
+
+				html += "</tr>";
+
+			}
+
+			workerTbody.innerHTML = html;
+
+		});
+
+	}
+
+	workerSelectBtn.addEventListener("click", function() {
+
+		const checked =
+			document.querySelector("input[name='workerRadio']:checked");
+
+		if (!checked) {
+
+			alert("작업자를 선택하세요.");
+			return;
+
+		}
+
+		const empId =
+			checked.value;
+
+		const empName =
+			checked.getAttribute("data-name");
+
+		ioWorkerInput.value =
+			empName + " (" + empId + ")";
+
+		workerModal.style.display = "none";
+
+	});
+
 	qtyInput.addEventListener("input", function() {
 
 		if (qtyInput.readOnly) {
@@ -495,6 +720,9 @@ window.addEventListener("load", function() {
 
 		qtyInput.value =
 			qtyInput.value.replace(/,/g, "");
+
+		ioWorkerInput.value =
+			ioWorkerInput.value.replace(/^.*\((.*)\)$/, "$1");
 
 	});
 
