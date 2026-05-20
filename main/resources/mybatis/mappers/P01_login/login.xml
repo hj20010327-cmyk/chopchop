@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P01_login">
+
+	<select id="selectEmp" parameterType="empDTO" resultType="empDTO">
+		SELECT 
+			e.EMP_ID empId,
+			e.EMP_NAME empName,
+			e.EMP_PW empPw,
+			e.EMP_TEL empTel,
+			e.EMP_EMAIL empEmail,
+			e.EMP_DEPTNO empDeptno,
+			d.DNAME empDname,
+			e.EMP_AUTH empAuth,
+			a.AUTH_NAME empAuthName,
+			e.EMP_FIRST empFirst,
+			e.EMP_INOFFICE empInOffice,
+			e.EMP_HIREDATE empHiredate
+		FROM EMP e
+			LEFT OUTER JOIN DEPT d ON e.EMP_DEPTNO = d.DEPTNO
+			LEFT OUTER JOIN AUTH a ON e.EMP_AUTH = a.AUTH_NO
+		WHERE upper(e.EMP_ID) = upper(#{empId}) and e.EMP_AUTH != 0 and e.EMP_INOFFICE != 0
+	</select>
+
+</mapper>
