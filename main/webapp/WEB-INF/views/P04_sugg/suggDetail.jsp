@@ -133,7 +133,7 @@
                 </div>
                 
 				<!-- 첨부파일 -->
-				<c:if test="${not empty dto.file_origin_name}">
+				<c:if test="${not empty dto.sugg_file_origin_name}">
 				    <div style="
 				            border-top:1px solid #ddd;
 				            padding:12px 24px;
@@ -141,9 +141,9 @@
 				            color:#555;">
 				
 				        첨부파일 :
-				        <a href="${pageContext.request.contextPath}/resources/upload/sugg/${dto.file_save_name}"
-				           download="${dto.file_origin_name}">
-				            ${dto.file_origin_name}
+				        <a href="${pageContext.request.contextPath}/resources/upload/sugg/${dto.sugg_file_save_name}"
+				           download="${dto.sugg_file_origin_name}">
+				            ${dto.sugg_file_origin_name}
 				        </a>
 				
 				    </div>
@@ -223,7 +223,7 @@
 
                                         <strong>
                                             <c:if test="${comm.comm_level > 0}">
-                                                ㄴ
+                                                
                                             </c:if>
                                             ${comm.comm_writer}
                                         </strong>

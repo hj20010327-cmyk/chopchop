@@ -66,8 +66,8 @@
                 s.sugg_cdate,
                 s.sugg_mdate,
                 s.sugg_usage,
-                s.file_origin_name,
-                s.file_save_name,
+                s.sugg_file_origin_name,
+                s.sugg_file_save_name,
                 NVL((
                     SELECT COUNT(*)
                     FROM sugg_comment c
@@ -126,8 +126,8 @@
         sugg_cdate,
         sugg_mdate,
         sugg_usage,
-        file_origin_name,
-        file_save_name
+        sugg_file_origin_name,
+        sugg_file_save_name
     FROM suggestion
     WHERE sugg_no = #{sugg_no}
      AND sugg_usage = 'Y'
@@ -144,8 +144,8 @@
         sugg_answer,
         sugg_cdate,
         sugg_usage,
-        file_origin_name,
-        file_save_name
+        sugg_file_origin_name,
+        sugg_file_save_name
     )
     VALUES (
         SUGG_SEQ.NEXTVAL,
@@ -156,8 +156,8 @@
         'N',
         SYSDATE,
         'Y',
-        #{file_origin_name},
-        #{file_save_name}
+        #{sugg_file_origin_name},
+        #{sugg_file_save_name}
     )
 
 </insert>
@@ -172,13 +172,13 @@
 
         <choose>
             <when test='deleteFile != null and deleteFile.equals("Y")'>
-                file_origin_name = NULL,
-                file_save_name = NULL,
+                sugg_file_origin_name = NULL,
+                sugg_file_save_name = NULL,
             </when>
 
-            <when test="file_origin_name != null and file_origin_name != ''">
-                file_origin_name = #{file_origin_name},
-                file_save_name = #{file_save_name},
+            <when test="sugg_file_origin_name != null and sugg_file_origin_name != ''">
+                sugg_file_origin_name = #{sugg_file_origin_name},
+                sugg_file_save_name = #{sugg_file_save_name},
             </when>
         </choose>
 

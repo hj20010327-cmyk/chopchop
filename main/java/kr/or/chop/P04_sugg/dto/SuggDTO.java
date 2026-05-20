@@ -20,7 +20,7 @@ public class SuggDTO {
     private int comment_count; // 댓글 수 
     private String startDate; // 검색 시작일
     private String endDate; // 검색 종료일
-    private String file_origin_name;
-    private String file_save_name;
+    private String sugg_file_origin_name;
+    private String sugg_file_save_name;
     private String deleteFile;
 }

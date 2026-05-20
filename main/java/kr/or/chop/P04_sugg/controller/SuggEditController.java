@@ -66,8 +66,8 @@ public class SuggEditController {
 
             uploadFile.transferTo(saveFile);
 
-            dto.setFile_origin_name(originName);
-            dto.setFile_save_name(saveName);
+            dto.setSugg_file_origin_name(originName);
+            dto.setSugg_file_save_name(saveName);
         }
 
         suggService.updateSugg(dto);

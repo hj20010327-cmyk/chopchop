@@ -182,8 +182,8 @@
 
                                 <c:choose>
 
-                                    <c:when test="${not empty dto.file_origin_name}">
-                                        ${dto.file_origin_name}
+                                    <c:when test="${not empty dto.sugg_file_origin_name}">
+                                        ${dto.sugg_file_origin_name}
                                     </c:when>
 
                                     <c:otherwise>
@@ -194,7 +194,7 @@
 
                             </span>
 
-                            <c:if test="${not empty dto.file_origin_name}">
+                            <c:if test="${not empty dto.sugg_file_origin_name}">
 
                                 <button type="button"
                                         id="deleteFileBtn"
