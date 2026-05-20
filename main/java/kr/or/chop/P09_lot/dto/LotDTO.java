@@ -10,6 +10,7 @@ public class LotDTO {
 
 	private String lotId;
 	private String lotItem;
+	private String logItemName;
 	private String lotVendor;
 	private String lotWork;
 	private int lotQty;
