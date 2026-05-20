@@ -137,6 +137,29 @@
 	    WHERE vendor_id = #{vendorId}
 	
 	</update>
+	
+	<select id="selectVendorIoList"
+	        parameterType="string"
+	        resultType="vendorIoDTO">
+	
+	    SELECT
+	        io.io_id AS ioId,
+	        io.io_type AS ioType,
+	        item.item_id AS itemId,
+	        item.item_name AS itemName,
+	        io.io_reason AS ioReason,
+	        io.io_date AS ioDate,
+	        io.io_qty AS ioQty,
+	        io.io_lot AS ioLot
+	    FROM io io
+	    LEFT JOIN lot lot
+	        ON io.io_lot = lot.lot_id
+	    LEFT JOIN item item
+	        ON lot.lot_item = item.item_id
+	    WHERE io.io_vendor = #{vendorId}
+	    ORDER BY io.io_date DESC
+	
+	</select>
 
 </mapper>
 

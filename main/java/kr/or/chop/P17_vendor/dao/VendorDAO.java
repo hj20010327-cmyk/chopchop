@@ -3,6 +3,7 @@ package kr.or.chop.P17_vendor.dao;
 import java.util.List;
 
 import kr.or.chop.P17_vendor.dto.VendorDTO;
+import kr.or.chop.P17_vendor.dto.VendorIoDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 public interface VendorDAO {
@@ -18,4 +19,6 @@ public interface VendorDAO {
     int updateVendor(VendorDTO vendorDTO);
 
     int deleteVendor(String vendorId);
+    
+    List<VendorIoDTO> selectVendorIoList(String vendorId);
 }

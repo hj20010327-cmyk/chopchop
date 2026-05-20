@@ -9,6 +9,7 @@ public class VendorIoDTO {
 
     private String ioId;
     private String ioType;
+    private String itemId;
     private String itemName;
     private String ioReason;
     private Date ioDate;

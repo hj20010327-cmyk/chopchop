@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.chop.P17_vendor.dao.VendorDAO;
 import kr.or.chop.P17_vendor.dto.VendorDTO;
+import kr.or.chop.P17_vendor.dto.VendorIoDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Service
@@ -44,5 +45,10 @@ public class VendorServiceImpl implements VendorService {
 	@Override
 	public int deleteVendor(String vendorId) {
 		return vendorDAO.deleteVendor(vendorId);
+	}
+	
+	@Override
+	public List<VendorIoDTO> selectVendorIoList(String vendorId) {
+	    return vendorDAO.selectVendorIoList(vendorId);
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import kr.or.chop.P17_vendor.dto.VendorDTO;
+import kr.or.chop.P17_vendor.dto.VendorIoDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Repository
@@ -50,5 +51,10 @@ public class VendorDAOImpl implements VendorDAO {
 	@Override
 	public int deleteVendor(String vendorId) {
 		return sqlSession.update("mapper.P17_vendor.deleteVendor", vendorId);
+	}
+
+	@Override
+	public List<VendorIoDTO> selectVendorIoList(String vendorId) {
+		return sqlSession.selectList("mapper.P17_vendor.selectVendorIoList", vendorId);
 	}
 }
