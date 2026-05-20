@@ -50,12 +50,12 @@
                     </div>
 
                     <a class="btn btn-sub"
-                        href="${pageContext.request.contextPath}/equip/stop?eqId=${eqp.eqId}">
+                        href="${pageContext.request.contextPath}/eq/stop?eqId=${eqp.eqId}">
                         설비 정지
                     </a>
 
                     <a class="btn btn-main"
-                        href="${pageContext.request.contextPath}/equip/run?eqId=${eqp.eqId}">
+                        href="${pageContext.request.contextPath}/eq/run?eqId=${eqp.eqId}">
                         설비 가동
                     </a>
                 </div>
@@ -153,7 +153,7 @@
                 </div>
 
                 <a class="btn btn-main"
-                    href="${pageContext.request.contextPath}/equip/log/add?eqId=${eqp.eqId}">
+                    href="${pageContext.request.contextPath}/eq/log/add?eqId=${eqp.eqId}">
                     점검이력 등록
                 </a>
 

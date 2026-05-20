@@ -33,7 +33,7 @@ public class EqAddController {
 
 		eqService.insertEq(eqDTO);
 
-		return "redirect:/equip/list";
+		return "redirect:/eq/list.tiles";
 	}
 
 }
