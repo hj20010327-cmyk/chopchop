@@ -17,12 +17,13 @@
 
     <form id="routForm"
           action="${pageContext.request.contextPath}/routing/insert"
-          method="post">
+          method="post"
+          class="grid-form">
 
-        <div class="search-box">
+        <div class="btn-row">
+            <div class="left"></div>
 
-            <div class="search-btn-area"
-                 style="width: 100%; justify-content: flex-end;">
+            <div class="right">
                 <a class="btn btn-white"
                    href="${pageContext.request.contextPath}/routing/list">
                     취소
@@ -33,17 +34,20 @@
                     등록
                 </button>
             </div>
+        </div>
 
-            <div class="search-item">
-                <label>라우팅명</label>
+        <div class="grid-wrap rout-grid-wrap">
+
+            <div class="grid search-item">
+                <label>라우팅명 <span class="red">*</span></label>
                 <input type="text"
                        name="routName"
                        required
                        placeholder="라우팅명을 입력하세요.">
             </div>
 
-            <div class="search-item">
-                <label>생산 품목</label>
+            <div class="grid search-item">
+                <label>생산 품목 <span class="red">*</span></label>
                 <select name="routItem"
                         required>
                     <option value="">품목 선택</option>
@@ -67,29 +71,29 @@
                 </select>
             </div>
 
-            <div class="search-item keyword">
+            <div class="grid search-item rout-content-item">
                 <label>라우팅 설명</label>
+
                 <textarea name="routContent"
+                          class="rout-content-textarea"
                           placeholder="라우팅 설명을 입력하세요."></textarea>
             </div>
 
         </div>
 
-        <div class="header-row"
-             style="margin-top: 28px;">
+        <div class="routing-section-title-row">
             <div>
-                <h3 class="page-title"
-                    style="font-size: 20px;">
+                <h3 class="content-content-content-title">
                     공정 흐름 구성
                 </h3>
                 <p class="page-subtitle">공정을 선택해 라우팅 순서를 구성합니다.</p>
             </div>
         </div>
 
-        <div class="search-box">
+        <div class="routing-proc-row">
 
             <div class="search-item">
-                <label>공정 선택</label>
+                <label>공정 선택 <span class="red">*</span></label>
 
                 <select id="procSelect">
                     <option value="">공정 선택</option>
@@ -113,7 +117,7 @@
                        placeholder="공정을 선택하세요.">
             </div>
 
-            <div class="search-item keyword">
+            <div class="search-item">
                 <label>사용 가능 설비</label>
                 <input type="text"
                        id="eqView"
@@ -121,8 +125,7 @@
                        placeholder="공정을 선택하세요.">
             </div>
 
-            <div class="search-btn-area"
-                 style="align-self: flex-end;">
+            <div class="routing-add-btn-box">
                 <button type="button"
                         class="btn btn-main"
                         id="addProcBtn">
@@ -132,8 +135,7 @@
 
         </div>
 
-        <div class="table-wrap"
-             style="margin-top: 20px;">
+        <div class="table-wrap">
             <table class="table">
                 <thead>
                     <tr>
@@ -162,9 +164,69 @@
 </div>
 
 <style>
-    textarea {
-        min-height: 90px;
+    .rout-grid-wrap {
+        display: grid;
+        grid-template-columns: 200px 400px;
+        column-gap: 24px;
+        row-gap: 18px;
+        width: 624px;
+    }
+
+    .rout-grid-wrap .grid {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .rout-grid-wrap .grid input,
+    .rout-grid-wrap .grid select,
+    .rout-grid-wrap .grid textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .rout-content-item {
+        grid-column: 1 / 3;
+    }
+
+    .rout-content-textarea {
+        min-height: 100px;
         resize: none;
+    }
+
+    .routing-section-title-row {
+        margin: 48px 0 16px;
+    }
+
+    .routing-section-title-row .content-content-content-title {
+        margin-bottom: 8px;
+    }
+
+    .routing-proc-row {
+        display: grid;
+        grid-template-columns: 130px 260px 260px 90px;
+        column-gap: 16px;
+        align-items: end;
+        width: 804px;
+        margin-bottom: 20px;
+    }
+
+    .routing-proc-row .search-item {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .routing-proc-row .search-item input,
+    .routing-proc-row .search-item select {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .routing-add-btn-box .btn {
+        width: 90px;
     }
 
     .proc-row {

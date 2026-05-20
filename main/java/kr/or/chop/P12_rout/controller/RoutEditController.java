@@ -28,7 +28,7 @@ public class RoutEditController {
 		RoutDTO rout = routService.selectRoutDetail(routId);
 
 		// 기존 공정 흐름
-		List<RoutDetailDTO> detailList = routService.selectRoutDetailList(routId);
+		List<RoutDetailDTO> routDetailList = routService.selectRoutDetailList(routId);
 
 		// 반제품 + 완제품 목록
 		List<RoutDTO> routItemList = routService.selectRoutItemList();
@@ -37,7 +37,7 @@ public class RoutEditController {
 		List<RoutDetailDTO> processList = routService.selectProcessList();
 
 		model.addAttribute("rout", rout);
-		model.addAttribute("detailList", detailList);
+		model.addAttribute("routDetailList", routDetailList);
 		model.addAttribute("routItemList", routItemList);
 		model.addAttribute("processList", processList);
 
@@ -53,5 +53,16 @@ public class RoutEditController {
 		routService.updateRoutWithDetail(routDTO, detailDTO.getRoutDtlProcList());
 
 		return "redirect:/routing/detail?routId=" + routDTO.getRoutId();
+	}
+
+	/**
+	 * 라우팅 삭제
+	 */
+	@RequestMapping("/delete")
+	public String routDelete(String routId) {
+
+		routService.deleteRout(routId);
+
+		return "redirect:/routing/list";
 	}
 }

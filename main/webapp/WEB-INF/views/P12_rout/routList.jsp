@@ -21,26 +21,56 @@
     </div>
 
     <form class="search-box"
-          action="${pageContext.request.contextPath}/routing/list"
-          method="get">
-
-        <div class="search-item keyword">
-            <label>검색어</label>
-
-            <input type="text"
-                   name="searchKeyword"
-                   value="${search.searchKeyword}"
-                   placeholder="라우팅코드, 라우팅명, 품목코드, 품목명을 입력하세요.">
-        </div>
-
-        <div class="search-btn-area">
-            <button type="submit"
-                    class="btn btn-main">
-                검색
-            </button>
-        </div>
-
-    </form>
+	      action="${pageContext.request.contextPath}/routing/list"
+	      method="get">
+	
+	    <div class="search-item">
+	        <label>검색조건</label>
+	
+	        <select name="searchType">
+	            <option value=""
+	                ${empty search.searchType ? 'selected' : ''}>
+	                전체
+	            </option>
+	
+	            <option value="routId"
+	                ${search.searchType == 'routId' ? 'selected' : ''}>
+	                라우팅 코드
+	            </option>
+	
+	            <option value="routName"
+	                ${search.searchType == 'routName' ? 'selected' : ''}>
+	                라우팅명
+	            </option>
+	
+	            <option value="itemId"
+	                ${search.searchType == 'itemId' ? 'selected' : ''}>
+	                품목 코드
+	            </option>
+	
+	            <option value="itemName"
+	                ${search.searchType == 'itemName' ? 'selected' : ''}>
+	                품목명
+	            </option>
+	        </select>
+	    </div>
+	
+	    <div class="search-item keyword">
+	        <label>검색어</label>
+	
+	        <input type="text"
+	               name="searchKeyword"
+	               value="${search.searchKeyword}"
+	               placeholder="검색어를 입력하세요.">
+	    </div>
+	
+	    <div class="search-btn-area">
+	        <button type="submit" class="btn btn-main">
+	            검색
+	        </button>
+	    </div>
+	
+	</form>
 
     <div class="table-wrap">
         <table class="table">

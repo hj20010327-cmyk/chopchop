@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">라우팅 수정</h2>
-            <p class="page-subtitle">라우팅 기본 정보와 공정 흐름을 수정합니다.</p>
+            <p class="page-subtitle">라우팅 정보와 공정 흐름을 수정합니다.</p>
         </div>
 
         <div>
@@ -17,16 +17,21 @@
 
     <form id="routForm"
           action="${pageContext.request.contextPath}/routing/update"
-          method="post">
+          method="post"
+          class="grid-form">
 
-        <input type="hidden"
-               name="routId"
-               value="${rout.routId}">
+        <input type="hidden" name="routId" value="${rout.routId}">
 
-        <div class="search-box">
+        <div class="btn-row">
+            <div class="left">
+                <button type="button"
+                        class="btn btn-white"
+                        id="deleteBtn">
+                    삭제
+                </button>
+            </div>
 
-            <div class="search-btn-area"
-                 style="width: 100%; justify-content: flex-end;">
+            <div class="right">
                 <a class="btn btn-white"
                    href="${pageContext.request.contextPath}/routing/detail?routId=${rout.routId}">
                     취소
@@ -34,34 +39,30 @@
 
                 <button type="submit"
                         class="btn btn-main">
-                    저장
+                    수정완료
                 </button>
             </div>
+        </div>
 
-            <div class="search-item">
-                <label>라우팅 코드</label>
-                <input type="text"
-                       value="${rout.routId}"
-                       readonly>
-            </div>
+        <div class="grid-wrap rout-grid-wrap">
 
-            <div class="search-item">
-                <label>라우팅명</label>
+            <div class="grid search-item">
+                <label>라우팅명 <span class="red">*</span></label>
                 <input type="text"
                        name="routName"
                        value="${rout.routName}"
-                       required>
+                       required
+                       placeholder="라우팅명을 입력하세요.">
             </div>
 
-            <div class="search-item">
-                <label>생산 품목</label>
-                <select name="routItem"
-                        required>
+            <div class="grid search-item">
+                <label>생산 품목 <span class="red">*</span></label>
+                <select name="routItem" required>
                     <option value="">품목 선택</option>
 
                     <c:forEach var="item" items="${routItemList}">
                         <option value="${item.itemId}"
-                                <c:if test="${item.itemId == rout.routItem}">selected</c:if>>
+                            ${rout.routItem == item.itemId ? 'selected' : ''}>
                             <c:choose>
                                 <c:when test="${item.itemType == 20}">
                                     [반제품]
@@ -79,29 +80,28 @@
                 </select>
             </div>
 
-            <div class="search-item keyword">
+            <div class="grid search-item rout-content-item">
                 <label>라우팅 설명</label>
                 <textarea name="routContent"
+                          class="rout-content-textarea"
                           placeholder="라우팅 설명을 입력하세요.">${rout.routContent}</textarea>
             </div>
 
         </div>
 
-        <div class="header-row"
-             style="margin-top: 28px;">
+        <div class="routing-section-title-row">
             <div>
-                <h3 class="page-title"
-                    style="font-size: 20px;">
-                    공정 흐름 수정
+                <h3 class="content-content-content-title">
+                    공정 흐름 구성
                 </h3>
-                <p class="page-subtitle">공정을 추가/삭제하거나 드래그해서 순서를 변경하세요.</p>
+                <p class="page-subtitle">공정을 선택해 라우팅 순서를 구성합니다.</p>
             </div>
         </div>
 
-        <div class="search-box">
+        <div class="routing-proc-row">
 
             <div class="search-item">
-                <label>공정 선택</label>
+                <label>공정 선택 <span class="red">*</span></label>
 
                 <select id="procSelect">
                     <option value="">공정 선택</option>
@@ -125,7 +125,7 @@
                        placeholder="공정을 선택하세요.">
             </div>
 
-            <div class="search-item keyword">
+            <div class="search-item">
                 <label>사용 가능 설비</label>
                 <input type="text"
                        id="eqView"
@@ -133,8 +133,7 @@
                        placeholder="공정을 선택하세요.">
             </div>
 
-            <div class="search-btn-area"
-                 style="align-self: flex-end;">
+            <div class="routing-add-btn-box">
                 <button type="button"
                         class="btn btn-main"
                         id="addProcBtn">
@@ -144,8 +143,7 @@
 
         </div>
 
-        <div class="table-wrap"
-             style="margin-top: 20px;">
+        <div class="table-wrap">
             <table class="table">
                 <thead>
                     <tr>
@@ -159,46 +157,39 @@
                 </thead>
 
                 <tbody id="selectedProcBody">
-                    <c:forEach var="detail" items="${detailList}">
-                        <tr class="proc-row"
-                            draggable="true">
-                            <td class="step-cell">${detail.routDtlStep}</td>
-                            <td>
-                                <span class="drag-handle">≡</span>
-                                ${detail.procId}
-                                <input type="hidden"
-                                       name="routDtlProcList"
-                                       value="${detail.procId}">
-                            </td>
-                            <td>${detail.procName}</td>
-                            <td>${detail.wpTypeName}</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${empty detail.eqNames}">
-                                        등록된 설비 없음
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${detail.eqNames}
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <button type="button"
-                                        class="btn btn-white remove-btn">
-                                    삭제
-                                </button>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${empty routDetailList}">
+                            <tr id="emptyProcRow">
+                                <td colspan="6" style="text-align: center;">
+                                    추가된 공정이 없습니다.
+                                </td>
+                            </tr>
+                        </c:when>
 
-                    <c:if test="${empty detailList}">
-                        <tr id="emptyProcRow">
-                            <td colspan="6"
-                                style="text-align: center;">
-                                추가된 공정이 없습니다.
-                            </td>
-                        </tr>
-                    </c:if>
+                        <c:otherwise>
+                            <c:forEach var="detail" items="${routDetailList}" varStatus="status">
+                                <tr class="proc-row" draggable="true">
+                                    <td class="step-cell">${status.index + 1}</td>
+                                    <td>
+                                        <span class="drag-handle">≡</span>
+                                        ${detail.procId}
+                                        <input type="hidden"
+                                               name="routDtlProcList"
+                                               value="${detail.procId}">
+                                    </td>
+                                    <td>${detail.procName}</td>
+                                    <td>${detail.wpTypeName}</td>
+                                    <td>${detail.eqNames}</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-white remove-btn">
+                                            삭제
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
         </div>
@@ -208,9 +199,69 @@
 </div>
 
 <style>
-    textarea {
-        min-height: 90px;
+    .rout-grid-wrap {
+        display: grid;
+        grid-template-columns: 200px 400px;
+        column-gap: 24px;
+        row-gap: 18px;
+        width: 624px;
+    }
+
+    .rout-grid-wrap .grid {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .rout-grid-wrap .grid input,
+    .rout-grid-wrap .grid select,
+    .rout-grid-wrap .grid textarea {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .rout-content-item {
+        grid-column: 1 / 3;
+    }
+
+    .rout-content-textarea {
+        min-height: 100px;
         resize: none;
+    }
+
+    .routing-section-title-row {
+        margin: 48px 0 16px;
+    }
+
+    .routing-section-title-row .content-content-content-title {
+        margin-bottom: 8px;
+    }
+
+    .routing-proc-row {
+        display: grid;
+        grid-template-columns: 130px 260px 260px 90px;
+        column-gap: 16px;
+        align-items: end;
+        width: 804px;
+        margin-bottom: 20px;
+    }
+
+    .routing-proc-row .search-item {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .routing-proc-row .search-item input,
+    .routing-proc-row .search-item select {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .routing-add-btn-box .btn {
+        width: 90px;
     }
 
     .proc-row {
@@ -236,6 +287,7 @@
         const addProcBtn = document.getElementById("addProcBtn");
         const selectedProcBody = document.getElementById("selectedProcBody");
         const routForm = document.getElementById("routForm");
+        const deleteBtn = document.getElementById("deleteBtn");
 
         procSelect.addEventListener("change", function() {
             const option = procSelect.options[procSelect.selectedIndex];
@@ -270,6 +322,15 @@
             eqView.value = "";
         });
 
+        deleteBtn.addEventListener("click", function() {
+            if (!confirm("해당 라우팅을 삭제하시겠습니까?")) {
+                return;
+            }
+
+            routForm.action = "${pageContext.request.contextPath}/routing/delete";
+            routForm.submit();
+        });
+
         routForm.addEventListener("submit", function(e) {
             const rows = selectedProcBody.querySelectorAll(".proc-row");
 
@@ -280,6 +341,11 @@
             }
 
             refreshStep();
+        });
+
+        const existingRows = selectedProcBody.querySelectorAll(".proc-row");
+        existingRows.forEach(function(row) {
+            bindRowEvent(row);
         });
 
         function addProcessRow(proc) {
@@ -394,13 +460,5 @@
                 offset: Number.NEGATIVE_INFINITY
             }).element;
         }
-
-        const currentRows = selectedProcBody.querySelectorAll(".proc-row");
-
-        currentRows.forEach(function(row) {
-            bindRowEvent(row);
-        });
-
-        refreshStep();
     });
 </script>

@@ -24,17 +24,8 @@ public class RoutServiceImpl implements RoutService {
 
 	@Override
 	public List<RoutDTO> selectRoutList(RoutDTO routDTO, PageInfo page) {
+
 		return routDAO.selectRoutList(routDTO, page);
-	}
-
-	@Override
-	public RoutDTO selectRoutDetail(String routId) {
-		return routDAO.selectRoutDetail(routId);
-	}
-
-	@Override
-	public List<RoutDetailDTO> selectRoutDetailList(String routId) {
-		return routDAO.selectRoutDetailList(routId);
 	}
 
 	@Override
@@ -49,41 +40,64 @@ public class RoutServiceImpl implements RoutService {
 
 	@Override
 	@Transactional
-	public void insertRoutWithDetail(RoutDTO routDTO, String[] procList) {
+	public void insertRoutWithDetail(RoutDTO routDTO, String[] routDtlProcList) {
 
 		routDAO.insertRout(routDTO);
 
-		if (procList != null) {
-			for (int i = 0; i < procList.length; i++) {
-				RoutDetailDTO detailDTO = new RoutDetailDTO();
+		String routId = routDTO.getRoutId();
 
-				detailDTO.setRoutDtlRout(routDTO.getRoutId());
-				detailDTO.setRoutDtlStep(i + 1);
-				detailDTO.setRoutDtlProc(procList[i]);
+		if (routDtlProcList == null) {
+			return;
+		}
 
-				routDAO.insertRoutDetail(detailDTO);
-			}
+		for (int i = 0; i < routDtlProcList.length; i++) {
+
+			RoutDetailDTO detailDTO = new RoutDetailDTO();
+
+			detailDTO.setRoutDtlRout(routId);
+			detailDTO.setRoutDtlProc(routDtlProcList[i]);
+			detailDTO.setRoutDtlStep(i + 1);
+
+			routDAO.insertRoutDetail(detailDTO);
 		}
 	}
 
 	@Override
+	public RoutDTO selectRoutDetail(String routId) {
+		return routDAO.selectRoutDetail(routId);
+	}
+
+	@Override
+	public List<RoutDetailDTO> selectRoutDetailList(String routId) {
+		return routDAO.selectRoutDetailList(routId);
+	}
+
+	@Override
 	@Transactional
-	public void updateRoutWithDetail(RoutDTO routDTO, String[] procList) {
+	public void updateRoutWithDetail(RoutDTO routDTO, String[] routDtlProcList) {
 
 		routDAO.updateRout(routDTO);
 
 		routDAO.deleteRoutDetail(routDTO.getRoutId());
 
-		if (procList != null) {
-			for (int i = 0; i < procList.length; i++) {
-				RoutDetailDTO detailDTO = new RoutDetailDTO();
-
-				detailDTO.setRoutDtlRout(routDTO.getRoutId());
-				detailDTO.setRoutDtlStep(i + 1);
-				detailDTO.setRoutDtlProc(procList[i]);
-
-				routDAO.insertRoutDetail(detailDTO);
-			}
+		if (routDtlProcList == null) {
+			return;
 		}
+
+		for (int i = 0; i < routDtlProcList.length; i++) {
+
+			RoutDetailDTO detailDTO = new RoutDetailDTO();
+
+			detailDTO.setRoutDtlRout(routDTO.getRoutId());
+			detailDTO.setRoutDtlProc(routDtlProcList[i]);
+			detailDTO.setRoutDtlStep(i + 1);
+
+			routDAO.insertRoutDetail(detailDTO);
+		}
+	}
+
+	@Override
+	public void deleteRout(String routId) {
+		routDAO.deleteRout(routId);
 	}
 }

@@ -17,12 +17,34 @@
         WHERE r.rout_usage = 'Y'
 
         <if test="searchKeyword != null and searchKeyword != ''">
-            AND (
-                UPPER(r.rout_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                OR UPPER(r.rout_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                OR UPPER(i.item_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                OR UPPER(i.item_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-            )
+
+            <choose>
+                <when test="searchType == 'routId'">
+                    AND UPPER(r.rout_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                </when>
+
+                <when test="searchType == 'routName'">
+                    AND UPPER(r.rout_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                </when>
+
+                <when test="searchType == 'itemId'">
+                    AND UPPER(i.item_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                </when>
+
+                <when test="searchType == 'itemName'">
+                    AND UPPER(i.item_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                </when>
+
+                <otherwise>
+                    AND (
+                        UPPER(r.rout_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                        OR UPPER(r.rout_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                        OR UPPER(i.item_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                        OR UPPER(i.item_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                    )
+                </otherwise>
+            </choose>
+
         </if>
 
     </select>
@@ -59,12 +81,34 @@
                 WHERE r.rout_usage = 'Y'
 
                 <if test="routDTO.searchKeyword != null and routDTO.searchKeyword != ''">
-                    AND (
-                        UPPER(r.rout_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                        OR UPPER(r.rout_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                        OR UPPER(i.item_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                        OR UPPER(i.item_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                    )
+
+                    <choose>
+                        <when test="routDTO.searchType == 'routId'">
+                            AND UPPER(r.rout_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                        </when>
+
+                        <when test="routDTO.searchType == 'routName'">
+                            AND UPPER(r.rout_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                        </when>
+
+                        <when test="routDTO.searchType == 'itemId'">
+                            AND UPPER(i.item_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                        </when>
+
+                        <when test="routDTO.searchType == 'itemName'">
+                            AND UPPER(i.item_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                        </when>
+
+                        <otherwise>
+                            AND (
+                                UPPER(r.rout_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                                OR UPPER(r.rout_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                                OR UPPER(i.item_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                                OR UPPER(i.item_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                            )
+                        </otherwise>
+                    </choose>
+
                 </if>
 
                 ORDER BY r.rout_id DESC
@@ -100,6 +144,7 @@
             ON r.rout_item = i.item_id
 
         WHERE r.rout_id = #{routId}
+        AND r.rout_usage = 'Y'
 
     </select>
 
@@ -268,8 +313,8 @@
 
         UPDATE routing
         SET
-            rout_item = #{routItem},
             rout_name = #{routName},
+            rout_item = #{routItem},
             rout_content = #{routContent}
         WHERE rout_id = #{routId}
 
@@ -280,9 +325,21 @@
     <delete id="deleteRoutDetail"
             parameterType="string">
 
-        DELETE FROM routing_detail
+        DELETE
+        FROM routing_detail
         WHERE rout_dtl_rout = #{routId}
 
     </delete>
+
+
+    <!-- 라우팅 논리 삭제 -->
+    <update id="deleteRout"
+            parameterType="string">
+
+        UPDATE routing
+        SET rout_usage = 'N'
+        WHERE rout_id = #{routId}
+
+    </update>
 
 </mapper>
