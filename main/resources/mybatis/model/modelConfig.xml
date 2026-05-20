@@ -11,7 +11,7 @@
     </settings>
 
 	<typeAliases>
-<!-- 		<typeAlias type="kr.or.chop.P01_login.dto.EmpDTO" alias="empDTO" /> -->
+		<typeAlias type="kr.or.chop.P01_login.dto.EmpDTO" alias="empDTO" />
 <!-- 		<typeAlias type="kr.or.chop.P01_login.dto.DeptDTO" alias="deptDTO" /> -->
 <!-- 		<typeAlias type="kr.or.chop.P01_login.dto.AlarmDTO" alias="alarmDTO" /> -->
 <!-- 		<typeAlias type="kr.or.chop.P03_notice.dto.NoticeDTO" alias="noticeDTO" /> -->

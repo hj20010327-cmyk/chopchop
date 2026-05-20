@@ -10,7 +10,7 @@
 			<h2 class="page-title">입출고 이력 수정</h2>
 
 			<p class="page-subtitle">
-				입출고 이력 정보를 수정할 수 있습니다.
+				입출고 이력(${io.idId})의 정보를 수정하세요.
 			</p>
 		</div>
 
@@ -298,13 +298,14 @@
 			<input type="text"
 				id="workerKeyword"
 				placeholder="이름/사원번호 검색"
-				style="flex:1;">
+				style="width: 60%;"
+				oninput="searchRT()">
 
-			<button type="button"
-				class="btn btn-main"
-				id="workerSearchSubmit">
-				검색
-			</button>
+<!-- 			<button type="button" -->
+<!-- 				class="btn btn-main" -->
+<!-- 				id="workerSearchSubmit"> -->
+<!-- 				검색 -->
+<!-- 			</button> -->
 
 		</div>
 
@@ -433,51 +434,51 @@ window.addEventListener("load", function() {
 		workerModal.style.display = "none";
 	});
 
-	workerSearchSubmit.addEventListener("click", function() {
+// 	workerSearchSubmit.addEventListener("click", function() {
 
-		const keyword =
-			document.querySelector("#workerKeyword").value;
+// 		const keyword =
+// 			document.querySelector("#workerKeyword").value;
 
-		loadWorkerList(keyword);
-	});
+// 		loadWorkerList(keyword);
+// 	});
 
-	function loadWorkerList(keyword) {
+// 	function loadWorkerList(keyword) {
 
-		fetch(
-			"${pageContext.request.contextPath}/io/workerList?keyword="
-			+ encodeURIComponent(keyword)
-		)
-		.then(function(response) {
-			return response.json();
-		})
-		.then(function(result) {
+// 		fetch(
+// 			"${pageContext.request.contextPath}/io/workerList?keyword="
+// 			+ encodeURIComponent(keyword)
+// 		)
+// 		.then(function(response) {
+// 			return response.json();
+// 		})
+// 		.then(function(result) {
 
-			let html = "";
+// 			let html = "";
 
-			for (let i = 0; i < result.length; i++) {
+// 			for (let i = 0; i < result.length; i++) {
 
-				html += "<tr>";
+// 				html += "<tr>";
 
-				html += "<td>" + result[i].empId + "</td>";
+// 				html += "<td>" + result[i].empId + "</td>";
 
-				html += "<td>" + result[i].empName + "</td>";
+// 				html += "<td>" + result[i].empName + "</td>";
 
-				html += "<td>";
-				html += "<input type='radio' ";
-				html += "name='workerRadio' ";
-				html += "value='" + result[i].empId + "' ";
-				html += "data-name='" + result[i].empName + "'>";
-				html += "</td>";
+// 				html += "<td>";
+// 				html += "<input type='radio' ";
+// 				html += "name='workerRadio' ";
+// 				html += "value='" + result[i].empId + "' ";
+// 				html += "data-name='" + result[i].empName + "'>";
+// 				html += "</td>";
 
-				html += "</tr>";
-			}
+// 				html += "</tr>";
+// 			}
 
-			workerTbody.innerHTML = html;
-		})
-		.catch(function() {
-			alert("작업자 목록 조회 실패");
-		});
-	}
+// 			workerTbody.innerHTML = html;
+// 		})
+// 		.catch(function() {
+// 			alert("작업자 목록 조회 실패");
+// 		});
+// 	}
 
 	workerSelectBtn.addEventListener("click", function() {
 
@@ -544,4 +545,59 @@ window.addEventListener("load", function() {
 	});
 
 });
+
+
+
+function searchRT() {
+	const keyword = document.querySelector("#workerKeyword").value;
+	loadWorkerList(keyword);
+}
+
+function loadWorkerList(keyword) {
+
+	fetch(
+		"${pageContext.request.contextPath}/io/workerList?keyword="
+		+ encodeURIComponent(keyword)
+	)
+	.then(function(response) {
+		return response.json();
+	})
+	.then(function(result) {
+
+		let html = "";
+
+		for (let i = 0; i < result.length; i++) {
+
+			html += "<tr>";
+
+			html += "<td>" + result[i].empId + "</td>";
+
+			html += "<td>" + result[i].empName + "</td>";
+
+			html += "<td>";
+			html += "<input type='radio' ";
+			html += "name='workerRadio' ";
+			html += "value='" + result[i].empId + "' ";
+			html += "data-name='" + result[i].empName + "'>";
+			html += "</td>";
+
+			html += "</tr>";
+
+		}
+		
+		if (result.length == 0) {
+			html = `
+				<tr>
+					<td colspan="3">검색 결과가 없습니다.</td>
+				</tr>
+			`;
+		}
+
+		workerTbody.innerHTML = html;
+
+	});
+
+}
+
+
 </script>
