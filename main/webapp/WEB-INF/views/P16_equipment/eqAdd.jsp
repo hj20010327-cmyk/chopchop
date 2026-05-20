@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="content">
 
@@ -14,7 +15,7 @@
 		</div>
 	</div>
 
-	<form action="${pageContext.request.contextPath}/eq/insert"
+	<form action="${pageContext.request.contextPath}/equip/insert"
 		method="post">
 
 		<div class="btn-row">
@@ -22,7 +23,7 @@
 
 			<div>
 				<a class="btn btn-white"
-					href="${pageContext.request.contextPath}/eq/list"> 취소 </a>
+					href="${pageContext.request.contextPath}/equip/list"> 취소 </a>
 
 				<button type="submit" class="btn btn-main">등록</button>
 			</div>
@@ -52,7 +53,7 @@
 								설비 책임자 <span class="red">*</span>
 							</div>
 
-							<input type="text" name="eqWorker" placeholder="검사자 조회" readonly
+							<input type="text" name="eqWorker" placeholder="책임자 조회" readonly
 								style="width: 180px; min-width: 180px; background: #ddd;">
 
 							<button type="button" class="btn btn-main">조회</button>

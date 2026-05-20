@@ -7,45 +7,45 @@
 
 	<select id="selectEqList" parameterType="map" resultType="eqDTO">
 
-		SELECT
+	SELECT
 		E.EQ_ID AS eqId,
 		E.EQ_NAME AS eqName,
 		E.EQ_STATUS AS eqStatus,
 		E.EQ_SDATE AS eqSdate,
 		E.EQ_WPID AS eqWpid,
-		S.EQ_STATUS_NAME AS
-		eqStatusName,
+		W.WP_NAME AS wpName,
+		S.EQ_STATUS_NAME AS eqStatusName,
 
 		300 AS totalTime,
 		290 AS runTime,
 		'91.2%' AS runRate
 
-		FROM
-		EQUIPMENT E
-		LEFT JOIN EQ_STATUS S
+	FROM EQUIPMENT E
+	LEFT JOIN EQ_STATUS S
 		ON E.EQ_STATUS = S.EQ_STATUS_NO
+	LEFT JOIN WORKPLACE W
+		ON E.EQ_WPID = W.WP_ID
 
-		<where>
-			<if test="eqWpid != null and eqWpid != ''">
-				AND E.EQ_WPID = #{eqWpid}
-			</if>
+	<where>
+		<if test="eqWpid != null and eqWpid != ''">
+			AND E.EQ_WPID = #{eqWpid}
+		</if>
 
-			<if test="eqStatus != 0">
-				AND E.EQ_STATUS = #{eqStatus}
-			</if>
+		<if test="eqStatus != 0">
+			AND E.EQ_STATUS = #{eqStatus}
+		</if>
 
-			<if test="searchKeyword != null and searchKeyword != ''">
-				AND (
-				UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} ||
-				'%')
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND (
+				UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
 				OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
-				)
-			</if>
-		</where>
+			)
+		</if>
+	</where>
 
-		ORDER BY E.EQ_ID DESC
+	ORDER BY E.EQ_ID DESC
 
-	</select>
+</select>
 
 	<select id="selectEqTotalCount" resultType="int">
 		SELECT COUNT(*)
@@ -131,21 +131,25 @@
 
 	<insert id="insertEq" parameterType="eqDTO">
 
-		INSERT INTO EQUIPMENT (
+	INSERT INTO EQUIPMENT (
 		EQ_ID,
 		EQ_NAME,
 		EQ_STATUS,
 		EQ_SDATE,
-		EQ_WPID
-		) VALUES (
+		EQ_WPID,
+		EQ_VENDOR,
+		EQ_MANAGER
+	) VALUES (
 		'EQ' || EQ_SEQ.NEXTVAL,
 		#{eqName},
 		20,
 		SYSDATE,
-		#{eqWpid}
-		)
+		#{eqWpid},
+		#{eqVendor},
+		#{eqManager}
+	)
 
-	</insert>
+</insert>
 	
 	<select id="selectWpList"
     resultType="kr.or.chop.P15_workplace.dto.WPDTO">

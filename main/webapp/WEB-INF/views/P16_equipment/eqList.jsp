@@ -15,7 +15,7 @@
         <div>
             <p class="page-route">홈 &gt; 설비관리</p>
             <a class="btn btn-white"
-                href="${pageContext.request.contextPath}/eq/add">
+                href="${pageContext.request.contextPath}/equip/add">
                 설비 등록
             </a>
         </div>
@@ -51,7 +51,7 @@
     </div>
 
     <form class="search-box"
-        action="${pageContext.request.contextPath}/eq/list"
+        action="${pageContext.request.contextPath}/equip/list"
         method="get"
         style="width:100%; justify-content:space-between;">
 
@@ -140,10 +140,10 @@
             <tbody>
 
                 <c:forEach var="eqp" items="${eqList}">
-                    <tr onclick="location.href='${pageContext.request.contextPath}/eq/detail?eqId=${eqp.eqId}'">
+                    <tr onclick="location.href='${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}'">
 
                         <td>${eqp.eqName} (${eqp.eqId})</td>
-                        <td>${eqp.eqWpid}</td>
+                        <td>${eqp.wpName}</td>
                         <td>${eqp.totalTime}시간</td>
                         <td>${eqp.runTime}시간</td>
                         <td>${eqp.runRate}</td>
