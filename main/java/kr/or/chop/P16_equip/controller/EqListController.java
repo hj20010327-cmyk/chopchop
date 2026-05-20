@@ -12,7 +12,7 @@ import kr.or.chop.P16_equip.service.EqService;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Controller
-@RequestMapping("/eq")
+@RequestMapping("/equip")
 public class EqListController {
 
 	@Autowired

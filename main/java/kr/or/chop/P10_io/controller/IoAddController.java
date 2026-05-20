@@ -1,5 +1,6 @@
 package kr.or.chop.P10_io.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,11 @@ public class IoAddController {
 	@RequestMapping("/insertDo")
 	public String insertDo(IoDTO ioDTO) {
 
+		ioDTO.setIoDate(toTimestamp(ioDTO.getIoDay(),ioDTO.getIoTime()));
+		
 		ioService.insertIo(ioDTO);
-
-		return "redirect:/io/list.tiles";
+		
+		return "redirect:/io/list";
 	}
 
 	@ResponseBody
@@ -59,6 +62,24 @@ public class IoAddController {
 	public List<AdminDTO> workerList(String keyword) {
 
 		return ioService.selectWorkerList(keyword);
+	}
+	
+	private Timestamp toTimestamp(String day, String time) {
+	    if (day == null || day.isEmpty() || time == null || time.isEmpty()) {
+	        return null;
+	    }
+
+	    // 0:00 -> 00:00
+	    if (time.length() == 4) {
+	        time = "0" + time;
+	    }
+
+	    // 00:00:00 -> 00:00
+	    if (time.length() >= 5) {
+	        time = time.substring(0, 5);
+	    }
+
+	    return Timestamp.valueOf(day + " " + time + ":00");
 	}
 
 }

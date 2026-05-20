@@ -12,6 +12,7 @@ public class LotDTO {
 	private String lotItem;
 	private String lotItemName;
 	private String lotVendor;
+	private String lotVendorName;
 	private String lotWork;
 	private int lotQty;
 	private int lotFqty;

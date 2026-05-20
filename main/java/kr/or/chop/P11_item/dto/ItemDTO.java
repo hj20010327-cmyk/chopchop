@@ -11,12 +11,12 @@ public class ItemDTO {
 	private String unit;
 	private String spec;
 	private int unitPrice;
-	private String itemStorage;
 	private String itemVendor;
 	private int useDate;
 	private int safetyStock;
 	private String itemUsage;
 	private String vendorName;
+	private String itemWhType;
 	
 	private String searchType;
 	private String searchKeyword;

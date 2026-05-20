@@ -66,7 +66,7 @@
 				<thead>
 					<tr>
 						<th style="width: 130px;">LOT 번호</th>
-						<th style="width: 200px;">품목</th>
+						<th style="width: 200px;">품목명(코드)</th>
 						<th style="width: 130px;">위치</th>
 						<th style="width: 100px;">수량</th>
 						<th style="width: 180px;">유통기한</th>
@@ -78,7 +78,7 @@
 					<c:forEach var="lot" items="${lotList}">
 						<tr onclick="location.href='${pageContext.request.contextPath}/lot/detail?lotId=${lot.lotId}'">
 							<td class="lotId">${lot.lotId}</td>
-							<td>${lot.lotItem}</td>
+							<td>${lot.lotItemName}(${lot.lotItem})</td>
 							<td>${lot.lotAwhsec}</td>
 							<td>${lot.lotFqty}EA</td>
 							<td>${lot.lotExp}</td>

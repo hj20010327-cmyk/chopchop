@@ -68,9 +68,19 @@
 
 				<input type="text"
 					name="itemName"
-					placeholder="품목명 입력">
+					placeholder="품목명 입력"
+					style="width: 48%;">
 			</div>
 
+
+		</div>
+		
+		<div style="
+			display:flex;
+			gap:40px;
+			margin-bottom:26px;
+		">
+		
 			<!-- 품목유형 -->
 			<div style="
 				display:flex;
@@ -82,7 +92,7 @@
 					품목유형 <span class="red">*</span>
 				</label>
 
-				<select name="itemType">
+				<select name="itemType" id="itemType">
 
 					<option value="">
 						품목 유형 선택
@@ -99,11 +109,26 @@
 					<option value="30">
 						완제품
 					</option>
+					
+					<option value="40">
+						기타 자재
+					</option>
 
 				</select>
 
 			</div>
-
+			
+			<div style="
+				display:flex;
+				flex-direction:column;
+				flex:1;
+			" class="search-item">
+			<label>창고 유형</label>
+			<select name="itemWhType" id="itemWhType">
+				<option>창고 유형 선택</option>
+			</select>
+			</div>
+			
 		</div>
 
 		<!-- 2줄 -->
@@ -207,31 +232,69 @@
 		<!-- 거래처 -->
 		<div style="
 			display:flex;
-			flex-direction:column;
+			gap:40px;
 			margin-bottom:26px;
-		" class="search-item">
-
-			<label>
-				거래처
-			</label>
-
-			<select name="itemVendor">
-
-				<option value="">
-					거래처명(거래처코드) 선택
-				</option>
-
-				<c:forEach var="vendor" items="${vendors}">
-
-					<option value="${vendor.vendorId}">
-						${vendor.vendorName} (${vendor.vendorId})
+		">
+		
+			<!-- 거래처 타입 -->
+			<div style="
+				display:flex;
+				flex-direction:column;
+				flex:1;
+			" class="search-item">
+		
+				<label>
+					거래처 타입
+				</label>
+		
+				<select id="vendorType"
+					name="vendorType">
+		
+					<option value="">
+						거래처 타입 선택
 					</option>
-
-				</c:forEach>
-
-			</select>
-
+		
+					<option value="S">
+						공급처
+					</option>
+		
+					<option value="C">
+						납품처
+					</option>
+		
+					<option value="E">
+						기타
+					</option>
+		
+				</select>
+		
+			</div>
+		
+			<!-- 거래처 이름 -->
+			<div style="
+				display:flex;
+				flex-direction:column;
+				flex:1;
+			" class="search-item">
+		
+				<label>
+					거래처
+				</label>
+		
+				<select id="itemVendor"
+					name="itemVendor">
+		
+					<option value="">
+						거래처명(거래처코드) 선택
+					</option>
+		
+				</select>
+		
+			</div>
+		
+			
 		</div>
+			
 
 		<!-- 보관방법 -->
 		<div style="
@@ -257,93 +320,59 @@
 <script>
 window.addEventListener("load", function() {
 
-	const vendorSelect = document.querySelector("select[name='itemVendor']");
+	const vendorTypeSelect =
+		document.querySelector("#vendorType");
 
-	const vendorRow = document.createElement("div");
-
-	vendorRow.setAttribute("style",
-		"display:flex;" +
-		"gap:40px;" +
-		"margin-bottom:26px;"
-	);
-
-	vendorRow.innerHTML =
-
-		/* 거래처 타입 */
-		'<div class="search-item" ' +
-			'style="display:flex; flex-direction:column; flex:1;">' +
-
-			'<label>거래처 타입</label>' +
-
-			'<select id="vendorType" name="vendorType">' +
-
-				'<option value="">거래처 타입 선택</option>' +
-				'<option value="S">공급처</option>' +
-				'<option value="C">납품처</option>' +
-				'<option value="E">기타</option>' +
-
-			'</select>' +
-		'</div>' +
-
-		/* 거래처 */
-		'<div class="search-item" ' +
-			'style="display:flex; flex-direction:column; flex:1;">' +
-
-			'<label>거래처</label>' +
-
-			'<select id="itemVendor" name="itemVendor">' +
-
-				'<option value="">거래처명(거래처코드) 선택</option>' +
-
-			'</select>' +
-
-		'</div>';
-
-	const oldVendorArea = vendorSelect.closest(".search-item");
-
-	oldVendorArea.parentNode.replaceChild(vendorRow, oldVendorArea);
-
-	const vendorTypeSelect = document.querySelector("#vendorType");
-	const newVendorSelect = document.querySelector("#itemVendor");
+	const vendorSelect =
+		document.querySelector("#itemVendor");
 
 	vendorTypeSelect.addEventListener("change", function() {
 
 		const vendorType = this.value;
 
-		newVendorSelect.innerHTML =
+		vendorSelect.innerHTML =
 			'<option value="">거래처명(거래처코드) 선택</option>';
 
 		if (vendorType === "") {
 			return;
 		}
 
-		fetch("${pageContext.request.contextPath}/item/vendorList?vendorType="
-			+ encodeURIComponent(vendorType))
+		fetch(
+			"${pageContext.request.contextPath}/item/vendorList?vendorType="
+			+ encodeURIComponent(vendorType)
+		)
 
-			.then(function(response) {
-				return response.json();
-			})
+		.then(function(response) {
+			return response.json();
+		})
 
-			.then(function(result) {
+		.then(function(result) {
 
-				let html =
-					'<option value="">거래처명(거래처코드) 선택</option>';
+			let html =
+				'<option value="">거래처명(거래처코드) 선택</option>';
 
-				for (let i = 0; i < result.length; i++) {
+			for (let i = 0; i < result.length; i++) {
 
-					html += '<option value="' + result[i].vendorId + '">';
-					html += result[i].vendorName + ' (' + result[i].vendorId + ')';
-					html += '</option>';
+				html +=
+					'<option value="' + result[i].vendorId + '">';
 
-				}
+				html +=
+					result[i].vendorName +
+					' (' + result[i].vendorId + ')';
 
-				newVendorSelect.innerHTML = html;
+				html += '</option>';
 
-			})
+			}
 
-			.catch(function() {
-				alert("거래처 목록 조회 실패");
-			});
+			vendorSelect.innerHTML = html;
+
+		})
+
+		.catch(function() {
+
+			alert("거래처 목록 조회 실패");
+
+		});
 
 	});
 	
@@ -437,6 +466,55 @@ preventNegative(useDateInput);
 			safetyStockInput.value.replace(/,/g, "");
 
 	});
+	
+	/* =========================
+	품목 유형별 창고 유형
+========================= */
+
+const itemTypeSelect =
+	document.querySelector("#itemType");
+
+const whTypeSelect =
+	document.querySelector("#itemWhType");
+
+itemTypeSelect.addEventListener("change", function() {
+
+	const itemType = this.value;
+
+	let html =
+		'<option value="">창고 유형 선택</option>';
+
+	// 원자재
+	if (itemType === "10") {
+
+		html += '<option value="10">원자재냉동창고</option>';
+		html += '<option value="20">원자재냉장창고</option>';
+		html += '<option value="30">원자재상온창고</option>';
+
+	}
+
+	// 반제품
+	else if (itemType === "20") {
+
+		html += '<option value="40">반제품냉장창고</option>';
+		html += '<option value="50">반제품냉동창고</option>';
+
+	}
+
+	// 완제품
+	else if (itemType === "30") {
+
+		html += '<option value="60">완제품창고</option>';
+
+	}
+	
+	else if (itemType === "40") {
+		html += '<option value="70">기타 자재 창고</option>'
+	}
+
+	whTypeSelect.innerHTML = html;
+
+});
 
 });
 </script>

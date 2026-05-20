@@ -45,11 +45,11 @@ public class IoDAOImpl implements IoDAO {
 
 		String ioId = null;
 
-		if ("입고".equals(ioDTO.getIoType())) {
+		if ("IN".equals(ioDTO.getIoType())) {
 
 			ioId = sqlSession.selectOne("mapper.P10_io.selectInId");
 
-		} else if ("출고".equals(ioDTO.getIoType())) {
+		} else if ("OUT".equals(ioDTO.getIoType())) {
 
 			ioId = sqlSession.selectOne("mapper.P10_io.selectOutId");
 		}
@@ -94,8 +94,22 @@ public class IoDAOImpl implements IoDAO {
 
 	@Override
 	public List<AdminDTO> selectWorkerList(String keyword) {
-
 		return sqlSession.selectList("mapper.P10_io.selectWorkerList", keyword);
+	}
+
+	@Override
+	public void insertLotByIo(IoDTO ioDTO) {
+		sqlSession.insert("mapper.P10_io.insertLotByIo", ioDTO);
+	}
+
+	@Override
+	public String selectLastLotId() {
+		return sqlSession.selectOne("mapper.P10_io.selectLastLotId");
+	}
+
+	@Override
+	public int minusLotFqty(IoDTO ioDTO) {
+		return sqlSession.update("mapper.P10_io.minusLotFqty", ioDTO);
 	}
 
 }

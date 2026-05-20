@@ -21,5 +21,8 @@ public interface IoDAO {
 	void updateIo(IoDTO ioDTO);
 	String selectVendorTypeById(String vendorId);
 	List<AdminDTO> selectWorkerList(String keyword);
+	void insertLotByIo(IoDTO ioDTO);
+	String selectLastLotId();
+	int minusLotFqty(IoDTO ioDTO);
 	
 }

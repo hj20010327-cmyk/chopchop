@@ -82,12 +82,12 @@
 						<td>${lot.lotId}</td>
 
 						<th>품목</th>
-						<td>${lot.lotItem}</td>
+						<td>${lot.lotItemName}</td>
 					</tr>
 
 					<tr>
-						<th>입고 번호</th>
-						<td>${lot.lotVendor}</td>
+						<th>거래처이름(코드)</th>
+						<td>${lot.lotVendorName}(${lot.lotVendor})</td>
 
 						<th>제조일시</th>
 						<td>
@@ -110,11 +110,7 @@
 					<tr>
 						<th>출고일시</th>
 						<td>
-							<c:if test="${empty lot.lotExp}">-</c:if>
-							<c:if test="${not empty lot.lotExp}">
-								<fmt:formatDate value="${lot.lotExp}"
-									pattern="yyyy-MM-dd HH:mm"/>
-							</c:if>						
+							-					
 						</td>
 
 						<th>현재 수량</th>
@@ -123,7 +119,8 @@
 
 					<tr>
 						<th>유통기한</th>
-						<td>${lot.lotExp}</td>
+						<td><fmt:formatDate value="${lot.lotExp}"
+									pattern="yyyy-MM-dd HH:mm"/></td>
 
 						<th>위치</th>
 						<td>${lot.lotAwhsec}</td>

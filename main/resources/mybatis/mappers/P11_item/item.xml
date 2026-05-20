@@ -47,8 +47,8 @@
 		item_unit AS unit,
 		item_spec AS spec,
 		item_unit_price AS unitPrice,
-		item_storage AS
-		itemStorage,
+		item_whtype AS
+		itemWhType,
 		item_vendor AS itemVendor,
 		item_usedate AS useDate,
 		item_safety_stock AS safetyStock,
@@ -91,11 +91,11 @@
 		item_unit,
 		item_spec,
 		item_unit_price,
-		item_storage,
+		item_whtype,
 		item_vendor,
 		item_usedate,
 		item_safety_stock,
-		item_usage
+		item_usage,
 		)
 		VALUES (
 		<choose>
@@ -118,7 +118,7 @@
 		#{unit},
 		#{spec},
 		#{unitPrice},
-		#{itemStorage},
+		#{itemWhType},
 		#{itemVendor},
 		#{useDate},
 		#{safetyStock},
@@ -138,12 +138,12 @@
 		I.item_unit AS unit,
 		I.item_spec AS spec,
 		I.item_unit_price AS unitPrice,
-		I.item_storage AS itemStorage,
 		I.item_vendor AS itemVendor,
 		V.vendor_name AS vendorName,
 		I.item_usedate AS useDate,
 		I.item_safety_stock AS safetyStock,
-		I.item_usage AS itemUsage
+		I.item_usage AS itemUsage,
+		I.item_whtype AS itemWhType
 		FROM item I
 		LEFT JOIN vendor V
 		ON I.item_vendor
@@ -196,7 +196,7 @@
 			item_unit = #{unit},
 			item_spec = #{spec},
 			item_unit_price = #{unitPrice},
-			item_storage = #{itemStorage},
+			item_whtype = #{itemWhType},
 			item_vendor = #{itemVendor},
 			item_usedate = #{useDate},
 			item_safety_stock = #{safetyStock}

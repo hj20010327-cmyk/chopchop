@@ -112,7 +112,7 @@
 					<c:if test="${empty itemList}">
 						<tr>
 							<td colspan="7" style="text-align: center;">
-								조회된 거래처가 없습니다.
+								조회된 품목이 없습니다.
 							</td>
 						</tr>
 					</c:if>				

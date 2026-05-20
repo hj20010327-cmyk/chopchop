@@ -15,25 +15,28 @@
 		from
 		(
 		select
-		lot_id as lotId,
-		lot_item
+		L.lot_id as lotId,
+		L.lot_item
 		as lotItem,
-		lot_vendor as lotVendor,
-		lot_work as lotWork,
-		lot_qty as
+		L.lot_vendor as lotVendor,
+		L.lot_work as lotWork,
+		L.lot_qty as
 		lotQty,
-		lot_fqty as lotFqty,
-		lot_mfd as lotMfd,
-		lot_etw as lotEtw,
-		lot_exp as lotExp,
-		lot_qc as lotQc,
-		lot_status as lotStatus,
-		lot_memo as
+		L.lot_fqty as lotFqty,
+		L.lot_mfd as lotMfd,
+		L.lot_etw as lotEtw,
+		L.lot_exp as lotExp,
+		L.lot_qc as lotQc,
+		L.lot_status as lotStatus,
+		L.lot_memo as
 		lotMemo,
-		lot_bwhsec as lotBwhsec,
-		lot_awhsec as lotAwhsec,
-		lot_cqty as lotCqty
-		from lot
+		L.lot_bwhsec as lotBwhsec,
+		L.lot_awhsec as lotAwhsec,
+		L.lot_cqty as lotCqty,
+		IT.item_name as lotItemName
+		from lot L
+		LEFT JOIN ITEM IT
+			ON L.LOT_ITEM = IT.ITEM_ID
 		<where>
 			<if test="lotStatus != null and lotStatus != ''">
 				AND lot_status = #{lotStatus}
@@ -41,15 +44,15 @@
 
 			<if test="searchKeyword != null and searchKeyword != ''">
 				AND (
-				UPPER(lot_id) LIKE UPPER('%' || #{searchKeyword} ||
-				'%')
+				UPPER(lot_id) LIKE UPPER('%' || #{searchKeyword} || '%')
 				OR UPPER(lot_item) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(IT.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
 				)
 			</if>
 		</where>
 		ORDER BY lot_id DESC
 		) I
-		)
+	)
 
 	</select>
 
@@ -61,6 +64,7 @@
 			L.LOT_ID AS lotId,
 			L.LOT_ITEM AS lotItem,
 			L.LOT_VENDOR AS lotVendor,
+			V.vendor_name as lotVendorName,
 			L.LOT_WORK AS lotWork,
 			L.LOT_QTY AS lotQty,
 			L.LOT_FQTY AS lotFqty,
@@ -73,10 +77,14 @@
 			L.LOT_BWHSEC AS lotBwhsec,
 			L.LOT_AWHSEC AS lotAwhsec,
 			L.lot_cqty as lotCqty,
-			I.ITEM_TYPE AS itemType
+			I.ITEM_NAME AS lotItemName
 		FROM LOT L
 		LEFT JOIN ITEM I
 			ON L.LOT_ITEM = I.ITEM_ID
+			
+		LEFT JOIN VENDOR V
+		ON L.LOT_VENDOR = V.VENDOR_ID
+	
 		WHERE L.LOT_ID = #{lotId}
 	
 	</select>

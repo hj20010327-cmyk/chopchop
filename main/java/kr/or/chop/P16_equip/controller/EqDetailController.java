@@ -11,7 +11,7 @@ import kr.or.chop.P16_equip.dto.EqDTO;
 import kr.or.chop.P16_equip.service.EqService;
 
 @Controller
-@RequestMapping("/eq")
+@RequestMapping("/equip")
 public class EqDetailController {
 	
 	@Autowired

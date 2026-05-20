@@ -8,99 +8,98 @@
 	<select id="selectIoList" parameterType="map" resultType="ioDTO">
 
 		SELECT
-			IO.io_id AS ioId,
-			IO.io_type AS ioType,
-			IO.io_reason AS ioReason,
-			IO.io_vendor AS ioVendor,
-			IO.io_lot AS ioLot,
-			IO.io_qty AS ioQty,
-			IO.io_date AS ioDate,
-			IO.io_worker AS ioWorker,
-			IO.io_msg AS ioMsg,
-	
-			I.item_id AS itemId,
-			I.item_name AS itemName
-	
+		IO.io_id AS ioId,
+		IO.io_type AS ioType,
+		IO.io_reason AS ioReason,
+		IO.io_vendor AS ioVendor,
+		IO.io_lot AS ioLot,
+		IO.io_qty AS ioQty,
+		IO.io_date AS ioDate,
+		IO.io_worker AS ioWorker,
+		IO.io_msg AS ioMsg,
+
+		I.item_id AS itemId,
+		I.item_name AS itemName
+
 		FROM io IO
-	
+
 		LEFT JOIN lot L
-			ON IO.io_lot = L.lot_id
-	
+		ON IO.io_lot = L.lot_id
+
 		LEFT JOIN item I
-			ON L.lot_item = I.item_id
-	
+		ON L.lot_item = I.item_id
+
 		<where>
 			<if test="ioType != null and ioType != ''">
 				AND IO.io_type = #{ioType}
 			</if>
-	
+
 			<if test="startDate != null and startDate != ''">
 				AND IO.io_date &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
 			</if>
-	
+
 			<if test="endDate != null and endDate != ''">
 				AND IO.io_date &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
 			</if>
-	
+
 			<if test="searchKeyword != null and searchKeyword != ''">
 				AND (
-					UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
-					OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
-					OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
-					OR UPPER(I.item_id) LIKE UPPER('%' || #{searchKeyword} || '%')
-					OR UPPER(I.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
+				UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(I.item_id) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(I.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
 				)
 			</if>
-	
+
 			AND IO.io_usage = 'Y'
 		</where>
-	
+
 		ORDER BY IO.io_date DESC
-	
+
 	</select>
 
-	<select id="selectIoDetail"
-    parameterType="string"
-    resultType="kr.or.chop.P10_io.dto.IoDTO">
+	<select id="selectIoDetail" parameterType="string"
+		resultType="kr.or.chop.P10_io.dto.IoDTO">
 
-	    SELECT
-	        IO.IO_ID AS ioId,
-	        IO.IO_TYPE AS ioType,
-	        IO.IO_REASON AS ioReason,
-	
-	        IO.IO_VENDOR AS ioVendor,
-	        V.VENDOR_NAME AS vendorName,
-	
-	        IO.IO_LOT AS ioLot,
-	
-	        IO.IO_QTY AS ioQty,
-	        IO.IO_DATE AS ioDate,
-	
-	        IO.IO_WORKER AS ioWorker,
-	        E.EMP_NAME AS workerName,
-	
-	        IO.IO_MSG AS ioMsg,
-	
-	        I.ITEM_ID AS itemId,
-	        I.ITEM_NAME AS itemName
-	
-	    FROM IO IO
-	
-	    LEFT JOIN VENDOR V
-	        ON IO.IO_VENDOR = V.VENDOR_ID
-	
-	    LEFT JOIN LOT L
-	        ON IO.IO_LOT = L.LOT_ID
-	
-	    LEFT JOIN ITEM I
-	        ON L.LOT_ITEM = I.ITEM_ID
-	
-	    LEFT JOIN EMP E
-	        ON IO.IO_WORKER = E.EMP_ID
-	
-	    WHERE IO.IO_ID = #{ioId}
-	    and io_usage = 'Y'
-	
+		SELECT
+		IO.IO_ID AS ioId,
+		IO.IO_TYPE AS ioType,
+		IO.IO_REASON AS ioReason,
+
+		IO.IO_VENDOR AS ioVendor,
+		V.VENDOR_NAME AS vendorName,
+
+		IO.IO_LOT AS ioLot,
+
+		IO.IO_QTY AS ioQty,
+		IO.IO_DATE AS ioDate,
+
+		IO.IO_WORKER AS ioWorker,
+		E.EMP_NAME AS workerName,
+
+		IO.IO_MSG AS ioMsg,
+
+		I.ITEM_ID AS itemId,
+		I.ITEM_NAME AS itemName
+
+		FROM IO IO
+
+		LEFT JOIN VENDOR V
+		ON IO.IO_VENDOR = V.VENDOR_ID
+
+		LEFT JOIN LOT L
+		ON IO.IO_LOT = L.LOT_ID
+
+		LEFT JOIN ITEM I
+		ON L.LOT_ITEM = I.ITEM_ID
+
+		LEFT JOIN EMP E
+		ON IO.IO_WORKER = E.EMP_ID
+
+		WHERE IO.IO_ID = #{ioId}
+		and io_usage = 'Y'
+
 	</select>
 
 	<select id="selectInId" resultType="string">
@@ -153,105 +152,173 @@
 		SELECT
 		LOT_ID AS lotId,
 		LOT_ITEM AS lotItem,
-		LOT_FQTY AS lotFqty,
+		LOT_FQTY AS
+		lotFqty,
 		LOT_EXP AS lotExp,
 		LOT_STATUS AS lotStatus
 		FROM LOT
-		WHERE LOT_ITEM = #{itemId}
+		WHERE
+		LOT_ITEM = #{itemId}
 		AND LOT_FQTY > 0
 		AND LOT_STATUS IN (10, 20)
-		ORDER BY LOT_EXP ASC, LOT_ID ASC
+		ORDER BY
+		LOT_EXP ASC, LOT_ID ASC
 
 	</select>
+	
+	<insert id="insertIo"
+	parameterType="ioDTO">
 
-
-	<insert id="insertIo" parameterType="ioDTO">
-
-		INSERT INTO io (
-		io_id,
-		io_type,
-		io_reason,
-		io_vendor,
-		io_lot,
-		io_qty,
-		io_date,
-		io_worker,
-		io_msg
+		INSERT INTO IO (
+			IO_ID,
+			IO_TYPE,
+			IO_REASON,
+			IO_VENDOR,
+			IO_LOT,
+			IO_QTY,
+			IO_DATE,
+			IO_WORKER,
+			IO_MSG,
+			IO_USAGE
 		)
 		VALUES (
-		#{ioId},
-		#{ioType},
-		#{ioReason},
-		#{ioVendor},
-		#{ioLot},
-		#{ioQty},
-		SYSDATE + (9/24),
-		#{ioWorker},
-		#{ioMsg}
+			#{ioId},
+			#{ioType},
+			#{ioReason},
+			#{ioVendor},
+			#{ioLot},
+			#{ioQty},
+			#{ioDate},
+			#{ioWorker},
+			#{ioMsg},
+			'Y'
 		)
-
+	
 	</insert>
 
-	<update id="deleteIo"
-	parameterType="string">
+
+	<insert id="insertLotByIo"
+	parameterType="ioDTO">
+
+		INSERT INTO LOT (
+			LOT_ID,
+			LOT_ITEM,
+			LOT_VENDOR,
+			LOT_WORK,
+			LOT_QTY,
+			LOT_CQTY,
+			LOT_FQTY,
+			LOT_MFD,
+			LOT_ETW,
+			LOT_EXP,
+			LOT_QC,
+			LOT_STATUS,
+			LOT_MEMO,
+			LOT_BWHSEC,
+			LOT_AWHSEC
+		)
+		VALUES (
+			'LOT' || LOT_SEQ.NEXTVAL,
+			#{itemId},
+			#{ioVendor},
+			NULL,
+			#{ioQty},
+			0,
+			0,
+			TO_DATE(#{ioDay}, 'YYYY-MM-DD'),
+			NULL,
+			NULL,
+			'N',
+			10,
+			#{ioMsg},
+			NULL,
+			NULL
+		)
+	
+	</insert>
+
+	<update id="deleteIo" parameterType="string">
 
 		UPDATE io
 		SET
-			io_usage = 'N'
+		io_usage = 'N'
 		WHERE io_id = #{ioId}
-	
+
 	</update>
 
 	<update id="updateIo"
-	parameterType="kr.or.chop.P10_io.dto.IoDTO">
+		parameterType="kr.or.chop.P10_io.dto.IoDTO">
 
 		UPDATE io
 		SET
-			io_type = #{ioType},
-			io_reason = #{ioReason},
-			io_vendor = #{ioVendor},
-			io_lot = #{ioLot},
-			io_qty = #{ioQty},
-			io_date = #{ioDate},
-			io_worker = #{ioWorker},
-			io_msg = #{ioMsg}
+		io_type = #{ioType},
+		io_reason = #{ioReason},
+		io_vendor = #{ioVendor},
+		io_lot = #{ioLot},
+		io_qty = #{ioQty},
+		io_date = #{ioDate},
+		io_worker = #{ioWorker},
+		io_msg = #{ioMsg}
 		WHERE io_id = #{ioId}
-	
+
 	</update>
 
-	<select id="selectVendorTypeById"
-	parameterType="string"
-	resultType="string">
+	<select id="selectVendorTypeById" parameterType="string"
+		resultType="string">
 
 		SELECT vendor_type
 		FROM vendor
 		WHERE vendor_id = #{vendorId}
-	
+
 	</select>
 
-	<select id="selectWorkerList"
-	parameterType="string"
-	resultType="adminDTO">
+	<select id="selectWorkerList" parameterType="string"
+		resultType="adminDTO">
 
 		SELECT
-			emp_id AS empId,
-			emp_name AS empName
+		emp_id AS empId,
+		emp_name AS empName
 		FROM emp
-	
+
 		<where>
 			emp_inoffice = 0
-	
+
 			<if test="_parameter != null and _parameter != ''">
 				AND (
-					UPPER(emp_id) LIKE UPPER('%' || #{_parameter} || '%')
-					OR
-					UPPER(emp_name) LIKE UPPER('%' || #{_parameter} || '%')
+				UPPER(emp_id) LIKE UPPER('%' || #{_parameter} || '%')
+				OR
+				UPPER(emp_name) LIKE UPPER('%' || #{_parameter} || '%')
 				)
 			</if>
 		</where>
-	
+
 		ORDER BY emp_id
-	
+
 	</select>
+
+	<select id="selectLastLotId" resultType="string">
+
+		SELECT 'LOT' ||
+		LOT_SEQ.CURRVAL
+		FROM dual
+
+	</select>
+
+	<update id="minusLotFqty" parameterType="ioDTO">
+
+		UPDATE LOT
+		SET
+			LOT_CQTY = LOT_CQTY - #{ioQty},
+			LOT_STATUS =
+				CASE
+					WHEN LOT_CQTY - #{ioQty} = 0 THEN 30
+					WHEN LOT_CQTY - #{ioQty} > 0 THEN 20
+					ELSE LOT_STATUS
+				END
+		WHERE LOT_ID = #{ioLot}
+		AND LOT_CQTY >= #{ioQty}
+
+	</update>
+	
 
 </mapper>
