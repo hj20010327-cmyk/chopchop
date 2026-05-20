@@ -23,6 +23,12 @@ public class IoServiceImpl implements IoService {
 	public List<IoDTO> selectIoList(IoDTO ioDTO, PageInfo pageInfo) {
 		return ioDAO.selectIoList(ioDTO, pageInfo);
 	}
+	
+	@Override
+	public int selectIoCount(IoDTO ioDTO) {
+
+		return ioDAO.selectIoCount(ioDTO);
+	}
 
 	@Override
 	public IoDTO selectIoDetail(String ioId) {

@@ -4,6 +4,31 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.P09_lot">
 
+	<select id="selectLotCount"
+		parameterType="lotDTO" resultType="int">
+		
+		select count(*)
+		from lot L
+		LEFT JOIN ITEM IT
+			ON L.LOT_ITEM = IT.ITEM_ID
+		<where>
+			<if test="lotStatus != null and lotStatus != ''">
+				AND lot_status = #{lotStatus}
+			</if>
+
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (
+				UPPER(lot_id) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(lot_item) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(IT.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
+				)
+			</if>
+		</where>
+		
+		
+		
+	</select>
+
 	<select id="selectlotList" parameterType="map"
 		resultType="lotDTO">
 

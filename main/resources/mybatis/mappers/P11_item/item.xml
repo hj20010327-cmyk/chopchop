@@ -71,7 +71,15 @@
 			</if>
 		</where>
 
-		ORDER BY item_id DESC
+		ORDER BY
+		CASE
+			WHEN item_type = '30' THEN 1
+			WHEN item_type = '20' THEN 2
+			WHEN item_type = '10' THEN 3
+			WHEN item_type = '40' THEN 4
+			ELSE 5
+		END,
+		item_id DESC
 		) I
 		)
 		WHERE RN BETWEEN #{page.startRow}
@@ -95,7 +103,7 @@
 		item_vendor,
 		item_usedate,
 		item_safety_stock,
-		item_usage,
+		item_usage
 		)
 		VALUES (
 		<choose>
@@ -110,16 +118,25 @@
 			<when test="itemType == 30 or itemType == '30'">
 				'FIN' || fin_seq.NEXTVAL
 			</when>
+			
+			<when test="itemType == 40 or itemType == '40'">
+				'ETC' || etc_seq.NEXTVAL
+			</when>
 
 		</choose>
 		,
 		#{itemName},
 		#{itemType},
-		#{unit},
+		upper(#{unit}),
 		#{spec},
 		#{unitPrice},
 		#{itemWhType},
-		#{itemVendor},
+		<if test="itemVendor == null or itemVendor == ''">
+			null,
+		</if>
+		<if test="itemVendor != null and itemVendor != ''">
+			#{itemVendor},
+		</if>
 		#{useDate},
 		#{safetyStock},
 		'Y'

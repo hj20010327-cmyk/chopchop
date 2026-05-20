@@ -34,6 +34,12 @@ public class IoDAOImpl implements IoDAO {
 
 		return sqlSession.selectList("mapper.P10_io.selectIoList", paramMap);
 	}
+	
+	@Override
+	public int selectIoCount(IoDTO ioDTO) {
+
+		return sqlSession.selectOne("mapper.P10_io.selectIoCount", ioDTO);
+	}
 
 	@Override
 	public IoDTO selectIoDetail(String ioId) {

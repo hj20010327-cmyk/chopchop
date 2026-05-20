@@ -5,8 +5,51 @@
 
 <mapper namespace="mapper.P10_io">
 
+	<select id="selectIoCount"
+		parameterType="ioDTO" resultType="int">
+	
+		select count(*)
+		from io
+		<where>
+			<if test="ioType != null and ioType != ''">
+				AND IO.io_type = #{ioType}
+			</if>
+
+			<if test="startDate != null and startDate != ''">
+				AND IO.io_date &gt;= TO_DATE(#{startDate}, 'YYYY-MM-DD')
+			</if>
+
+			<if test="endDate != null and endDate != ''">
+				AND IO.io_date &lt; TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+			</if>
+
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (
+				UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(I.item_id) LIKE UPPER('%' || #{searchKeyword} || '%')
+				OR UPPER(I.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
+				)
+			</if>
+
+			AND IO.io_usage = 'Y'
+		</where>
+		
+	
+	
+	</select>
+
+
 	<select id="selectIoList" parameterType="map" resultType="ioDTO">
 
+		select *
+		from
+		(
+		select rownum rn,
+		I.*
+		from
+		(
 		SELECT
 		IO.io_id AS ioId,
 		IO.io_type AS ioType,
@@ -56,6 +99,11 @@
 		</where>
 
 		ORDER BY IO.io_date DESC
+		) I
+		)
+		where rn between #{page.startRow}
+		and
+		#{page.endRow}
 
 	</select>
 

@@ -31,13 +31,13 @@
             <div style="display: flex; align-items: center; gap: 8px;">
                 <input type="date"
                     name="startDate"
-                    value="${search.startDate}" style="min-width:218px;">
+                    value="${search.startDate}" style="min-width:178px;">
 
                 <span>~</span>
 
                 <input type="date"
                     name="endDate"
-                    value="${search.endDate}" style="min-width:218px;">
+                    value="${search.endDate}" style="min-width:178px;">
             </div>
         </div>
 
@@ -72,6 +72,9 @@
             <button type="submit" class="btn btn-main">
                 검색
             </button>
+            <a class="btn btn-white" href="${pageContext.request.contextPath}/io/list">
+				초기화
+			</a>
         </div>
 
     </form>

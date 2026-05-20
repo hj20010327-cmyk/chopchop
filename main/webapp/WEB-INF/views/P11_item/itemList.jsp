@@ -44,6 +44,11 @@
 					${search.searchType == '30' ? 'selected' : ''}>
 					완제품
 				</option>
+				
+				<option value="40"
+					${search.searchType == '40' ? 'selected' : ''}>
+					기타 자재
+				</option>
 			</select>
 		</div>
 		
@@ -95,6 +100,9 @@
 									</c:when>
 									<c:when test="${item.itemType == '30'}">
 										완제품
+									</c:when>
+									<c:when test="${item.itemType == '40'}">
+										기타 자재
 									</c:when>
 									<c:otherwise>
 										-

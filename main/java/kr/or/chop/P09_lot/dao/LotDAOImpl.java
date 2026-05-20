@@ -34,6 +34,11 @@ public class LotDAOImpl implements LotDAO {
 	}
 	
 	@Override
+	public int selectLotCount(LotDTO lotDTO) {
+		return sqlSession.selectOne("mapper.P09_lot.selectLotCount", lotDTO);
+	}
+	
+	@Override
 	public LotDTO selectLotDetail(String lotId) {
 	    return sqlSession.selectOne("mapper.P09_lot.selectLotDetail", lotId);
 	}

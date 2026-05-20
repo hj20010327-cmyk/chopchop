@@ -22,6 +22,11 @@ public class LotServiceImpl implements LotService {
     }
     
     @Override
+    public int selectLotCount(LotDTO lotDTO) {
+    	return lotDAO.selectLotCount(lotDTO);
+    }
+    
+    @Override
     public LotDTO selectLotDetail(String lotId) {
         return lotDAO.selectLotDetail(lotId);
     }

@@ -11,18 +11,19 @@ import kr.or.chop.common.pagination.PageInfo;
 
 public interface IoDAO {
 
-	List<IoDTO> selectIoList(IoDTO ioDTO, PageInfo pageInfo);
-	IoDTO selectIoDetail(String ioId);
-	void insertIo(IoDTO ioDTO);
-	List<ItemDTO> selectItemListByType(String itemType);
-	List<VendorDTO> selectVendorList();
-	List<LotDTO> selectLotListByItem(String itemId);
-	void deleteIo(String ioId);
-	void updateIo(IoDTO ioDTO);
-	String selectVendorTypeById(String vendorId);
-	List<AdminDTO> selectWorkerList(String keyword);
-	void insertLotByIo(IoDTO ioDTO);
-	String selectLastLotId();
-	int minusLotFqty(IoDTO ioDTO);
+	public List<IoDTO> selectIoList(IoDTO ioDTO, PageInfo pageInfo);
+	public int selectIoCount(IoDTO ioDTO);
+	public IoDTO selectIoDetail(String ioId);
+	public void insertIo(IoDTO ioDTO);
+	public List<ItemDTO> selectItemListByType(String itemType);
+	public List<VendorDTO> selectVendorList();
+	public List<LotDTO> selectLotListByItem(String itemId);
+	public void deleteIo(String ioId);
+	public void updateIo(IoDTO ioDTO);
+	public String selectVendorTypeById(String vendorId);
+	public List<AdminDTO> selectWorkerList(String keyword);
+	public void insertLotByIo(IoDTO ioDTO);
+	public String selectLastLotId();
+	public int minusLotFqty(IoDTO ioDTO);
 	
 }

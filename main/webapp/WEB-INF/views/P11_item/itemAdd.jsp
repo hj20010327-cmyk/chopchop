@@ -296,23 +296,7 @@
 		</div>
 			
 
-		<!-- 보관방법 -->
-		<div style="
-			display:flex;
-			flex-direction:column;
-		" class="search-item">
-
-			<label>
-				보관방법 <span class="red">*</span>
-			</label>
-
-			<textarea name="itemStorage"
-				placeholder="보관방법을 입력하세요."
-				style="
-					height:220px;
-				"></textarea>
-
-		</div>
+		
 
 	</form>
 
