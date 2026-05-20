@@ -22,7 +22,7 @@
       	  method="get"
       	  id="searchForm">
 
-    <div class="search-item date-item" style="width: 600px;">
+    <div class="search-item date-item">
         <label>기간</label>
 
         <div class="date-row">
@@ -65,6 +65,10 @@
 
     <div class="search-btn-area">
         <button type="submit" class="btn btn-main">검색</button>
+         <a class="btn btn-white reset-btn"
+       href="${pageContext.request.contextPath}/sugg/list">
+        초기화
+    	</a>
     </div>
 
 </form>
@@ -201,12 +205,11 @@
     display: flex;
     align-items: flex-end;
     gap: 10px;
+    flex-wrap: nowrap;
 }
 
-.search-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.date-item {
+    width: auto;
 }
 
 .date-row {
@@ -216,20 +219,31 @@
 }
 
 .date-row input {
-    width: 120px;
+    width: 230px;
+    min-width: 230px;
 }
 
 .status-item select {
-    width: 90px;
+    width: 110px;
+    min-width: 110px;
 }
 
 .keyword input {
-    width: 260px;
+    width: 240px;
+    min-width: 240px;
 }
 
 .search-btn-area {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-width: 145px;
+}
+
+.reset-btn {
+    width: 66px;
+    white-space: nowrap;
 }
 
 .suggTitle {
@@ -238,8 +252,34 @@
 }
 
 .suggTitle:hover {
-    color: #2d7a46;   /* 초록색 */
+    color: #2d7a46;
     text-decoration: underline;
+}
+
+
+/* PC 화면에서만 한 줄 유지 */
+@media (min-width: 1200px) {
+    .search-box {
+        flex-wrap: nowrap;
+    }
+}
+
+/* 작은 화면에서는 자연스럽게 줄바꿈 */
+@media (max-width: 768px) {
+    .date-row {
+        flex-wrap: wrap;
+    }
+
+    .date-row input,
+    .status-item select,
+    .keyword input {
+        width: 100%;
+    }
+
+    .search-item,
+    .search-btn-area {
+        width: 100%;
+    }
 }
 </style>
 
