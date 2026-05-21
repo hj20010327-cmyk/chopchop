@@ -6,26 +6,29 @@
 
 	<div class="header-row">
 		<div>
-			<h2 class="page-title">설비 등록</h2>
-			<p class="page-subtitle">새로운 설비를 등록해주세요.</p>
+			<h2 class="page-title">설비 수정</h2>
+			<p class="page-subtitle">설비 정보를 수정해주세요.</p>
 		</div>
 
 		<div>
-			<p class="page-route">홈 &gt; 설비관리 &gt; 등록</p>
+			<p class="page-route">홈 &gt; 설비관리 &gt; 수정</p>
 		</div>
 	</div>
 
-	<form action="${pageContext.request.contextPath}/equip/insert"
+	<form action="${pageContext.request.contextPath}/equip/update"
 		method="post">
+
+		<input type="hidden" name="eqId" value="${eqp.eqId}">
 
 		<div class="btn-row">
 			<div></div>
 
 			<div>
 				<a class="btn btn-white"
-					href="${pageContext.request.contextPath}/equip/list"> 취소 </a>
+					href="${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}">
+					취소 </a>
 
-				<button type="submit" class="btn btn-main">등록</button>
+				<button type="submit" class="btn btn-main">저장</button>
 			</div>
 		</div>
 
@@ -40,8 +43,13 @@
 					<div class="grid-wrap">
 
 						<div class="search-item">
+							<label>설비코드</label> <input type="text" value="${eqp.eqId}"
+								readonly>
+						</div>
+
+						<div class="search-item">
 							<label>설비명 <span class="red">*</span></label> <input type="text"
-								name="eqName" placeholder="설비명 입력" required>
+								name="eqName" value="${eqp.eqName}" required>
 						</div>
 
 					</div>
@@ -54,7 +62,7 @@
 							<div class="search-btn-area">
 
 								<input type="text" name="eqManager" id="eqManager"
-									placeholder="책임자 조회" readonly>
+									value="${eqp.eqManager}" placeholder="책임자 조회" readonly>
 
 								<button type="button" class="btn btn-main" id="openManagerModal">
 									조회</button>
@@ -68,10 +76,9 @@
 							<div class="search-btn-area">
 
 								<input type="text" name="eqVendor" id="eqVendor"
-									placeholder="거래처 조회" readonly>
+									value="${eqp.eqVendor}" placeholder="거래처 조회" readonly>
 
 								<button type="button" class="btn btn-main" id="openVendorModal">
-
 									조회</button>
 
 							</div>
@@ -82,9 +89,8 @@
 					<div class="grid-wrap">
 
 						<div class="search-item">
-							<label>작업구역</label> 
-							<select id="wpType">
-								<option value="" disabled selected>작업구역 선택</option>
+							<label>작업구역</label> <select id="wpType">
+								<option value="" disabled>작업구역 선택</option>
 								<option value="10">전처리</option>
 								<option value="20">배합</option>
 								<option value="30">반죽</option>
@@ -97,12 +103,12 @@
 								<option value="100">검사</option>
 							</select>
 						</div>
-						
+
 						<div class="search-item">
-							<label>작업장</label> 
-							<select name="eqWpid" id="eqWpid"
-									style="width: 240px;">
-								<option value="" disabled selected>작업장 선택</option>
+							<label>작업장</label> <select name="eqWpid" id="eqWpid"
+								style="width: 240px;">
+								<option value="${eqp.eqWpid}" selected>${eqp.wpName}
+									(${eqp.eqWpid})</option>
 							</select>
 						</div>
 
@@ -136,7 +142,6 @@
 		</div>
 
 		<table class="table">
-
 			<thead>
 				<tr>
 					<th>사원번호</th>
@@ -147,18 +152,15 @@
 
 			<tbody id="managerResultBody">
 			</tbody>
-
 		</table>
 
 		<div
 			style="display: flex; justify-content: center; gap: 10px; margin-top: 25px;">
 
 			<button type="button" class="btn btn-white" id="closeManagerModal">
-
 				취소</button>
 
 			<button type="button" class="btn btn-main" id="managerSelectBtn">
-
 				선택</button>
 
 		</div>
@@ -167,36 +169,24 @@
 
 </div>
 
+
 <!-- 관리업체 조회 모달 -->
 <div id="vendorOverlay" class="overlay">
 
-	<div class="modal" style="width:620px;">
+	<div class="modal" style="width: 620px;">
 
-		<h2 class="modal-title">
-			관리업체 조회
-		</h2>
+		<h2 class="modal-title">관리업체 조회</h2>
 
-		<p class="modal-subTitle">
-			관리업체를 조회 후 선택해주세요.
-		</p>
+		<p class="modal-subTitle">관리업체를 조회 후 선택해주세요.</p>
 
 		<div class="search-item"
-			style="display:flex;
-			justify-content:center;
-			gap:10px;
-			margin-bottom:20px;
-			flex-direction:row;">
+			style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-direction: row;">
 
-			<input type="text"
-				id="vendorKeyword"
-				placeholder="업체명/업체코드 검색"
-				style="width:60%;"
-				oninput="loadVendorList()">
-
+			<input type="text" id="vendorKeyword" placeholder="업체명/업체코드 검색"
+				style="width: 60%;" oninput="loadVendorList()">
 		</div>
 
 		<table class="table">
-
 			<thead>
 				<tr>
 					<th>업체코드</th>
@@ -206,32 +196,17 @@
 			</thead>
 
 			<tbody id="vendorResultBody">
-
 			</tbody>
-
 		</table>
 
-		<div style="
-			display:flex;
-			justify-content:center;
-			gap:10px;
-			margin-top:25px;">
+		<div
+			style="display: flex; justify-content: center; gap: 10px; margin-top: 25px;">
 
-			<button type="button"
-				class="btn btn-white"
-				id="closeVendorModal">
+			<button type="button" class="btn btn-white" id="closeVendorModal">
+				취소</button>
 
-				취소
-
-			</button>
-
-			<button type="button"
-				class="btn btn-main"
-				id="vendorSelectBtn">
-
-				선택
-
-			</button>
+			<button type="button" class="btn btn-main" id="vendorSelectBtn">
+				선택</button>
 
 		</div>
 
@@ -240,17 +215,13 @@
 </div>
 
 
-
-
 <script>
 	document
 			.querySelector("#openManagerModal")
 			.addEventListener(
 					"click",
 					function() {
-
 						document.querySelector("#managerOverlay").style.display = "flex";
-
 						loadManagerList();
 					});
 
@@ -259,48 +230,37 @@
 			.addEventListener(
 					"click",
 					function() {
-
 						document.querySelector("#managerOverlay").style.display = "none";
 					});
 
 	document.querySelector("#managerKeyword").addEventListener("keyup",
 			function(e) {
-
 				if (e.key === "Enter") {
 					loadManagerList();
 				}
 			});
 
 	function loadManagerList() {
-
 		const keyword = document.querySelector("#managerKeyword").value;
 
 		fetch(
 				"${pageContext.request.contextPath}/equip/managerList?keyword="
 						+ encodeURIComponent(keyword))
-
 				.then(function(response) {
 					return response.json();
 				})
-
 				.then(
 						function(list) {
-
-							console.log(list);
 							const tbody = document
 									.querySelector("#managerResultBody");
-
 							tbody.innerHTML = "";
 
 							if (list.length === 0) {
-
 								tbody.innerHTML = "<tr><td colspan='3'>검색 결과가 없습니다.</td></tr>";
-
 								return;
 							}
 
 							for (let i = 0; i < list.length; i++) {
-
 								const manager = list[i];
 
 								tbody.innerHTML += "<tr>"
@@ -321,9 +281,7 @@
 	}
 
 	function selectManager(managerId, managerName) {
-
 		document.querySelector("#eqManager").value = managerId;
-
 		document.querySelector("#managerOverlay").style.display = "none";
 	}
 
@@ -332,7 +290,6 @@
 			.addEventListener(
 					"click",
 					function() {
-
 						const selected = document
 								.querySelector("input[name='selectedManager']:checked");
 
@@ -347,135 +304,114 @@
 						selectManager(managerId, managerName);
 					});
 
-	document.querySelector("#openVendorModal")
-	.addEventListener("click", function () {
+	document
+			.querySelector("#openVendorModal")
+			.addEventListener(
+					"click",
+					function() {
+						document.querySelector("#vendorOverlay").style.display = "flex";
+						loadVendorList();
+					});
 
-		document.querySelector("#vendorOverlay")
-			.style.display = "flex";
-
-		loadVendorList();
-	});
-
-
-	document.querySelector("#closeVendorModal")
-	.addEventListener("click", function () {
-
-		document.querySelector("#vendorOverlay")
-			.style.display = "none";
-	});
-
+	document
+			.querySelector("#closeVendorModal")
+			.addEventListener(
+					"click",
+					function() {
+						document.querySelector("#vendorOverlay").style.display = "none";
+					});
 
 	function loadVendorList() {
-
-		const keyword =
-			document.querySelector("#vendorKeyword").value;
+		const keyword = document.querySelector("#vendorKeyword").value;
 
 		fetch(
-			"${pageContext.request.contextPath}/equip/vendorList?keyword="
-			+ encodeURIComponent(keyword)
-		)
+				"${pageContext.request.contextPath}/equip/vendorList?keyword="
+						+ encodeURIComponent(keyword))
+				.then(function(response) {
+					return response.json();
+				})
+				.then(
+						function(list) {
+							const tbody = document
+									.querySelector("#vendorResultBody");
+							tbody.innerHTML = "";
 
-		.then(function(response) {
-			return response.json();
-		})
+							if (list.length === 0) {
+								tbody.innerHTML = "<tr><td colspan='3'>검색 결과가 없습니다.</td></tr>";
+								return;
+							}
 
-		.then(function(list) {
+							for (let i = 0; i < list.length; i++) {
+								const vendor = list[i];
 
-			const tbody =
-				document.querySelector("#vendorResultBody");
-
-			tbody.innerHTML = "";
-
-			if (list.length === 0) {
-
-				tbody.innerHTML =
-					"<tr><td colspan='3'>검색 결과가 없습니다.</td></tr>";
-
-				return;
-			}
-
-			for(let i = 0; i < list.length; i++) {
-
-				const vendor = list[i];
-
-				tbody.innerHTML +=
-					"<tr>" +
-						"<td>" +
-							vendor.eqVendor +
-						"</td>" +
-
-						"<td>" +
-							vendor.eqVendorName +
-						"</td>" +
-
-						"<td>" +
-							"<input type='radio' " +
-							"name='selectedVendor' " +
-							"value='" + vendor.eqVendor + "' " +
-							"data-name='" + vendor.eqVendorName + "'>" +
-						"</td>" +
-					"</tr>";
-			}
-		});
+								tbody.innerHTML += "<tr>"
+										+ "<td>"
+										+ vendor.eqVendor
+										+ "</td>"
+										+ "<td>"
+										+ vendor.eqVendorName
+										+ "</td>"
+										+ "<td>"
+										+ "<input type='radio' " +
+						"name='selectedVendor' " +
+						"value='" + vendor.eqVendor + "' " +
+						"data-name='" + vendor.eqVendorName + "'>"
+										+ "</td>" + "</tr>";
+							}
+						});
 	}
 
+	document
+			.querySelector("#vendorSelectBtn")
+			.addEventListener(
+					"click",
+					function() {
+						const selected = document
+								.querySelector("input[name='selectedVendor']:checked");
 
-	document.querySelector("#vendorSelectBtn")
-	.addEventListener("click", function () {
+						if (!selected) {
+							alert("관리업체를 선택해주세요.");
+							return;
+						}
 
-		const selected =
-			document.querySelector(
-				"input[name='selectedVendor']:checked"
-			);
+						const vendorId = selected.value;
 
-		if (!selected) {
-			alert("관리업체를 선택해주세요.");
-			return;
-		}
+						document.querySelector("#eqVendor").value = vendorId;
+						document.querySelector("#vendorOverlay").style.display = "none";
+					});
 
-		const vendorId = selected.value;
+	document
+			.querySelector("#wpType")
+			.addEventListener(
+					"change",
+					function() {
+						const wpType = this.value;
+						const select = document.querySelector("#eqWpid");
 
-		document.querySelector("#eqVendor")
-			.value = vendorId;
+						select.innerHTML = "<option value=''>작업장 선택</option>";
 
-		document.querySelector("#vendorOverlay")
-			.style.display = "none";
-	});
-	
-	document.querySelector("#wpType")
-	.addEventListener("change", function () {
+						if (!wpType) {
+							return;
+						}
 
-		const wpType = this.value;
+						fetch(
+								"${pageContext.request.contextPath}/equip/wpList?wpType="
+										+ wpType)
+								.then(function(response) {
+									return response.json();
+								})
+								.then(
+										function(list) {
+											for (let i = 0; i < list.length; i++) {
+												const wp = list[i];
 
-		const select =
-			document.querySelector("#eqWpid");
-
-		select.innerHTML =
-			"<option value=''>작업장 선택</option>";
-
-		if (!wpType) {
-			return;
-		}
-
-		fetch(
-			"${pageContext.request.contextPath}/equip/wpList?wpType="
-			+ wpType
-		)
-
-		.then(response => response.json())
-
-		.then(function(list) {
-
-			for(let i = 0; i < list.length; i++) {
-
-				const wp = list[i];
-
-				select.innerHTML +=
-					"<option value='" + wp.wpId + "'>" +
-						wp.wpName +
-						" (" + wp.wpId + ")" +
-					"</option>";
-			}
-		});
-	});
+												select.innerHTML += "<option value='" + wp.wpId + "'>"
+														+ wp.wpName
+														+ " ("
+														+ wp.wpId
+														+ ")"
+														+ "</option>";
+											}
+										});
+					});
 </script>

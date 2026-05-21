@@ -5,6 +5,7 @@
 
 <mapper namespace="mapper.P16_equipment">
 
+<!-- 설비 목록 조회용 -->
 <select id="selectEqList" parameterType="map" resultType="eqDTO">
 
 	SELECT
@@ -29,6 +30,7 @@
 		ON E.EQ_WPID = W.WP_ID
 
 	<where>
+		E.EQ_USAGE = 'Y'
 		<if test="eqWpid != null and eqWpid != ''">
 			AND E.EQ_WPID = #{eqWpid}
 		</if>
@@ -49,83 +51,109 @@
 
 </select>
 
-	<select id="selectEqTotalCount" resultType="int">
-		SELECT COUNT(*)
-		FROM
-		EQUIPMENT
-	</select>
+<!-- 설비 전체 개수 조회 (카드/통계용) -->
+<select id="selectEqTotalCount" resultType="int">
+	SELECT COUNT(*)
+	FROM
+	EQUIPMENT
+	WHERE EQ_USAGE = 'Y'
+</select>
 
-	<select id="selectEqCountByStatus" parameterType="int"
-		resultType="int">
+<!-- 상태별 설비 개수 조회 -->
+<!-- 예: 가동중 몇개, 점검중 몇개 -->
+<select id="selectEqCountByStatus" parameterType="int"
+	resultType="int">
 
-		SELECT COUNT(*)
-		FROM EQUIPMENT
-		WHERE EQ_STATUS = #{eqStatus}
+	SELECT COUNT(*)
+	FROM EQUIPMENT
+	WHERE EQ_STATUS = #{eqStatus}
+	AND EQ_USAGE = 'Y'
 
-	</select>
+</select>
 
-	<select id="selectEqDetail" parameterType="string" resultType="eqDTO">
+<!-- 설비 상세 조회 -->
+<!-- 설비코드 기준 1건 조회 -->
+<!-- 작업장명, 업체명, 책임자명 JOIN -->
+<select id="selectEqDetail" parameterType="string" resultType="eqDTO">
 
-	SELECT
-		E.EQ_ID AS eqId,
-		E.EQ_NAME AS eqName,
-		E.EQ_STATUS AS eqStatus,
-		E.EQ_SDATE AS eqSdate,
-		E.EQ_WPID AS eqWpid,
-		E.EQ_VENDOR AS eqVendor,
-		E.EQ_MANAGER AS eqManager,
+SELECT
+	E.EQ_ID AS eqId,
+	E.EQ_NAME AS eqName,
+	E.EQ_STATUS AS eqStatus,
+	E.EQ_SDATE AS eqSdate,
+	E.EQ_WPID AS eqWpid,
+	E.EQ_VENDOR AS eqVendor,
+	E.EQ_MANAGER AS eqManager,
 
-		S.EQ_STATUS_NAME AS eqStatusName,
+	S.EQ_STATUS_NAME AS eqStatusName,
 
-		W.WP_NAME AS wpName,
+	W.WP_NAME AS wpName,
+	WT.WP_TYPE_NAME AS wpTypeName,
 
-		V.VENDOR_NAME AS eqVendorName,
+	V.VENDOR_NAME AS eqVendorName,
 
-		EMP.EMP_NAME AS eqManagerName,
+	EMP.EMP_NAME AS eqManagerName,
 
-		300 AS totalTime,
-		290 AS runTime,
-		'91.23%' AS runRate
+	300 AS totalTime,
+	290 AS runTime,
+	'91.23%' AS runRate
 
-	FROM EQUIPMENT E
-	LEFT JOIN EQ_STATUS S
-		ON E.EQ_STATUS = S.EQ_STATUS_NO
-	LEFT JOIN WORKPLACE W
-		ON E.EQ_WPID = W.WP_ID
-	LEFT JOIN VENDOR V
-		ON E.EQ_VENDOR = V.VENDOR_ID
-	LEFT JOIN EMP EMP
-		ON E.EQ_MANAGER = EMP.EMP_ID
+FROM EQUIPMENT E
+LEFT JOIN EQ_STATUS S
+	ON E.EQ_STATUS = S.EQ_STATUS_NO
+LEFT JOIN WORKPLACE W
+	ON E.EQ_WPID = W.WP_ID
+LEFT JOIN VENDOR V
+	ON E.EQ_VENDOR = V.VENDOR_ID
+LEFT JOIN EMP EMP
+	ON E.EQ_MANAGER = EMP.EMP_ID
+LEFT JOIN WP_TYPE WT
+	ON W.WP_TYPE = WT.WP_TYPE_NO
 
-	WHERE E.EQ_ID = #{eqId}
+WHERE E.EQ_ID = #{eqId}
+AND E.EQ_USAGE = 'Y'
 
-	</select>
-
-
-	<select id="selectEqLogList" parameterType="string"
-		resultType="eqDTO">
-
-		SELECT
-		ELOG_ID AS elogId,
-		ELOG_EQID AS elogEqid,
-		ELOG_SDATE AS
-		elogSdate,
-		ELOG_EDATE AS elogEdate,
-		ELOG_REASON AS elogReason,
-		ELOG_CONTENT AS elogContent,
-		ELOG_RESULT AS elogResult,
-		ELOG_WORKER AS
-		elogWorker,
-		ELOG_USAGE AS elogUsage
-		FROM EQ_LOG
-		WHERE ELOG_EQID = #{eqId}
-		AND ELOG_USAGE = 'Y'
-		ORDER BY ELOG_SDATE DESC
-
-	</select>
+</select>
 
 
-	<select id="selectEqRunList" parameterType="string"
+<!-- 	설비 점검 이력 조회용 -->
+<select id="selectEqLogList" parameterType="string"
+resultType="eqDTO">
+
+SELECT
+	ELOG_ID AS elogId,
+	ELOG_EQID AS elogEqid,
+	ELOG_SDATE AS
+	elogSdate,
+	ELOG_EDATE AS elogEdate,
+	ELOG_REASON AS elogReason,
+	ELOG_CONTENT AS elogContent,
+	ELOG_RESULT AS elogResult,
+	ELOG_WORKER AS
+	elogWorker,
+	ELOG_USAGE AS elogUsage
+FROM EQ_LOG
+WHERE ELOG_EQID = #{eqId}
+AND ELOG_USAGE = 'Y'
+ORDER BY ELOG_SDATE DESC
+
+</select>
+
+<!-- 작업장 목록 조회 -->
+<!-- 설비 등록/수정 select box용 -->	
+<select id="selectWpList"
+    resultType="kr.or.chop.P15_workplace.dto.WPDTO">
+
+	    SELECT
+	        WP_ID AS wpId,
+	        WP_NAME AS wpName
+	    FROM WORKPLACE
+	    ORDER BY WP_ID ASC
+	
+</select>
+
+<!-- 	설비 가동이력 조회용 -->
+<select id="selectEqRunList" parameterType="string"
 		resultType="eqDTO">
 
 		SELECT
@@ -140,9 +168,86 @@
 		ORDER BY
 		EQ_RUN_STIME DESC
 
-	</select>
+</select>
 
-	<insert id="insertEq" parameterType="eqDTO">
+<!-- 책임자 조회 -->
+<select id="selectEqManagerList"
+	parameterType="string"
+	resultType="map">
+
+	SELECT
+		EMP_ID AS "eqManager",
+		EMP_NAME AS "eqManagerName"
+	FROM EMP
+
+	<where>
+		<if test="_parameter != null and _parameter != ''">
+
+			AND (
+				UPPER(EMP_ID)
+				LIKE UPPER('%' || #{_parameter} || '%')
+
+				OR
+
+				UPPER(EMP_NAME)
+				LIKE UPPER('%' || #{_parameter} || '%')
+			)
+
+		</if>
+	</where>
+
+	ORDER BY EMP_ID
+
+</select>
+
+<!-- 관리업체 조회 -->
+<select id="selectEqVendorList"
+	parameterType="string"
+	resultType="map">
+
+	SELECT
+		VENDOR_ID AS "eqVendor",
+		VENDOR_NAME AS "eqVendorName"
+	FROM VENDOR
+
+	WHERE VENDOR_TYPE = 'E'
+
+	<if test="_parameter != null and _parameter != ''">
+
+		AND (
+			UPPER(VENDOR_ID)
+			LIKE UPPER('%' || #{_parameter} || '%')
+
+			OR
+
+			UPPER(VENDOR_NAME)
+			LIKE UPPER('%' || #{_parameter} || '%')
+		)
+
+	</if>
+
+	ORDER BY VENDOR_ID
+
+</select>
+
+<!-- 작업구역별 작업장 조회 -->
+<select id="selectWpListByType"
+	parameterType="int"
+	resultType="kr.or.chop.P15_workplace.dto.WPDTO">
+
+	SELECT
+		WP_ID AS wpId,
+		WP_NAME AS wpName
+	FROM WORKPLACE
+	WHERE WP_TYPE = #{wpType}
+	and wp_usage = 'Y'
+	ORDER BY WP_ID
+
+</select>
+
+<!-- 설비 등록 -->
+<!-- 상태 기본값 = 정지(20) -->
+<insert id="insertEq" parameterType="eqDTO">
 
 	INSERT INTO EQUIPMENT (
 		EQ_ID,
@@ -151,7 +256,8 @@
 		EQ_SDATE,
 		EQ_WPID,
 		EQ_VENDOR,
-		EQ_MANAGER
+		EQ_MANAGER,
+		EQ_USAGE
 	) VALUES (
 		'EQ' || EQ_SEQ.NEXTVAL,
 		#{eqName},
@@ -159,20 +265,77 @@
 		SYSDATE,
 		#{eqWpid},
 		#{eqVendor},
-		#{eqManager}
+		#{eqManager},
+		'Y'
+	)
+
+</insert>
+
+<!--  점검 이력 등록 -->
+<!-- 사용여부 기본값 = Y -->
+<insert id="insertEqLog" parameterType="eqDTO">
+
+	INSERT INTO EQ_LOG (
+		ELOG_ID,
+		ELOG_EQID,
+		ELOG_SDATE,
+		ELOG_EDATE,
+		ELOG_REASON,
+		ELOG_CONTENT,
+		ELOG_RESULT,
+		ELOG_WORKER,
+		ELOG_USAGE
+	) VALUES (
+		'ELOG' || ELOG_SEQ.NEXTVAL,
+		#{elogEqid},
+		#{elogSdate},
+		#{elogEdate},
+		#{elogReason},
+		#{elogContent},
+		#{elogResult},
+		#{elogWorker},
+		'Y'
 	)
 
 </insert>
 	
-	<select id="selectWpList"
-    resultType="kr.or.chop.P15_workplace.dto.WPDTO">
+<!-- 설비 수정 -->
+<!-- 수정 가능 항목만 변경 -->
+<!-- 설비명 / 작업장 / 업체 / 책임자 -->
+<update id="updateEq" parameterType="eqDTO">
 
-	    SELECT
-	        WP_ID AS wpId,
-	        WP_NAME AS wpName
-	    FROM WORKPLACE
-	    ORDER BY WP_ID ASC
-	
-	</select>
+	UPDATE EQUIPMENT
+	SET
+		EQ_NAME = #{eqName},
+		EQ_VENDOR = #{eqVendor},
+		EQ_MANAGER = #{eqManager}
+
+		<if test="eqWpid != null and eqWpid != ''">
+			, EQ_WPID = #{eqWpid}
+		</if>
+
+	WHERE EQ_ID = #{eqId}
+
+</update>
+
+<!-- 설비 상태 변경 -->
+<!-- 가동(10), 정지(20), 점검중(30), 고장(40) -->
+<update id="updateEqStatus" parameterType="eqDTO">
+
+	UPDATE EQUIPMENT
+	SET EQ_STATUS = #{eqStatus}
+	WHERE EQ_ID = #{eqId}
+
+</update>
+
+<!--  설비 소프트 삭제 -->
+<update id="deleteEq" parameterType="string">
+
+	UPDATE EQUIPMENT
+	SET EQ_USAGE = 'N'
+	WHERE EQ_ID = #{eqId}
+
+</update>
+
 
 </mapper>

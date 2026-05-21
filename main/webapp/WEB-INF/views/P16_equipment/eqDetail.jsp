@@ -32,9 +32,10 @@
             </a>
 
             <a class="btn btn-red"
-                href="${pageContext.request.contextPath}/equip/delete?eqId=${eqp.eqId}">
-                삭제
-            </a>
+				href="${pageContext.request.contextPath}/equip/delete?eqId=${eqp.eqId}"
+				onclick="return confirm('정말 삭제하시겠습니까?');">
+				삭제
+			</a>
         </div>
     </div>
 
@@ -64,11 +65,11 @@
 
                     <c:choose>
                         <c:when test="${eqp.eqStatus == 10}">
-                            <span class="status status-success">가동중</span>
+                            <span class="status status-success" style="color:var(--success)">•  가동중</span>
                         </c:when>
 
                         <c:when test="${eqp.eqStatus == 20}">
-                            <span class="status status-info">정지</span>
+                            <span class="status status-info" style="color:var(--danger)">•  정지</span>
                         </c:when>
 
                         <c:when test="${eqp.eqStatus == 30}">
@@ -84,14 +85,14 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <select name="eqStatus"
-                        style="width:150px; min-width:150px; height:36px;">
-                        <option value="">설비 상태 선택</option>
-                        <option value="10">가동중</option>
-                        <option value="20">정지</option>
-                        <option value="30">점검중</option>
-                        <option value="40">고장</option>
-                    </select>
+<!--                     <select name="eqStatus" -->
+<!--                         style="width:150px; min-width:150px; height:36px;"> -->
+<!--                         <option value="">설비 상태 선택</option> -->
+<!--                         <option value="10">가동중</option> -->
+<!--                         <option value="20">정지</option> -->
+<!--                         <option value="30">점검중</option> -->
+<!--                         <option value="40">고장</option> -->
+<!--                     </select> -->
                 </div>
 
             </div>
@@ -128,7 +129,7 @@
                         <td>${eqp.wpName}</td>
 
                         <th>작업구역</th>
-                        <td>${eqp.eqWpid}</td>
+                        <td>${eqp.wpTypeName}</td>
                     </tr>
 
                     <tr>
@@ -153,7 +154,7 @@
                 </div>
 
                 <a class="btn btn-main"
-                    href="${pageContext.request.contextPath}/equip/log/add?eqId=${eqp.eqId}">
+                    href="${pageContext.request.contextPath}/equip/mt/add?eqId=${eqp.eqId}">
                     점검이력 등록
                 </a>
 

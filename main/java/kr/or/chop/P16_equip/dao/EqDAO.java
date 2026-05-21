@@ -1,6 +1,7 @@
 package kr.or.chop.P16_equip.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import kr.or.chop.P15_workplace.dto.WPDTO;
 import kr.or.chop.P16_equip.dto.EqDTO;
@@ -22,6 +23,22 @@ public interface EqDAO {
 	
 	void insertEq(EqDTO eqDTO);
 	
+	void updateEq(EqDTO eqDTO);
+	
+	void updateEqStatus(EqDTO eqDTO);
+	
+	void insertEqLog(EqDTO eqDTO);
+	
 	List<WPDTO> selectWpList();
+	
+	List<Map<String, Object>> selectEqManagerList(String keyword);
+	
+	List<Map<String, Object>> selectEqVendorList(String keyword);
+	
+	List<WPDTO> selectWpListByType(int wpType);
+	
+	void deleteEq(String eqId);
+	
+	
 
 }

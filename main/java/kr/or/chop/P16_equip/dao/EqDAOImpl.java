@@ -60,10 +60,45 @@ public class EqDAOImpl implements EqDAO {
 
 		sqlSession.insert("mapper.P16_equipment.insertEq", eqDTO);
 	}
-	
+
+	@Override
+	public void updateEq(EqDTO eqDTO) {
+		sqlSession.update("mapper.P16_equipment.updateEq", eqDTO);
+	}
+
 	@Override
 	public List<WPDTO> selectWpList() {
-	    return sqlSession.selectList("mapper.P16_equipment.selectWpList");
+		return sqlSession.selectList("mapper.P16_equipment.selectWpList");
+	}
+
+	@Override
+	public List<Map<String, Object>> selectEqManagerList(String keyword) {
+		return sqlSession.selectList("mapper.P16_equipment.selectEqManagerList", keyword);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectEqVendorList(String keyword) {
+		return sqlSession.selectList("mapper.P16_equipment.selectEqVendorList", keyword);
+	}
+
+	@Override
+	public void updateEqStatus(EqDTO eqDTO) {
+		sqlSession.update("mapper.P16_equipment.updateEqStatus", eqDTO);
+	}
+
+	@Override
+	public void insertEqLog(EqDTO eqDTO) {
+		sqlSession.insert("mapper.P16_equipment.insertEqLog", eqDTO);
+	}
+
+	@Override
+	public List<WPDTO> selectWpListByType(int wpType) {
+		return sqlSession.selectList("mapper.P16_equipment.selectWpListByType", wpType);
+	}
+
+	@Override
+	public void deleteEq(String eqId) {
+		sqlSession.update("mapper.P16_equipment.deleteEq", eqId);
 	}
 
 }

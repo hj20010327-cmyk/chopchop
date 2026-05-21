@@ -20,6 +20,8 @@ public class EqDTO {
 	private String eqVendorName;  // VENDOR_NAME 관리업체명
 	private String eqManagerName; // EMP_NAME 책임자명
 	private String wpName;        // WP_NAME 작업장명
+	private String wpTypeName;
+	
 	
 	// 설비 통계 (임시 계산값)
 	private int totalTime;        // 전체시간

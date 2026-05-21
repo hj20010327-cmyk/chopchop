@@ -31,5 +31,37 @@ public class EqDetailController {
 
         return "P16_equipment/eqDetail.tiles";
     }
+    
+    @RequestMapping("/run")
+    public String runEq(String eqId) {
+
+        EqDTO eqDTO = new EqDTO();
+        eqDTO.setEqId(eqId);
+        eqDTO.setEqStatus(10); // 가동중
+
+        eqService.updateEqStatus(eqDTO);
+
+        return "redirect:/equip/detail?eqId=" + eqId;
+    }
+
+    @RequestMapping("/stop")
+    public String stopEq(String eqId) {
+
+        EqDTO eqDTO = new EqDTO();
+        eqDTO.setEqId(eqId);
+        eqDTO.setEqStatus(20); // 정지
+
+        eqService.updateEqStatus(eqDTO);
+
+        return "redirect:/equip/detail?eqId=" + eqId;
+    }
+    
+    @RequestMapping("/delete")
+    public String deleteEq(String eqId) {
+
+    	eqService.deleteEq(eqId);
+
+    	return "redirect:/equip/list";
+    }
 	
 }

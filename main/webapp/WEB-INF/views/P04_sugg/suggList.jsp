@@ -384,16 +384,16 @@ function dateCheck() {
 	text-decoration: underline;
 }
 
-@media (min-width:1200px) {
-	.search-box {
-		flex-wrap: nowrap;
-	}
-}
+/* @media (min-width:1200px) { */
+/* 	.search-box { */
+/* 		flex-wrap: nowrap; */
+/* 	} */
+/* } */
 
-@media (max-width:768px) {
-	.date-row {
-		flex-wrap: wrap;
-	}
+/* @media (max-width:768px) { */
+/* 	.date-row { */
+/* 		flex-wrap: wrap; */
+/* 	} */
 
 	.date-row input,
 	.status-item select,
@@ -401,7 +401,7 @@ function dateCheck() {
 		width: 100%;
 	}
 
-	.search-item,
+
 	.search-btn-area {
 		width: 100%;
 	}

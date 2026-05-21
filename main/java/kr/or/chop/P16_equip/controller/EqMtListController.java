@@ -1,0 +1,31 @@
+package kr.or.chop.P16_equip.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.chop.P16_equip.dto.EqDTO;
+import kr.or.chop.P16_equip.service.EqService;
+
+@Controller
+@RequestMapping("/equip/mt")
+public class EqMtListController {
+
+	@Autowired
+	EqService eqService;
+
+	@RequestMapping("/list")
+	public String mtList(String eqId, Model model) {
+
+		EqDTO eqp = eqService.selectEqDetail(eqId);
+		List<EqDTO> eqLogList = eqService.selectEqLogList(eqId);
+
+		model.addAttribute("eqp", eqp);
+		model.addAttribute("eqLogList", eqLogList);
+
+		return "P16_equipment/eqMtList.tiles";
+	}
+}

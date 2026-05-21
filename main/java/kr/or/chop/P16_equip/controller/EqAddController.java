@@ -1,11 +1,13 @@
 package kr.or.chop.P16_equip.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.chop.P15_workplace.dto.WPDTO;
 import kr.or.chop.P16_equip.dto.EqDTO;
@@ -34,6 +36,25 @@ public class EqAddController {
 		eqService.insertEq(eqDTO);
 
 		return "redirect:/equip/list";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/managerList")
+	public List<Map<String, Object>> managerList(String keyword) {
+		return eqService.selectEqManagerList(keyword);
+	}
+
+	@ResponseBody
+	@RequestMapping("/vendorList")
+	public List<Map<String, Object>> vendorList(String keyword) {
+		return eqService.selectEqVendorList(keyword);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/wpList")
+	public List<WPDTO> wpList(int wpType) {
+
+		return eqService.selectWpListByType(wpType);
 	}
 
 }
