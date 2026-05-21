@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P10_io.dto.IoDTO;
 import kr.or.chop.P11_item.dto.ItemDTO;
+import kr.or.chop.P14_warehouse.dto.SecDTO;
+import kr.or.chop.P14_warehouse.dto.WHDTO;
 import kr.or.chop.P17_vendor.dto.VendorDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 import kr.or.chop.common.pagination.PageInfo;
@@ -75,6 +77,11 @@ public class IoDAOImpl implements IoDAO {
 
 		return sqlSession.selectList("mapper.P10_io.selectVendorList");
 	}
+	
+	@Override
+	public List<VendorDTO> selectVendorByType(String vendorType) {
+		return sqlSession.selectList("mapper.P10_io.selectVendorListByType", vendorType);
+	}
 
 	@Override
 	public List<LotDTO> selectLotListByItem(String itemId) {
@@ -116,6 +123,16 @@ public class IoDAOImpl implements IoDAO {
 	@Override
 	public int minusLotFqty(IoDTO ioDTO) {
 		return sqlSession.update("mapper.P10_io.minusLotFqty", ioDTO);
+	}
+
+	@Override
+	public List<WHDTO> selectWarehouseListByItem(String itemId) {
+		return sqlSession.selectList("mapper.P10_io.selectWarehouseListByItem", itemId);
+	}
+
+	@Override
+	public List<SecDTO> selectWhSecList(String whId) {
+		return sqlSession.selectList("mapper.P10_io.selectWhSecList", whId);
 	}
 
 }

@@ -13,6 +13,8 @@ import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P10_io.dto.IoDTO;
 import kr.or.chop.P10_io.service.IoService;
 import kr.or.chop.P11_item.dto.ItemDTO;
+import kr.or.chop.P14_warehouse.dto.SecDTO;
+import kr.or.chop.P14_warehouse.dto.WHDTO;
 import kr.or.chop.P17_vendor.dto.VendorDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 
@@ -32,6 +34,7 @@ public class IoAddController {
 
 		return "P10_io/ioAdd.tiles";
 	}
+	
 
 	@RequestMapping("/insertDo")
 	public String insertDo(IoDTO ioDTO) {
@@ -41,6 +44,14 @@ public class IoAddController {
 		ioService.insertIo(ioDTO);
 		
 		return "redirect:/io/list";
+	}
+	
+	@RequestMapping("/vendorList")
+	@ResponseBody
+	public List<VendorDTO> vendorList (String vendorType) {
+		
+		return ioService.selectVendorByType(vendorType);
+		
 	}
 
 	@ResponseBody
@@ -80,6 +91,18 @@ public class IoAddController {
 	    }
 
 	    return Timestamp.valueOf(day + " " + time + ":00");
+	}
+	
+	@ResponseBody
+	@RequestMapping("/warehouseList")
+	public List<WHDTO> warehouseList(String itemId) {
+		return ioService.selectWarehouseListByItem(itemId);
+	}
+
+	@ResponseBody
+	@RequestMapping("/whSecList")
+	public List<SecDTO> whSecList(String whId) {
+		return ioService.selectWhSecList(whId);
 	}
 
 }

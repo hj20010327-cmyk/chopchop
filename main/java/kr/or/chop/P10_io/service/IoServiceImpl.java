@@ -9,6 +9,8 @@ import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P10_io.dao.IoDAO;
 import kr.or.chop.P10_io.dto.IoDTO;
 import kr.or.chop.P11_item.dto.ItemDTO;
+import kr.or.chop.P14_warehouse.dto.SecDTO;
+import kr.or.chop.P14_warehouse.dto.WHDTO;
 import kr.or.chop.P17_vendor.dto.VendorDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 import kr.or.chop.common.pagination.PageInfo;
@@ -77,6 +79,11 @@ public class IoServiceImpl implements IoService {
 	public List<VendorDTO> selectVendorList() {
 		return ioDAO.selectVendorList();
 	}
+	
+	@Override
+	public List<VendorDTO> selectVendorByType(String vendorType) {
+		return ioDAO.selectVendorByType(vendorType);
+	}
 
 	@Override
 	public List<LotDTO> selectLotListByItem(String itemId) {
@@ -104,6 +111,16 @@ public class IoServiceImpl implements IoService {
 	public List<AdminDTO> selectWorkerList(String keyword) {
 
 		return ioDAO.selectWorkerList(keyword);
+	}
+
+	@Override
+	public List<WHDTO> selectWarehouseListByItem(String itemId) {
+		return ioDAO.selectWarehouseListByItem(itemId);
+	}
+
+	@Override
+	public List<SecDTO> selectWhSecList(String whId) {
+		return ioDAO.selectWhSecList(whId);
 	}
 
 }

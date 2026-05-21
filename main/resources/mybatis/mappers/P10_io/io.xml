@@ -273,13 +273,17 @@
 			#{ioQty},
 			0,
 			0,
-			TO_DATE(#{ioDay}, 'YYYY-MM-DD'),
 			NULL,
-			NULL,
+			#{ioDate},
+			(
+			SELECT #{ioDate} + ITEM_USEDATE
+			FROM ITEM
+			WHERE ITEM_ID = #{itemId}
+			),
 			'N',
 			10,
 			#{ioMsg},
-			NULL,
+			#{whSec},
 			NULL
 		)
 	
@@ -318,6 +322,18 @@
 		FROM vendor
 		WHERE vendor_id = #{vendorId}
 
+	</select>
+	
+	<select id="selectVendorListByType" parameterType="string"
+		resultType="vendorDTO">
+			
+		select 
+		vendor_name as vendorName,
+		vendor_id as vendorId
+		from vendor
+		where vendor_type = #{vendorType}
+		and vendor_usage = 'Y'
+				
 	</select>
 
 	<select id="selectWorkerList" parameterType="string"
@@ -367,6 +383,72 @@
 		AND LOT_CQTY >= #{ioQty}
 
 	</update>
+	
+	<select id="selectWarehouseListByItem"
+	parameterType="string"
+	resultType="whDTO">
+
+		SELECT
+			W.WH_ID AS whId,
+			W.WH_NAME AS whName,
+			W.WH_TYPE AS whTypeNo,
+			W.WH_QTY AS whQty,
+			W.WH_LOC AS whLoc
+		FROM warehouse W
+		WHERE W.WH_TYPE = (
+			SELECT ITEM_WHTYPE
+			FROM ITEM
+			WHERE ITEM_ID = #{itemId}
+		)
+		AND W.WH_USAGE = 'Y'
+		ORDER BY W.WH_ID
+	
+	</select>
+	
+	<select id="selectWhSecList"
+	parameterType="string"
+	resultType="secDTO">
+
+		SELECT
+		ws.WH_SEC_ID AS secId,
+		ws.WH_SEC_WHID AS secWhId,
+		ws.WH_SEC_QTY AS secQty,
+		NVL(lot_sum.currentLotCnt, 0) AS secPrevQty,
+		ws.WH_SEC_USAGE AS secUsage
+		FROM WH_SEC ws
+			LEFT OUTER JOIN (
+				SELECT
+					lot_location.secId AS secId,
+					COUNT(lot_location.lotId) AS currentLotCnt
+				FROM (
+					SELECT
+						lot.lot_id AS lotId,
+						CASE
+							WHEN lot.lot_qc = 'N' THEN lot.lot_bwhsec
+							WHEN lot.lot_qc = 'Y' THEN lot.lot_awhsec
+						END AS secId
+					FROM lot lot
+						LEFT OUTER JOIN (
+							SELECT
+								lu.use_lot AS lotId,
+								SUM(NVL(lu.use_qty, 0)) AS totalUseQty
+							FROM lot_use lu
+							GROUP BY lu.use_lot
+						) use_sum
+							ON lot.lot_id = use_sum.lotId
+					WHERE lot.lot_status IN (10, 20)
+					  AND (
+							NVL(lot.lot_fqty, 0) - NVL(use_sum.totalUseQty, 0)
+						  ) > 0
+				) lot_location
+				GROUP BY lot_location.secId
+			) lot_sum
+				ON ws.WH_SEC_ID = lot_sum.secId
+		WHERE ws.WH_SEC_WHID = #{whId}
+		  AND ws.WH_SEC_USAGE = 'Y'
+		ORDER BY ws.WH_SEC_ID
+	
+	</select>
 	
 
 </mapper>

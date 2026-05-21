@@ -146,6 +146,35 @@
 			</div>
 
 		</div>
+		
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
+		
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+		
+				<label>
+					창고 <span class="red">*</span>
+				</label>
+				
+				<select id="warehouse" name="whId">
+					<option value="" disabled selected>창고 선택</option>
+				</select>
+			</div>
+			
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+				
+				<label>
+					창고 섹션 <span class="red">*</span>
+				</label>
+				
+				<select name="whSec" id="whSec">
+					<option value="" disabled selected>섹션 선택</option>
+				</select>
+				
+			</div>
+				
+		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
 
@@ -542,6 +571,8 @@ window.addEventListener("load", function() {
 	itemSelect.addEventListener("change", function() {
 
 		qtyInput.value = "";
+		
+		loadWarehouseList(this.value);
 
 		if (getIoType() === "OUT") {
 			loadLotList(this.value);
@@ -594,7 +625,7 @@ window.addEventListener("load", function() {
 			return;
 		}
 
-		fetch("${pageContext.request.contextPath}/item/vendorList?vendorType="
+		fetch("${pageContext.request.contextPath}/io/vendorList?vendorType="
 			+ encodeURIComponent(vendorType))
 			.then(function(response) {
 				return response.json();
@@ -792,6 +823,84 @@ function loadWorkerList(keyword) {
 
 	});
 
+}
+
+const warehouseSelect = document.querySelector("#warehouse");
+const whSecSelect = document.querySelector("#whSec");
+
+function loadWarehouseList(itemId) {
+
+	warehouseSelect.innerHTML =
+		'<option value="" disabled selected>창고 선택</option>';
+
+	whSecSelect.innerHTML =
+		'<option value="" disabled selected>섹션 선택</option>';
+
+	if (itemId === "") {
+		return;
+	}
+
+	fetch("${pageContext.request.contextPath}/io/warehouseList?itemId="
+		+ encodeURIComponent(itemId))
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(result) {
+
+			let html =
+				'<option value="" disabled selected>창고 선택</option>';
+
+			for (let i = 0; i < result.length; i++) {
+				html += '<option value="' + result[i].whId + '">';
+				html += result[i].whName + ' (' + result[i].whId + ')';
+				html += '</option>';
+			}
+
+			warehouseSelect.innerHTML = html;
+		})
+		.catch(function() {
+			alert("창고 목록 조회 실패");
+		});
+}
+
+warehouseSelect.addEventListener("change", function() {
+
+	loadWhSecList(this.value);
+
+});
+
+function loadWhSecList(whId) {
+
+	whSecSelect.innerHTML =
+		'<option value="" disabled selected>섹션 선택</option>';
+
+	if (whId === "") {
+		return;
+	}
+
+	fetch("${pageContext.request.contextPath}/io/whSecList?whId="
+		+ encodeURIComponent(whId))
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(result) {
+
+			let html =
+				'<option value="" disabled selected>섹션 선택</option>';
+
+			for (let i = 0; i < result.length; i++) {
+				html += '<option value="' + result[i].secId + '">';
+				html += result[i].secId 
+				+ ' (' + result[i].secPrevQty
+				+ '/' + result[i].secQty + ')';
+				html += '</option>';
+			}
+
+			whSecSelect.innerHTML = html;
+		})
+		.catch(function() {
+			alert("창고 섹션 조회 실패");
+		});
 }
 
 </script>

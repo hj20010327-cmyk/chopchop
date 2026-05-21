@@ -361,6 +361,10 @@ textarea:focus {
     color: var(--warning);
 }
 
+.status-safe {
+	color: var(--safe);
+}
+
 .status-danger {
     color: var(--danger);
 }
