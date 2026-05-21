@@ -18,31 +18,22 @@ public class RoutAddController {
 	@Autowired
 	RoutService routService;
 
-	/**
-	 * 라우팅 등록 페이지
-	 */
 	@RequestMapping("/add")
 	public String routAdd(Model model) {
 
-		// 반제품 + 완제품 목록
 		List<RoutDTO> routItemList = routService.selectRoutItemList();
-
-		// 공정 목록
-		List<RoutDetailDTO> processList = routService.selectProcessList();
+		List<RoutDetailDTO> wpTypeList = routService.selectWpTypeList();
 
 		model.addAttribute("routItemList", routItemList);
-		model.addAttribute("processList", processList);
+		model.addAttribute("wpTypeList", wpTypeList);
 
 		return "P12_rout/routAdd.tiles";
 	}
 
-	/**
-	 * 라우팅 등록
-	 */
 	@RequestMapping("/insert")
 	public String routInsert(RoutDTO routDTO, RoutDetailDTO detailDTO) {
 
-		routService.insertRoutWithDetail(routDTO, detailDTO.getRoutDtlProcList());
+		routService.insertRoutWithDetail(routDTO, detailDTO);
 
 		return "redirect:/routing/list";
 	}

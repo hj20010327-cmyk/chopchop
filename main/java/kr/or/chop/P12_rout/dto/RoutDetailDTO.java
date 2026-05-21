@@ -16,16 +16,21 @@ public class RoutDetailDTO {
     private String procId;
     private String procName;
     private String procContent;
+    private String procUsage;
     private int procWpType;
 
     // WP_TYPE
     private int wpTypeNo;
     private String wpTypeName;
     private String wpTypeContent;
-
-    // 설비 목록 문자열
-    private String eqNames;
+    
+    // EQUIPMENT 요약
+    private int eqCount;
+    private String firstEqName;
 
     // 등록/수정 form 배열
-    private String[] routDtlProcList;
+    private String[] procIdList;
+    private String[] procNameList;
+    private String[] procContentList;
+    private int[] procWpTypeList;
 }

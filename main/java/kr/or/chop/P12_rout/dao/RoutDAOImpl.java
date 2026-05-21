@@ -25,7 +25,6 @@ public class RoutDAOImpl implements RoutDAO {
 
 	@Override
 	public List<RoutDTO> selectRoutList(RoutDTO routDTO, PageInfo page) {
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("routDTO", routDTO);
 		map.put("page", page);
@@ -39,8 +38,23 @@ public class RoutDAOImpl implements RoutDAO {
 	}
 
 	@Override
-	public List<RoutDetailDTO> selectProcessList() {
-		return sqlSession.selectList("mapper.P12_rout.selectProcessList");
+	public List<RoutDetailDTO> selectWpTypeList() {
+		return sqlSession.selectList("mapper.P12_rout.selectWpTypeList");
+	}
+
+	@Override
+	public int insertProcess(RoutDetailDTO detailDTO) {
+		return sqlSession.insert("mapper.P12_rout.insertProcess", detailDTO);
+	}
+
+	@Override
+	public int updateProcess(RoutDetailDTO detailDTO) {
+		return sqlSession.update("mapper.P12_rout.updateProcess", detailDTO);
+	}
+
+	@Override
+	public int deleteProcess(String procId) {
+		return sqlSession.update("mapper.P12_rout.deleteProcess", procId);
 	}
 
 	@Override
@@ -76,5 +90,10 @@ public class RoutDAOImpl implements RoutDAO {
 	@Override
 	public int deleteRout(String routId) {
 		return sqlSession.update("mapper.P12_rout.deleteRout", routId);
+	}
+
+	@Override
+	public int softDeleteRoutDetail(String routId) {
+		return sqlSession.update("mapper.P12_rout.softDeleteRoutDetail", routId);
 	}
 }

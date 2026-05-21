@@ -5,262 +5,201 @@
 
 <mapper namespace="mapper.P12_rout">
 
-    <!-- 라우팅 목록 개수 -->
+    <!-- =========================================================
+         라우팅 목록 개수
+    ========================================================== -->
     <select id="selectRoutCount"
-            parameterType="routDTO"
+            parameterType="kr.or.chop.P12_rout.dto.RoutDTO"
             resultType="int">
 
         SELECT COUNT(*)
         FROM routing r
-        LEFT JOIN item i
-            ON r.rout_item = i.item_id
+            JOIN item i ON r.rout_item = i.item_id
         WHERE r.rout_usage = 'Y'
 
         <if test="searchKeyword != null and searchKeyword != ''">
-
             <choose>
-                <when test="searchType == 'routId'">
-                    AND UPPER(r.rout_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                <when test="searchType == 'item'">
+                    AND UPPER(i.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
                 </when>
 
-                <when test="searchType == 'routName'">
-                    AND UPPER(r.rout_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                </when>
-
-                <when test="searchType == 'itemId'">
-                    AND UPPER(i.item_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                </when>
-
-                <when test="searchType == 'itemName'">
-                    AND UPPER(i.item_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                <when test="searchType == 'name'">
+                    AND UPPER(r.rout_name) LIKE UPPER('%' || #{searchKeyword} || '%')
                 </when>
 
                 <otherwise>
                     AND (
-                        UPPER(r.rout_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                        OR UPPER(r.rout_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                        OR UPPER(i.item_id) LIKE '%' || UPPER(#{searchKeyword}) || '%'
-                        OR UPPER(i.item_name) LIKE '%' || UPPER(#{searchKeyword}) || '%'
+                        UPPER(i.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
+                        OR UPPER(r.rout_name) LIKE UPPER('%' || #{searchKeyword} || '%')
                     )
                 </otherwise>
             </choose>
-
         </if>
 
     </select>
 
 
-    <!-- 라우팅 목록 -->
+    <!-- =========================================================
+         라우팅 목록
+    ========================================================== -->
     <select id="selectRoutList"
             parameterType="map"
-            resultType="routDTO">
+            resultType="kr.or.chop.P12_rout.dto.RoutDTO">
 
         SELECT *
-        FROM
-        (
-            SELECT ROWNUM RN, A.*
-            FROM
-            (
+        FROM (
+            SELECT
+                ROWNUM rnum,
+                A.*
+            FROM (
                 SELECT
-                    r.rout_id AS routId,
-                    r.rout_item AS routItem,
-                    r.rout_name AS routName,
-                    r.rout_content AS routContent,
-                    r.rout_usage AS routUsage,
-
-                    i.item_id AS itemId,
-                    i.item_name AS itemName,
-                    i.item_type AS itemType,
-                    i.item_spec AS itemSpec,
-                    i.item_unit AS itemUnit
-
+                    r.rout_id       AS routId,
+                    r.rout_item     AS routItem,
+                    r.rout_name     AS routName,
+                    r.rout_content  AS routContent,
+                    r.rout_usage    AS routUsage,
+                    i.item_name     AS itemName,
+                    i.item_type     AS itemType
                 FROM routing r
-                LEFT JOIN item i
-                    ON r.rout_item = i.item_id
-
+                    JOIN item i ON r.rout_item = i.item_id
                 WHERE r.rout_usage = 'Y'
 
                 <if test="routDTO.searchKeyword != null and routDTO.searchKeyword != ''">
-
                     <choose>
-                        <when test="routDTO.searchType == 'routId'">
-                            AND UPPER(r.rout_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                        <when test="routDTO.searchType == 'item'">
+                            AND UPPER(i.item_name) LIKE UPPER('%' || #{routDTO.searchKeyword} || '%')
                         </when>
 
-                        <when test="routDTO.searchType == 'routName'">
-                            AND UPPER(r.rout_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                        </when>
-
-                        <when test="routDTO.searchType == 'itemId'">
-                            AND UPPER(i.item_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                        </when>
-
-                        <when test="routDTO.searchType == 'itemName'">
-                            AND UPPER(i.item_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                        <when test="routDTO.searchType == 'name'">
+                            AND UPPER(r.rout_name) LIKE UPPER('%' || #{routDTO.searchKeyword} || '%')
                         </when>
 
                         <otherwise>
                             AND (
-                                UPPER(r.rout_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                                OR UPPER(r.rout_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                                OR UPPER(i.item_id) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
-                                OR UPPER(i.item_name) LIKE '%' || UPPER(#{routDTO.searchKeyword}) || '%'
+                                UPPER(i.item_name) LIKE UPPER('%' || #{routDTO.searchKeyword} || '%')
+                                OR UPPER(r.rout_name) LIKE UPPER('%' || #{routDTO.searchKeyword} || '%')
                             )
                         </otherwise>
                     </choose>
-
                 </if>
 
                 ORDER BY r.rout_id DESC
-
             ) A
+            WHERE ROWNUM &lt;= #{page.currentPage} * #{page.boardLimit}
         )
-        WHERE RN BETWEEN #{page.startRow}
-        AND #{page.endRow}
+        WHERE rnum &gt; (#{page.currentPage} - 1) * #{page.boardLimit}
 
     </select>
 
 
-    <!-- 라우팅 상세 마스터 -->
-    <select id="selectRoutDetail"
-            parameterType="string"
-            resultType="routDTO">
-
-        SELECT
-            r.rout_id AS routId,
-            r.rout_item AS routItem,
-            r.rout_name AS routName,
-            r.rout_content AS routContent,
-            r.rout_usage AS routUsage,
-
-            i.item_id AS itemId,
-            i.item_name AS itemName,
-            i.item_type AS itemType,
-            i.item_spec AS itemSpec,
-            i.item_unit AS itemUnit
-
-        FROM routing r
-        LEFT JOIN item i
-            ON r.rout_item = i.item_id
-
-        WHERE r.rout_id = #{routId}
-        AND r.rout_usage = 'Y'
-
-    </select>
-
-
-    <!-- 라우팅 상세 공정 목록 -->
-    <select id="selectRoutDetailList"
-            parameterType="string"
-            resultType="routDetailDTO">
-
-        SELECT
-            rd.rout_dtl_id AS routDtlId,
-            rd.rout_dtl_rout AS routDtlRout,
-            rd.rout_dtl_step AS routDtlStep,
-            rd.rout_dtl_proc AS routDtlProc,
-            rd.rout_dtl_usage AS routDtlUsage,
-
-            p.proc_id AS procId,
-            p.proc_name AS procName,
-            p.proc_content AS procContent,
-            p.proc_wp_type AS procWpType,
-
-            wt.wp_type_no AS wpTypeNo,
-            wt.wp_type_name AS wpTypeName,
-            wt.wp_type_content AS wpTypeContent,
-
-            (
-                SELECT LISTAGG(e.eq_name, ', ')
-                       WITHIN GROUP (ORDER BY e.eq_name)
-                FROM equipment e
-                JOIN workplace w
-                    ON e.eq_wpid = w.wp_id
-                WHERE w.wp_type = p.proc_wp_type
-                AND w.wp_usage = 'Y'
-            ) AS eqNames
-
-        FROM routing_detail rd
-        LEFT JOIN process p
-            ON rd.rout_dtl_proc = p.proc_id
-        LEFT JOIN wp_type wt
-            ON p.proc_wp_type = wt.wp_type_no
-
-        WHERE rd.rout_dtl_rout = #{routId}
-        AND rd.rout_dtl_usage = 'Y'
-
-        ORDER BY rd.rout_dtl_step ASC
-
-    </select>
-
-
-    <!-- 라우팅 대상 품목 목록 : 반제품 + 완제품 -->
+    <!-- =========================================================
+         라우팅 등록/수정용 완제품 목록
+    ========================================================== -->
     <select id="selectRoutItemList"
-            resultType="routDTO">
+            resultType="kr.or.chop.P12_rout.dto.RoutDTO">
 
         SELECT
-            item_id AS itemId,
+            item_id   AS itemId,
             item_name AS itemName,
-            item_type AS itemType,
-            item_spec AS itemSpec,
-            item_unit AS itemUnit
-
+            item_type AS itemType
         FROM item
-
         WHERE item_usage = 'Y'
-        AND item_type IN (20, 30)
-
-        ORDER BY item_type ASC, item_id ASC
+          AND item_type IN (20, 30)
+        ORDER BY item_id
 
     </select>
 
 
-    <!-- 공정 목록 -->
-    <select id="selectProcessList"
-            resultType="routDetailDTO">
+    <!-- =========================================================
+         작업장 타입 목록
+    ========================================================== -->
+    <select id="selectWpTypeList"
+            resultType="kr.or.chop.P12_rout.dto.RoutDetailDTO">
 
         SELECT
-            p.proc_id AS procId,
-            p.proc_name AS procName,
-            p.proc_content AS procContent,
-            p.proc_wp_type AS procWpType,
-
-            wt.wp_type_no AS wpTypeNo,
-            wt.wp_type_name AS wpTypeName,
-            wt.wp_type_content AS wpTypeContent,
-
-            (
-                SELECT LISTAGG(e.eq_name, ', ')
-                       WITHIN GROUP (ORDER BY e.eq_name)
-                FROM equipment e
-                JOIN workplace w
-                    ON e.eq_wpid = w.wp_id
-                WHERE w.wp_type = p.proc_wp_type
-                AND w.wp_usage = 'Y'
-            ) AS eqNames
-
-        FROM process p
-        LEFT JOIN wp_type wt
-            ON p.proc_wp_type = wt.wp_type_no
-
-        WHERE p.proc_usage = 'Y'
-
-        ORDER BY wt.wp_type_no ASC, p.proc_id ASC
+            wp_type_no      AS wpTypeNo,
+            wp_type_name    AS wpTypeName,
+            wp_type_content AS wpTypeContent
+        FROM wp_type
+        ORDER BY wp_type_no
 
     </select>
 
 
-    <!-- 라우팅 등록 -->
+    <!-- =========================================================
+         PROCESS 즉석 등록
+         useGeneratedKeys는 Oracle에서 안 맞는 경우 많아서 selectKey 사용
+    ========================================================== -->
+    <insert id="insertProcess"
+            parameterType="kr.or.chop.P12_rout.dto.RoutDetailDTO">
+
+        <selectKey keyProperty="procId"
+                   resultType="string"
+                   order="BEFORE">
+            SELECT 'PROC' || PROC_SEQ.NEXTVAL
+            FROM dual
+        </selectKey>
+
+        INSERT INTO process
+        (
+            proc_id,
+            proc_name,
+            proc_content,
+            proc_usage,
+            proc_wp_type
+        )
+        VALUES
+        (
+            #{procId},
+            #{procName},
+            #{procContent},
+            'Y',
+            #{procWpType}
+        )
+
+    </insert>
+
+
+    <!-- =========================================================
+         PROCESS 수정
+    ========================================================== -->
+    <update id="updateProcess"
+            parameterType="kr.or.chop.P12_rout.dto.RoutDetailDTO">
+
+        UPDATE process
+        SET
+            proc_name = #{procName},
+            proc_content = #{procContent},
+            proc_wp_type = #{procWpType}
+        WHERE proc_id = #{procId}
+
+    </update>
+
+
+    <!-- =========================================================
+         PROCESS soft delete
+    ========================================================== -->
+    <update id="deleteProcess"
+            parameterType="string">
+
+        UPDATE process
+        SET proc_usage = 'N'
+        WHERE proc_id = #{procId}
+
+    </update>
+
+
+    <!-- =========================================================
+         ROUTING 등록
+    ========================================================== -->
     <insert id="insertRout"
-            parameterType="routDTO">
+            parameterType="kr.or.chop.P12_rout.dto.RoutDTO">
 
         <selectKey keyProperty="routId"
                    resultType="string"
                    order="BEFORE">
-
-            SELECT 'ROUT' || ROUTING_SEQ.NEXTVAL
+            SELECT 'RT' || ROUT_SEQ.NEXTVAL
             FROM dual
-
         </selectKey>
 
         INSERT INTO routing
@@ -283,9 +222,11 @@
     </insert>
 
 
-    <!-- 라우팅 상세 등록 -->
+    <!-- =========================================================
+         ROUTING_DETAIL 등록
+    ========================================================== -->
     <insert id="insertRoutDetail"
-            parameterType="routDetailDTO">
+            parameterType="kr.or.chop.P12_rout.dto.RoutDetailDTO">
 
         INSERT INTO routing_detail
         (
@@ -297,7 +238,7 @@
         )
         VALUES
         (
-            'RDTL' || ROUTING_DETAIL_SEQ.NEXTVAL,
+            'RDTL' || RDTL_SEQ.NEXTVAL,
             #{routDtlRout},
             #{routDtlStep},
             #{routDtlProc},
@@ -307,32 +248,131 @@
     </insert>
 
 
-    <!-- 라우팅 수정 -->
+    <!-- =========================================================
+         라우팅 상세 상단
+    ========================================================== -->
+    <select id="selectRoutDetail"
+            parameterType="string"
+            resultType="kr.or.chop.P12_rout.dto.RoutDTO">
+
+        SELECT
+            r.rout_id       AS routId,
+            r.rout_item     AS routItem,
+            r.rout_name     AS routName,
+            r.rout_content  AS routContent,
+            r.rout_usage    AS routUsage,
+            i.item_name     AS itemName,
+            i.item_type     AS itemType
+        FROM routing r
+            JOIN item i ON r.rout_item = i.item_id
+        WHERE r.rout_id = #{routId}
+          AND r.rout_usage = 'Y'
+
+    </select>
+
+
+    <!-- =========================================================
+         라우팅 상세 공정 목록
+    ========================================================== -->
+    <select id="selectRoutDetailList"
+	        parameterType="string"
+	        resultType="kr.or.chop.P12_rout.dto.RoutDetailDTO">
+	
+	    SELECT
+	        rd.rout_dtl_id     AS routDtlId,
+	        rd.rout_dtl_rout   AS routDtlRout,
+	        rd.rout_dtl_step   AS routDtlStep,
+	        rd.rout_dtl_proc   AS routDtlProc,
+	        rd.rout_dtl_usage  AS routDtlUsage,
+	
+	        p.proc_id          AS procId,
+	        p.proc_name        AS procName,
+	        p.proc_content     AS procContent,
+	        p.proc_usage       AS procUsage,
+	        p.proc_wp_type     AS procWpType,
+	
+	        wt.wp_type_no      AS wpTypeNo,
+	        wt.wp_type_name    AS wpTypeName,
+	        wt.wp_type_content AS wpTypeContent,
+	
+	        NVL(eq_sum.eq_count, 0) AS eqCount,
+	        eq_sum.first_eq_name    AS firstEqName
+	
+	    FROM routing_detail rd
+	        JOIN process p
+	            ON rd.rout_dtl_proc = p.proc_id
+	
+	        LEFT JOIN wp_type wt
+	            ON p.proc_wp_type = wt.wp_type_no
+	
+	        LEFT JOIN (
+	            SELECT
+	                wp.wp_type             AS wp_type_no,
+	                COUNT(eq.eq_id)        AS eq_count,
+	                MIN(eq.eq_name)        AS first_eq_name
+	            FROM workplace wp
+	                LEFT JOIN equipment eq
+	                    ON eq.eq_wpid = wp.wp_id
+	                   AND eq.eq_usage = 'Y'
+	            WHERE wp.wp_usage = 'Y'
+	            GROUP BY wp.wp_type
+	        ) eq_sum
+	            ON eq_sum.wp_type_no = p.proc_wp_type
+	
+	    WHERE rd.rout_dtl_rout = #{routId}
+	      AND rd.rout_dtl_usage = 'Y'
+	      AND p.proc_usage = 'Y'
+	
+	    ORDER BY rd.rout_dtl_step
+	
+	</select>
+	
+    <!-- =========================================================
+         ROUTING 수정
+    ========================================================== -->
     <update id="updateRout"
-            parameterType="routDTO">
+            parameterType="kr.or.chop.P12_rout.dto.RoutDTO">
 
         UPDATE routing
         SET
-            rout_name = #{routName},
             rout_item = #{routItem},
+            rout_name = #{routName},
             rout_content = #{routContent}
         WHERE rout_id = #{routId}
 
     </update>
 
 
-    <!-- 라우팅 상세 삭제 후 재등록용 -->
+    <!-- =========================================================
+         ROUTING_DETAIL hard delete
+         수정 시 순서 재등록용
+    ========================================================== -->
     <delete id="deleteRoutDetail"
             parameterType="string">
 
-        DELETE
-        FROM routing_detail
+        DELETE FROM routing_detail
         WHERE rout_dtl_rout = #{routId}
 
     </delete>
 
 
-    <!-- 라우팅 논리 삭제 -->
+    <!-- =========================================================
+         ROUTING_DETAIL soft delete
+         라우팅 삭제용
+    ========================================================== -->
+    <update id="softDeleteRoutDetail"
+            parameterType="string">
+
+        UPDATE routing_detail
+        SET rout_dtl_usage = 'N'
+        WHERE rout_dtl_rout = #{routId}
+
+    </update>
+
+
+    <!-- =========================================================
+         ROUTING soft delete
+    ========================================================== -->
     <update id="deleteRout"
             parameterType="string">
 

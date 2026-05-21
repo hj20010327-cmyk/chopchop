@@ -18,20 +18,14 @@ public class RoutDetailController {
 	@Autowired
 	RoutService routService;
 
-	/**
-	 * 라우팅 상세 페이지
-	 */
 	@RequestMapping("/detail")
 	public String routDetail(String routId, Model model) {
 
-		// 라우팅 기본 정보
 		RoutDTO rout = routService.selectRoutDetail(routId);
-
-		// 라우팅 공정 흐름
-		List<RoutDetailDTO> detailList = routService.selectRoutDetailList(routId);
+		List<RoutDetailDTO> routDetailList = routService.selectRoutDetailList(routId);
 
 		model.addAttribute("rout", rout);
-		model.addAttribute("detailList", detailList);
+		model.addAttribute("routDetailList", routDetailList);
 
 		return "P12_rout/routDetail.tiles";
 	}

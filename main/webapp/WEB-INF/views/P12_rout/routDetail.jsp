@@ -12,259 +12,350 @@
 
         <div>
             <p class="page-route">홈 &gt; 라우팅 관리 &gt; 상세</p>
+        </div>
+    </div>
 
+    <div class="btn-row">
+        <div class="left">
             <a class="btn btn-white"
                href="${pageContext.request.contextPath}/routing/list">
                 목록
             </a>
+        </div>
 
+        <div class="right">
             <a class="btn btn-main"
                href="${pageContext.request.contextPath}/routing/edit?routId=${rout.routId}">
                 수정
             </a>
+
+            <a class="btn btn-red"
+               href="${pageContext.request.contextPath}/routing/delete?routId=${rout.routId}"
+               onclick="return confirm('해당 라우팅을 삭제하시겠습니까?');">
+                삭제
+            </a>
         </div>
     </div>
 
-    <div class="search-box">
+    <!-- 라우팅 상세 정보 -->
+    <div class="content-content">
+        <div class="content-content-content">
 
-        <div class="search-item">
-            <label>라우팅 코드</label>
-            <input type="text"
-                   value="${rout.routId}"
-                   readonly>
+            <div class="content-content-content-title">
+                라우팅 상세 정보
+            </div>
+
+            <div class="info-table-wrap">
+                <table class="info-table">
+                    <tbody>
+                        <tr>
+                            <th>라우팅 번호</th>
+                            <td>${rout.routId}</td>
+
+                            <th>라우팅명</th>
+                            <td>${rout.routName}</td>
+                        </tr>
+
+                        <tr>
+                            <th>품목 코드</th>
+                            <td>${rout.routItem}</td>
+
+                            <th>품목명</th>
+                            <td>${rout.itemName}</td>
+                        </tr>
+
+                        <tr>
+                            <th>품목 유형</th>
+                            <td>
+                            	<c:choose>
+								    <c:when test="${rout.itemType == 20}">
+								        반제품
+								    </c:when>
+								
+								    <c:when test="${rout.itemType == 30}">
+								        완제품
+								    </c:when>
+								
+								    <c:otherwise>
+								        -
+								    </c:otherwise>
+								</c:choose>
+                            </td>
+
+                            <th>라우팅 설명</th>
+                            <td>${rout.routContent}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
-
-        <div class="search-item">
-            <label>라우팅명</label>
-            <input type="text"
-                   value="${rout.routName}"
-                   readonly>
-        </div>
-
-        <div class="search-item">
-            <label>생산 품목</label>
-            <input type="text"
-                   value="${rout.itemName} (${rout.routItem})"
-                   readonly>
-        </div>
-
-        <div class="search-item">
-            <label>품목 규격</label>
-            <input type="text"
-                   value="${rout.itemSpec}"
-                   readonly>
-        </div>
-
-        <div class="search-item keyword">
-            <label>라우팅 설명</label>
-            <textarea readonly>${rout.routContent}</textarea>
-        </div>
-
     </div>
 
-    <div class="header-row"
-         style="margin-top: 28px;">
-        <div>
-            <h3 class="page-title"
-                style="font-size: 20px;">
-                공정 흐름
-            </h3>
-            <p class="page-subtitle">라우팅에 등록된 공정 순서입니다.</p>
+    <!-- 공정 흐름 -->
+    <div class="content-content">
+        <div class="content-content-content">
+
+            <div class="routing-section-title-row">
+                <div>
+                    <div class="content-content-content-title">
+                        공정 흐름
+                    </div>
+
+                    <p class="page-subtitle">
+                        라우팅에 등록된 공정 순서입니다.
+                    </p>
+                </div>
+            </div>
+
+            <c:choose>
+                <c:when test="${empty routDetailList}">
+                    <div class="empty-box">
+                        등록된 공정이 없습니다.
+                    </div>
+                </c:when>
+
+                <c:otherwise>
+                    <div class="flow-card-wrap">
+
+                        <c:forEach var="detail"
+                                   items="${routDetailList}"
+                                   varStatus="status">
+
+                            <div class="flow-flow-item">
+
+                                <c:if test="${!status.first}">
+                                    <div class="flow-inline-arrow">
+                                        →
+                                    </div>
+                                </c:if>
+
+                                <div class="flow-card">
+                                    <div class="step-badge">
+                                        ${status.count}
+                                    </div>
+
+                                    <div class="flow-card-title">
+                                        ${detail.procName}
+                                    </div>
+
+                                    <div class="flow-card-code">
+                                        ${detail.procId}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </c:forEach>
+
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
         </div>
     </div>
 
-    <div class="routing-flow-wrap">
-        <c:forEach var="detail" items="${detailList}" varStatus="status">
-            <div class="flow-card">
-                <div class="flow-step">
-                    STEP ${detail.routDtlStep}
-                </div>
+    <!-- 단계 정보 -->
+    <div class="content-content">
+        <div class="content-content-content">
 
-                <div class="flow-title">
-                    ${detail.procName}
-                </div>
+            <div class="routing-section-title-row">
+                <div>
+                    <div class="content-content-content-title">
+                        단계 정보
+                    </div>
 
-                <div class="flow-meta">
-                    <span>작업장 타입</span>
-                    <strong>${detail.wpTypeName}</strong>
+                    <p class="page-subtitle">
+                        각 공정의 설명, 작업장 타입, 사용 설비를 확인합니다.
+                    </p>
                 </div>
+            </div>
 
-                <div class="flow-meta">
-                    <span>사용 가능 설비</span>
-                    <strong>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">단계</th>
+                            <th style="width: 260px;">공정명</th>
+                            <th>공정 설명</th>
+                            <th style="width: 180px;">작업장 타입</th>
+                            <th style="width: 180px;">사용 설비</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
                         <c:choose>
-                            <c:when test="${empty detail.eqNames}">
-                                등록된 설비 없음
+                            <c:when test="${empty routDetailList}">
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        등록된 공정이 없습니다.
+                                    </td>
+                                </tr>
                             </c:when>
+
                             <c:otherwise>
-                                ${detail.eqNames}
+                                <c:forEach var="detail"
+                                           items="${routDetailList}"
+                                           varStatus="status">
+
+                                    <tr>
+                                        <td>${status.count}</td>
+
+                                        <td>
+                                            ${detail.procName}
+                                            <span class="muted-text">
+                                                (${detail.procId})
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${empty detail.procContent}">
+                                                    -
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${detail.procContent}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${empty detail.wpTypeName}">
+                                                    -
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${detail.wpTypeName}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${detail.eqCount == 0}">
+                                                    -
+                                                </c:when>
+
+                                                <c:when test="${detail.eqCount == 1}">
+                                                    ${detail.firstEqName}
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    ${detail.firstEqName} 외 ${detail.eqCount - 1}건
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+
+                                </c:forEach>
                             </c:otherwise>
                         </c:choose>
-                    </strong>
-                </div>
-
-                <div class="flow-desc">
-                    ${detail.procContent}
-                </div>
+                    </tbody>
+                </table>
             </div>
 
-            <c:if test="${!status.last}">
-                <div class="flow-arrow">→</div>
-            </c:if>
-        </c:forEach>
-
-        <c:if test="${empty detailList}">
-            <div class="empty-flow">
-                등록된 공정 흐름이 없습니다.
-            </div>
-        </c:if>
-    </div>
-
-    <div class="table-wrap"
-         style="margin-top: 24px;">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th style="width: 90px;">순서</th>
-                    <th style="width: 160px;">공정 코드</th>
-                    <th style="width: 180px;">공정명</th>
-                    <th style="width: 180px;">작업장 타입</th>
-                    <th>사용 가능 설비</th>
-                    <th>공정 설명</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <c:forEach var="detail" items="${detailList}">
-                    <tr>
-                        <td>${detail.routDtlStep}</td>
-                        <td>${detail.procId}</td>
-                        <td>${detail.procName}</td>
-                        <td>${detail.wpTypeName}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${empty detail.eqNames}">
-                                    -
-                                </c:when>
-                                <c:otherwise>
-                                    ${detail.eqNames}
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>${detail.procContent}</td>
-                    </tr>
-                </c:forEach>
-
-                <c:if test="${empty detailList}">
-                    <tr>
-                        <td colspan="6"
-                            style="text-align: center;">
-                            등록된 공정 정보가 없습니다.
-                        </td>
-                    </tr>
-                </c:if>
-            </tbody>
-        </table>
+        </div>
     </div>
 
 </div>
 
+
 <style>
-    .routing-flow-wrap {
+    .routing-section-title-row {
+        margin-bottom: 16px;
+
         display: flex;
-        align-items: stretch;
-        gap: 12px;
-
-        padding: 20px;
-        margin-top: 12px;
-
-        background-color: #fff;
-        border: 1px solid var(--gray);
-        border-radius: 8px;
-
-        overflow-x: auto;
+        align-items: flex-end;
+        justify-content: space-between;
     }
 
-    .flow-card {
-        min-width: 220px;
-        padding: 16px;
-
-        border: 1px solid var(--gray);
-        border-radius: 8px;
-        background-color: #fff;
-
-        flex-shrink: 0;
-    }
-
-    .flow-step {
-        margin-bottom: 8px;
-
-        color: var(--main-green);
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .flow-title {
-        margin-bottom: 12px;
-
-        color: #222;
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-    .flow-meta {
+    .flow-card-wrap {
         display: flex;
-        flex-direction: column;
-        gap: 4px;
+        flex-wrap: wrap;
 
-        margin-bottom: 10px;
-
-        font-size: 13px;
+        margin-top: 18px;
     }
 
-    .flow-meta span {
-        color: #777;
-    }
-
-    .flow-meta strong {
-        color: #333;
-        font-weight: 600;
-        line-height: 1.4;
-    }
-
-    .flow-desc {
-        margin-top: 12px;
-        padding-top: 12px;
-
-        border-top: 1px solid var(--gray);
-
-        color: #555;
-        font-size: 13px;
-        line-height: 1.5;
-        white-space: pre-line;
-    }
-
-    .flow-arrow {
+    .flow-flow-item {
         display: flex;
         align-items: center;
 
-        color: var(--main-green);
-        font-size: 26px;
-        font-weight: 700;
-
-        flex-shrink: 0;
+        margin-right: 18px;
+        margin-bottom: 18px;
     }
 
-    .empty-flow {
-        width: 100%;
-        padding: 30px;
+    .flow-inline-arrow {
+        margin-right: 18px;
+
+        font-size: 28px;
+        font-weight: 700;
+        color: #111;
+    }
+
+    .flow-card {
+        position: relative;
+
+        width: 160px;
+        min-height: 110px;
+
+        padding: 45px 16px 18px;
+
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: #fff;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+    }
+
+    .step-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+
+        width: 30px;
+        height: 30px;
+
+        border-radius: 50%;
+
+        background: var(--main-green);
+        color: #fff;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-weight: 700;
+    }
+
+    .flow-card-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-top: 6px;
+        margin-bottom: 8px;
+    }
+
+    .flow-card-code {
+        color: #777;
+        font-size: 13px;
+    }
+
+    .empty-box {
+        padding: 32px;
+
+        border: 1px solid #ddd;
+        border-radius: 8px;
 
         color: #777;
         text-align: center;
     }
 
-    textarea[readonly] {
-        min-height: 90px;
-        resize: none;
+    .muted-text {
+        color: #777;
+        font-size: 13px;
     }
 </style>

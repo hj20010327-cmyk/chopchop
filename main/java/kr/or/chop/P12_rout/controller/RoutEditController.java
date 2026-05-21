@@ -18,46 +18,30 @@ public class RoutEditController {
 	@Autowired
 	RoutService routService;
 
-	/**
-	 * 라우팅 수정 페이지
-	 */
 	@RequestMapping("/edit")
 	public String routEdit(String routId, Model model) {
 
-		// 라우팅 기본 정보
 		RoutDTO rout = routService.selectRoutDetail(routId);
-
-		// 기존 공정 흐름
 		List<RoutDetailDTO> routDetailList = routService.selectRoutDetailList(routId);
-
-		// 반제품 + 완제품 목록
 		List<RoutDTO> routItemList = routService.selectRoutItemList();
-
-		// 공정 목록
-		List<RoutDetailDTO> processList = routService.selectProcessList();
+		List<RoutDetailDTO> wpTypeList = routService.selectWpTypeList();
 
 		model.addAttribute("rout", rout);
 		model.addAttribute("routDetailList", routDetailList);
 		model.addAttribute("routItemList", routItemList);
-		model.addAttribute("processList", processList);
+		model.addAttribute("wpTypeList", wpTypeList);
 
 		return "P12_rout/routEdit.tiles";
 	}
 
-	/**
-	 * 라우팅 수정
-	 */
 	@RequestMapping("/update")
 	public String routUpdate(RoutDTO routDTO, RoutDetailDTO detailDTO) {
 
-		routService.updateRoutWithDetail(routDTO, detailDTO.getRoutDtlProcList());
+		routService.updateRoutWithDetail(routDTO, detailDTO);
 
 		return "redirect:/routing/detail?routId=" + routDTO.getRoutId();
 	}
 
-	/**
-	 * 라우팅 삭제
-	 */
 	@RequestMapping("/delete")
 	public String routDelete(String routId) {
 
