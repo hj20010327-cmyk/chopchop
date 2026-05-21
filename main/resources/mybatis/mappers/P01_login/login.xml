@@ -24,5 +24,20 @@
 			LEFT OUTER JOIN AUTH a ON e.EMP_AUTH = a.AUTH_NO
 		WHERE upper(e.EMP_ID) = upper(#{empId}) and e.EMP_AUTH != 0 and e.EMP_INOFFICE != 0
 	</select>
+	
+	<select id="checkEmpEmail" parameterType="empDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM EMP
+		WHERE trim(UPPER(EMP_ID)) = trim(UPPER(#{empId}))
+		  AND TRIM(LOWER(EMP_EMAIL)) = TRIM(LOWER(#{empEmail}))
+		  AND EMP_AUTH != 0
+		  AND EMP_INOFFICE != 0
+	</select>
+	
+	<update id="updateTempPw" parameterType="empDTO">
+		UPDATE EMP
+		SET EMP_PW = #{empPw}
+		WHERE trim(upper(EMP_ID)) = trim(upper(#{empId}))
+	</update>
 
 </mapper>

@@ -16,5 +16,15 @@ public class LoginDAOImpl implements LoginDAO {
 	public EmpDTO selectEmp(EmpDTO chkEmpDTO) {
 		return sqlSession.selectOne("mapper.P01_login.selectEmp", chkEmpDTO);
 	}
+	
+	@Override
+	public int checkEmpEmail(EmpDTO empDTO) {
+		return sqlSession.selectOne("mapper.P01_login.checkEmpEmail", empDTO);
+	}
+
+	@Override
+	public int updateTempPw(EmpDTO empDTO) {
+		return sqlSession.update("mapper.P01_login.updateTempPw", empDTO);
+	}
 
 }

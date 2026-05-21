@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <header class="header">
+
     <div class="header-left">
         <a href="${pageContext.request.contextPath}/dashboard" class="header-logo">
             <img
@@ -15,6 +16,18 @@
 
 	<div class="alarm-wrap">
 	    <div class="header-right">
+	    	
+	    	<!-- 프로필 -->
+	        <div class="header-profile">
+	            <span class="profile-img"></span>
+	            <span class="profile-name">
+	            	<a href="${pageContext.request.contextPath}/mypage?empId=${sessionScope.loginUser.empId}">
+		            	${sessionScope.loginUser.empName} (${sessionScope.loginUser.empId})
+	            	</a>
+	           	</span>
+	        </div>
+	        
+	        <!-- 알람버튼 -->
 	        <button type="button" class="header-icon" id="alarmBtn">
 	
 			    <c:choose>
@@ -37,6 +50,7 @@
 			
 			</button>
 			
+			<!-- 알람내역 -->
 			<div class="alarm-panel" id="alarmPanel">
 		        <h3 class="alarm-title">알림 내역</h3>
 		
@@ -52,15 +66,8 @@
 		            </div>
 		        </div>
 		    </div>
+		    
 		</div>
-
-        <div class="header-profile">
-            <span class="profile-img"></span>
-            <span class="profile-name">
-            	<a href="${pageContext.request.contextPath}/mypage?empId=">
-	            	홍길동 (EMP1001)
-            	</a>
-           	</span>
-        </div>
     </div>
+    
 </header>

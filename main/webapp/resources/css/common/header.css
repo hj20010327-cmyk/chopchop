@@ -87,9 +87,9 @@
 .header-profile {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
 }
 
