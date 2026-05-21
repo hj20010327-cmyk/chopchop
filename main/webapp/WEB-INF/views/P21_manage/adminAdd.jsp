@@ -54,10 +54,11 @@
             <div class="grid-wrap">
 
                 <div class="search-item grid">
-                    <label>이메일</label>
+                    <label>이메일 <span class="red">*</span></label>
                     <input type="email"
                            name="empEmail"
-                           placeholder="example@email.com">
+                           placeholder="example@email.com"
+                           required>
                 </div>
 
                 <div class="search-item grid">

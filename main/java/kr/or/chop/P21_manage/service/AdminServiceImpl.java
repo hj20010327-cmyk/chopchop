@@ -12,26 +12,36 @@ import kr.or.chop.common.pagination.PageInfo;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    @Autowired
-    AdminDAO adminDAO;
+	@Autowired
+	AdminDAO adminDAO;
 
-    @Override
-    public int selectAdminCount(AdminDTO adminDTO) {
-        return adminDAO.selectAdminCount(adminDTO);
-    }
+	@Override
+	public int selectAdminCount(AdminDTO adminDTO) {
+		return adminDAO.selectAdminCount(adminDTO);
+	}
 
-    @Override
-    public List<AdminDTO> selectAdminList(AdminDTO adminDTO, PageInfo page) {
-        return adminDAO.selectAdminList(adminDTO, page);
-    }
-    
-    @Override
-    public AdminDTO selectAdminDetail(String empId) {
-        return adminDAO.selectAdminDetail(empId);
-    }
-    
-    @Override
-    public int insertAdmin(AdminDTO adminDTO) {
-        return adminDAO.insertAdmin(adminDTO);
-    }
+	@Override
+	public List<AdminDTO> selectAdminList(AdminDTO adminDTO, PageInfo page) {
+		return adminDAO.selectAdminList(adminDTO, page);
+	}
+
+	@Override
+	public AdminDTO selectAdminDetail(String empId) {
+		return adminDAO.selectAdminDetail(empId);
+	}
+
+	@Override
+	public int insertAdmin(AdminDTO adminDTO) {
+		return adminDAO.insertAdmin(adminDTO);
+	}
+
+	@Override
+	public int updateAdmin(AdminDTO adminDTO) {
+		return adminDAO.updateAdmin(adminDTO);
+	}
+
+	@Override
+	public int deleteAdmin(String empId) {
+		return adminDAO.deleteAdmin(empId);
+	}
 }

@@ -2,12 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<div class="content">
+<div class="content admin-detail-page">
 
     <div class="header-row">
         <div>
             <h2 class="page-title">사원 상세</h2>
-            <p class="page-subtitle">사원 정보를 확인하고 관리할 수 있습니다.</p>
+            <p class="page-subtitle">사원 정보를 확인하고 관리하세요.</p>
         </div>
 
         <div>
@@ -15,23 +15,37 @@
         </div>
     </div>
 
-    <div class="btn-row">
-        <div>
-            <a class="btn btn-white"
-               href="${pageContext.request.contextPath}/admin/list">
-                목록
-            </a>
-        </div>
+    <div class="btn-row admin-detail-btn-row">
+	    <div>
+	        <a class="btn btn-white"
+	           href="${pageContext.request.contextPath}/admin/list">
+	            목록
+	        </a>
+	    </div>
+	
+	    <div style="display: flex; gap: 8px;">
+		    <a class="btn btn-main"
+		       href="${pageContext.request.contextPath}/admin/edit?empId=${admin.empId}">
+		        수정
+		    </a>
+		
+		    <form action="${pageContext.request.contextPath}/admin/delete"
+		          method="post"
+		          onsubmit="return confirm('해당 사원을 삭제 처리하시겠습니까?');">
+		
+		        <input type="hidden"
+		               name="empId"
+		               value="${admin.empId}">
+		
+		        <button type="submit"
+		                class="btn btn-red">
+		            삭제
+		        </button>
+		    </form>
+		</div>
+	</div>
 
-        <div>
-            <a class="btn btn-main"
-               href="${pageContext.request.contextPath}/admin/edit?empId=${admin.empId}">
-                수정
-            </a>
-        </div>
-    </div>
-
-    <div class="card emp-profile-card">
+    <div class="emp-profile-card">
 
         <div class="emp-profile-left">
             <div class="emp-profile-img"></div>
@@ -44,40 +58,41 @@
 
         <div>
             <c:choose>
-                <c:when test="${admin.empInOffice == 0}">
-                    <span class="status status-success">● 재직</span>
-                </c:when>
-                <c:when test="${admin.empInOffice == 10}">
-                    <span class="status status-warning">● 휴직</span>
-                </c:when>
-                <c:when test="${admin.empInOffice == 50}">
-                    <span class="status status-info">● 퇴사</span>
-                </c:when>
-                <c:otherwise>
-                    <span class="status status-info">● 미지정</span>
-                </c:otherwise>
-            </c:choose>
+			    <c:when test="${admin.empInOffice == 0}">
+			        <span class="status status-success">● 재직</span>
+			    </c:when>
+			
+			    <c:when test="${admin.empInOffice == 10}">
+			        <span class="status status-warning">● 휴직</span>
+			    </c:when>
+			
+			    <c:when test="${admin.empInOffice == 50}">
+			        <span class="status status-info">● 퇴사</span>
+			    </c:when>
+			
+			    <c:otherwise>
+			        <span class="status status-info">● 미지정</span>
+			    </c:otherwise>
+			</c:choose>
         </div>
 
     </div>
 
-    <div class="emp-detail-grid">
+    <div class="emp-info-grid">
 
-        <div class="card">
-            <h3 class="card-title">사원 정보</h3>
+        <div class="emp-info-card">
+            <h3 class="emp-section-title">사원 정보</h3>
 
-            <div class="info-table-wrap">
-                <table class="info-table">
+            <div class="emp-table-wrap">
+                <table class="emp-info-table">
                     <tr>
                         <th>사원번호</th>
                         <td>${admin.empId}</td>
                     </tr>
-
                     <tr>
                         <th>이름</th>
                         <td>${admin.empName}</td>
                     </tr>
-
                     <tr>
                         <th>부서</th>
                         <td>${admin.deptName}</td>
@@ -86,45 +101,32 @@
             </div>
         </div>
 
-        <div class="card">
-            <h3 class="card-title">계정 정보</h3>
+        <div class="emp-info-card">
+            <h3 class="emp-section-title">계정 정보</h3>
 
-            <div class="info-table-wrap">
-                <table class="info-table">
+            <div class="emp-table-wrap">
+                <table class="emp-info-table">
                     <tr>
                         <th>이메일</th>
                         <td>${admin.empEmail}</td>
                     </tr>
-
                     <tr>
                         <th>전화번호</th>
                         <td>${admin.empTel}</td>
                     </tr>
-
                     <tr>
-                        <th>입사일</th>
+                        <th>가입일</th>
                         <td>${admin.empHiredate}</td>
                     </tr>
-
                     <tr>
                         <th>권한</th>
                         <td>
                             <c:choose>
-                                <c:when test="${admin.empAuth == 0}">
-                                    퇴사자
-                                </c:when>
-                                <c:when test="${admin.empAuth == 10}">
-                                    작업자
-                                </c:when>
-                                <c:when test="${admin.empAuth == 20}">
-                                    관리자
-                                </c:when>
-                                <c:when test="${admin.empAuth == 30}">
-                                    최고관리자
-                                </c:when>
-                                <c:otherwise>
-                                    권한 미지정
-                                </c:otherwise>
+                                <c:when test="${admin.empAuth == 0}">퇴사자</c:when>
+                                <c:when test="${admin.empAuth == 10}">일반 작업자</c:when>
+                                <c:when test="${admin.empAuth == 20}">현장 관리자</c:when>
+                                <c:when test="${admin.empAuth == 30}">MES 관리자</c:when>
+                                <c:otherwise>권한 미지정</c:otherwise>
                             </c:choose>
                         </td>
                     </tr>
@@ -134,64 +136,240 @@
 
     </div>
 
+    <div class="emp-activity-section">
+        <h3 class="emp-section-title">활동 정보</h3>
+
+        <div class="emp-activity-wrap">
+
+            <div class="emp-activity-card">
+                <p class="activity-title">대기 중인 작업</p>
+                <p class="activity-count activity-wait">0 <span>건</span></p>
+                <p class="activity-sub">최근 30일 기준</p>
+            </div>
+
+            <div class="emp-activity-card">
+                <p class="activity-title">진행 중인 작업</p>
+                <p class="activity-count activity-progress">0 <span>건</span></p>
+                <p class="activity-sub">최근 30일 기준</p>
+            </div>
+
+            <div class="emp-activity-card">
+                <p class="activity-title">완료된 작업</p>
+                <p class="activity-count activity-done">0 <span>건</span></p>
+                <p class="activity-sub">최근 30일 기준</p>
+            </div>
+
+            <div class="emp-activity-card">
+                <p class="activity-title">지연된 작업</p>
+                <p class="activity-count activity-delay">0 <span>건</span></p>
+                <p class="activity-sub">최근 30일 기준</p>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 <style>
+    .admin-detail-page {
+        max-width: 1080px;
+        margin: 0 auto;
+    }
+
+    .admin-detail-btn-row {
+        margin-top: 24px;
+        margin-bottom: 26px;
+    }
+
     .emp-profile-card {
         min-height: 150px;
-        margin-bottom: 16px;
+        padding: 26px;
 
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+
+        border: 1px solid #999;
+        border-radius: 8px;
+        background-color: #fff;
+
+        margin-bottom: 16px;
     }
 
     .emp-profile-left {
         display: flex;
         align-items: center;
-        gap: 32px;
+        gap: 42px;
     }
 
     .emp-profile-img {
-        width: 96px;
-        height: 96px;
+        width: 110px;
+        height: 110px;
 
         border-radius: 50%;
-        background-color: var(--gray);
+        background-color: #d9d9d9;
     }
 
     .emp-profile-name {
-        margin: 0 0 10px;
+        margin: 0 0 12px;
 
-        font-size: 26px;
-        font-weight: 700;
+        font-size: 28px;
+        font-weight: 800;
+        color: #000;
     }
 
     .emp-profile-id {
         margin: 0;
 
-        font-size: 18px;
-        color: var(--dark-gray);
+        font-size: 20px;
+        color: #777;
     }
 
-    .emp-detail-grid {
+    .emp-info-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        gap: 18px;
+
+        margin-bottom: 40px;
     }
 
-    .emp-detail-grid .card {
-        min-height: 230px;
-        padding: 24px;
+    .emp-info-card {
+        min-height: 250px;
+        padding: 28px 26px;
+
+        border: 1px solid #999;
+        border-radius: 8px;
+        background-color: #fff;
     }
 
-    .emp-detail-grid .info-table-wrap {
-        padding: 0 20px;
+    .emp-section-title {
+        margin: 0 0 34px;
+
+        font-size: 22px;
+        font-weight: 800;
+        color: #000;
+    }
+
+    .emp-table-wrap {
+        padding: 0 26px;
+    }
+
+    .emp-info-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+
+        border-top: 2px solid #999;
+    }
+
+    .emp-info-table tr {
+        border-bottom: 2px solid #999;
+    }
+
+    .emp-info-table th,
+    .emp-info-table td {
+        height: 38px;
+        padding: 0 10px;
+
+        font-size: 15px;
+        text-align: left;
+        vertical-align: middle;
+
+        background-color: #fff;
+    }
+
+    .emp-info-table th {
+        width: 32%;
+        font-weight: 500;
+        color: #000;
+    }
+
+    .emp-info-table td {
+        width: 68%;
+        font-weight: 400;
+        color: #000;
+    }
+
+    .emp-activity-section {
+        margin-top: 10px;
+    }
+
+    .emp-activity-section .emp-section-title {
+        margin-bottom: 22px;
+    }
+
+    .emp-activity-wrap {
+        display: flex;
+        justify-content: center;
+        gap: 28px;
+    }
+
+    .emp-activity-card {
+        width: 165px;
+        min-height: 135px;
+        padding: 20px 16px;
+
+        border: 1px solid #333;
+        border-radius: 8px;
+        background-color: #fff;
+
+        text-align: center;
+    }
+
+    .activity-title {
+        margin: 0 0 14px;
+
+        font-size: 18px;
+        font-weight: 800;
+        color: #000;
+    }
+
+    .activity-count {
+        margin: 0 0 12px;
+
+        font-size: 36px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .activity-count span {
+        margin-left: 8px;
+
+        font-size: 18px;
+        font-weight: 800;
+        color: #000;
+    }
+
+    .activity-sub {
+        margin: 0;
+
+        font-size: 13px;
+        color: #000;
+    }
+
+    .activity-wait {
+        color: #f59e0b;
+    }
+
+    .activity-progress {
+        color: #2e7d55;
+    }
+
+    .activity-done {
+        color: #777;
+    }
+
+    .activity-delay {
+        color: #d32f2f;
     }
 
     @media (max-width: 1000px) {
-        .emp-detail-grid {
+        .emp-info-grid {
             grid-template-columns: 1fr;
+        }
+
+        .emp-activity-wrap {
+            flex-wrap: wrap;
         }
 
         .emp-profile-card {

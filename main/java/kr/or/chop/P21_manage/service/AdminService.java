@@ -7,10 +7,15 @@ import kr.or.chop.common.pagination.PageInfo;
 
 public interface AdminService {
 
-    int selectAdminCount(AdminDTO adminDTO);
-    List<AdminDTO> selectAdminList(AdminDTO adminDTO, PageInfo page);
-    
-    AdminDTO selectAdminDetail(String empId);
-    
-    int insertAdmin(AdminDTO adminDTO);
+	int selectAdminCount(AdminDTO adminDTO);
+
+	List<AdminDTO> selectAdminList(AdminDTO adminDTO, PageInfo page);
+
+	AdminDTO selectAdminDetail(String empId);
+
+	int insertAdmin(AdminDTO adminDTO);
+
+	int updateAdmin(AdminDTO adminDTO);
+
+	int deleteAdmin(String empId);
 }

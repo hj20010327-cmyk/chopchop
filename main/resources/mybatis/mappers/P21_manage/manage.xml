@@ -5,147 +5,168 @@
 
 <mapper namespace="mapper.P21_manage">
 
-    <select id="selectAdminCount"
-            parameterType="adminDTO"
-            resultType="int">
+	<select id="selectAdminCount" parameterType="adminDTO"
+		resultType="int">
 
-        SELECT COUNT(*)
-        FROM emp e
-        LEFT JOIN dept d
-            ON e.emp_deptno = d.deptno
-        WHERE 1 = 1
+		SELECT COUNT(*)
+		FROM emp e
+		LEFT JOIN dept d
+		ON e.emp_deptno = d.deptno
+		WHERE e.emp_inoffice != 99
 
-        <if test="searchDeptno != null">
-            AND e.emp_deptno = #{searchDeptno}
-        </if>
+		<if test="searchDeptno != null">
+			AND e.emp_deptno = #{searchDeptno}
+		</if>
 
-        <if test="searchAuth != null">
-            AND e.emp_auth = #{searchAuth}
-        </if>
+		<if test="searchAuth != null">
+			AND e.emp_auth = #{searchAuth}
+		</if>
 
-        <if test="searchStatus != null">
-            AND e.emp_inoffice = #{searchStatus}
-        </if>
+		<if test="searchStatus != null">
+			AND e.emp_inoffice = #{searchStatus}
+		</if>
 
-        <if test="searchKeyword != null and searchKeyword != ''">
-            AND (
-                UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                OR UPPER(e.emp_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-                OR UPPER(d.dname) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
-            )
-        </if>
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND (
+			UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+			OR UPPER(e.emp_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+			OR UPPER(d.dname) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+			)
+		</if>
 
-    </select>
-
-
-    <select id="selectAdminList"
-            parameterType="map"
-            resultType="adminDTO">
-
-        SELECT *
-        FROM
-        (
-            SELECT ROWNUM RN, A.*
-            FROM
-            (
-                SELECT
-                    e.emp_id AS empId,
-                    e.emp_name AS empName,
-                    e.emp_pw AS empPw,
-                    e.emp_tel AS empTel,
-                    e.emp_email AS empEmail,
-                    e.emp_deptno AS empDeptno,
-                    d.dname AS deptName,
-                    e.emp_auth AS empAuth,
-                    e.emp_first AS empFirst,
-                    e.emp_inoffice AS empInOffice,
-                    e.emp_hiredate AS empHiredate
-                FROM emp e
-                LEFT JOIN dept d
-                    ON e.emp_deptno = d.deptno
-                WHERE 1 = 1
-
-                <if test="adminDTO.searchDeptno != null">
-                    AND e.emp_deptno = #{adminDTO.searchDeptno}
-                </if>
-
-                <if test="adminDTO.searchAuth != null">
-                    AND e.emp_auth = #{adminDTO.searchAuth}
-                </if>
-
-                <if test="adminDTO.searchStatus != null">
-                    AND e.emp_inoffice = #{adminDTO.searchStatus}
-                </if>
-
-                <if test="adminDTO.searchKeyword != null and adminDTO.searchKeyword != ''">
-                    AND (
-                        UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                        OR UPPER(e.emp_name) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                        OR UPPER(d.dname) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
-                    )
-                </if>
-
-                ORDER BY e.emp_id DESC
-            ) A
-        )
-        WHERE RN BETWEEN #{page.startRow}
-        AND #{page.endRow}
-
-    </select>
-    
-    <select id="selectAdminDetail"
-	        parameterType="string"
-	        resultType="adminDTO">
-	
-	    SELECT
-	        e.emp_id AS empId,
-	        e.emp_name AS empName,
-	        e.emp_pw AS empPw,
-	        e.emp_tel AS empTel,
-	        e.emp_email AS empEmail,
-	        e.emp_deptno AS empDeptno,
-	        d.dname AS deptName,
-	        e.emp_auth AS empAuth,
-	        e.emp_first AS empFirst,
-	        e.emp_inoffice AS empInOffice,
-	        e.emp_hiredate AS empHiredate
-	    FROM emp e
-	    LEFT JOIN dept d
-	        ON e.emp_deptno = d.deptno
-	    WHERE e.emp_id = #{empId}
-	
 	</select>
-	
-	<insert id="insertAdmin"
-	        parameterType="adminDTO">
-	
-	    INSERT INTO emp
-	    (
-	        emp_id,
-	        emp_name,
-	        emp_pw,
-	        emp_tel,
-	        emp_email,
-	        emp_deptno,
-	        emp_auth,
-	        emp_first,
-	        emp_inoffice,
-	        emp_hiredate
-	    )
-	    VALUES
-	    (
-	        'EMP' || SEQ_EMP.NEXTVAL,
-	        #{empName},
-	        '1234',
-	        #{empTel},
-	        #{empEmail},
-	        #{empDeptno},
-	        #{empAuth},
-	        'Y',
-	        #{empInOffice},
-	        SYSDATE
-	    )
-	
+
+
+	<select id="selectAdminList" parameterType="map"
+		resultType="adminDTO">
+
+		SELECT *
+		FROM
+		(
+		SELECT ROWNUM RN, A.*
+		FROM
+		(
+		SELECT
+		e.emp_id AS empId,
+		e.emp_name AS empName,
+		e.emp_pw AS empPw,
+		e.emp_tel AS empTel,
+		e.emp_email AS empEmail,
+		e.emp_deptno AS empDeptno,
+		d.dname AS deptName,
+		e.emp_auth AS empAuth,
+		e.emp_first AS empFirst,
+		e.emp_inoffice AS empInOffice,
+		e.emp_hiredate AS empHiredate
+		FROM emp e
+		LEFT JOIN dept d
+		ON e.emp_deptno = d.deptno
+		WHERE e.emp_inoffice != 99
+
+		<if test="adminDTO.searchDeptno != null">
+			AND e.emp_deptno = #{adminDTO.searchDeptno}
+		</if>
+
+		<if test="adminDTO.searchAuth != null">
+			AND e.emp_auth = #{adminDTO.searchAuth}
+		</if>
+
+		<if test="adminDTO.searchStatus != null">
+			AND e.emp_inoffice = #{adminDTO.searchStatus}
+		</if>
+
+		<if
+			test="adminDTO.searchKeyword != null and adminDTO.searchKeyword != ''">
+			AND (
+			UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} || '%'))
+			OR UPPER(e.emp_name) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword}
+			|| '%'))
+			OR UPPER(d.dname) LIKE TRIM(UPPER('%' || #{adminDTO.searchKeyword} ||
+			'%'))
+			)
+		</if>
+
+		ORDER BY e.emp_id DESC
+		) A
+		)
+		WHERE RN BETWEEN #{page.startRow}
+		AND #{page.endRow}
+
+	</select>
+
+	<select id="selectAdminDetail" parameterType="string"
+		resultType="adminDTO">
+
+		SELECT
+		e.emp_id AS empId,
+		e.emp_name AS empName,
+		e.emp_pw AS empPw,
+		e.emp_tel AS empTel,
+		e.emp_email AS empEmail,
+		e.emp_deptno AS empDeptno,
+		d.dname AS deptName,
+		e.emp_auth AS empAuth,
+		e.emp_first AS empFirst,
+		e.emp_inoffice AS empInOffice,
+		e.emp_hiredate AS empHiredate
+		FROM emp e
+		LEFT JOIN dept d
+		ON e.emp_deptno = d.deptno
+		WHERE e.emp_id = #{empId}
+
+	</select>
+
+	<insert id="insertAdmin" parameterType="adminDTO">
+
+		INSERT INTO emp
+		(
+		emp_id,
+		emp_name,
+		emp_pw,
+		emp_tel,
+		emp_email,
+		emp_deptno,
+		emp_auth,
+		emp_first,
+		emp_inoffice,
+		emp_hiredate
+		)
+		VALUES
+		(
+		'EMP' || EMP_SEQ.NEXTVAL,
+		#{empName},
+		'1234',
+		#{empTel},
+		#{empEmail},
+		#{empDeptno},
+		#{empAuth},
+		'Y',
+		#{empInOffice},
+		SYSDATE
+		)
+
 	</insert>
+
+	<update id="updateAdmin" parameterType="adminDTO">
+
+		UPDATE emp
+		SET
+		emp_name = #{empName},
+		emp_tel = #{empTel},
+		emp_email = #{empEmail},
+		emp_deptno = #{empDeptno},
+		emp_auth = #{empAuth},
+		emp_inoffice = #{empInOffice}
+		WHERE emp_id = #{empId}
+
+	</update>
+
+	<update id="deleteAdmin" parameterType="string">
+
+		UPDATE emp
+		SET emp_inoffice = 99
+		WHERE emp_id = #{empId}
+
+	</update>
 
 </mapper>
