@@ -396,6 +396,11 @@ textarea:focus {
 	background-color: var(--warning-back);
 }
 
+.status-back-safe {
+	color: var(--safe);
+	background-color: var(--safe-back);
+}
+
 .status-back-danger {
 	color: var(--danger);
 	background-color: var(--danger-back);
@@ -558,6 +563,13 @@ textarea:focus {
 
 .search-item input {
     min-width: 260px;
+}
+
+.search-item input[type="date"] {
+	min-width: 180px;
+}
+.search-item input.short {
+	min-width: 220px;
 }
 
 .search-item select {

@@ -161,7 +161,7 @@
 	    </selectKey>
 		
 		INSERT INTO WORKPLACE (WP_ID, WP_NAME, WP_TYPE, WP_USAGE)
-		VALUES (#{wpId}, #{wpName}, #{wpType}, 'Y')
+		VALUES (#{wpId}, #{wpName}, #{wpTypeNo}, 'Y')
 	</insert>
 	
 	<update id="updateWpImg" parameterType="wpDTO">
@@ -172,7 +172,7 @@
 	
 	<update id="updateWp" parameterType="wpDTO">
 		UPDATE WORKPLACE
-		SET WP_NAME = #{wpName}, WP_TYPE = #{wpType}
+		SET WP_NAME = #{wpName}, WP_TYPE = #{wpTypeNo}
 		WHERE WP_ID = #{wpId}
 	</update>
 	

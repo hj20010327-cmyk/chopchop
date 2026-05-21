@@ -73,6 +73,7 @@
 			<label>제목/작성자 검색</label>
 
 			<input type="text"
+				class="short"
 				name="keyword"
 				value="${suggDTO.keyword}"
 				placeholder="내용을 입력하세요.">
@@ -344,20 +345,20 @@ function dateCheck() {
 	gap: 8px;
 }
 
-.date-row input {
-	width: 230px;
-	min-width: 230px;
-}
+/* .date-row input { */
+/* 	width: 230px; */
+/* 	min-width: 230px; */
+/* } */
 
-.status-item select {
-	width: 110px;
-	min-width: 110px;
-}
+/* .status-item select { */
+/* 	width: 110px; */
+/* 	min-width: 110px; */
+/* } */
 
-.keyword input {
-	width: 240px;
-	min-width: 240px;
-}
+/* .keyword input { */
+/* 	width: 240px; */
+/* 	min-width: 240px; */
+/* } */
 
 .search-btn-area {
 	display: flex;

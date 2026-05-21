@@ -43,46 +43,46 @@
 			
 			<div class="grid search-item">
 				<label>유형 <span class="red">*</span></label>
-				<select name="wpType" required>
+				<select name="wpTypeNo" required>
 					<option value="" disabled>작업장 유형 선택</option>
 	                <option value="10"
-						${wpDTO.wpType == '10' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '10' ? 'selected' : ''}>
 						전처리
 					</option>
 					<option value="20"
-						${wpDTO.wpType == '20' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '20' ? 'selected' : ''}>
 						배합
 					</option>
 					<option value="30"
-						${wpDTO.wpType == '30' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '30' ? 'selected' : ''}>
 						반죽
 					</option>
 					<option value="40"
-						${wpDTO.wpType == '40' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '40' ? 'selected' : ''}>
 						제피
 					</option>
 					<option value="50"
-						${wpDTO.wpType == '50' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '50' ? 'selected' : ''}>
 						성형
 					</option>
 					<option value="60"
-						${wpDTO.wpType == '60' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '60' ? 'selected' : ''}>
 						증숙
 					</option>
 					<option value="70"
-						${wpDTO.wpType == '70' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '70' ? 'selected' : ''}>
 						냉각
 					</option>
 					<option value="80"
-						${wpDTO.wpType == '80' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '80' ? 'selected' : ''}>
 						급속냉동
 					</option>
 					<option value="90"
-						${wpDTO.wpType == '90' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '90' ? 'selected' : ''}>
 						포장
 					</option>
 					<option value="100"
-						${wpDTO.wpType == '100' ? 'selected' : ''}>
+						${wpDTO.wpTypeNo == '100' ? 'selected' : ''}>
 						검사
 					</option>
 	            </select>

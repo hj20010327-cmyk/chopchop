@@ -16,7 +16,7 @@
 <!-- 		<typeAlias type="kr.or.chop.P01_login.dto.AlarmDTO" alias="alarmDTO" /> -->
 <!-- 		<typeAlias type="kr.or.chop.P03_notice.dto.NoticeDTO" alias="noticeDTO" /> -->
 		<typeAlias type="kr.or.chop.P04_sugg.dto.SuggDTO" alias="suggDTO" />
-<!-- 		<typeAlias type="kr.or.chop.P05_plan.dto.PlanDTO" alias="planDTO" /> -->
+		<typeAlias type="kr.or.chop.P05_plan.dto.PlanDTO" alias="planDTO" />
 <!-- 		<typeAlias type="kr.or.chop.P06_work.dto.WorkDTO" alias="workDTO" /> -->
 <!-- 		<typeAlias type="kr.or.chop.P07_qc.dto.QcDTO" alias="qcDTO" /> -->
 		<typeAlias type="kr.or.chop.P08_stock.dto.StockDTO" alias="stockDTO" />
