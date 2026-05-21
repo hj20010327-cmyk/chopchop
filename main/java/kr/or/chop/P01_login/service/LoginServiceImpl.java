@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.chop.P01_login.dao.LoginDAO;
 import kr.or.chop.P01_login.dto.EmpDTO;
+import kr.or.chop.common.util.Sha256Util;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -68,7 +69,9 @@ public class LoginServiceImpl implements LoginService {
 
         // 2. 임시 비밀번호 생성
         String tempPw = createTempPw();
-        empDTO.setEmpPw(tempPw);
+        // 2-1. 비밀번호 암호화
+        String encTempPw = Sha256Util.encrypt(tempPw);
+        empDTO.setEmpPw(encTempPw);
 
         // 3. DB 비밀번호 변경
         int updateResult = loginDAO.updateTempPw(empDTO);
@@ -103,6 +106,14 @@ public class LoginServiceImpl implements LoginService {
 
         return sb.toString();
     }
+
+	@Override
+	public int updatePw(EmpDTO loginUser) {
+		String encPw = Sha256Util.encrypt(loginUser.getEmpPw());
+		loginUser.setEmpPw(encPw);
+		
+		return loginDAO.updatePw(loginUser);
+	}
 
 	
 }

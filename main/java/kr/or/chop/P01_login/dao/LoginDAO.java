@@ -7,5 +7,6 @@ public interface LoginDAO {
 	public EmpDTO selectEmp(EmpDTO chkEmpDTO);
 	public int checkEmpEmail(EmpDTO empDTO);
 	public int updateTempPw(EmpDTO empDTO);
+	public int updatePw(EmpDTO loginUser);
 
 }

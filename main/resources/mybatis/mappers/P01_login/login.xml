@@ -39,5 +39,11 @@
 		SET EMP_PW = #{empPw}, EMP_FIRST = 'Y'
 		WHERE trim(upper(EMP_ID)) = trim(upper(#{empId}))
 	</update>
+	
+	<update id="updatePw" parameterType="empDTO">
+		UPDATE EMP
+		SET EMP_PW = #{empPw}, EMP_FIRST = 'N'
+		WHERE trim(upper(EMP_ID)) = trim(upper(#{empId}))
+	</update>
 
 </mapper>

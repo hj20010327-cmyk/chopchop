@@ -7,5 +7,6 @@ public interface LoginService {
 	public EmpDTO selectEmp(EmpDTO chkEmpDTO);
 	public void sendTempPw(EmpDTO empDTO, String tempPw) throws Exception;
 	public boolean issueTempPw(EmpDTO empDTO);
+	public int updatePw(EmpDTO loginUser);
 
 }

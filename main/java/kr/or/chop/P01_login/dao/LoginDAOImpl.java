@@ -14,6 +14,7 @@ public class LoginDAOImpl implements LoginDAO {
 
 	@Override
 	public EmpDTO selectEmp(EmpDTO chkEmpDTO) {
+		System.out.println("pw : " + chkEmpDTO.getEmpPw());
 		return sqlSession.selectOne("mapper.P01_login.selectEmp", chkEmpDTO);
 	}
 	
@@ -25,6 +26,11 @@ public class LoginDAOImpl implements LoginDAO {
 	@Override
 	public int updateTempPw(EmpDTO empDTO) {
 		return sqlSession.update("mapper.P01_login.updateTempPw", empDTO);
+	}
+
+	@Override
+	public int updatePw(EmpDTO loginUser) {
+		return sqlSession.update("mapper.P01_login.updatePw", loginUser);
 	}
 
 }
