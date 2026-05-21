@@ -27,5 +27,6 @@ public interface IoService {
 	public List<VendorDTO> selectVendorByType(String vendorType);
 	public List<WHDTO> selectWarehouseListByItem(String itemId);
 	public List<SecDTO> selectWhSecList(String whId);
+	public void updateLot(IoDTO ioDTO);
 	
 }

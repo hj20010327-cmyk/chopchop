@@ -31,13 +31,13 @@
             <div style="display: flex; align-items: center; gap: 8px;">
                 <input type="date"
                     name="startDate"
-                    value="${search.startDate}" style="min-width:178px;">
+                    value="${search.startDate}">
 
                 <span>~</span>
 
                 <input type="date"
                     name="endDate"
-                    value="${search.endDate}" style="min-width:178px;">
+                    value="${search.endDate}">
             </div>
         </div>
 
@@ -65,7 +65,7 @@
             <input type="text"
                 name="searchKeyword"
                 value="${search.searchKeyword}"
-                placeholder="내용을 입력하세요." style="min-width:218px;">
+                placeholder="내용을 입력하세요." class="short">
         </div>
 
         <div class="search-btn-area">

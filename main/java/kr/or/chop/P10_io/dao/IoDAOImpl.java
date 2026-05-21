@@ -134,5 +134,10 @@ public class IoDAOImpl implements IoDAO {
 	public List<SecDTO> selectWhSecList(String whId) {
 		return sqlSession.selectList("mapper.P10_io.selectWhSecList", whId);
 	}
+	
+	@Override
+	public void updateLot(IoDTO ioDTO) {
+		sqlSession.update("mapper.P10_io.updateLot", ioDTO);
+	}
 
 }

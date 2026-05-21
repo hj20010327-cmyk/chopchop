@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <div class="content">
 
@@ -22,10 +23,10 @@
 			<label>유통기한</label>
 
 			<div style="display: flex; align-items: center; gap: 8px;">
-				<input type="date" name="startDate" value="${search.startDate}" style="min-width:178px;">
+				<input type="date" name="startDate" value="${search.startDate}">
 
 				<span>~</span> <input type="date" name="endDate"
-					value="${search.endDate}" style="min-width:178px;">
+					value="${search.endDate}">
 			</div>
 		</div>
 
@@ -52,7 +53,7 @@
 
 		<div class="search-item keyword">
 			<label>품목명/LOT 번호 검색</label> <input type="text" name="searchKeyword"
-				value="${search.searchKeyword}" placeholder="내용을 입력하세요." style="min-width:218px;">
+				value="${search.searchKeyword}" placeholder="내용을 입력하세요." class="short">
 		</div>
 
 		<div class="search-btn-area">
@@ -82,9 +83,30 @@
 						<tr onclick="location.href='${pageContext.request.contextPath}/lot/detail?lotId=${lot.lotId}'">
 							<td class="lotId">${lot.lotId}</td>
 							<td>${lot.lotItemName}(${lot.lotItem})</td>
-							<td>${lot.lotAwhsec}</td>
-							<td>${lot.lotFqty}EA</td>
-							<td>${lot.lotExp}</td>
+							<td>
+								<c:choose>
+									<c:when test="${lot.lotQc == 'Y'}">
+										${lot.lotAwhsec}
+									</c:when>
+									<c:when test="${lot.lotQc == 'N'}">
+										${lot.lotBwhsec}
+									</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<c:choose>
+									<c:when test="${lot.lotQc == 'Y'}">
+										${lot.lotFqty}EA
+									</c:when>
+									<c:when test="${lot.lotQc == 'N'}">
+										${lot.lotQty}EA
+									</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<fmt:formatDate value="${lot.lotExp}"
+								pattern="yyyy-MM-dd HH:mm"/>
+							</td>
 							<td>
 								<c:choose>
 

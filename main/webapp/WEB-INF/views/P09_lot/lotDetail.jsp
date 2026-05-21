@@ -56,7 +56,7 @@
 						</c:when>
 
 						<c:when test="${lot.lotStatus == '40'}">
-							<span class="status-back status-back-warning"> • 보류 </span>
+							<span class="status-back status-back-warning"> • 검사 전 </span>
 						</c:when>
 
 						<c:when test="${lot.lotStatus == '0'}">
@@ -91,8 +91,15 @@
 
 						<th>제조일시</th>
 						<td>
-						<fmt:formatDate value="${lot.lotMfd}"
-							pattern="yyyy-MM-dd HH:mm"/>
+							<c:choose>
+								<c:when test="${lot.lotQc == 'Y'}">
+									<fmt:formatDate value="${lot.lotMfd}"
+										pattern="yyyy-MM-dd HH:mm"/>
+								</c:when>
+								<c:when test="${lot.lotQc == 'N'}">
+									-
+								</c:when>
+							</c:choose>
 						</td>
 					</tr>
 
@@ -113,7 +120,7 @@
 							-					
 						</td>
 
-						<th>현재 수량</th>
+						<th>가용 수량</th>
 						<td>${lot.lotFqty}EA</td>
 					</tr>
 
@@ -123,7 +130,16 @@
 									pattern="yyyy-MM-dd HH:mm"/></td>
 
 						<th>위치</th>
-						<td>${lot.lotAwhsec}</td>
+						<td>
+							<c:choose>
+								<c:when test="${lot.lotQc == 'Y'}">
+									${lot.lotAwhsec}
+								</c:when>
+								<c:when test="${lot.lotQc == 'N'}">
+									${lot.lotBwhsec}
+								</c:when>
+							</c:choose>
+						</td>
 					</tr>
 
 				</table>

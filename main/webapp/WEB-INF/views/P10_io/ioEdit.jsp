@@ -207,10 +207,9 @@
 				</label>
 
 				<input type="text"
-					name="ioLot"
 					value="${io.ioLot}"
-					placeholder="LOT 번호 입력"
 					readonly>
+				<input type="hidden" name="ioLot" value="${io.ioLot}">
 
 			</div>
 
@@ -222,10 +221,11 @@
 				</label>
 
 				<input type="text"
-					name="ioQty"
 					value="${io.ioQty}"
-					placeholder="수량 입력"
 					readonly>
+				<input type="hidden"
+					name="ioQty"
+					value="${io.ioQty}">
 
 			</div>
 

@@ -54,6 +54,7 @@ public class IoEditController {
 		);
 
 		ioService.updateIo(ioDTO);
+		ioService.updateLot(ioDTO);
 		
 		return "redirect:/io/detail?ioId=" + ioDTO.getIoId();
 	}

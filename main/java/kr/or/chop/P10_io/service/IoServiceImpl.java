@@ -122,5 +122,10 @@ public class IoServiceImpl implements IoService {
 	public List<SecDTO> selectWhSecList(String whId) {
 		return ioDAO.selectWhSecList(whId);
 	}
+	
+	@Override
+	public void updateLot(IoDTO ioDTO) {
+		ioDAO.updateLot(ioDTO);
+	}
 
 }

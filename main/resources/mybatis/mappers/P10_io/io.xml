@@ -296,7 +296,7 @@
 			WHERE ITEM_ID = #{itemId}
 			),
 			'N',
-			10,
+			40,
 			#{ioMsg},
 			#{whSec},
 			NULL
@@ -328,6 +328,25 @@
 		io_msg = #{ioMsg}
 		WHERE io_id = #{ioId}
 
+	</update>
+	
+	<update id="updateLot"
+		parameterType="ioDTO">
+		
+		update lot
+		set
+		lot_vendor = #{ioVendor},
+		lot_etw = #{ioDate},
+		lot_exp = (
+			SELECT #{ioDate} + ITEM_USEDATE
+			FROM ITEM
+			WHERE ITEM_ID = #{itemId}
+			),
+		lot_memo = #{ioMsg},
+		lot_bwhsec = #{whSec}
+		where lot_id = #{ioLot}	
+		
+		
 	</update>
 
 	<select id="selectVendorTypeById" parameterType="string"
