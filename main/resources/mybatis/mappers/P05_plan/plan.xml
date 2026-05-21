@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.P05_plan">
+
+	<select id="selectPlanCount" parameterType="planDTO" resultType="int">
+		SELECT count(*)
+		FROM plan p
+			LEFT OUTER JOIN item i on p.plan_item = i.item_id
+		WHERE plan_usage = 'Y'
+			<if test="(planSearchSdate != null and planSearchSdate != '')">
+				AND p.plan_edate <![CDATA[<]]>= #{planSearchSdate}					
+			</if>
+			<if test="(planSearchEdate != null and planSearchEdate != '')">
+				AND p.plan_sdate <![CDATA[<]]>= #{planSearchEdate}					
+			</if>
+			<if test="searchType != null and searchType != ''">
+				AND p.plan_status = #{searchType}
+			</if>
+			<if test="searchKeyword != null and searchKeyword != ''">
+				AND (
+					UPPER(p.plan_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+					or UPPER(p.plan_item) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+					or UPPER(i.item_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+				)
+			</if>
+	</select>
+
+	<select id="selectAllPlan" parameterType="map" resultType="planDTO">
+		SELECT *
+		FROM (
+			SELECT rownum rn, plan.*
+			FROM (
+				SELECT
+					p.plan_id planId,
+					p.plan_item planItem,
+					i.item_name planItemName,
+					i.item_unit planItemNnit,
+					p.plan_fin_qty planFinQty,
+					p.plan_wp_qty planWpQty,
+					p.plan_sdate planSdate,
+					p.plan_edate planEdate,
+					p.plan_status planStatus,
+					p.plan_director planDirector,
+					d.emp_name planDname,
+					p.plan_cdate planCdate,
+					p.plan_mdate planMdate
+				FROM plan p
+					LEFT OUTER JOIN item i ON p.plan_item = i.ITEM_ID
+					LEFT OUTER JOIN emp d ON d.emp_id = p.plan_director
+				WHERE plan_usage = 'Y'	
+					<if test="(planDTO.planSearchSdate != null and planDTO.planSearchSdate != '')">
+						AND p.plan_edate <![CDATA[<]]>= #{planDTO.planSearchSdate}					
+					</if>
+					<if test="(planDTO.planSearchEdate != null and planDTO.planSearchEdate != '')">
+						AND p.plan_sdate <![CDATA[<]]>= #{planDTO.planSearchEdate}					
+					</if>
+					<if test="planDTO.searchType != null and planDTO.searchType != ''">
+						AND p.plan_status = #{planDTO.searchType}
+					</if>
+					<if test="planDTO.searchKeyword != null and planDTO.searchKeyword != ''">
+						AND (
+							UPPER(p.plan_id) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
+							or UPPER(p.plan_item) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
+							or UPPER(i.item_name) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
+						)
+					</if>
+			) plan
+			WHERE 1 = 1
+			
+			<if test="planDTO.cardType != null and planDTO.cardType == 'ing'">
+				AND plan.plan_status = 10
+			</if>
+			<if test="planDTO.cardType != null and planDTO.cardType == 'wait'">
+				AND plan.plan_status = 20
+			</if>
+			<if test="planDTO.cardType != null and planDTO.cardType == 'stop'">
+				AND plan.plan_status = 40
+			</if>
+			<if test="planDTO.cardType != null and planDTO.cardType == 'etc'">
+				AND plan.plan_status = 50
+			</if>
+		)
+		WHERE rn BETWEEN #{page.startRow} AND #{page.endRow}
+	</select>
+	
+	<select id="selectPlanCardCnt" parameterType="planDTO" resultType="planDTO">
+		SELECT
+		    COUNT(*) AS totalCnt,
+		    SUM(CASE WHEN plan_status = 10 THEN 1 ELSE 0 END) AS ingCnt,
+		    SUM(CASE WHEN plan_status = 20 THEN 1 ELSE 0 END) AS waitCnt,
+		    SUM(CASE WHEN plan_status = 30 THEN 1 ELSE 0 END) AS finCnt,
+		    SUM(CASE WHEN plan_status = 40 THEN 1 ELSE 0 END) AS stopCnt,
+		    SUM(CASE WHEN plan_status = 50 THEN 1 ELSE 0 END) AS etcCnt
+		FROM plan
+	</select>
+	
+</mapper>
