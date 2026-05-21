@@ -10,7 +10,7 @@
 			<h2 class="page-title">입출고 이력 수정</h2>
 
 			<p class="page-subtitle">
-				입출고 이력(${io.idId})의 정보를 수정하세요.
+				입출고 이력(${io.ioId})의 정보를 수정하세요.
 			</p>
 		</div>
 
@@ -27,6 +27,7 @@
 		style="width:100%; max-width:1050px;">
 
 		<input type="hidden" name="ioId" value="${io.ioId}">
+		<input type="hidden" name="ioType" value="${io.ioType}">
 
 		<div style="display:flex; justify-content:flex-end; gap:12px;">
 
@@ -56,17 +57,15 @@
 
 						<div style="display:flex; align-items:center; gap:7px;">
 							<input type="radio"
-								name="ioType"
 								value="IN"
-								<c:if test="${io.ioType == 'IN'}">checked</c:if>>
+								<c:if test="${io.ioType == 'IN'}">checked</c:if> disabled>
 							입고
 						</div>
 
 						<div style="display:flex; align-items:center; gap:7px;">
 							<input type="radio"
-								name="ioType"
 								value="OUT"
-								<c:if test="${io.ioType == 'OUT'}">checked</c:if>>
+								<c:if test="${io.ioType == 'OUT'}">checked</c:if> disabled>
 							출고
 						</div>
 
@@ -120,6 +119,82 @@
 
 			</div>
 
+		</div>
+		
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
+
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+
+				<label>
+					품목유형 <span class="red">*</span>
+				</label>
+
+<!-- 				<select id="itemType" name="itemType"> -->
+<!-- 					<option value="" disabled selected>품목유형 선택</option> -->
+<!-- 					<option value="10">원자재</option> -->
+<!-- 					<option value="20">반제품</option> -->
+<!-- 					<option value="30">완제품</option> -->
+<!-- 				</select> -->
+				<c:choose>
+					<c:when test="${io.itemType == '10'}">
+						<input type="text" value="원자재" readonly>
+					</c:when>	
+					<c:when test="${io.itemType == '20'}">
+						<input type="text" value="반제품" readonly>
+					</c:when>	
+					<c:when test="${io.itemType == '30'}">
+						<input type="text" value="완제품" readonly>
+					</c:when>	
+					<c:when test="${io.itemType == '40'}">
+						<input type="text" value="기타 자재" readonly>
+					</c:when>	
+				</c:choose>
+				<input type="hidden" name="itemType" value="${io.itemType}"> 
+
+			</div>
+
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+
+				<label>
+					품목 <span class="red">*</span>
+				</label>
+
+<!-- 				<select id="itemId" name="itemId"> -->
+<!-- 					<option value="" disabled selected>품목 선택</option> -->
+<!-- 				</select> -->
+					<input type="text" value="${io.itemName}" readonly>
+					<input type="hidden" id="itemId" name="itemId" value="${io.itemId}">
+
+			</div>
+
+		</div>
+		
+		<div style="display:flex; gap:40px; margin-bottom:26px;">
+
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+		
+				<label>창고 <span class="red">*</span></label>
+		
+				<select id="warehouse" name="whId">
+					<option value="">창고 선택</option>
+				</select>
+		
+			</div>
+		
+			<div class="search-item"
+				style="display:flex; flex-direction:column; flex:1;">
+		
+				<label>창고 섹션 <span class="red">*</span></label>
+		
+				<select name="whSec" id="whSec">
+					<option value="">섹션 선택</option>
+				</select>
+		
+			</div>
+		
 		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
@@ -369,10 +444,16 @@ window.addEventListener("load", function() {
 	const currentVendorType = "${vendorType}";
 	const currentVendorId = "${io.ioVendor}";
 
+	const itemIdInput = document.querySelector("#itemId");
+	const warehouseSelect = document.querySelector("#warehouse");
+	const whSecSelect = document.querySelector("#whSec");
+
+	const currentWhId = "${io.whId}";
+	const currentWhSec = "${io.whSec}";
+
 	const workerModal = document.querySelector("#workerModal");
 	const workerSearchBtn = document.querySelector("#workerSearchBtn");
 	const workerModalClose = document.querySelector("#workerModalClose");
-	const workerSearchSubmit = document.querySelector("#workerSearchSubmit");
 	const workerTbody = document.querySelector("#workerTbody");
 	const workerSelectBtn = document.querySelector("#workerSelectBtn");
 	const ioWorkerInput = document.querySelector("#ioWorker");
@@ -386,7 +467,7 @@ window.addEventListener("load", function() {
 			return;
 		}
 
-		fetch("${pageContext.request.contextPath}/item/vendorList?vendorType="
+		fetch("${pageContext.request.contextPath}/io/vendorList?vendorType="
 			+ encodeURIComponent(vendorType))
 			.then(function(response) {
 				return response.json();
@@ -416,13 +497,108 @@ window.addEventListener("load", function() {
 			});
 	}
 
+	function loadWarehouseList(itemId, selectedWhId, selectedWhSec) {
+
+		warehouseSelect.innerHTML =
+			'<option value="">창고 선택</option>';
+
+		whSecSelect.innerHTML =
+			'<option value="">섹션 선택</option>';
+
+		if (itemId === "") {
+			return;
+		}
+
+		fetch("${pageContext.request.contextPath}/io/warehouseList?itemId="
+			+ encodeURIComponent(itemId))
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(result) {
+
+				let html =
+					'<option value="">창고 선택</option>';
+
+				for (let i = 0; i < result.length; i++) {
+
+					let selected = "";
+
+					if (selectedWhId === result[i].whId) {
+						selected = "selected";
+					}
+
+					html += '<option value="' + result[i].whId + '" ' + selected + '>';
+					html += result[i].whName + ' (' + result[i].whId + ')';
+					html += '</option>';
+				}
+
+				warehouseSelect.innerHTML = html;
+
+				if (selectedWhId !== "") {
+					loadWhSecList(selectedWhId, selectedWhSec);
+				}
+			})
+			.catch(function() {
+				alert("창고 목록 조회 실패");
+			});
+	}
+
+	function loadWhSecList(whId, selectedWhSec) {
+
+		whSecSelect.innerHTML =
+			'<option value="">섹션 선택</option>';
+
+		if (whId === "") {
+			return;
+		}
+
+		fetch("${pageContext.request.contextPath}/io/whSecList?whId="
+			+ encodeURIComponent(whId))
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(result) {
+
+				let html =
+					'<option value="">섹션 선택</option>';
+
+				for (let i = 0; i < result.length; i++) {
+
+					let selected = "";
+
+					if (selectedWhSec === result[i].secId) {
+						selected = "selected";
+					}
+
+					html += '<option value="' + result[i].secId + '" ' + selected + '>';
+					html += result[i].secId
+					+ ' (' + result[i].secPrevQty
+					+ '/' + result[i].secQty + ')';
+					html += '</option>';
+				}
+
+				whSecSelect.innerHTML = html;
+			})
+			.catch(function() {
+				alert("창고 섹션 조회 실패");
+			});
+	}
+
 	if (currentVendorType !== "") {
 		vendorTypeSelect.value = currentVendorType;
 		loadVendorList(currentVendorType, currentVendorId);
 	}
 
+	if (itemIdInput && itemIdInput.value !== "") {
+		loadWarehouseList(itemIdInput.value, currentWhId, currentWhSec);
+	}
+
 	vendorTypeSelect.addEventListener("change", function() {
 		loadVendorList(this.value, "");
+	});
+
+	warehouseSelect.addEventListener("change", function() {
+		loadWhSecList(this.value, "");
 	});
 
 	workerSearchBtn.addEventListener("click", function() {
@@ -433,52 +609,6 @@ window.addEventListener("load", function() {
 	workerModalClose.addEventListener("click", function() {
 		workerModal.style.display = "none";
 	});
-
-// 	workerSearchSubmit.addEventListener("click", function() {
-
-// 		const keyword =
-// 			document.querySelector("#workerKeyword").value;
-
-// 		loadWorkerList(keyword);
-// 	});
-
-// 	function loadWorkerList(keyword) {
-
-// 		fetch(
-// 			"${pageContext.request.contextPath}/io/workerList?keyword="
-// 			+ encodeURIComponent(keyword)
-// 		)
-// 		.then(function(response) {
-// 			return response.json();
-// 		})
-// 		.then(function(result) {
-
-// 			let html = "";
-
-// 			for (let i = 0; i < result.length; i++) {
-
-// 				html += "<tr>";
-
-// 				html += "<td>" + result[i].empId + "</td>";
-
-// 				html += "<td>" + result[i].empName + "</td>";
-
-// 				html += "<td>";
-// 				html += "<input type='radio' ";
-// 				html += "name='workerRadio' ";
-// 				html += "value='" + result[i].empId + "' ";
-// 				html += "data-name='" + result[i].empName + "'>";
-// 				html += "</td>";
-
-// 				html += "</tr>";
-// 			}
-
-// 			workerTbody.innerHTML = html;
-// 		})
-// 		.catch(function() {
-// 			alert("작업자 목록 조회 실패");
-// 		});
-// 	}
 
 	workerSelectBtn.addEventListener("click", function() {
 
@@ -546,8 +676,6 @@ window.addEventListener("load", function() {
 
 });
 
-
-
 function searchRT() {
 	const keyword = document.querySelector("#workerKeyword").value;
 	loadWorkerList(keyword);
@@ -569,9 +697,7 @@ function loadWorkerList(keyword) {
 		for (let i = 0; i < result.length; i++) {
 
 			html += "<tr>";
-
 			html += "<td>" + result[i].empId + "</td>";
-
 			html += "<td>" + result[i].empName + "</td>";
 
 			html += "<td>";
@@ -582,22 +708,16 @@ function loadWorkerList(keyword) {
 			html += "</td>";
 
 			html += "</tr>";
-
 		}
-		
+
 		if (result.length == 0) {
-			html = `
-				<tr>
-					<td colspan="3">검색 결과가 없습니다.</td>
-				</tr>
-			`;
+			html =
+				'<tr>' +
+					'<td colspan="3">검색 결과가 없습니다.</td>' +
+				'</tr>';
 		}
 
-		workerTbody.innerHTML = html;
-
+		document.querySelector("#workerTbody").innerHTML = html;
 	});
-
 }
-
-
 </script>

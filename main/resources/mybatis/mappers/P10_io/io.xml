@@ -108,46 +108,61 @@
 	</select>
 
 	<select id="selectIoDetail" parameterType="string"
-		resultType="kr.or.chop.P10_io.dto.IoDTO">
+	resultType="kr.or.chop.P10_io.dto.IoDTO">
 
 		SELECT
-		IO.IO_ID AS ioId,
-		IO.IO_TYPE AS ioType,
-		IO.IO_REASON AS ioReason,
-
-		IO.IO_VENDOR AS ioVendor,
-		V.VENDOR_NAME AS vendorName,
-
-		IO.IO_LOT AS ioLot,
-
-		IO.IO_QTY AS ioQty,
-		IO.IO_DATE AS ioDate,
-
-		IO.IO_WORKER AS ioWorker,
-		E.EMP_NAME AS workerName,
-
-		IO.IO_MSG AS ioMsg,
-
-		I.ITEM_ID AS itemId,
-		I.ITEM_NAME AS itemName
-
+			IO.IO_ID AS ioId,
+			IO.IO_TYPE AS ioType,
+			IO.IO_REASON AS ioReason,
+	
+			IO.IO_VENDOR AS ioVendor,
+			V.VENDOR_NAME AS vendorName,
+	
+			IO.IO_LOT AS ioLot,
+	
+			IO.IO_QTY AS ioQty,
+			IO.IO_DATE AS ioDate,
+	
+			IO.IO_WORKER AS ioWorker,
+			E.EMP_NAME AS workerName,
+	
+			IO.IO_MSG AS ioMsg,
+	
+			I.ITEM_ID AS itemId,
+			I.ITEM_NAME AS itemName,
+			I.ITEM_TYPE AS itemType,
+	
+			CASE
+				WHEN L.LOT_QC = 'N' THEN L.LOT_BWHSEC
+				WHEN L.LOT_QC = 'Y' THEN L.LOT_AWHSEC
+			END AS whSec,
+	
+			WS.WH_SEC_WHID AS whId
+	
 		FROM IO IO
-
+	
 		LEFT JOIN VENDOR V
-		ON IO.IO_VENDOR = V.VENDOR_ID
-
+			ON IO.IO_VENDOR = V.VENDOR_ID
+	
 		LEFT JOIN LOT L
-		ON IO.IO_LOT = L.LOT_ID
-
+			ON IO.IO_LOT = L.LOT_ID
+	
 		LEFT JOIN ITEM I
-		ON L.LOT_ITEM = I.ITEM_ID
-
+			ON L.LOT_ITEM = I.ITEM_ID
+	
+		LEFT JOIN WH_SEC WS
+			ON WS.WH_SEC_ID =
+				CASE
+					WHEN L.LOT_QC = 'N' THEN L.LOT_BWHSEC
+					WHEN L.LOT_QC = 'Y' THEN L.LOT_AWHSEC
+				END
+	
 		LEFT JOIN EMP E
-		ON IO.IO_WORKER = E.EMP_ID
-
+			ON IO.IO_WORKER = E.EMP_ID
+	
 		WHERE IO.IO_ID = #{ioId}
-		and io_usage = 'Y'
-
+		AND IO.IO_USAGE = 'Y'
+	
 	</select>
 
 	<select id="selectInId" resultType="string">
@@ -437,9 +452,13 @@
 						) use_sum
 							ON lot.lot_id = use_sum.lotId
 					WHERE lot.lot_status IN (10, 20)
-					  AND (
-							NVL(lot.lot_fqty, 0) - NVL(use_sum.totalUseQty, 0)
-						  ) > 0
+					 AND (
+							CASE
+								WHEN lot.lot_qc = 'N' THEN NVL(lot.lot_qty, 0)
+								WHEN lot.lot_qc = 'Y' THEN NVL(lot.lot_fqty, 0)
+								ELSE 0
+							END - NVL(use_sum.totalUseQty, 0)
+						) > 0
 				) lot_location
 				GROUP BY lot_location.secId
 			) lot_sum

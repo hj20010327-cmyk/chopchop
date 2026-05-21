@@ -43,8 +43,12 @@
 	
 	                WHERE lot.lot_status IN (10, 20)
 	                  AND (
-	                        NVL(lot.lot_fqty, 0) - NVL(use_sum.totalUseQty, 0)
-	                      ) > 0
+							CASE
+								WHEN lot.lot_qc = 'N' THEN NVL(lot.lot_qty, 0)
+								WHEN lot.lot_qc = 'Y' THEN NVL(lot.lot_fqty, 0)
+								ELSE 0
+							END - NVL(use_sum.totalUseQty, 0)
+						) > 0
 	            ) lot_location
 	            GROUP BY lot_location.secId
 	        ) lot_sum

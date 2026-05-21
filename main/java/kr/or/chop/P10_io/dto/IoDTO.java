@@ -22,8 +22,10 @@ public class IoDTO {
     private String ioMsg;
     private String itemId;
     private String itemName;
+    private String itemType;
     private String workerName;
     private String whSec;
+    private String whId;
 
     private String startDate;
     private String endDate;

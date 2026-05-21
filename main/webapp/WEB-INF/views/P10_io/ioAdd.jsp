@@ -663,52 +663,6 @@ window.addEventListener("load", function() {
 
 	});
 
-// 	workerSearchSubmit.addEventListener("click", function() {
-
-// 		const keyword =
-// 			document.querySelector("#workerKeyword").value;
-
-// 		loadWorkerList(keyword);
-
-// 	});
-
-// 	function loadWorkerList(keyword) {
-
-// 		fetch(
-// 			"${pageContext.request.contextPath}/io/workerList?keyword="
-// 			+ encodeURIComponent(keyword)
-// 		)
-// 		.then(function(response) {
-// 			return response.json();
-// 		})
-// 		.then(function(result) {
-
-// 			let html = "";
-
-// 			for (let i = 0; i < result.length; i++) {
-
-// 				html += "<tr>";
-
-// 				html += "<td>" + result[i].empId + "</td>";
-
-// 				html += "<td>" + result[i].empName + "</td>";
-
-// 				html += "<td>";
-// 				html += "<input type='radio' ";
-// 				html += "name='workerRadio' ";
-// 				html += "value='" + result[i].empId + "' ";
-// 				html += "data-name='" + result[i].empName + "'>";
-// 				html += "</td>";
-
-// 				html += "</tr>";
-
-// 			}
-
-// 			workerTbody.innerHTML = html;
-
-// 		});
-
-// 	}
 	
 	workerSelectBtn.addEventListener("click", function() {
 
