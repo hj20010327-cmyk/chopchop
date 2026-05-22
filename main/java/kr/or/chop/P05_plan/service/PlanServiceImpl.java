@@ -30,4 +30,9 @@ public class PlanServiceImpl implements PlanService {
 		return planDAO.selectPlanCardCnt(planDTO);
 	}
 
+	@Override
+	public int insertPlan(PlanDTO planDTO) {
+		return planDAO.insertPlan(planDTO);
+	}
+
 }

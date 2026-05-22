@@ -107,8 +107,8 @@
 			<div class="grid search-item">
 				<label>점검자</label>
 				<!-- 수정해야 할 부분. 로그인 필터 생기면 로그인 정보 가지고 -->
-				<input type="hidden" name="glogWorker" id="glogWorker" value="EMP1007">
-				<input type="text" id="glogWorkerInfo" placeholder="점검자" value="김점검 (EMP1007)" required readonly>
+				<input type="hidden" name="glogWorker" id="glogWorker" value="${sessionScope.loginUser.empId}">
+				<input type="text" id="glogWorkerInfo" placeholder="점검자" value="${sessionScope.loginUser.empName} (${sessionScope.loginUser.empId})" required readonly>
 			</div>
 			
 			<div class="grid search-item">

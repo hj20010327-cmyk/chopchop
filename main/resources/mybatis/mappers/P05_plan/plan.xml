@@ -10,10 +10,10 @@
 			LEFT OUTER JOIN item i on p.plan_item = i.item_id
 		WHERE plan_usage = 'Y'
 			<if test="(planSearchSdate != null and planSearchSdate != '')">
-				AND p.plan_edate <![CDATA[<]]>= #{planSearchSdate}					
+				AND p.plan_edate <![CDATA[<]]>= TO_DATE(#{planSearchSdate}, 'YYYY-MM-DD')				
 			</if>
 			<if test="(planSearchEdate != null and planSearchEdate != '')">
-				AND p.plan_sdate <![CDATA[<]]>= #{planSearchEdate}					
+				AND p.plan_sdate <![CDATA[<]]>= TO_DATE(#{planSearchEdate}, 'YYYY-MM-DD')				
 			</if>
 			<if test="searchType != null and searchType != ''">
 				AND p.plan_status = #{searchType}
@@ -172,5 +172,34 @@
 	            )
 	        </if>
 	</select>
+	
+	<insert id="insertPlan" parameterType="planDTO">
+		INSERT INTO plan (
+		plan_id, 
+		plan_item, 
+		plan_fin_qty, 
+		plan_wp_qty,
+		plan_sdate, 
+		plan_edate,
+		plan_dmsg,
+		plan_status,
+		plan_director,
+		plan_cdate,
+		plan_usage
+		)
+		VALUES (
+		'PLAN' || plan_seq.nextval,
+		#{planItem},
+		#{planFinQty},
+		0,
+		#{planSdate},
+		#{planEdate},
+		#{planDmsg},
+		10,
+		#{planDirector},
+		sysdate + (9/24),
+		'Y'
+		)
+	</insert>
 	
 </mapper>

@@ -24,7 +24,7 @@
 			</a>
 		</div>
 		<div class="right">
-			<a class="btn btn-main"
+			<a class="btn btn-main" style="display: none;"
 				href="${pageContext.request.contextPath}/warehouse/section/edit?secId=${secDTO.secId}">
 				수정
 			</a>

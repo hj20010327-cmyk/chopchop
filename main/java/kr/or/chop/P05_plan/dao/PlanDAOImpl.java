@@ -37,4 +37,9 @@ public class PlanDAOImpl implements PlanDAO {
 		return sqlSession.selectOne("mapper.P05_plan.selectPlanCardCnt", planDTO);
 	}
 
+	@Override
+	public int insertPlan(PlanDTO planDTO) {
+		return sqlSession.insert("mapper.P05_plan.insertPlan", planDTO);
+	}
+
 }

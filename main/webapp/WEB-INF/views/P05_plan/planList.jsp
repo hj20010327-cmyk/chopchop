@@ -24,31 +24,31 @@
 		<div class="card info plan-all"
 	         data-card-type="all">
 	        <div class="card-title">전체 계획</div>
-	        <div class="card-value">${search.totalCnt}</div>
+	        <div class="card-value">${planCard.totalCnt}</div>
 	    </div>
 	
 	    <div class="card success plan-card"
 	         data-card-type="ing">
 	        <div class="card-title">진행 중인 계획</div>
-	        <div class="card-value">${search.ingCnt}</div>
+	        <div class="card-value">${planCard.ingCnt}</div>
 	    </div>
 	
 	    <div class="card warning plan-card"
 	         data-card-type="wait">
 	        <div class="card-title">대기 중인 계획</div>
-	        <div class="card-value">${search.waitCnt}</div>
+	        <div class="card-value">${planCard.waitCnt}</div>
 	    </div>
 	
 	    <div class="card danger plan-card"
 	         data-card-type="stop">
 	        <div class="card-title">중단된 계획</div>
-	        <div class="card-value">${search.stopCnt}</div>
+	        <div class="card-value">${planCard.stopCnt}</div>
 	    </div>
 	
 	    <div class="card safe plan-card"
 	         data-card-type="etc">
 	        <div class="card-title">보류된 계획</div>
-	        <div class="card-value">${search.etcCnt}</div>
+	        <div class="card-value">${planCard.etcCnt}</div>
 	    </div>
 	</div>
 	
@@ -61,7 +61,8 @@
 		<div class="search-item">
 			<label>기간</label>
 			<div>
-				<input type="date" name="planSearchSdate" value="${search.planSearchSdate}"> ~ <input type="date" name="planSearchEdate" value="${search.planSearchEdate}">
+				<input type="date" id="planSearchSdate" name="planSearchSdate" value="${search.planSearchSdate}"
+					onchange="limitDate()"> ~ <input type="date" id="planSearchEdate" name="planSearchEdate" value="${search.planSearchEdate}">
 			</div>
 		</div>
 		
@@ -133,9 +134,16 @@
 					<c:forEach var="plan" items="${planList}">
 						<tr class="planList">
 							<td class="planId">${plan.planId}</td>
-							<td>${plan.planItemName} (${plan.planItemId})</td>
-							<td>${plan.planFinQty}</td>
-							<td>${plan.planSdate} ~ ${plan.planEdate}</td>
+							<td>${plan.planItemName} (${plan.planItem})</td>
+							<td><fmt:formatNumber value="${plan.planFinQty}" pattern="#,###" /></td>
+							<td>
+<%-- 								<fmt:formatDate value="${plan.planSdate}" pattern="yyyy-MM-dd" /> --%>
+<!-- 								~ -->
+<%-- 								<fmt:formatDate value="${plan.planEdate}" pattern="yyyy-MM-dd" /> --%>
+								${fn:substring(plan.planSdate, 0, 10)}
+								    ~
+							    ${fn:substring(plan.planEdate, 0, 10)}
+							</td>
 							<td class="span">상태</td>
 							<td>${plan.planCdate}</td>
 							<td class="whId">${wh.whId}</td>
@@ -221,6 +229,7 @@
 	function bind() {
 		bindCardFilter();
 		moveDetail();
+		limitDate();
 	}
 	
 	function bindCardFilter() {
@@ -322,6 +331,28 @@
 
 	            window.location.href = url;
 	        });
+	    }
+	}
+	
+	function limitDate() {
+		const sdate = document.querySelector("#planSearchSdate");
+		const edate = document.querySelector("#planSearchEdate");
+		
+		const startValue = sdate.value;
+		
+		if (!startValue) {
+			edate.removeAttribute("min");
+			return;
+		}
+		
+		edate.min = startValue;
+		
+		if (edate.value && edate.value < startValue) {
+	        edate.value = "";
+	    }
+		
+		if (sdate.value) {
+	        edate.min = sdate.value;
 	    }
 	}
 	

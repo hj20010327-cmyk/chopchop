@@ -12,19 +12,21 @@ public class PlanDTO {
 	
 	private String planItem;
 	private String planItemName;
-	private String planItemunit;
+	private String planItemUnit;
 	
 	private int planFinQty;
 	private int planWpQty = 0;
 	
-	private Date planSdate;
-	private Date planEdate;
+	private String planSdate;
+	private String planEdate;
 	
 	private String planDirector;
 	private String planDname;
 
 	private Date planCdate;
 	private Date planMdate;
+	
+	private String planDmsg;
 	
 	private Date planSearchSdate;
 	private Date planSearchEdate;

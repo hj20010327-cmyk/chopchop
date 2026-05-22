@@ -10,5 +10,7 @@ public interface PlanDAO {
 	public int selectPlanCount(PlanDTO planDTO);
 	public List<PlanDTO> selectAllPlan(PlanDTO planDTO, PageInfo pageInfo);
 	public PlanDTO selectPlanCardCnt(PlanDTO planDTO);
+	
+	public int insertPlan(PlanDTO planDTO);
 
 }

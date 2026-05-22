@@ -84,10 +84,10 @@
 					창고 내 섹션 정보
 				</div>
 				<div class="right">
-<!-- 					<a class="btn btn-main" -->
-<%-- 						href="${pageContext.request.contextPath}/warehouse/section/add?whId=${whDTO.whId}"> --%>
-<!-- 						섹션 추가 -->
-<!-- 					</a> -->
+					<a class="btn btn-main"
+						href="${pageContext.request.contextPath}/warehouse/section/add?whId=${whDTO.whId}">
+						섹션 추가
+					</a>
 				</div>
 			</div>
 			
