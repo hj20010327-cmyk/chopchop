@@ -131,7 +131,7 @@
 			LEFT OUTER JOIN GHP ghp ON glog.GLOG_GHP = ghp.GHP_ID
 			LEFT OUTER JOIN EMP E ON glog.GLOG_WORKER = E.EMP_ID
 			LEFT OUTER JOIN WORKPLACE wp ON wp.wp_id = glog.glog_wpid
-		WHERE upper(glog.glog_id) = upper(#{glogId})
+		WHERE upper(glog.glog_id) = upper(#{glogId}) and glog.glog_usage = 'Y'
 	</select>
 	
 	<update id="deleteGlog" parameterType="glogDTO">

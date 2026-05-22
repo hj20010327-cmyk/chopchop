@@ -25,6 +25,33 @@
 					or UPPER(i.item_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
 				)
 			</if>
+			<if test="cardTypes != null and cardTypes.size() > 0">
+	            AND (
+	                <foreach collection="cardTypes" item="cardType" separator=" OR ">
+	                    <choose>
+	                        <when test="cardType == 'ing'">
+	                            p.plan_status = 20
+	                        </when>
+	
+	                        <when test="cardType == 'wait'">
+	                            p.plan_status = 10
+	                        </when>
+	
+	                        <when test="cardType == 'fin'">
+	                            p.plan_status = 30
+	                        </when>
+	
+	                        <when test="cardType == 'stop'">
+	                            p.plan_status = 40
+	                        </when>
+	
+	                        <when test="cardType == 'etc'">
+	                            p.plan_status = 0
+	                        </when>
+	                    </choose>
+	                </foreach>
+	            )
+	        </if>
 	</select>
 
 	<select id="selectAllPlan" parameterType="map" resultType="planDTO">
@@ -69,31 +96,81 @@
 			) plan
 			WHERE 1 = 1
 			
-			<if test="planDTO.cardType != null and planDTO.cardType == 'ing'">
-				AND plan.plan_status = 10
-			</if>
-			<if test="planDTO.cardType != null and planDTO.cardType == 'wait'">
-				AND plan.plan_status = 20
-			</if>
-			<if test="planDTO.cardType != null and planDTO.cardType == 'stop'">
-				AND plan.plan_status = 40
-			</if>
-			<if test="planDTO.cardType != null and planDTO.cardType == 'etc'">
-				AND plan.plan_status = 50
+<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'ing'"> -->
+<!-- 				AND plan.plan_status = 20 -->
+<!-- 			</if> -->
+<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'wait'"> -->
+<!-- 				AND plan.plan_status = 10 -->
+<!-- 			</if> -->
+<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'stop'"> -->
+<!-- 				AND plan.plan_status = 40 -->
+<!-- 			</if> -->
+<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'etc'"> -->
+<!-- 				AND plan.plan_status = 0 -->
+<!-- 			</if> -->
+
+			<if test="planDTO.cardTypes != null and planDTO.cardTypes.size() > 0">
+			    AND (
+			        <foreach collection="planDTO.cardTypes" item="cardType" separator=" OR ">
+			            <choose>
+			                <when test="cardType == 'ing'">
+			                    plan.plan_status = 20
+			                </when>
+			
+			                <when test="cardType == 'wait'">
+			                    plan.plan_status = 10
+			                </when>
+			
+			                <when test="cardType == 'fin'">
+			                    plan.plan_status = 30
+			                </when>
+			
+			                <when test="cardType == 'stop'">
+			                    plan.plan_status = 40
+			                </when>
+			
+			                <when test="cardType == 'etc'">
+			                    plan.plan_status = 0
+			                </when>
+			            </choose>
+			        </foreach>
+			    )
 			</if>
 		)
 		WHERE rn BETWEEN #{page.startRow} AND #{page.endRow}
 	</select>
 	
 	<select id="selectPlanCardCnt" parameterType="planDTO" resultType="planDTO">
-		SELECT
-		    COUNT(*) AS totalCnt,
-		    SUM(CASE WHEN plan_status = 10 THEN 1 ELSE 0 END) AS ingCnt,
-		    SUM(CASE WHEN plan_status = 20 THEN 1 ELSE 0 END) AS waitCnt,
-		    SUM(CASE WHEN plan_status = 30 THEN 1 ELSE 0 END) AS finCnt,
-		    SUM(CASE WHEN plan_status = 40 THEN 1 ELSE 0 END) AS stopCnt,
-		    SUM(CASE WHEN plan_status = 50 THEN 1 ELSE 0 END) AS etcCnt
-		FROM plan
+	    SELECT
+	        COUNT(*) AS totalCnt,
+	        SUM(CASE WHEN p.plan_status = 20 THEN 1 ELSE 0 END) AS ingCnt,
+	        SUM(CASE WHEN p.plan_status = 10 THEN 1 ELSE 0 END) AS waitCnt,
+	        SUM(CASE WHEN p.plan_status = 30 THEN 1 ELSE 0 END) AS finCnt,
+	        SUM(CASE WHEN p.plan_status = 40 THEN 1 ELSE 0 END) AS stopCnt,
+	        SUM(CASE WHEN p.plan_status = 0 THEN 1 ELSE 0 END) AS etcCnt
+	    FROM plan p
+	        LEFT OUTER JOIN item i ON p.plan_item = i.item_id
+	    WHERE p.plan_usage = 'Y'
+	
+	        <if test="(planSearchSdate != null and planSearchSdate != '')">
+	            AND p.plan_edate <![CDATA[>=]]> #{planSearchSdate}
+	        </if>
+	
+	        <if test="(planSearchEdate != null and planSearchEdate != '')">
+	            AND p.plan_sdate <![CDATA[<=]]> #{planSearchEdate}
+	        </if>
+	
+	        <if test="searchType != null and searchType != ''">
+	            AND p.plan_status = #{searchType}
+	        </if>
+	
+	        <if test="searchKeyword != null and searchKeyword != ''">
+	            AND (
+	                UPPER(p.plan_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+	                OR UPPER(p.plan_item) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+	                OR UPPER(i.item_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+	            )
+	        </if>
 	</select>
 	
 </mapper>

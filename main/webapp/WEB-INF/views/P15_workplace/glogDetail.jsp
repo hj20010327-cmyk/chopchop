@@ -56,7 +56,12 @@
 					<tbody>
 						<tr>
 							<th>점검대상</th>
-							<td>${glog.glogWpName} (${glog.glogWpId})</td>
+							<td>
+								<a class="toDetail"
+									href="${pageContext.request.contextPath}/workplace/detail?wpId=${glog.glogWpId}">
+									${glog.glogWpName} (${glog.glogWpId})
+								</a>
+							</td>
 							<th>GHP 기준</th>
 							<td>${glog.ghpName} (${glog.ghpId})</td>
 						</tr>

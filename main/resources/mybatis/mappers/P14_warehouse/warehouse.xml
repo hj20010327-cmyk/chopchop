@@ -5,20 +5,112 @@
 <mapper namespace="mapper.P14_warehouse">
 
 	
-	<select id="selectWHCount"
-		parameterType="whDTO" resultType="int">
+<!-- 	<select id="selectWHCount" parameterType="whDTO" resultType="int"> -->
 
-		select count(*)
-		from warehouse
-		where wh_usage = 'Y'	
-			<if test="searchType != null and searchType != ''">
-				and wh_type = #{searchType}
-			</if>
-			<if test="searchKeyword != null and searchKeyword != ''">
-				and ( upper(wh_name) like trim(upper('%' || #{searchKeyword} || '%')) 
-					or upper(wh_id) like trim(upper('%' || #{searchKeyword} || '%')) ) 
-			</if>
+<!-- 		select count(*) -->
+<!-- 		from warehouse -->
+<!-- 		where wh_usage = 'Y'	 -->
+<!-- 			<if test="searchType != null and searchType != ''"> -->
+<!-- 				and wh_type = #{searchType} -->
+<!-- 			</if> -->
+<!-- 			<if test="searchKeyword != null and searchKeyword != ''"> -->
+<!-- 				and ( upper(wh_name) like trim(upper('%' || #{searchKeyword} || '%'))  -->
+<!-- 					or upper(wh_id) like trim(upper('%' || #{searchKeyword} || '%')) )  -->
+<!-- 			</if> -->
 		
+<!-- 	</select> -->
+		
+	<select id="selectWHCount" parameterType="whDTO" resultType="int">
+	
+	    SELECT COUNT(*)
+	    FROM (
+	        SELECT
+	            wh.wh_id AS whId,
+	            wh.wh_name AS whName,
+	            wh.wh_type AS whTypeNo,
+	            wh.wh_qty AS whQty,
+	            NVL(lot_sum.whPrevQty, 0) AS whPrevQty
+	        FROM warehouse wh
+	
+	            LEFT OUTER JOIN (
+	                SELECT
+	                    ws.wh_sec_whid AS whId,
+	                    COUNT(lot.lot_id) AS whPrevQty
+	                FROM lot lot
+	
+	                    LEFT OUTER JOIN (
+	                        SELECT
+	                            lu.use_lot AS lotId,
+	                            SUM(NVL(lu.use_qty, 0)) AS totalUseQty
+	                        FROM lot_use lu
+	                        GROUP BY lu.use_lot
+	                    ) use_sum
+	                        ON lot.lot_id = use_sum.lotId
+	
+	                    INNER JOIN wh_sec ws
+	                        ON ws.wh_sec_id =
+	                            CASE
+	                                WHEN lot.lot_qc = 'N' THEN lot.lot_bwhsec
+	                                WHEN lot.lot_qc = 'Y' THEN lot.lot_awhsec
+	                            END
+	
+	                WHERE lot.lot_status NOT IN (0, 30)
+	                  AND (
+	                        CASE
+	                            WHEN lot.lot_qc = 'N' THEN NVL(lot.lot_qty, 0)
+	                            WHEN lot.lot_qc = 'Y' THEN NVL(lot.lot_fqty, 0)
+	                            ELSE 0
+	                        END - NVL(use_sum.totalUseQty, 0)
+	                    ) > 0
+	
+	                GROUP BY ws.wh_sec_whid
+	            ) lot_sum
+	                ON wh.wh_id = lot_sum.whId
+	
+	        WHERE wh.wh_usage = 'Y'
+	
+	            <if test="searchType != null and searchType != ''">
+	                AND wh.wh_type = #{searchType}
+	            </if>
+	
+	            <if test="searchKeyword != null and searchKeyword != ''">
+	                AND (
+	                    UPPER(wh.wh_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+	                    OR UPPER(wh.wh_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+	                )
+	            </if>
+	    ) base
+	
+	    WHERE 1 = 1
+	
+	        <if test="cardTypes != null and cardTypes.size() > 0">
+	            AND (
+	                <foreach collection="cardTypes" item="cardType" separator=" OR ">
+	                    <choose>
+	                        <when test="cardType == 'using'">
+	                            base.whPrevQty > 0
+	                        </when>
+	
+	                        <when test="cardType == 'safe'">
+	                            base.whQty > 0
+	                            AND base.whPrevQty / base.whQty <![CDATA[<]]> 0.8
+	                        </when>
+	
+	                        <when test="cardType == 'warning'">
+	                            base.whQty > 0
+	                            AND base.whPrevQty / base.whQty <![CDATA[>=]]> 0.8
+	                            AND base.whPrevQty / base.whQty <![CDATA[<]]> 1
+	                        </when>
+	
+	                        <when test="cardType == 'danger'">
+	                            base.whQty > 0
+	                            AND base.whPrevQty / base.whQty <![CDATA[>=]]> 1
+	                        </when>
+	                    </choose>
+	                </foreach>
+	            )
+	        </if>
+	
 	</select>
 	
 	<select id="selectAllWH"
@@ -98,6 +190,7 @@
 	                                        ORDER BY glog.glog_date DESC
 	                                    ) AS rn
 	                                FROM ghp_log glog
+	                                WHERE glog.glog_usage = 'Y'
 	                            )
 	                            WHERE rn = 1
 	                        ) glog
@@ -119,25 +212,53 @@
 	
 	                WHERE 1 = 1
 	
-	                    <if test="whDTO.cardType != null and whDTO.cardType == 'using'">
-	                        AND base.whPrevQty > 0
-	                    </if>
+<!-- 	                    <if test="whDTO.cardType != null and whDTO.cardType == 'using'"> -->
+<!-- 	                        AND base.whPrevQty > 0 -->
+<!-- 	                    </if> -->
 	
-	                    <if test="whDTO.cardType != null and whDTO.cardType == 'safe'">
-	                        AND base.whQty > 0
-	                        AND base.whPrevQty / base.whQty <![CDATA[<]]> 0.8
-	                    </if>
+<!-- 	                    <if test="whDTO.cardType != null and whDTO.cardType == 'safe'"> -->
+<!-- 	                        AND base.whQty > 0 -->
+<!-- 	                        AND base.whPrevQty / base.whQty <![CDATA[<]]> 0.8 -->
+<!-- 	                    </if> -->
 	
-	                    <if test="whDTO.cardType != null and whDTO.cardType == 'warning'">
-	                        AND base.whQty > 0
-	                        AND base.whPrevQty / base.whQty <![CDATA[>=]]> 0.8
-	                        AND base.whPrevQty / base.whQty <![CDATA[<]]> 1
-	                    </if>
+<!-- 	                    <if test="whDTO.cardType != null and whDTO.cardType == 'warning'"> -->
+<!-- 	                        AND base.whQty > 0 -->
+<!-- 	                        AND base.whPrevQty / base.whQty <![CDATA[>=]]> 0.8 -->
+<!-- 	                        AND base.whPrevQty / base.whQty <![CDATA[<]]> 1 -->
+<!-- 	                    </if> -->
 	
-	                    <if test="whDTO.cardType != null and whDTO.cardType == 'danger'">
-	                        AND base.whQty > 0
-	                        AND base.whPrevQty / base.whQty <![CDATA[>=]]> 1
-	                    </if>
+<!-- 	                    <if test="whDTO.cardType != null and whDTO.cardType == 'danger'"> -->
+<!-- 	                        AND base.whQty > 0 -->
+<!-- 	                        AND base.whPrevQty / base.whQty <![CDATA[>=]]> 1 -->
+<!-- 	                    </if> -->
+
+	                    <if test="whDTO.cardTypes != null and whDTO.cardTypes.size() > 0">
+						    AND (
+						        <foreach collection="whDTO.cardTypes" item="cardType" separator=" OR ">
+						            <choose>
+						                <when test="cardType == 'using'">
+						                    base.whPrevQty > 0
+						                </when>
+						
+						                <when test="cardType == 'safe'">
+						                    base.whQty > 0
+						                    AND base.whPrevQty / base.whQty <![CDATA[<]]> 0.8
+						                </when>
+						
+						                <when test="cardType == 'warning'">
+						                    base.whQty > 0
+						                    AND base.whPrevQty / base.whQty <![CDATA[>=]]> 0.8
+						                    AND base.whPrevQty / base.whQty <![CDATA[<]]> 1
+						                </when>
+						
+						                <when test="cardType == 'danger'">
+						                    base.whQty > 0
+						                    AND base.whPrevQty / base.whQty <![CDATA[>=]]> 1
+						                </when>
+						            </choose>
+						        </foreach>
+						    )
+						</if>
 	
 	                ORDER BY whTypeNo, whId
 	            ) p
@@ -220,6 +341,16 @@
 	            ) lot_sum
 	                ON wh.wh_id = lot_sum.whId
 	        WHERE wh.wh_usage = 'Y'
+	        <if test="searchType != null and searchType != ''">
+			    AND wh.wh_type = #{searchType}
+			</if>
+			
+			<if test="searchKeyword != null and searchKeyword != ''">
+			    AND (
+			        UPPER(wh.wh_name) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+			        OR UPPER(wh.wh_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
+			    )
+			</if>
 	    )
 	
 	</select>
@@ -291,6 +422,7 @@
 		                    ORDER BY glog.glog_date DESC
 		                ) AS rn
 		            FROM ghp_log glog
+		            WHERE glog.glog_usage = 'Y'
 		        )
 		        WHERE rn = 1
 		    ) glog
@@ -302,7 +434,7 @@
 	<select id="selectGlogCount" parameterType="whDTO" resultType="int">
 		select count(*)
 		from ghp_log glog
-		where upper(glog.glog_whid) = upper(#{whId})
+		where upper(glog.glog_whid) = upper(#{whId}) and glog.glog_usage = 'Y'
 	</select>
 	
 	

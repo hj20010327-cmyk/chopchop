@@ -1,6 +1,7 @@
 package kr.or.chop.P05_plan.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -30,7 +31,8 @@ public class PlanDTO {
 	private Integer searchType;
 	private String searchKeyword;
 	
-	private String cardType;
+//	private String cardType;
+	private List<String> cardTypes;
 	private int totalCnt;
 	private int ingCnt;
 	private int waitCnt;

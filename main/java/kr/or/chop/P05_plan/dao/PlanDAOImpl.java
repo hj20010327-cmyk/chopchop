@@ -29,7 +29,7 @@ public class PlanDAOImpl implements PlanDAO {
 		map.put("page", pageInfo);
 		map.put("planDTO", planDTO);
 		
-		return sqlSession.selectOne("mapper.P05_plan.selectAllPlan", map);
+		return sqlSession.selectList("mapper.P05_plan.selectAllPlan", map);
 	}
 
 	@Override

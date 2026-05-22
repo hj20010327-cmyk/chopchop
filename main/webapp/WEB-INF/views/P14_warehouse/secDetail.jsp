@@ -48,7 +48,12 @@
 							<th>섹션번호</th>
 							<td>${secDTO.secId}</td>
 							<th>소속 창고</th>
-							<td>${secDTO.secWhId}</td>
+							<td>
+								<a class="toDetail"
+									href="${pageContext.request.contextPath}/warehouse/detail?whId=${secDTO.secWhId}">
+									${secDTO.secWhName} (${secDTO.secWhId})
+								</a>
+							</td>
 						</tr>
 						<tr>
 							<th>수용량</th>

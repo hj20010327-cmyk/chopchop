@@ -51,6 +51,7 @@
 										ORDER BY glog.glog_date desc
 									) AS rn
 								FROM ghp_log glog
+								WHERE glog.glog_usage = 'Y'
 							)
 							WHERE rn = 1
 						) glog 

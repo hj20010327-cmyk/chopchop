@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <div class="content">
 	
@@ -21,35 +22,35 @@
 	</div>
 	
 	<div class="card-wrap whCard">
-		<div class="card info ${search.cardType == null || search.cardType == '' || search.cardType == 'all' ? 'active' : ''}"
+		<div class="card info wh-all"
 	         data-card-type="all">
 	        <div class="card-title">전체 창고</div>
 	        <div class="card-value">${whCard.totalWhCnt}</div>
 	        <div class="card-subtitle">전체 창고</div>
 	    </div>
 	
-	    <div class="card success ${search.cardType == 'using' ? 'active' : ''}"
-	         data-card-type="using">
-	        <div class="card-title">사용 중 창고</div>
-	        <div class="card-value">${whCard.usingWhCnt}</div>
-	        <div class="card-subtitle">적재량 1 이상 창고</div>
-	    </div>
+<!-- 	    <div class="card success wh-card" -->
+<!-- 	         data-card-type="using"> -->
+<!-- 	        <div class="card-title">사용 중 창고</div> -->
+<%-- 	        <div class="card-value">${whCard.usingWhCnt}</div> --%>
+<!-- 	        <div class="card-subtitle">적재량 1 이상 창고</div> -->
+<!-- 	    </div> -->
 	
-	    <div class="card safe ${search.cardType == 'safe' ? 'active' : ''}"
+	    <div class="card safe wh-card"
 	         data-card-type="safe">
 	        <div class="card-title">안전 창고</div>
 	        <div class="card-value">${whCard.safeWhCnt}</div>
 	        <div class="card-subtitle">적재율 80% 미만</div>
 	    </div>
 	
-	    <div class="card warning ${search.cardType == 'warning' ? 'active' : ''}"
+	    <div class="card warning wh-card"
 	         data-card-type="warning">
 	        <div class="card-title">위험 창고</div>
 	        <div class="card-value">${whCard.dangerWhCnt}</div>
 	        <div class="card-subtitle">80% 이상 100% 미만</div>
 	    </div>
 	
-	    <div class="card danger ${search.cardType == 'danger' ? 'active' : ''}"
+	    <div class="card danger wh-card"
 	         data-card-type="danger">
 	        <div class="card-title">초과 적재 창고</div>
 	        <div class="card-value">${whCard.overWhCnt}</div>
@@ -61,8 +62,6 @@
 		action="${pageContext.request.contextPath}/warehouse/list"
 		id="whSearchForm"
 		method="get">
-		<input type="hidden" name="cardType" id="cardType" value="${search.cardType}">
-		
 		<div class="search-item">
 			<label>유형</label>
 			
@@ -264,30 +263,138 @@
 		moveDetail();
 	}
 	
+// 	function bindCardFilter() {
+//         const cards = document.querySelectorAll(".whCard .card");
+//         const form = document.querySelector("#whSearchForm");
+//         const cardTypeInput = document.querySelector("#cardType");
+
+//         if (!cards.length || !form || !cardTypeInput) {
+//             return;
+//         }
+
+//         cards.forEach(card => {
+//             card.addEventListener("click", () => {
+//                 const cardType = card.dataset.cardType;
+
+//                 cardTypeInput.value = cardType;
+
+//                 const pageInput = form.querySelector("input[name='page']");
+//                 if (pageInput) {
+//                     pageInput.value = 1;
+//                 }
+
+//                 form.submit();
+//             });
+//         });
+//     }
+
+
 	function bindCardFilter() {
-        const cards = document.querySelectorAll(".whCard .card");
-        const form = document.querySelector("#whSearchForm");
-        const cardTypeInput = document.querySelector("#cardType");
+	    const allCard = document.querySelector(".whCard .wh-all");
+	    const whCards = document.querySelectorAll(".whCard .wh-card");
+	    const form = document.querySelector("#whSearchForm");
+	    
+	    if (!allCard || !whCards.length || !form) {
+	        return;
+	    }
+	
+	    const params = new URLSearchParams(window.location.search);
+	    const selectedCardTypes = params.getAll("cardTypes");
+	    
+	 	// 검색 버튼만 눌러도 기존 카드 선택 유지되도록 form에 hidden input 복원
+	    syncSelectedCardTypesToForm(selectedCardTypes);
+		
+	 	// URL 기준으로 active 복원
+	    if (selectedCardTypes.length === 0) {
+	        allCard.classList.add("active");
+	    } else {
+	        allCard.classList.remove("active");
+	
+	        whCards.forEach(card => {
+	            const cardType = card.dataset.cardType;
+	
+	            if (selectedCardTypes.includes(cardType)) {
+	                card.classList.add("active");
+	            }
+	        });
+	    }
+	
+		 // 전체 카드 클릭		
+	    allCard.addEventListener("click", () => {
+	        whCards.forEach(card => {
+	            card.classList.remove("active");
+	        });
+	
+	        allCard.classList.add("active");
+	
+	        submitCardFilter([]);
+	    });
+	
+	 	// 개별 카드 클릭
+		whCards.forEach(card => {
+	        card.addEventListener("click", () => {
+	            card.classList.toggle("active");
+	            allCard.classList.remove("active");
+	
+	            const activeCards = document.querySelectorAll(".whCard .wh-card.active");
+	
+	            const selectedValues = [];
+	
+	            activeCards.forEach(activeCard => {
+	                selectedValues.push(activeCard.dataset.cardType);
+	            });
+	
+	            if (selectedValues.length === 0) {
+	                allCard.classList.add("active");
+	                submitCardFilter([]);
+	                return;
+	            }
+	
+	            submitCardFilter(selectedValues);
+	        });
+	    });
+	 	
+		// 현재 선택값을 form hidden input으로 맞춰주는 함수
+		function syncSelectedCardTypesToForm(selectedValues) {
+		    form.querySelectorAll("input[name='cardTypes']").forEach(input => {
+		        input.remove();
+		    });
 
-        if (!cards.length || !form || !cardTypeInput) {
-            return;
-        }
+		    selectedValues.forEach(cardType => {
+		        const input = document.createElement("input");
 
-        cards.forEach(card => {
-            card.addEventListener("click", () => {
-                const cardType = card.dataset.cardType;
+		        input.type = "hidden";
+		        input.name = "cardTypes";
+		        input.value = cardType;
 
-                cardTypeInput.value = cardType;
-
-                const pageInput = form.querySelector("input[name='page']");
-                if (pageInput) {
-                    pageInput.value = 1;
-                }
-
-                form.submit();
-            });
-        });
-    }
+		        form.appendChild(input);
+		    });
+		}	 	
+		
+		// 카드 클릭 시 submit
+	    function submitCardFilter(selectedValues) {
+	        form.querySelectorAll("input[name='cardTypes']").forEach(input => {
+	            input.remove();
+	        });
+	
+	        selectedValues.forEach(cardType => {
+	            const input = document.createElement("input");
+	
+	            input.type = "hidden";
+	            input.name = "cardTypes";
+	            input.value = cardType;
+	
+	            form.appendChild(input);
+	        });
+	
+	        const pageInput = form.querySelector("input[name='page']");
+	        if (pageInput) {
+	            pageInput.value = 1;
+	        }
+	
+	        form.submit();
+	    }
+	}
 	
 	function moveDetail() {
 		const whLists = document.querySelectorAll(".whList");

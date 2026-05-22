@@ -21,31 +21,31 @@
 	</div>
 	
 	<div class="card-wrap planCard">
-		<div class="card info ${search.cardType == null || search.cardType == '' || search.cardType == 'all' ? 'active' : ''}"
+		<div class="card info plan-all"
 	         data-card-type="all">
-	        <div class="card-title">예정된 계획</div>
+	        <div class="card-title">전체 계획</div>
 	        <div class="card-value">${search.totalCnt}</div>
 	    </div>
 	
-	    <div class="card success ${search.cardType == 'ing' ? 'active' : ''}"
+	    <div class="card success plan-card"
 	         data-card-type="ing">
 	        <div class="card-title">진행 중인 계획</div>
 	        <div class="card-value">${search.ingCnt}</div>
 	    </div>
 	
-	    <div class="card warning ${search.cardType == 'wait' ? 'active' : ''}"
+	    <div class="card warning plan-card"
 	         data-card-type="wait">
 	        <div class="card-title">대기 중인 계획</div>
 	        <div class="card-value">${search.waitCnt}</div>
 	    </div>
 	
-	    <div class="card danger ${search.cardType == 'stop' ? 'active' : ''}"
+	    <div class="card danger plan-card"
 	         data-card-type="stop">
 	        <div class="card-title">중단된 계획</div>
 	        <div class="card-value">${search.stopCnt}</div>
 	    </div>
 	
-	    <div class="card safe ${search.cardType == 'etc' ? 'active' : ''}"
+	    <div class="card safe plan-card"
 	         data-card-type="etc">
 	        <div class="card-title">보류된 계획</div>
 	        <div class="card-value">${search.etcCnt}</div>
@@ -56,12 +56,12 @@
 		action="${pageContext.request.contextPath}/plan/list"
 		id="planSearchForm"
 		method="get">
-		<input type="hidden" name="cardType" id="cardType" value="${search.cardType}">
+<%-- 		<input type="hidden" name="cardType" id="cardType" value="${search.cardType}"> --%>
 		
 		<div class="search-item">
 			<label>기간</label>
 			<div>
-				<input type="date" name="planSearchSdate"> ~ <input type="date" name="planSearchEdate">
+				<input type="date" name="planSearchSdate" value="${search.planSearchSdate}"> ~ <input type="date" name="planSearchEdate" value="${search.planSearchEdate}">
 			</div>
 		</div>
 		
@@ -88,7 +88,7 @@
 					중단
 				</option>
 				<option value="0"
-					${search.searchType == '10' ? 'selected' : ''}>
+					${search.searchType == '0' ? 'selected' : ''}>
 					보류
 				</option>
 			</select>
@@ -224,45 +224,105 @@
 	}
 	
 	function bindCardFilter() {
-        const cards = document.querySelectorAll(".planCard .card");
-        const form = document.querySelector("#planSearchForm");
-        const cardTypeInput = document.querySelector("#cardType");
+	    const allCard = document.querySelector(".planCard .plan-all");
+	    const planCards = document.querySelectorAll(".planCard .plan-card");
+	    const form = document.querySelector("#planSearchForm");
 
-        if (!cards.length || !form || !cardTypeInput) {
-            return;
-        }
+	    if (!allCard || !planCards.length || !form) {
+	        return;
+	    }
 
-        cards.forEach(card => {
-            card.addEventListener("click", () => {
-                const cardType = card.dataset.cardType;
+	    const params = new URLSearchParams(window.location.search);
+	    const selectedCardTypes = params.getAll("cardTypes");
 
-                cardTypeInput.value = cardType;
+	    syncSelectedCardTypesToForm(selectedCardTypes);
 
-                const pageInput = form.querySelector("input[name='page']");
-                if (pageInput) {
-                    pageInput.value = 1;
-                }
+	    if (selectedCardTypes.length === 0) {
+	        allCard.classList.add("active");
+	    } else {
+	        allCard.classList.remove("active");
 
-                form.submit();
-            });
-        });
-    }
+	        planCards.forEach(card => {
+	            const cardType = card.dataset.cardType;
+
+	            if (selectedCardTypes.includes(cardType)) {
+	                card.classList.add("active");
+	            }
+	        });
+	    }
+
+	    allCard.addEventListener("click", () => {
+	        planCards.forEach(card => {
+	            card.classList.remove("active");
+	        });
+
+	        allCard.classList.add("active");
+
+	        submitCardFilter([]);
+	    });
+
+	    planCards.forEach(card => {
+	        card.addEventListener("click", () => {
+	            card.classList.toggle("active");
+	            allCard.classList.remove("active");
+
+	            const activeCards = document.querySelectorAll(".planCard .plan-card.active");
+	            const selectedValues = [];
+
+	            activeCards.forEach(activeCard => {
+	                selectedValues.push(activeCard.dataset.cardType);
+	            });
+
+	            if (selectedValues.length === 0) {
+	                allCard.classList.add("active");
+	                submitCardFilter([]);
+	                return;
+	            }
+
+	            submitCardFilter(selectedValues);
+	        });
+	    });
+
+	    function syncSelectedCardTypesToForm(selectedValues) {
+	        form.querySelectorAll("input[name='cardTypes']").forEach(input => {
+	            input.remove();
+	        });
+
+	        selectedValues.forEach(cardType => {
+	            const input = document.createElement("input");
+
+	            input.type = "hidden";
+	            input.name = "cardTypes";
+	            input.value = cardType;
+
+	            form.appendChild(input);
+	        });
+	    }
+
+	    function submitCardFilter(selectedValues) {
+	        syncSelectedCardTypesToForm(selectedValues);
+
+	        const pageInput = form.querySelector("input[name='page']");
+	        if (pageInput) {
+	            pageInput.value = 1;
+	        }
+
+	        form.submit();
+	    }
+	}
 	
 	function moveDetail() {
-		const whLists = document.querySelectorAll(".whList");
-		
-		for (let i=0; i<whLists.length; i++) {
-			
-			whLists[i].addEventListener("click", () => {
-				const whId = whLists[i].querySelector(".whId").textContent.trim();
-				console.log ("whId : " + whId);
-				
-				const url = `${pageContext.request.contextPath}/warehouse/detail?whId=` + whId;
-				console.log ("url : " + url);
-				
-				window.location.href = url;
-			})
-		}
+	    const planLists = document.querySelectorAll(".planList");
+
+	    for (let i = 0; i < planLists.length; i++) {
+	        planLists[i].addEventListener("click", () => {
+	            const planId = planLists[i].querySelector(".planId").textContent.trim();
+
+	            const url = `${pageContext.request.contextPath}/plan/detail?planId=` + planId;
+
+	            window.location.href = url;
+	        });
+	    }
 	}
 	
 </script>

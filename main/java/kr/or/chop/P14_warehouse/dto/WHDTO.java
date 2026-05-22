@@ -1,6 +1,7 @@
 package kr.or.chop.P14_warehouse.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -30,7 +31,9 @@ public class WHDTO {
 	private String searchType;
 	private String searchKeyword;
 	
-	private String cardType;
+//	private String cardType;
+	private List<String> cardTypes;
+	
 	private int totalWhCnt;
 	private int usingWhCnt;
 	private int safeWhCnt;
