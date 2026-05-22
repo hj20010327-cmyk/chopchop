@@ -36,11 +36,6 @@
 		
 		<div class="grid-wrap">
 			<div class="grid search-item">
-				<label>창고 이름 <span class="red">*</span></label>
-				<input type="text" name="whName" placeholder="창고 이름 입력" required>
-			</div>
-			
-			<div class="grid search-item">
 				<label>유형 <span class="red">*</span></label>
 				<select name="whTypeNo" required>
 	                <option value="" selected disabled>창고 유형 선택</option>
@@ -59,6 +54,10 @@
 		</div>
 		
 		<div class="grid-wrap">
+			<div class="grid search-item">
+				<label>창고 이름 <span class="red">*</span></label>
+				<input type="text" name="whName" placeholder="창고 이름 입력" required>
+			</div>
 			<div class="grid search-item">
 				<label>창고 위치 <span class="red">*</span></label>
 				<input type="text" name="whLoc" placeholder="창고 위치 입력" required>

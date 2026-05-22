@@ -36,7 +36,7 @@
 			GHP_MAX_VALUE ghpMaxValue,
 			GHP_UNIT ghpUnit
 		FROM GHP
-		WHERE GHP_USAGE = 'Y' AND GHP_WP_TYPE = #{whTypeNo}
+		WHERE GHP_USAGE = 'Y' AND GHP_WH_TYPE = #{whTypeNo}
 		ORDER BY GHP_ID
 	</select>
 	

@@ -41,7 +41,7 @@
 	                    ) use_sum
 	                        ON lot.lot_id = use_sum.lotId
 	
-	                WHERE lot.lot_status IN (10, 20)
+	                WHERE lot.lot_status NOT IN (0, 30)
 	                  AND (
 							CASE
 								WHEN lot.lot_qc = 'N' THEN NVL(lot.lot_qty, 0)
@@ -59,7 +59,7 @@
 	<select id="selectLotCount" parameterType="secDTO" resultType="int">
 		SELECT COUNT(*)
 		FROM LOT
-		WHERE LOT_STATUS IN (10, 20)
+		WHERE LOT_STATUS NOT IN (0, 30)
 		  AND (
 		        (LOT_QC = 'N' AND LOT_BWHSEC = #{secId})
 		     OR (LOT_QC = 'Y' AND LOT_AWHSEC = #{secId})
@@ -93,7 +93,7 @@
 							i.ITEM_TYPE    AS itemType
 						FROM LOT l
 							LEFT OUTER JOIN ITEM i on i.ITEM_ID = l.LOT_ITEM
-						WHERE l.LOT_STATUS IN (10, 20)
+						WHERE l.LOT_STATUS NOT IN (0, 30)
 						  AND (
 						        (l.LOT_QC = 'N' AND l.LOT_BWHSEC = #{secDTO.secId})
 						     OR (l.LOT_QC = 'Y' AND l.LOT_AWHSEC = #{secDTO.secId})

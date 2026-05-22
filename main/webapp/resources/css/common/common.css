@@ -770,3 +770,40 @@ textarea[readonly]:focus {
 	text-decoration: underline;
 	color: var(--main-green);
 }
+
+
+
+
+/* ==============================
+   toDetail
+============================== */
+
+.pw-wrap {
+	position: relative;
+	width: 100%;
+}
+
+.pw-wrap input {
+	width: 100%;
+	padding-right: 45px; /* 눈 아이콘 공간 확보 */
+	box-sizing: border-box;
+}
+
+.pw-toggle {
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+
+	border: none;
+	background: transparent;
+	cursor: pointer;
+
+	font-size: 16px;
+	line-height: 1;
+	padding: 0;
+}
+
+.hidePw {
+	display: none;
+}

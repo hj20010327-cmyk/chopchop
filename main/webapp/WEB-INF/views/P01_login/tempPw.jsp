@@ -34,7 +34,7 @@
 		
 		<div id="message"></div>
 		
-		<button type="button" id="submitBtn" class="btn btn-main" onclick="loginChk()">임시 비밀번호 전송</button>
+		<button type="submit" id="submitBtn" class="btn btn-main" onclick="loginChk()">임시 비밀번호 전송</button>
 	</form>
 	
 	<a id="movePw" href="${pageContext.request.contextPath}/login">로그인 페이지로 이동</a>
@@ -131,6 +131,11 @@
 </style>
 
 <script>
+
+	document.querySelector("#loginForm").addEventListener("submit", function(e) {
+		e.preventDefault();
+		loginChk();
+	});
 	
 	function loginChk() {
 		const loginForm = document.getElementById("loginForm");

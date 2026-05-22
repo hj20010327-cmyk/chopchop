@@ -113,8 +113,8 @@
 			</div>
 			
 			<div class="grid search-item">
-				<label>측정값 <span class="red">*</span></label>
-				<input type="number" name="glogValue" id="glogValue" placeholder="측정값 입력" required>
+				<label>측정값</label>
+				<input type="number" name="glogValue" id="glogValue" placeholder="측정값 입력">
 			</div>
 		</div>
 				

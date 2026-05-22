@@ -15,7 +15,7 @@ public class GlogDTO {
 	
 	private String glogWorker;
 	private String glogWName;
-	private int glogValue = -9999;
+	private Integer glogValue;
 	private String glogResult;
 	
 	private	String glogAction;

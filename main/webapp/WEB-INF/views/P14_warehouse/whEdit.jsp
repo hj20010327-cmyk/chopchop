@@ -37,11 +37,6 @@
 		
 		<div class="grid-wrap">
 			<div class="grid search-item">
-				<label>창고 이름 <span class="red">*</span></label>
-				<input type="text" name="whName" placeholder="창고 이름 입력" value="${whDTO.whName}" required>
-			</div>
-			
-			<div class="grid search-item">
 				<label>유형 <span class="red">*</span></label>
 				<select name="whTypeNo" required>
 					<option value="" disabled>창고 유형 선택</option>
@@ -86,6 +81,17 @@
 						폐기 대기창고
 					</option>
 	            </select>
+			</div>
+		</div>
+		
+		<div class="grid-wrap">
+			<div class="grid search-item">
+				<label>창고 이름 <span class="red">*</span></label>
+				<input type="text" name="whName" placeholder="창고 이름 입력" value="${whDTO.whName}" required>
+			</div>
+			<div class="grid search-item">
+				<label>창고 위치 <span class="red">*</span></label>
+				<input type="text" name="whLoc" placeholder="창고 위치 입력" value="${whDTO.whLoc}" required>
 			</div>
 		</div>
 		
