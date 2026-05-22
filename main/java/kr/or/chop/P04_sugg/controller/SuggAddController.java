@@ -4,6 +4,7 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import kr.or.chop.P01_login.dto.EmpDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,14 @@ public class SuggAddController {
     				  HttpServletRequest request,
     				  HttpSession session) throws Exception {
     	System.out.println("/sugg/add 실행");
+    	
+    	EmpDTO loginUser = (EmpDTO) session.getAttribute("loginUser");
+
+    	if (loginUser == null) {
+    	    return "redirect:/login";
+    	}
+
+    	dto.setSugg_writer(loginUser.getEmpId());
     	
     	if (uploadFile != null && !uploadFile.isEmpty()) {
 

@@ -44,4 +44,9 @@ public class SuggServiceImpl implements SuggService {
     public int selectSuggCount(SuggDTO suggDTO) {
         return suggDAO.selectSuggCount(suggDTO);
     }
+    
+    @Override
+    public int updateSuggAnswer(SuggDTO dto) {
+        return suggDAO.updateSuggAnswer(dto);
+    }
 }

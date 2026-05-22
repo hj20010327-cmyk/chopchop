@@ -10,7 +10,7 @@
 		</div>
 
 		<div>
-			<p class="page-route">홈 > 건의사항</p>
+			<p class="page-route">   홈 > 건의사항 목록</p>
 
 			<a class="btn btn-white"
 				href="${pageContext.request.contextPath}/sugg/add">
@@ -126,11 +126,30 @@
 								${dto.sugg_no}
 							</td>
 
-							<td class="suggTitle"
-								onclick="openPwdModal(${dto.sugg_no})">
-
-								${dto.sugg_title}
-
+							<td class="suggTitle">
+							
+							    <c:choose>
+							
+							        <c:when test="${sessionScope.loginUser.empAuth >= 20}">
+							
+							            <a href="${pageContext.request.contextPath}/sugg/detail?sugg_no=${dto.sugg_no}">
+							                ${dto.sugg_title}
+							            </a>
+							
+							        </c:when>
+							
+							        <c:otherwise>
+							
+							            <span onclick="openPwdModal(${dto.sugg_no})">
+							
+							                ${dto.sugg_title}
+							
+							            </span>
+							
+							        </c:otherwise>
+							
+							    </c:choose>
+							
 							</td>
 
 							<td>${dto.sugg_cdate}</td>
@@ -194,65 +213,57 @@
 </div>
 
 <!-- 비밀번호 모달 -->
-<div id="pwdModal" class="overlay"
->
-<!--
-	style="
-	display:none;
-	position:fixed;
-	inset:0;
-	background:rgba(0,0,0,0.45);
-	z-index:9999;
-	justify-content:center;
-	align-items:center;"
--->
+<div id="pwdModal" class="overlay">
 
-	<div class="modal search-item">
+    <div class="modal search-item">
 
-		<!-- 헤더 -->
-		<h2 class="modal-title">
-			건의사항 비밀번호
-		</h2>
-		<p class="modal-subTitle">
-			게시글 확인을 위해 비밀번호를 입력해주세요
-		</p>
+        <h2 class="modal-title">
+            건의사항 비밀번호
+        </h2>
 
-		<form action="${pageContext.request.contextPath}/sugg/detail"
-			method="post">
+        <p class="modal-subTitle">
+            게시글 확인을 위해 비밀번호를 입력해주세요
+        </p>
 
-			<input type="hidden" id="modal_sugg_no" name="sugg_no">
-				<input type="password"
-					style="width: 335px;"
-					name="sugg_pw"
-					maxlength="4"
-					placeholder="숫자 4자리 비밀번호 입력"
-					required>
+        <form action="${pageContext.request.contextPath}/sugg/detail"
+              method="post">
 
-				<!-- 버튼 -->
-				<div style="
-					margin-top: 15px;
-					display:flex;
-					justify-content:center;
-					align-items:center;
-					gap:12px;
-					background:#fff;
-				">
-	
-					<button type="submit" class="btn btn-main">
-						확인
-					</button>
-	
-					<button type="button" class="btn btn-white"
-						onclick="closePwdModal()">
-						취소
-					</button>
+            <input type="hidden"
+                   id="modal_sugg_no"
+                   name="sugg_no">
 
-			</div>
-			</div>
+            <input type="password"
+                   style="width: 335px;"
+                   name="sugg_pw"
+                   maxlength="4"
+                   placeholder="숫자 4자리 비밀번호 입력"
+                   required>
 
-		</form>
+            <div style="
+                    margin-top: 15px;
+                    display:flex;
+                    justify-content:center;
+                    align-items:center;
+                    gap:12px;
+                    background:#fff;
+                ">
 
-	</div>
+                <button type="submit"
+                        class="btn btn-main">
+                    확인
+                </button>
+
+                <button type="button"
+                        class="btn btn-white"
+                        onclick="closePwdModal()">
+                    취소
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
@@ -329,6 +340,15 @@ function dateCheck() {
 </script>
 
 <style>
+ .suggTitle { 
+ 	cursor: pointer; 
+ 	transition: 0.2s;
+ } 
+
+ .suggTitle:hover { 
+ 	color: #2d7a46; 
+ 	text-decoration: underline; 
+ } 
 /* .search-box { */
 /* 	display: flex; */
 /* 	align-items: flex-end; */
@@ -346,14 +366,14 @@ function dateCheck() {
 /* 	gap: 8px; */
 /* } */
 
-/* /* .date-row input { */ */
-/* /* 	width: 230px; */ */
-/* /* 	min-width: 230px; */ */
+/* /* .date-row input { */ *
+/* /* 	width: 230px; */ *
+/* /* 	min-width: 230px; */ *
 /* /* } */ */
 
-/* /* .status-item select { */ */
-/* /* 	width: 110px; */ */
-/* /* 	min-width: 110px; */ */
+/* /* .status-item select { */ *
+/* /* 	width: 110px; */ *
+/* /* 	min-width: 110px; */ *
 /* /* } */ */
 
 /* /* .keyword input { */ */
@@ -368,30 +388,16 @@ function dateCheck() {
 /* 	flex-wrap: nowrap; */
 /* 	min-width: 145px; */
 /* } */
-
 /* .reset-btn { */
 /* 	width: 66px; */
 /* 	white-space: nowrap; */
 /* 	text-align:center; */
 /* } */
-
-/* .suggTitle { */
-/* 	cursor: pointer; */
-/* 	transition: 0.2s; */
-/* } */
-
-/* .suggTitle:hover { */
-/* 	color: #2d7a46; */
-/* 	text-decoration: underline; */
-/* } */
-
 /* 	.date-row input, */
 /* 	.status-item select, */
 /* 	.keyword input { */
 /* 		width: 100%; */
 /* 	} */
-
-
 /* 	.search-btn-area { */
 /* 		width: 100%; */
 /* 	} */

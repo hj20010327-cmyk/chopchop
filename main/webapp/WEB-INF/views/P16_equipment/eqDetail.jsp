@@ -50,16 +50,26 @@
                         설비 상세정보
                     </div>
 
-                    <button type="button"
-					        class="btn btn-sub"
-					        id="openStopModal">
-				    	설비 정지
-					</button>
-
-                    <a class="btn btn-main"
-                        href="${pageContext.request.contextPath}/equip/run?eqId=${eqp.eqId}">
-                        설비 가동
-                    </a>
+                    <!-- 설비 정지 버튼 (가동중일 때만 보임) -->
+				<c:if test="${eqp.eqStatus eq 10}">
+				    <a class="btn btn-main"
+				       href="javascript:void(0);"
+				       id="openStopModal">
+				        설비 정지
+				
+				    </a>
+				
+				</c:if>
+				<!-- 설비 가동 버튼 (정지일 때만 보임) -->
+				<c:if test="${eqp.eqStatus eq 20}">
+				
+				    <a class="btn btn-main"
+				       href="${pageContext.request.contextPath}/equip/run?eqId=${eqp.eqId}">
+				        설비 가동
+				    </a>
+				
+				</c:if>
+                    
                 </div>
 
                 <div style="display:flex; align-items:center; gap:14px;">

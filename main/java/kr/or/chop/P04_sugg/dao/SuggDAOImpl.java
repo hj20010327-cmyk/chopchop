@@ -62,4 +62,9 @@ public class SuggDAOImpl implements SuggDAO{
 	                param
 	        );
 	    }
+	    
+	    @Override
+	    public int updateSuggAnswer(SuggDTO dto) {
+	        return sqlSession.update(namespace + "updateSuggAnswer", dto);
+	    }
 }

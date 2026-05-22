@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.or.chop.P04_sugg.dto.SuggDTO;
 import kr.or.chop.P04_sugg.service.SuggService;
 
+import kr.or.chop.P01_login.dto.EmpDTO;
+
 @Controller
 @RequestMapping("/sugg")
 public class SuggEditController {
@@ -82,5 +84,29 @@ public class SuggEditController {
         suggService.deleteSugg(sugg_no);
 
         return "redirect:/sugg/list";
+    }
+    
+    @PostMapping("/answer")
+    public String updateAnswer(SuggDTO dto,
+                               HttpSession session) {
+
+        EmpDTO loginUser =
+                (EmpDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        // 관리자 이상만 가능
+        // AUTH 테이블 기준: 20 = 관리자, 30 = 최고관리자
+        if (loginUser.getEmpAuth() < 20) {
+            return "redirect:/sugg/detail?sugg_no="
+                    + dto.getSugg_no();
+        }
+
+        suggService.updateSuggAnswer(dto);
+
+        return "redirect:/sugg/detail?sugg_no="
+                + dto.getSugg_no();
     }
 }

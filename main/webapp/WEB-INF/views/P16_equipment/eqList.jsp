@@ -151,19 +151,19 @@
                         <td>
                             <c:choose>
                                 <c:when test="${eqp.eqStatus == 10}">
-                                    <span class="status status-success">가동중</span>
+                                    <span class="status status-success">• 가동중</span>
                                 </c:when>
 
                                 <c:when test="${eqp.eqStatus == 20}">
-                                    <span class="status status-info">정지</span>
+                                    <span class="status status-info">• 정지</span>
                                 </c:when>
 
                                 <c:when test="${eqp.eqStatus == 30}">
-                                    <span class="status status-warning">점검중</span>
+                                    <span class="status status-warning">•  점검중</span>
                                 </c:when>
 
                                 <c:when test="${eqp.eqStatus == 40}">
-                                    <span class="status status-danger">고장</span>
+                                    <span class="status status-danger">•  고장</span>
                                 </c:when>
 
                                 <c:otherwise>

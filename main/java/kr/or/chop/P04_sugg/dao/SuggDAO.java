@@ -18,5 +18,8 @@ public interface SuggDAO {
 	    
 	    int selectSuggCount(SuggDTO suggDTO);
 	    
+	    int updateSuggAnswer(SuggDTO dto);
+	    
 	    List<SuggDTO> selectSuggList(SuggDTO suggDTO, PageInfo pageInfo);
+	    
 }

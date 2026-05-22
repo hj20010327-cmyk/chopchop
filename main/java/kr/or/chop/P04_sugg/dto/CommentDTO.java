@@ -14,5 +14,6 @@ public class CommentDTO {
     private String comm_usage; // 유효여부 
     private String comm_writer; // FK
     private int comm_level;
+    private String empName;
 
 }

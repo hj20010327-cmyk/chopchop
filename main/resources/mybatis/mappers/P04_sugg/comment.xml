@@ -10,21 +10,28 @@
             parameterType="int"
             resultType="kr.or.chop.P04_sugg.dto.CommentDTO">
     SELECT
-        comm_no,
-        comm_sugg_no,
-        comm_parent,
-        comm_content,
-        comm_cdate,
-        comm_mdate,
-        comm_usage,
-        comm_writer,
-        comm_level
-    FROM sugg_comment
-    WHERE comm_sugg_no = #{comm_sugg_no}
-      AND comm_usage = 'Y'
-    START WITH comm_parent IS NULL
-    CONNECT BY PRIOR comm_no = comm_parent
-    ORDER SIBLINGS BY comm_cdate ASC
+    c.comm_no,
+    c.comm_sugg_no,
+    c.comm_parent,
+    c.comm_content,
+    c.comm_cdate,
+    c.comm_mdate,
+    c.comm_usage,
+    c.comm_writer,
+    c.comm_level,
+    e.emp_name AS empName
+
+FROM sugg_comment c
+
+LEFT JOIN emp e
+    ON c.comm_writer = e.emp_id
+
+WHERE c.comm_sugg_no = #{comm_sugg_no}
+  AND c.comm_usage = 'Y'
+
+START WITH c.comm_parent IS NULL
+CONNECT BY PRIOR c.comm_no = c.comm_parent
+ORDER SIBLINGS BY c.comm_cdate ASC
 
 </select>
 

@@ -19,4 +19,6 @@ public interface SuggService {
 
     int deleteSugg(int sugg_no);
     
+    int updateSuggAnswer(SuggDTO dto);
+    
 }

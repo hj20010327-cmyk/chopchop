@@ -15,6 +15,7 @@ import kr.or.chop.P04_sugg.dto.CommentDTO;
 import kr.or.chop.P04_sugg.dto.SuggDTO;
 import kr.or.chop.P04_sugg.service.CommentService;
 import kr.or.chop.P04_sugg.service.SuggService;
+import kr.or.chop.P01_login.dto.EmpDTO;
 
 @Controller
 @RequestMapping("/sugg/detail")
@@ -34,14 +35,25 @@ public class SuggDetailController {
 
         System.out.println("/sugg/detail 실행");
 
+        // 로그인 사용자 확인
+        EmpDTO loginUser =
+                (EmpDTO) session.getAttribute("loginUser");
+
+        // 관리자 이상인지 확인
+        boolean isAdmin = false;
+
+        if (loginUser != null && loginUser.getEmpAuth() >= 20) {
+            isAdmin = true;
+        }
+
         // 비밀번호 인증 여부 확인
         Boolean auth =
                 (Boolean) session.getAttribute(
                         "suggAuth_" + sugg_no
                 );
 
-        // 인증 안됐으면 목록으로
-        if (auth == null || !auth) {
+        // 관리자가 아니고, 비밀번호 인증도 안 됐으면 목록으로
+        if (!isAdmin && (auth == null || !auth)) {
             return "redirect:/sugg/list";
         }
 

@@ -24,7 +24,7 @@
 
 			<div>
 				<a class="btn btn-white"
-					href="${pageContext.request.contextPath}/equip/mt/list?eqId=${eqp.eqId}">
+					href="${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}">
 					취소
 				</a>
 

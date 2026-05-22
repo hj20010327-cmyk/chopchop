@@ -151,7 +151,7 @@
         SUGG_SEQ.NEXTVAL,
         #{sugg_title},
         #{sugg_content},
-        'EMP1001', 
+        #{sugg_writer}, 
         #{sugg_pw},
         'N',
         SYSDATE,
@@ -186,6 +186,15 @@
     WHERE sugg_no = #{sugg_no}
       AND sugg_usage = 'Y'
 
+</update>
+
+<update id="updateSuggAnswer" parameterType="suggDTO">
+    UPDATE suggestion
+    SET
+        sugg_answer = #{sugg_answer},
+        sugg_mdate = SYSDATE
+    WHERE sugg_no = #{sugg_no}
+      AND sugg_usage = 'Y'
 </update>
 
 <update id="deleteSugg" 

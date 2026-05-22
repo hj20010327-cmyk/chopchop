@@ -77,7 +77,8 @@
                         <div style="
                                 font-size:13px;
                                 margin-top:6px;">
-
+						<c:if test="${sessionScope.loginUser.empAuth < 20}">
+ 
                             <c:choose>
                                 <c:when test="${dto.sugg_answer eq 'Y'}">
                                   <span style="color:var(--success);">• 답변완료</span>  
@@ -86,6 +87,39 @@
                                    <span style="color:var(--dark-gray);">• 답변대기</span>
                                 </c:otherwise>
                             </c:choose>
+                         </c:if>
+                            
+							<c:if test="${sessionScope.loginUser.empAuth >= 20}">
+							    <form action="${pageContext.request.contextPath}/sugg/answer"
+							          method="post"
+							          class="answer-form">
+							
+							        <input type="hidden"
+							               name="sugg_no"
+							               value="${dto.sugg_no}">
+							
+							        <label>
+							            <input type="radio"
+							                   name="sugg_answer"
+							                   value="N"
+							                   ${dto.sugg_answer eq 'N' ? 'checked' : ''}>
+							            답변 대기
+							        </label>
+							
+							        <label>
+							            <input type="radio"
+							                   name="sugg_answer"
+							                   value="Y"
+							                   ${dto.sugg_answer eq 'Y' ? 'checked' : ''}>
+							            완료
+							        </label>
+							
+							        <button type="submit"
+							                class="btn btn-main">
+							            확인
+							        </button>
+							    </form>
+							</c:if>
 
                         </div>
 
@@ -177,7 +211,6 @@
                 <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
                 <input type="hidden" name="comm_parent" value="">
                 <input type="hidden" name="comm_level" value="0">
-                <input type="hidden" name="comm_writer" value="EMP1001">
 
                 <input type="text"
                        name="comm_content"
@@ -210,53 +243,93 @@
 
                             <tr>
                                 <td style="
+                                		 position:relative;
                                         border-left:none;
                                         border-right:none;
                                         padding:18px 12px;
                                         text-align:left;
                                         padding-left:${comm.comm_level * 35 + 12}px;">
 
-                                    <div style="
-                                            display:flex;
-                                            justify-content:space-between;
-                                            margin-bottom:8px;">
-
-                                        <strong>
-                                            <c:if test="${comm.comm_level > 0}">
-                                                
-                                            </c:if>
-                                            ${comm.comm_writer}
-                                        </strong>
-
-                                        <span style="
-                                                font-size:13px;
-                                                color:#777;">
-                                            ${comm.comm_cdate}
-                                        </span>
-
-                                    </div>
-
-                                    <div style="
-                                            padding-left:8px;
-                                            line-height:1.7;">
-                                        ${comm.comm_content}
-                                    </div>
+							<div style="
+							        display:flex;
+							        justify-content:space-between;
+							        align-items:center;
+							        margin-bottom:8px;">
+							
+							    <strong>
+							        ${comm.empName}
+							    </strong>
+							
+							    <div style="
+							            display:flex;
+							            align-items:center;
+							            gap:8px;">
+							
+							        <span style="
+							                font-size:13px;
+							                color:#777;">
+							            ${comm.comm_cdate}
+							        </span>
+							
+							        <c:if test="${sessionScope.loginUser.empId eq comm.comm_writer}">
+							
+							            <form action="${pageContext.request.contextPath}/sugg/comment/delete"
+							                  method="post"
+							                  style="display:inline;">
+							
+							                <input type="hidden"
+							                       name="comm_no"
+							                       value="${comm.comm_no}">
+							
+							                <input type="hidden"
+							                       name="comm_sugg_no"
+							                       value="${dto.sugg_no}">
+							
+							                <button type="submit"
+							                        class="comment-delete-x"
+							                        onclick="return confirm('댓글을 삭제하시겠습니까?');">
+							                    ×
+							                </button>
+							
+							            </form>
+							
+							        </c:if>
+							
+							    </div>
+							
+							</div>
+									
+									<div onclick="showReplyForm(${comm.comm_no})"
+									     style="
+									        padding-left:8px;
+									        line-height:1.7;
+									        cursor:pointer;">
+									    ${comm.comm_content}
+									</div>
+									
+<%-- 									<c:if test="${comm.comm_level < 2}"> --%>
+<!-- 									    <button type="button" -->
+<!-- 									            class="btn-none" -->
+<%-- 									            onclick="showReplyForm(${comm.comm_no})"> --%>
+<!-- 									        답글 -->
+<!-- 									    </button> -->
+<%-- 									</c:if> --%>
 
 
                                     <!-- 대댓글 / 대대댓글 입력 -->
                                     <c:if test="${comm.comm_level < 2}">
 
-                                        <form action="${pageContext.request.contextPath}/sugg/comment/add"
+                                        <form id="replyForm_${comm.comm_no}"
+                                        	  action="${pageContext.request.contextPath}/sugg/comment/add"
                                               method="post"
                                               style="
-                                                    display:flex;
+                                                    display:none;
                                                     gap:8px;
                                                     margin-top:10px;">
 
                                             <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
                                             <input type="hidden" name="comm_parent" value="${comm.comm_no}">
                                             <input type="hidden" name="comm_level" value="${comm.comm_level + 1}">
-                                            <input type="hidden" name="comm_writer" value="EMP1001">
 
                                             <input type="text"
                                                    name="comm_content"
@@ -276,28 +349,6 @@
                                         </form>
 
                                     </c:if>
-
-
-                                    <!-- 댓글 삭제 -->
-                                    <div style="margin-top:10px; text-align:right;">
-
-                                        <form action="${pageContext.request.contextPath}/sugg/comment/delete"
-                                              method="post"
-                                              style="display:inline;">
-
-                                            <input type="hidden" name="comm_no" value="${comm.comm_no}">
-                                            <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
-
-                                            <button type="submit"
-                                                    class="btn btn-red"
-                                                    onclick="return confirm('댓글을 삭제하시겠습니까?');">
-                                                삭제
-                                            </button>
-
-                                        </form>
-
-                                    </div>
-
                                 </td>
                             </tr>
 
@@ -327,10 +378,52 @@
 
 </div>
 
+<style>
+
+.answer-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.comment-delete-x {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-gray);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.comment-delete-x:hover {
+    color: var(--main-red);
+    text-decoration: none;
+}
+</style>
+
 <script>
 document.querySelector("#copyurl").addEventListener("click", function () {
     navigator.clipboard.writeText(window.location.href);
     alert("URL이 복사되었습니다.");
 });
+
+function showReplyForm(commNo) {
+
+    const form =
+        document.querySelector("#replyForm_" + commNo);
+
+    if (form == null) {
+        return;
+    }
+
+    if (form.style.display === "none" ||
+        form.style.display === "") {
+
+        form.style.display = "flex";
+    } else {
+        form.style.display = "none";
+    }
+}
 
 </script>
