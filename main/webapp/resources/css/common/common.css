@@ -117,6 +117,9 @@ textarea:focus {
     --main-red: #D32F2F;
     --main-red-hover: #C22828;
     --sub-red: #FFD0D0;
+    
+    --main-orange: #F9A825;
+    --main-orange-hover: #E2900C;
 }
 
 
@@ -235,6 +238,25 @@ textarea:focus {
 
 .btn-red:hover {
 	background-color: var(--main-red-hover);
+}
+
+.btn-orange {
+	background-color: var(--main-orange);
+	color: #fff;
+}
+
+.btn-orange:hover {
+	background-color: var(--main-orange-hover);
+}
+
+.btn-none {
+	font-size: 14px;
+	color: var(--dark-gray);
+	text-decoration: underline;
+}
+
+.btn-none:hover {
+	color: var(--main-green);
 }
 
 
