@@ -2,21 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<script>
-    const materialOptions = `
-        <option value="">투입 품목 선택</option>
-
-        <c:forEach var="item" items="${materialItemList}">
-            <option value="${item.itemId}"
-                    data-spec="${item.itemSpec}"
-                    data-price="${item.itemPrice}"
-                    data-unit="${item.itemUnit}">
-                ${item.itemName} (${item.itemId})
-            </option>
-        </c:forEach>
-    `;
-</script>
-
 <div class="content">
 
     <div class="header-row">
@@ -40,7 +25,8 @@
 
             <div class="right">
                 <a class="btn btn-white"
-                   href="${pageContext.request.contextPath}/bom/list">
+                   href="${pageContext.request.contextPath}/bom/list"
+                   onclick="return confirm('BOM 등록을 취소하시겠습니까?');">
                     취소
                 </a>
 
@@ -53,15 +39,25 @@
         <div class="grid-wrap bom-grid-wrap">
 
             <div class="grid search-item">
+                <label>품목 유형 <span class="red">*</span></label>
+
+                <select id="bomItemTypeSelect">
+                    <option value="30">완제품</option>
+                    <option value="20">반제품</option>
+                </select>
+            </div>
+
+            <div class="grid search-item">
                 <label>생산 품목 <span class="red">*</span></label>
 
-                <select name="bomItem" required>
+                <select name="bomItem" id="bomItemSelect" required>
                     <option value="" selected disabled>
                         품목명 (품목코드) 선택
                     </option>
 
                     <c:forEach var="item" items="${finishItemList}">
-                        <option value="${item.itemId}">
+                        <option value="${item.itemId}"
+                                data-item-type="${item.itemType}">
                             ${item.itemName} (${item.itemId})
                         </option>
                     </c:forEach>
@@ -107,45 +103,15 @@
                         <th>투입 수량</th>
                         <th>규격</th>
                         <th>단가 (원)</th>
+                        <th>소요금액 (원)</th>
                         <th>삭제</th>
                     </tr>
                 </thead>
 
                 <tbody id="bomDetailBody">
-                    <tr>
-                        <td>
-                            <select name="bomDtlItemList"
-                                    class="bom-detail-select"
-                                    required>
-                                <option value="">투입 품목 선택</option>
-
-                                <c:forEach var="item" items="${materialItemList}">
-                                    <option value="${item.itemId}"
-                                            data-spec="${item.itemSpec}"
-                                            data-price="${item.itemPrice}"
-                                            data-unit="${item.itemUnit}">
-                                        ${item.itemName} (${item.itemId})
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </td>
-
-                        <td>
-                            <input type="number"
-                                   name="bomDtlQtyList"
-                                   min="1"
-                                   required
-                                   placeholder="수량">
-                        </td>
-
-                        <td class="item-spec">-</td>
-                        <td class="item-price">-</td>
-
-                        <td>
-                            <button type="button"
-                                    class="remove-row-btn">
-                                ✕
-                            </button>
+                    <tr class="empty-add-row">
+                        <td colspan="6">
+                            - 투입 품목을 추가하려면 이 영역을 클릭하거나 품목 추가 버튼을 눌러주세요.
                         </td>
                     </tr>
                 </tbody>
@@ -156,12 +122,99 @@
 
 </div>
 
+<div class="modal-overlay" id="bomItemModal">
+    <div class="modal-box bom-item-modal-box">
+
+        <div class="modal-header">
+            <h3 class="modal-title">투입 품목 선택</h3>
+
+            <button type="button"
+                    class="modal-close-btn"
+                    id="closeBomItemModalBtn">
+                ×
+            </button>
+        </div>
+
+        <div class="modal-body">
+
+            <div class="search-item modal-search-item">
+                <label>품목 유형 <span class="red">*</span></label>
+
+                <select id="modalBomItemTypeSelect">
+                    <option value="10">원자재</option>
+                    <option value="20">반제품</option>
+                    <option value="40">기타 자재</option>
+                </select>
+            </div>
+
+            <div class="search-item modal-search-item">
+                <label>투입 품목 <span class="red">*</span></label>
+
+                <select id="modalBomItemSelect">
+                    <option value="">투입 품목 선택</option>
+
+                    <c:forEach var="item" items="${materialItemList}">
+                        <option value="${item.itemId}"
+                                data-item-type="${item.itemType}"
+                                data-spec="${item.itemSpec}"
+                                data-price="${item.itemPrice}"
+                                data-unit="${item.itemUnit}">
+                            ${item.itemName} (${item.itemId})
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <div class="search-item modal-search-item">
+                <label>투입 수량 <span class="red">*</span></label>
+
+                <input type="number"
+                       id="modalBomQtyInput"
+                       min="1"
+                       placeholder="수량">
+            </div>
+
+            <div class="modal-info-box">
+                <div>
+                    <span>규격</span>
+                    <strong id="modalItemSpec">-</strong>
+                </div>
+
+                <div>
+                    <span>단가</span>
+                    <strong id="modalItemPrice">-</strong>
+                </div>
+
+                <div>
+                    <span>소요금액</span>
+                    <strong id="modalTotalPrice">-</strong>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button type="button"
+                    class="btn btn-white"
+                    id="cancelBomItemModalBtn">
+                취소
+            </button>
+
+            <button type="button"
+                    class="btn btn-main"
+                    id="saveBomItemBtn">
+                적용
+            </button>
+        </div>
+
+    </div>
+</div>
+
 <style>
     .bom-grid-wrap {
         display: grid;
         grid-template-columns: 200px 400px;
         justify-content: flex-start;
-
         column-gap: 24px;
         row-gap: 18px;
     }
@@ -179,146 +232,472 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
         margin: 32px 0 16px;
     }
 
-    #bomDetailBody select,
-    #bomDetailBody input {
-        width: 90%;
-        height: 34px;
+    .empty-add-row {
+        cursor: pointer;
+    }
 
+    .empty-add-row td {
+        height: 52px;
+        color: #777;
+        text-align: center;
+    }
+
+    .empty-add-row:hover td {
+        color: var(--main-green);
+        text-decoration: underline;
+        background-color: #f8faf9;
+    }
+
+    .bom-detail-row {
+        cursor: pointer;
+    }
+
+    .bom-detail-row:hover .bom-item-name {
+        color: var(--main-green);
+        text-decoration: underline;
+    }
+
+    .remove-row-btn {
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 50%;
+        background-color: #f1f3f5;
+        color: #666;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .remove-row-btn:hover {
+        background-color: #dee2e6;
+        color: #333;
+        transform: scale(1.05);
+    }
+
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.35);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-box {
+        width: 560px;
+        padding: 24px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .modal-close-btn {
+        border: none;
+        background: none;
+        font-size: 26px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .modal-search-item select,
+    .modal-search-item input {
+        width: 100%;
+        height: 38px;
         padding: 0 10px;
-
         border: 1px solid var(--dark-gray);
         border-radius: 6px;
-
         font-size: 14px;
         background-color: #fff;
     }
 
-    #bomDetailBody select:focus,
-    #bomDetailBody input:focus {
+    .modal-search-item select:focus,
+    .modal-search-item input:focus {
         outline: none;
         border-color: var(--main-green);
     }
 
-    .remove-row-btn {
-	    width: 32px;
-	    height: 32px;
-	
-	    border: none;
-	    border-radius: 50%;
-	
-	    background-color: #f1f3f5;
-	    color: #666;
-	
-	    font-size: 18px;
-	    font-weight: 700;
-	
-	    cursor: pointer;
-	
-	    transition: 0.2s;
-	}
-	
-	.remove-row-btn:hover {
-	    background-color: #dee2e6;
-	    color: #333;
-	
-	    transform: scale(1.05);
-	}
+    .modal-info-box {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        margin-top: 4px;
+    }
+
+    .modal-info-box div {
+        padding: 14px 16px;
+        border: 1px solid var(--gray);
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+    .modal-info-box span {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: #777;
+    }
+
+    .modal-info-box strong {
+        font-size: 15px;
+        color: #222;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 24px;
+    }
 </style>
 
 <script>
+    let editingRow = null;
+
     window.addEventListener("load", function () {
         bindBomAddEvents();
     });
 
     function bindBomAddEvents() {
+        const bomItemTypeSelect = document.querySelector("#bomItemTypeSelect");
+        const bomItemSelect = document.querySelector("#bomItemSelect");
+
         const addItemBtn = document.querySelector("#addItemBtn");
         const bomDetailBody = document.querySelector("#bomDetailBody");
+        const bomAddForm = document.querySelector("#bomAddForm");
 
-        addItemBtn.addEventListener("click", function () {
-            addBomDetailRow();
+        const modal = document.querySelector("#bomItemModal");
+        const closeBtn = document.querySelector("#closeBomItemModalBtn");
+        const cancelBtn = document.querySelector("#cancelBomItemModalBtn");
+        const saveBtn = document.querySelector("#saveBomItemBtn");
+        const itemSelect = document.querySelector("#modalBomItemSelect");
+        const itemTypeSelect = document.querySelector("#modalBomItemTypeSelect");
+        const qtyInput = document.querySelector("#modalBomQtyInput");
+
+        bomItemTypeSelect.addEventListener("change", function () {
+            filterBomItems(true);
         });
 
-        bomDetailBody.addEventListener("change", function (e) {
-            if (e.target.classList.contains("bom-detail-select")) {
-                updateItemInfo(e.target);
-            }
+        itemTypeSelect.addEventListener("change", function () {
+            filterModalBomItems(true);
+        });
+
+        filterBomItems(false);
+        filterModalBomItems(false);
+
+        addItemBtn.addEventListener("click", function () {
+            openBomItemModal(null);
         });
 
         bomDetailBody.addEventListener("click", function (e) {
             if (e.target.classList.contains("remove-row-btn")) {
+                e.stopPropagation();
                 removeBomDetailRow(e.target);
+                return;
+            }
+
+            const emptyRow = e.target.closest(".empty-add-row");
+            if (emptyRow) {
+                openBomItemModal(null);
+                return;
+            }
+
+            const detailRow = e.target.closest(".bom-detail-row");
+            if (detailRow) {
+                openBomItemModal(detailRow);
+            }
+        });
+
+        itemSelect.addEventListener("change", function () {
+            updateModalItemInfo();
+        });
+
+        qtyInput.addEventListener("input", function () {
+            updateModalItemInfo();
+        });
+
+        closeBtn.addEventListener("click", function () {
+            closeBomItemModal();
+        });
+
+        cancelBtn.addEventListener("click", function () {
+            closeBomItemModal();
+        });
+
+        modal.addEventListener("click", function (e) {
+            if (e.target === modal) {
+                closeBomItemModal();
+            }
+        });
+
+        saveBtn.addEventListener("click", function () {
+            saveBomDetailRow();
+        });
+
+        bomAddForm.addEventListener("submit", function (e) {
+            const detailRows = document.querySelectorAll("#bomDetailBody .bom-detail-row");
+
+            if (detailRows.length === 0) {
+                alert("투입 품목을 1개 이상 추가해주세요.");
+                e.preventDefault();
             }
         });
     }
 
-    function addBomDetailRow() {
-        const bomDetailBody = document.querySelector("#bomDetailBody");
+    function filterBomItems(resetValue) {
+        const typeSelect = document.querySelector("#bomItemTypeSelect");
+        const itemSelect = document.querySelector("#bomItemSelect");
 
+        const selectedType = typeSelect.value;
+        const options = itemSelect.querySelectorAll("option");
+
+        options.forEach(option => {
+            if (!option.dataset.itemType) {
+                option.hidden = false;
+                return;
+            }
+
+            option.hidden = option.dataset.itemType !== selectedType;
+        });
+
+        if (resetValue) {
+            itemSelect.value = "";
+        }
+    }
+
+    function filterModalBomItems(resetValue) {
+        const typeSelect = document.querySelector("#modalBomItemTypeSelect");
+        const itemSelect = document.querySelector("#modalBomItemSelect");
+
+        const selectedType = typeSelect.value;
+        const options = itemSelect.querySelectorAll("option");
+
+        options.forEach(option => {
+            if (!option.dataset.itemType) {
+                option.hidden = false;
+                return;
+            }
+
+            option.hidden = option.dataset.itemType !== selectedType;
+        });
+
+        if (resetValue) {
+            itemSelect.value = "";
+        }
+
+        updateModalItemInfo();
+    }
+
+    function openBomItemModal(row) {
+        editingRow = row;
+
+        const modal = document.querySelector("#bomItemModal");
+        const itemSelect = document.querySelector("#modalBomItemSelect");
+        const itemTypeSelect = document.querySelector("#modalBomItemTypeSelect");
+        const qtyInput = document.querySelector("#modalBomQtyInput");
+
+        itemTypeSelect.value = "10";
+        itemSelect.value = "";
+        qtyInput.value = "";
+
+        document.querySelector("#modalItemSpec").textContent = "-";
+        document.querySelector("#modalItemPrice").textContent = "-";
+        document.querySelector("#modalTotalPrice").textContent = "-";
+
+        if (row) {
+            itemSelect.value = row.dataset.itemId;
+
+            const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+
+            if (selectedOption && selectedOption.dataset.itemType) {
+                itemTypeSelect.value = selectedOption.dataset.itemType;
+            }
+
+            filterModalBomItems(false);
+
+            itemSelect.value = row.dataset.itemId;
+            qtyInput.value = row.dataset.qty;
+
+            updateModalItemInfo();
+        } else {
+            filterModalBomItems(false);
+        }
+
+        modal.classList.add("active");
+    }
+
+    function closeBomItemModal() {
+        document.querySelector("#bomItemModal").classList.remove("active");
+        editingRow = null;
+    }
+
+    function updateModalItemInfo() {
+        const itemSelect = document.querySelector("#modalBomItemSelect");
+        const qtyInput = document.querySelector("#modalBomQtyInput");
+        const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            document.querySelector("#modalItemSpec").textContent = "-";
+            document.querySelector("#modalItemPrice").textContent = "-";
+            document.querySelector("#modalTotalPrice").textContent = "-";
+            return;
+        }
+
+        const spec = selectedOption.dataset.spec || "-";
+        const unit = selectedOption.dataset.unit || "";
+        const price = selectedOption.dataset.price || "-";
+        const qty = Number(qtyInput.value || 0);
+
+        document.querySelector("#modalItemSpec").textContent =
+            unit ? spec + " / " + unit : spec;
+
+        document.querySelector("#modalItemPrice").textContent =
+            price === "-"
+                ? "-"
+                : Number(price).toLocaleString() + "원";
+
+        document.querySelector("#modalTotalPrice").textContent =
+            price === "-" || qty <= 0
+                ? "-"
+                : (Number(price) * qty).toLocaleString() + "원";
+    }
+
+    function saveBomDetailRow() {
+        const itemSelect = document.querySelector("#modalBomItemSelect");
+        const qtyInput = document.querySelector("#modalBomQtyInput");
+        const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            alert("투입 품목을 선택해주세요.");
+            itemSelect.focus();
+            return;
+        }
+
+        if (!qtyInput.value || Number(qtyInput.value) <= 0) {
+            alert("투입 수량을 입력해주세요.");
+            qtyInput.focus();
+            return;
+        }
+
+        const itemId = selectedOption.value;
+        const itemText = selectedOption.textContent.trim();
+        const spec = selectedOption.dataset.spec || "-";
+        const unit = selectedOption.dataset.unit || "";
+        const price = selectedOption.dataset.price || "-";
+        const qty = qtyInput.value;
+
+        if (editingRow) {
+            updateBomDetailRow(editingRow, itemId, itemText, qty, spec, unit, price);
+        } else {
+            addBomDetailRow(itemId, itemText, qty, spec, unit, price);
+        }
+
+        closeBomItemModal();
+    }
+
+    function addBomDetailRow(itemId, itemText, qty, spec, unit, price) {
+        removeEmptyRow();
+
+        const bomDetailBody = document.querySelector("#bomDetailBody");
         const tr = document.createElement("tr");
 
-        tr.innerHTML =
-            '<td>' +
-                '<select name="bomDtlItemList" class="bom-detail-select" required>' +
-                    materialOptions +
-                '</select>' +
-            '</td>' +
+        tr.className = "bom-detail-row";
+        tr.dataset.itemId = itemId;
+        tr.dataset.qty = qty;
 
-            '<td>' +
-                '<input type="number" name="bomDtlQtyList" min="1" required placeholder="수량">' +
-            '</td>' +
-
-            '<td class="item-spec">-</td>' +
-
-            '<td class="item-price">-</td>' +
-
-            '<td>' +
-                '<button type="button" class="remove-row-btn">✕</button>' +
-            '</td>';
+        tr.innerHTML = makeBomDetailRowHtml(itemId, itemText, qty, spec, unit, price);
 
         bomDetailBody.appendChild(tr);
     }
 
-    function updateItemInfo(selectEl) {
-        const selectedOption =
-            selectEl.options[selectEl.selectedIndex];
+    function updateBomDetailRow(row, itemId, itemText, qty, spec, unit, price) {
+        row.dataset.itemId = itemId;
+        row.dataset.qty = qty;
+        row.innerHTML = makeBomDetailRowHtml(itemId, itemText, qty, spec, unit, price);
+    }
 
-        const spec =
-            selectedOption.dataset.spec || "-";
-
-        const unit =
-            selectedOption.dataset.unit || "";
-
-        const price =
-            selectedOption.dataset.price || "-";
-
-        const row =
-            selectEl.closest("tr");
-
-        row.querySelector(".item-spec").textContent =
-            unit ? spec + " / " + unit : spec;
-
-        row.querySelector(".item-price").textContent =
+    function makeBomDetailRowHtml(itemId, itemText, qty, spec, unit, price) {
+        const specText = unit ? spec + " / " + unit : spec;
+        const qtyText = Number(qty).toLocaleString();
+        const priceText = price === "-" ? "-" : Number(price).toLocaleString();
+        const totalPriceText =
             price === "-"
                 ? "-"
-                : Number(price).toLocaleString();
+                : (Number(price) * Number(qty)).toLocaleString();
+
+        return ''
+            + '<td class="bom-item-name">'
+            + itemText
+            + '<input type="hidden" name="bomDtlItemList" value="' + itemId + '">'
+            + '</td>'
+            + '<td>'
+            + qtyText + (unit ? ' ' + unit : '')
+            + '<input type="hidden" name="bomDtlQtyList" value="' + qty + '">'
+            + '</td>'
+            + '<td>' + specText + '</td>'
+            + '<td>' + priceText + '</td>'
+            + '<td>' + totalPriceText + '</td>'
+            + '<td>'
+            + '<button type="button" class="remove-row-btn">✕</button>'
+            + '</td>';
     }
 
     function removeBomDetailRow(buttonEl) {
-        const bomDetailBody =
-            document.querySelector("#bomDetailBody");
-
-        const rows =
-            bomDetailBody.querySelectorAll("tr");
-
-        if (rows.length <= 1) {
-            alert("투입 품목은 최소 1개 이상 필요합니다.");
-            return;
-        }
-
         buttonEl.closest("tr").remove();
+
+        const rows = document.querySelectorAll("#bomDetailBody .bom-detail-row");
+
+        if (rows.length === 0) {
+            appendEmptyRow();
+        }
+    }
+
+    function removeEmptyRow() {
+        const emptyRow = document.querySelector("#bomDetailBody .empty-add-row");
+
+        if (emptyRow) {
+            emptyRow.remove();
+        }
+    }
+
+    function appendEmptyRow() {
+        const bomDetailBody = document.querySelector("#bomDetailBody");
+        const tr = document.createElement("tr");
+
+        tr.className = "empty-add-row";
+        tr.innerHTML =
+            '<td colspan="6">'
+            + '- 투입 품목을 추가하려면 이 영역을 클릭하거나 품목 추가 버튼을 눌러주세요.'
+            + '</td>';
+
+        bomDetailBody.appendChild(tr);
     }
 </script>

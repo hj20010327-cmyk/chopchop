@@ -132,7 +132,10 @@
 	        bd.bom_dtl_usage AS bomDtlUsage,
 	
 	        i.item_name AS itemName,
-	        i.item_type AS itemType
+	        i.item_type AS itemType,
+	        i.item_unit AS itemUnit,
+	        i.item_spec AS itemSpec,
+			i.item_unit_price AS itemPrice
 	
 	    FROM bom_detail bd
 	    LEFT JOIN item i

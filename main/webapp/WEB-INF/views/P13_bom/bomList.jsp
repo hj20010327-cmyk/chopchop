@@ -67,8 +67,8 @@
                     <tr>
                         <th style="width: 130px;">BOM코드</th>
                         <th style="width: 160px;">BOM명</th>
-                        <th style="width: 220px;">품목</th>
-                        <th style="width: 120px;">품목 유형</th>
+                        <th style="width: 220px;">생산 품목명</th>
+                        <th style="width: 120px;">생산 품목 유형</th>
                         <th>설명</th>
                     </tr>
                 </thead>
@@ -83,23 +83,25 @@
                             <td>
                                 <c:choose>
 
-							    <c:when test="${bom.itemType == 10}">
-							        원자재
-							    </c:when>
-							
-							    <c:when test="${bom.itemType == 20}">
-							        반제품
-							    </c:when>
-							
-							    <c:when test="${bom.itemType == 30}">
-							        완제품
-							    </c:when>
-							
-							    <c:otherwise>
-							        ${bom.itemType}
-							    </c:otherwise>
-							
-							</c:choose>
+								    <c:when test="${bom.itemType == 20}">
+								        <span class="status status-warning">
+								            • 반제품
+								        </span>
+								    </c:when>
+								
+								    <c:when test="${bom.itemType == 30}">
+								        <span class="status status-success">
+								            • 완제품
+								        </span>
+								    </c:when>
+								
+								    <c:otherwise>
+								        <span class="status status-info">
+								            -
+								        </span>
+								    </c:otherwise>
+								
+								</c:choose>
                             </td>
 
                             <td>${bom.bomContent}</td>

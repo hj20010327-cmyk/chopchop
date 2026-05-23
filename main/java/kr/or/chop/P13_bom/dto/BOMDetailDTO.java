@@ -13,6 +13,9 @@ public class BOMDetailDTO {
 
     private String itemName;
     private int itemType;
+    private String itemUnit;
+    private String itemSpec;
+    private int itemPrice;
     
     private String[] bomDtlItemList;
     private int[] bomDtlQtyList;

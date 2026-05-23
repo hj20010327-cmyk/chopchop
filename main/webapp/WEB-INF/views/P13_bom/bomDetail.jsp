@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <div class="content">
 
@@ -39,9 +40,26 @@
 
     <div class="content-content">
 
-        <div class="content-content-content">
-            <div class="content-content-content-title">
-                BOM 기본 정보
+        <div class="content-content-content bom-info-section">
+
+            <div class="bom-title-row">
+                <div class="content-content-content-title">
+                    BOM 기본 정보
+                </div>
+
+                <div>
+                    <c:choose>
+                        <c:when test="${bom.itemType == 20}">
+                            <span class="status-back status-back-warning"> • 반제품 </span>
+                        </c:when>
+                        <c:when test="${bom.itemType == 30}">
+                            <span class="status-back status-back-success"> • 완제품 </span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="status-back status-back-info"> ${bom.itemType} </span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
 
             <div class="info-table-wrap">
@@ -54,44 +72,16 @@
                     </tr>
 
                     <tr>
-                        <th>완제품 코드</th>
-                        <td>${bom.bomItem}</td>
-                        <th>완제품명</th>
-                        <td>${bom.itemName}</td>
-                    </tr>
-
-                    <tr>
-                        <th>품목 유형</th>
+                        <th>생산 품목명</th>
                         <td>
-                            <c:choose>
-                                <c:when test="${bom.itemType == 20}">
-                                    반제품
-                                </c:when>
-                                <c:when test="${bom.itemType == 30}">
-                                    완제품
-                                </c:when>
-                                <c:otherwise>
-                                    ${bom.itemType}
-                                </c:otherwise>
-                            </c:choose>
+                            <a class="toDetail"
+                               href="${pageContext.request.contextPath}/item/detail?itemId=${bom.bomItem}">
+                                ${bom.itemName} (${bom.bomItem})
+                            </a>
                         </td>
 
-                        <th>사용 여부</th>
-                        <td>
-                            <c:choose>
-                                <c:when test="${bom.bomUsage == 'Y'}">
-                                    <span class="status status-success">사용</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="status status-info">미사용</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                    </tr>
-
-                    <tr>
                         <th>설명</th>
-                        <td colspan="3">${bom.bomContent}</td>
+                        <td>${bom.bomContent}</td>
                     </tr>
                 </table>
             </div>
@@ -106,48 +96,77 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th style="width: 130px;">상세코드</th>
-                            <th style="width: 160px;">품목코드</th>
-                            <th>품목명</th>
-                            <th style="width: 120px;">품목유형</th>
-                            <th style="width: 120px;">소요수량</th>
-                        </tr>
+						    <th>품목명</th>
+						    <th style="width: 120px;">품목유형</th>
+						    <th style="width: 120px;">소요수량</th>
+						    <th style="width: 150px;">규격</th>
+						    <th style="width: 130px;">단가 (원)</th>
+						    <th style="width: 150px;">소요금액 (원)</th>
+						</tr>
                     </thead>
 
                     <tbody>
                         <c:forEach var="detail" items="${detailList}">
-                            <tr>
-                                <td>${detail.bomDtlId}</td>
-                                <td>${detail.bomDtlItem}</td>
-                                <td>${detail.itemName}</td>
+                            <tr class="bom-detail-row"
+                                data-item-id="${detail.bomDtlItem}">
+
+                                <td>
+                                    <a class="toDetail"
+                                       href="${pageContext.request.contextPath}/item/detail?itemId=${detail.bomDtlItem}">
+                                        ${detail.itemName} (${detail.bomDtlItem})
+                                    </a>
+                                </td>
 
                                 <td>
                                     <c:choose>
                                         <c:when test="${detail.itemType == 10}">
-                                            원자재
+                                            <span class="status status-safe">
+                                                • 원자재
+                                            </span>
                                         </c:when>
+
                                         <c:when test="${detail.itemType == 20}">
-                                            반제품
+                                            <span class="status status-warning">
+                                                • 반제품
+                                            </span>
                                         </c:when>
-                                        <c:when test="${detail.itemType == 30}">
-                                            완제품
-                                        </c:when>
+
                                         <c:when test="${detail.itemType == 40}">
-                                            기타 자재
+                                            <span class="status status-info">
+                                                • 기타 자재
+                                            </span>
                                         </c:when>
+
                                         <c:otherwise>
-                                            ${detail.itemType}
+                                            <span class="status status-info">
+                                                -
+                                            </span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
 
-                                <td>${detail.bomDtlQty}</td>
+                                <td>
+                                    <fmt:formatNumber value="${detail.bomDtlQty}" pattern="#,##0" />
+                                    ${detail.itemUnit}
+                                </td>
+
+                                <td>
+                                    ${detail.itemSpec} / ${detail.itemUnit}
+                                </td>
+
+                                <td>
+                                    <fmt:formatNumber value="${detail.itemPrice}" pattern="#,##0" />
+                                </td>
+
+                                <td>
+                                    <fmt:formatNumber value="${detail.itemPrice * detail.bomDtlQty}" pattern="#,##0" />
+                                </td>
                             </tr>
                         </c:forEach>
 
                         <c:if test="${empty detailList}">
                             <tr>
-                                <td colspan="5" style="text-align:center;">
+                                <td colspan="6" style="text-align:center;">
                                     등록된 BOM 구성 품목이 없습니다.
                                 </td>
                             </tr>
@@ -160,3 +179,49 @@
     </div>
 
 </div>
+
+<style>
+    .bom-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 18px;
+    }
+
+    .bom-title-row .content-content-content-title {
+        margin-bottom: 0;
+    }
+
+    .bom-detail-row {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    window.addEventListener("load", () => {
+        init();
+    });
+
+    function init() {
+        bind();
+    }
+
+    function bind() {
+        moveItemDetail();
+    }
+
+    function moveItemDetail() {
+        const rows = document.querySelectorAll(".bom-detail-row");
+
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].addEventListener("click", () => {
+                const itemId = rows[i].dataset.itemId;
+
+                const url = "${pageContext.request.contextPath}/item/detail?itemId=" + itemId;
+
+                window.location.href = url;
+            });
+        }
+    }
+</script>
