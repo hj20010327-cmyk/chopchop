@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.chop.P09_lot.dto.LotDTO;
 import kr.or.chop.P10_io.dao.IoDAO;
@@ -38,36 +39,46 @@ public class IoServiceImpl implements IoService {
 	}
 
 	@Override
+	@Transactional
 	public void insertIo(IoDTO ioDTO) {
 
 		if ("IN".equals(ioDTO.getIoType())) {
 
-			// LOT 생성
+			// 1. LOT 생성
 			ioDAO.insertLotByIo(ioDTO);
 
-			// 방금 생성된 LOT 번호 가져오기
+			// 2. 방금 생성된 LOT 번호 가져오기
 			String lotId = ioDAO.selectLastLotId();
 
-			// IO에 저장할 LOT 번호 세팅
+			// 3. IO에 저장할 LOT 번호 세팅
 			ioDTO.setIoLot(lotId);
 
-			// IO 등록
+			// 4. IO 등록
 			ioDAO.insertIo(ioDTO);
 
+			// 5. STOCK 증가
+			ioDAO.plusStockByIo(ioDTO);
 		}
 
-		// 출고
 		else if ("OUT".equals(ioDTO.getIoType())) {
 
+			// 1. LOT 수량 차감
 			int result = ioDAO.minusLotFqty(ioDTO);
 
 			if (result == 0) {
 				throw new RuntimeException("LOT 잔량이 부족합니다.");
 			}
 
+			// 2. STOCK 감소
+			int stockResult = ioDAO.minusStockByIo(ioDTO);
+
+			if (stockResult == 0) {
+				throw new RuntimeException("재고 수량이 부족합니다.");
+			}
+
+			// 3. IO 등록
 			ioDAO.insertIo(ioDTO);
 		}
-
 	}
 
 	@Override

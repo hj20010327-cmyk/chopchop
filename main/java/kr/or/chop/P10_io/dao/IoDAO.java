@@ -31,5 +31,7 @@ public interface IoDAO {
 	public List<WHDTO> selectWarehouseListByItem(String itemId);
 	public List<SecDTO> selectWhSecList(String whId);
 	public void updateLot(IoDTO ioDTO);
+	public void plusStockByIo(IoDTO ioDTO);
+	public int minusStockByIo(IoDTO dto);
 	
 }

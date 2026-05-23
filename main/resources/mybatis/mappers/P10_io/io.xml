@@ -5,9 +5,9 @@
 
 <mapper namespace="mapper.P10_io">
 
-	<select id="selectIoCount"
-		parameterType="ioDTO" resultType="int">
-	
+	<select id="selectIoCount" parameterType="ioDTO"
+		resultType="int">
+
 		select count(*)
 		from io
 		<where>
@@ -25,9 +25,12 @@
 
 			<if test="searchKeyword != null and searchKeyword != ''">
 				AND (
-				UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
-				OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
-				OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
+				UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword}
+				|| '%')
+				OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
+				OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
 				OR UPPER(I.item_id) LIKE UPPER('%' || #{searchKeyword} || '%')
 				OR UPPER(I.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
 				)
@@ -35,9 +38,9 @@
 
 			AND IO.io_usage = 'Y'
 		</where>
-		
-	
-	
+
+
+
 	</select>
 
 
@@ -54,7 +57,8 @@
 		IO.io_id AS ioId,
 		IO.io_type AS ioType,
 		IO.io_reason AS ioReason,
-		IO.io_vendor AS ioVendor,
+		IO.io_vendor AS
+		ioVendor,
 		IO.io_lot AS ioLot,
 		IO.io_qty AS ioQty,
 		IO.io_date AS ioDate,
@@ -67,7 +71,8 @@
 		FROM io IO
 
 		LEFT JOIN lot L
-		ON IO.io_lot = L.lot_id
+		ON IO.io_lot =
+		L.lot_id
 
 		LEFT JOIN item I
 		ON L.lot_item = I.item_id
@@ -87,9 +92,12 @@
 
 			<if test="searchKeyword != null and searchKeyword != ''">
 				AND (
-				UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword} || '%')
-				OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} || '%')
-				OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} || '%')
+				UPPER(IO.io_id) LIKE UPPER('%' || #{searchKeyword}
+				|| '%')
+				OR UPPER(IO.io_lot) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
+				OR UPPER(IO.io_vendor) LIKE UPPER('%' || #{searchKeyword} ||
+				'%')
 				OR UPPER(I.item_id) LIKE UPPER('%' || #{searchKeyword} || '%')
 				OR UPPER(I.item_name) LIKE UPPER('%' || #{searchKeyword} || '%')
 				)
@@ -108,61 +116,61 @@
 	</select>
 
 	<select id="selectIoDetail" parameterType="string"
-	resultType="kr.or.chop.P10_io.dto.IoDTO">
+		resultType="kr.or.chop.P10_io.dto.IoDTO">
 
 		SELECT
-			IO.IO_ID AS ioId,
-			IO.IO_TYPE AS ioType,
-			IO.IO_REASON AS ioReason,
-	
-			IO.IO_VENDOR AS ioVendor,
-			V.VENDOR_NAME AS vendorName,
-	
-			IO.IO_LOT AS ioLot,
-	
-			IO.IO_QTY AS ioQty,
-			IO.IO_DATE AS ioDate,
-	
-			IO.IO_WORKER AS ioWorker,
-			E.EMP_NAME AS workerName,
-	
-			IO.IO_MSG AS ioMsg,
-	
-			I.ITEM_ID AS itemId,
-			I.ITEM_NAME AS itemName,
-			I.ITEM_TYPE AS itemType,
-	
-			CASE
-				WHEN L.LOT_QC = 'N' THEN L.LOT_BWHSEC
-				WHEN L.LOT_QC = 'Y' THEN L.LOT_AWHSEC
-			END AS whSec,
-	
-			WS.WH_SEC_WHID AS whId
-	
+		IO.IO_ID AS ioId,
+		IO.IO_TYPE AS ioType,
+		IO.IO_REASON AS ioReason,
+
+		IO.IO_VENDOR AS ioVendor,
+		V.VENDOR_NAME AS vendorName,
+
+		IO.IO_LOT AS ioLot,
+
+		IO.IO_QTY AS ioQty,
+		IO.IO_DATE AS ioDate,
+
+		IO.IO_WORKER AS ioWorker,
+		E.EMP_NAME AS workerName,
+
+		IO.IO_MSG AS ioMsg,
+
+		I.ITEM_ID AS itemId,
+		I.ITEM_NAME AS itemName,
+		I.ITEM_TYPE AS itemType,
+
+		CASE
+		WHEN L.LOT_QC = 'N' THEN L.LOT_BWHSEC
+		WHEN L.LOT_QC = 'Y' THEN L.LOT_AWHSEC
+		END AS whSec,
+
+		WS.WH_SEC_WHID AS whId
+
 		FROM IO IO
-	
+
 		LEFT JOIN VENDOR V
-			ON IO.IO_VENDOR = V.VENDOR_ID
-	
+		ON IO.IO_VENDOR = V.VENDOR_ID
+
 		LEFT JOIN LOT L
-			ON IO.IO_LOT = L.LOT_ID
-	
+		ON IO.IO_LOT = L.LOT_ID
+
 		LEFT JOIN ITEM I
-			ON L.LOT_ITEM = I.ITEM_ID
-	
+		ON L.LOT_ITEM = I.ITEM_ID
+
 		LEFT JOIN WH_SEC WS
-			ON WS.WH_SEC_ID =
-				CASE
-					WHEN L.LOT_QC = 'N' THEN L.LOT_BWHSEC
-					WHEN L.LOT_QC = 'Y' THEN L.LOT_AWHSEC
-				END
-	
+		ON WS.WH_SEC_ID =
+		CASE
+		WHEN L.LOT_QC = 'N' THEN L.LOT_BWHSEC
+		WHEN L.LOT_QC = 'Y' THEN L.LOT_AWHSEC
+		END
+
 		LEFT JOIN EMP E
-			ON IO.IO_WORKER = E.EMP_ID
-	
+		ON IO.IO_WORKER = E.EMP_ID
+
 		WHERE IO.IO_ID = #{ioId}
 		AND IO.IO_USAGE = 'Y'
-	
+
 	</select>
 
 	<select id="selectInId" resultType="string">
@@ -181,6 +189,14 @@
 		FROM dual
 
 	</select>
+
+	<update id="updateIoLot" parameterType="ioDTO">
+
+		UPDATE IO
+		SET IO_LOT = #{ioLot}
+		WHERE IO_ID = #{ioId}
+
+	</update>
 
 	<select id="selectItemListByType" parameterType="string"
 		resultType="itemDTO">
@@ -228,80 +244,78 @@
 		LOT_EXP ASC, LOT_ID ASC
 
 	</select>
-	
-	<insert id="insertIo"
-	parameterType="ioDTO">
+
+	<insert id="insertIo" parameterType="ioDTO">
 
 		INSERT INTO IO (
-			IO_ID,
-			IO_TYPE,
-			IO_REASON,
-			IO_VENDOR,
-			IO_LOT,
-			IO_QTY,
-			IO_DATE,
-			IO_WORKER,
-			IO_MSG,
-			IO_USAGE
+		IO_ID,
+		IO_TYPE,
+		IO_REASON,
+		IO_VENDOR,
+		IO_LOT,
+		IO_QTY,
+		IO_DATE,
+		IO_WORKER,
+		IO_MSG,
+		IO_USAGE
 		)
 		VALUES (
-			#{ioId},
-			#{ioType},
-			#{ioReason},
-			#{ioVendor},
-			#{ioLot},
-			#{ioQty},
-			#{ioDate},
-			#{ioWorker},
-			#{ioMsg},
-			'Y'
+		#{ioId},
+		#{ioType},
+		#{ioReason},
+		#{ioVendor},
+		#{ioLot},
+		#{ioQty},
+		#{ioDate},
+		#{ioWorker},
+		#{ioMsg},
+		'Y'
 		)
-	
+
 	</insert>
 
 
-	<insert id="insertLotByIo"
-	parameterType="ioDTO">
+	<insert id="insertLotByIo" parameterType="ioDTO">
 
 		INSERT INTO LOT (
-			LOT_ID,
-			LOT_ITEM,
-			LOT_VENDOR,
-			LOT_WORK,
-			LOT_QTY,
-			LOT_CQTY,
-			LOT_FQTY,
-			LOT_MFD,
-			LOT_ETW,
-			LOT_EXP,
-			LOT_QC,
-			LOT_STATUS,
-			LOT_MEMO,
-			LOT_BWHSEC,
-			LOT_AWHSEC
+		LOT_ID,
+		LOT_ITEM,
+		LOT_VENDOR,
+		LOT_WORK,
+		LOT_QTY,
+		LOT_CQTY,
+		LOT_FQTY,
+		LOT_MFD,
+		LOT_ETW,
+		LOT_EXP,
+		LOT_QC,
+		LOT_STATUS,
+		LOT_MEMO,
+		LOT_BWHSEC,
+		LOT_AWHSEC
 		)
 		VALUES (
-			'LOT' || LOT_SEQ.NEXTVAL,
-			#{itemId},
-			#{ioVendor},
-			NULL,
-			#{ioQty},
-			0,
-			0,
-			NULL,
-			#{ioDate},
-			(
-			SELECT #{ioDate} + ITEM_USEDATE
-			FROM ITEM
-			WHERE ITEM_ID = #{itemId}
-			),
-			'N',
-			40,
-			#{ioMsg},
-			#{whSec},
-			NULL
+		'LOT' || LOT_SEQ.NEXTVAL,
+		#{itemId},
+		#{ioVendor},
+		NULL,
+		#{ioQty},
+		0,
+		0,
+		NULL,
+		#{ioDate},
+		(
+		SELECT #{ioDate} + ITEM_USEDATE
+		FROM ITEM
+		WHERE ITEM_ID = #{itemId}
+		),
+		'N',
+		40,
+		#{ioMsg},
+		#{whSec},
+		NULL
 		)
-	
+
 	</insert>
 
 	<update id="deleteIo" parameterType="string">
@@ -323,30 +337,31 @@
 		io_vendor = #{ioVendor},
 		io_lot = #{ioLot},
 		io_qty = #{ioQty},
-		io_date = #{ioDate},
+		io_date =
+		#{ioDate},
 		io_worker = #{ioWorker},
 		io_msg = #{ioMsg}
-		WHERE io_id = #{ioId}
+		WHERE io_id =
+		#{ioId}
 
 	</update>
-	
-	<update id="updateLot"
-		parameterType="ioDTO">
-		
+
+	<update id="updateLot" parameterType="ioDTO">
+
 		update lot
 		set
 		lot_vendor = #{ioVendor},
 		lot_etw = #{ioDate},
 		lot_exp = (
-			SELECT #{ioDate} + ITEM_USEDATE
-			FROM ITEM
-			WHERE ITEM_ID = #{itemId}
-			),
+		SELECT #{ioDate} + ITEM_USEDATE
+		FROM ITEM
+		WHERE ITEM_ID = #{itemId}
+		),
 		lot_memo = #{ioMsg},
 		lot_bwhsec = #{whSec}
-		where lot_id = #{ioLot}	
-		
-		
+		where lot_id = #{ioLot}
+
+
 	</update>
 
 	<select id="selectVendorTypeById" parameterType="string"
@@ -357,17 +372,18 @@
 		WHERE vendor_id = #{vendorId}
 
 	</select>
-	
+
 	<select id="selectVendorListByType" parameterType="string"
 		resultType="vendorDTO">
-			
-		select 
+
+		select
 		vendor_name as vendorName,
 		vendor_id as vendorId
 		from vendor
-		where vendor_type = #{vendorType}
+		where vendor_type =
+		#{vendorType}
 		and vendor_usage = 'Y'
-				
+
 	</select>
 
 	<select id="selectWorkerList" parameterType="string"
@@ -383,7 +399,8 @@
 
 			<if test="_parameter != null and _parameter != ''">
 				AND (
-				UPPER(emp_id) LIKE UPPER('%' || #{_parameter} || '%')
+				UPPER(emp_id) LIKE UPPER('%' || #{_parameter} ||
+				'%')
 				OR
 				UPPER(emp_name) LIKE UPPER('%' || #{_parameter} || '%')
 				)
@@ -402,46 +419,87 @@
 
 	</select>
 
+	<update id="plusStockByIo" parameterType="ioDTO">
+
+		MERGE INTO STOCK S
+		USING (
+		SELECT #{itemId} AS ITEM_ID FROM dual
+		) D
+		ON (S.STOCK_ITEM = D.ITEM_ID)
+
+		WHEN MATCHED THEN
+		UPDATE SET
+		S.STOCK_PREV_QTY = NVL(S.STOCK_PREV_QTY, 0) + #{ioQty},
+		S.STOCK_AVAIL_QTY = NVL(S.STOCK_AVAIL_QTY, 0) + #{ioQty}
+
+		WHEN NOT MATCHED THEN
+		INSERT (
+		STOCK_ID,
+		STOCK_ITEM,
+		STOCK_PREV_QTY,
+		STOCK_AVAIL_QTY,
+		STOCK_RESERVE_QTY
+		)
+		VALUES (
+		'STOCK' || STOCK_SEQ.NEXTVAL,
+		#{itemId},
+		#{ioQty},
+		#{ioQty},
+		0
+		)
+
+	</update>
+
+	<update id="minusStockByIo" parameterType="ioDTO">
+
+		UPDATE STOCK
+		SET
+		STOCK_PREV_QTY = STOCK_PREV_QTY - #{ioQty},
+		STOCK_AVAIL_QTY = STOCK_AVAIL_QTY - #{ioQty}
+		WHERE STOCK_ITEM = #{itemId}
+		AND
+		STOCK_AVAIL_QTY >= #{ioQty}
+
+	</update>
+
 	<update id="minusLotFqty" parameterType="ioDTO">
 
 		UPDATE LOT
 		SET
-			LOT_CQTY = LOT_CQTY - #{ioQty},
-			LOT_STATUS =
-				CASE
-					WHEN LOT_CQTY - #{ioQty} = 0 THEN 30
-					WHEN LOT_CQTY - #{ioQty} > 0 THEN 20
-					ELSE LOT_STATUS
-				END
+		LOT_CQTY = LOT_CQTY - #{ioQty},
+		LOT_STATUS =
+		CASE
+		WHEN LOT_CQTY - #{ioQty} = 0 THEN 30
+		WHEN LOT_CQTY - #{ioQty} > 0 THEN 20
+		ELSE LOT_STATUS
+		END
 		WHERE LOT_ID = #{ioLot}
 		AND LOT_CQTY >= #{ioQty}
 
 	</update>
-	
-	<select id="selectWarehouseListByItem"
-	parameterType="string"
-	resultType="whDTO">
+
+	<select id="selectWarehouseListByItem" parameterType="string"
+		resultType="whDTO">
 
 		SELECT
-			W.WH_ID AS whId,
-			W.WH_NAME AS whName,
-			W.WH_TYPE AS whTypeNo,
-			W.WH_QTY AS whQty,
-			W.WH_LOC AS whLoc
+		W.WH_ID AS whId,
+		W.WH_NAME AS whName,
+		W.WH_TYPE AS whTypeNo,
+		W.WH_QTY AS whQty,
+		W.WH_LOC AS whLoc
 		FROM warehouse W
 		WHERE W.WH_TYPE = (
-			SELECT ITEM_WHTYPE
-			FROM ITEM
-			WHERE ITEM_ID = #{itemId}
+		SELECT ITEM_WHTYPE
+		FROM ITEM
+		WHERE ITEM_ID = #{itemId}
 		)
 		AND W.WH_USAGE = 'Y'
 		ORDER BY W.WH_ID
-	
+
 	</select>
-	
-	<select id="selectWhSecList"
-	parameterType="string"
-	resultType="secDTO">
+
+	<select id="selectWhSecList" parameterType="string"
+		resultType="secDTO">
 
 		SELECT
 		ws.WH_SEC_ID AS secId,
@@ -450,43 +508,43 @@
 		NVL(lot_sum.currentLotCnt, 0) AS secPrevQty,
 		ws.WH_SEC_USAGE AS secUsage
 		FROM WH_SEC ws
-			LEFT OUTER JOIN (
-				SELECT
-					lot_location.secId AS secId,
-					COUNT(lot_location.lotId) AS currentLotCnt
-				FROM (
-					SELECT
-						lot.lot_id AS lotId,
-						CASE
-							WHEN lot.lot_qc = 'N' THEN lot.lot_bwhsec
-							WHEN lot.lot_qc = 'Y' THEN lot.lot_awhsec
-						END AS secId
-					FROM lot lot
-						LEFT OUTER JOIN (
-							SELECT
-								lu.use_lot AS lotId,
-								SUM(NVL(lu.use_qty, 0)) AS totalUseQty
-							FROM lot_use lu
-							GROUP BY lu.use_lot
-						) use_sum
-							ON lot.lot_id = use_sum.lotId
-					WHERE lot.lot_status IN (10, 20)
-					 AND (
-							CASE
-								WHEN lot.lot_qc = 'N' THEN NVL(lot.lot_qty, 0)
-								WHEN lot.lot_qc = 'Y' THEN NVL(lot.lot_fqty, 0)
-								ELSE 0
-							END - NVL(use_sum.totalUseQty, 0)
-						) > 0
-				) lot_location
-				GROUP BY lot_location.secId
-			) lot_sum
-				ON ws.WH_SEC_ID = lot_sum.secId
+		LEFT OUTER JOIN (
+		SELECT
+		lot_location.secId AS secId,
+		COUNT(lot_location.lotId) AS currentLotCnt
+		FROM (
+		SELECT
+		lot.lot_id AS lotId,
+		CASE
+		WHEN lot.lot_qc = 'N' THEN lot.lot_bwhsec
+		WHEN lot.lot_qc = 'Y' THEN lot.lot_awhsec
+		END AS secId
+		FROM lot lot
+		LEFT OUTER JOIN (
+		SELECT
+		lu.use_lot AS lotId,
+		SUM(NVL(lu.use_qty, 0)) AS totalUseQty
+		FROM lot_use lu
+		GROUP BY lu.use_lot
+		) use_sum
+		ON lot.lot_id = use_sum.lotId
+		WHERE lot.lot_status IN (10, 20)
+		AND (
+		CASE
+		WHEN lot.lot_qc = 'N' THEN NVL(lot.lot_qty, 0)
+		WHEN lot.lot_qc = 'Y' THEN NVL(lot.lot_fqty, 0)
+		ELSE 0
+		END - NVL(use_sum.totalUseQty, 0)
+		) > 0
+		) lot_location
+		GROUP BY lot_location.secId
+		) lot_sum
+		ON ws.WH_SEC_ID = lot_sum.secId
 		WHERE ws.WH_SEC_WHID = #{whId}
-		  AND ws.WH_SEC_USAGE = 'Y'
+		AND ws.WH_SEC_USAGE = 'Y'
 		ORDER BY ws.WH_SEC_ID
-	
+
 	</select>
-	
+
 
 </mapper>

@@ -36,7 +36,7 @@ public class IoDAOImpl implements IoDAO {
 
 		return sqlSession.selectList("mapper.P10_io.selectIoList", paramMap);
 	}
-	
+
 	@Override
 	public int selectIoCount(IoDTO ioDTO) {
 
@@ -64,7 +64,51 @@ public class IoDAOImpl implements IoDAO {
 
 		ioDTO.setIoId(ioId);
 
+		// 1. 입출고 이력 등록
 		sqlSession.insert("mapper.P10_io.insertIo", ioDTO);
+
+
+		// =========================
+		// 입고 처리
+		// =========================
+		if ("IN".equals(ioDTO.getIoType())) {
+
+			// 2. LOT 생성
+			sqlSession.insert("mapper.P10_io.insertLotByIo", ioDTO);
+
+			// 3. 방금 생성된 LOT_ID 가져오기
+			String lotId = sqlSession.selectOne("mapper.P10_io.selectLastLotId");
+
+			// 4. DTO에 LOT_ID 세팅
+			ioDTO.setIoLot(lotId);
+
+			// 5. IO 테이블에 LOT_ID 연결
+			sqlSession.update("mapper.P10_io.updateIoLot", ioDTO);
+
+			// 6. STOCK 증가
+			sqlSession.update("mapper.P10_io.plusStockByIo", ioDTO);
+		}
+
+
+		// =========================
+		// 출고 처리
+		// =========================
+		else if ("OUT".equals(ioDTO.getIoType())) {
+
+			// 2. LOT 수량 차감
+			int lotResult = sqlSession.update("mapper.P10_io.minusLotFqty", ioDTO);
+
+			if (lotResult == 0) {
+				throw new RuntimeException("LOT 수량이 부족합니다.");
+			}
+
+			// 3. STOCK 감소
+			int stockResult = sqlSession.update("mapper.P10_io.minusStockByIo", ioDTO);
+
+			if (stockResult == 0) {
+				throw new RuntimeException("재고 수량이 부족합니다.");
+			}
+		}
 	}
 
 	@Override
@@ -77,7 +121,7 @@ public class IoDAOImpl implements IoDAO {
 
 		return sqlSession.selectList("mapper.P10_io.selectVendorList");
 	}
-	
+
 	@Override
 	public List<VendorDTO> selectVendorByType(String vendorType) {
 		return sqlSession.selectList("mapper.P10_io.selectVendorListByType", vendorType);
@@ -134,10 +178,22 @@ public class IoDAOImpl implements IoDAO {
 	public List<SecDTO> selectWhSecList(String whId) {
 		return sqlSession.selectList("mapper.P10_io.selectWhSecList", whId);
 	}
-	
+
 	@Override
 	public void updateLot(IoDTO ioDTO) {
 		sqlSession.update("mapper.P10_io.updateLot", ioDTO);
+	}
+
+	@Override
+	public void plusStockByIo(IoDTO dto) {
+
+		sqlSession.update("mapper.P10_io.plusStockByIo", dto);
+	}
+
+	@Override
+	public int minusStockByIo(IoDTO dto) {
+
+		return sqlSession.update("mapper.P10_io.minusStockByIo", dto);
 	}
 
 }
