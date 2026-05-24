@@ -8,55 +8,86 @@
 <!-- 설비 목록 조회용 -->
 <select id="selectEqList" parameterType="map" resultType="eqDTO">
 
-	SELECT
-		E.EQ_ID AS eqId,
-		E.EQ_NAME AS eqName,
-		E.EQ_STATUS AS eqStatus,
-		E.EQ_SDATE AS eqSdate,
-		E.EQ_WPID AS eqWpid,
+    SELECT *
+    FROM
+    (
+        SELECT ROWNUM RN,
+               E2.*
+        FROM
+        (
+            SELECT
+                E.EQ_ID AS eqId,
+                E.EQ_NAME AS eqName,
+                E.EQ_STATUS AS eqStatus,
+                E.EQ_SDATE AS eqSdate,
+                E.EQ_WPID AS eqWpid,
 
-		W.WP_NAME AS wpName,
+                W.WP_NAME AS wpName,
 
-		S.EQ_STATUS_NAME AS eqStatusName,
+                S.EQ_STATUS_NAME AS eqStatusName,
 
-		300 AS totalTime,
-		290 AS runTime,
-		'91.2%' AS runRate
+                300 AS totalTime,
+                290 AS runTime,
+                '91.2%' AS runRate
 
-	FROM EQUIPMENT E
-	LEFT JOIN EQ_STATUS S
-		ON E.EQ_STATUS = S.EQ_STATUS_NO
-	LEFT JOIN WORKPLACE W
-		ON E.EQ_WPID = W.WP_ID
+            FROM EQUIPMENT E
+            LEFT JOIN EQ_STATUS S
+                ON E.EQ_STATUS = S.EQ_STATUS_NO
+            LEFT JOIN WORKPLACE W
+                ON E.EQ_WPID = W.WP_ID
 
-	<where>
-		E.EQ_USAGE = 'Y'
-		<if test="eqWpid != null and eqWpid != ''">
-			AND E.EQ_WPID = #{eqWpid}
-		</if>
+            WHERE E.EQ_USAGE = 'Y'
 
-		<if test="eqStatus != 0">
-			AND E.EQ_STATUS = #{eqStatus}
-		</if>
+            <if test="eqWpid != null and eqWpid != ''">
+                AND E.EQ_WPID = #{eqWpid}
+            </if>
 
-		<if test="searchKeyword != null and searchKeyword != ''">
-			AND (
-				UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
-				OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
-			)
-		</if>
-	</where>
+            <if test="eqStatus != 0">
+                AND E.EQ_STATUS = #{eqStatus}
+            </if>
 
-	ORDER BY E.EQ_ID DESC
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (
+                    UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
+                    OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
+                )
+            </if>
+
+            ORDER BY E.EQ_ID DESC
+        ) E2
+    )
+    WHERE RN BETWEEN #{page.startRow}
+                 AND #{page.endRow}
 
 </select>
 
 <!-- 설비 전체 개수 조회 (카드/통계용) -->
-<select id="selectEqTotalCount" resultType="int">
-	SELECT COUNT(*)
-	FROM
-	EQUIPMENT
-	WHERE EQ_USAGE = 'Y'
+<select id="selectEqTotalCount" parameterType="map" resultType="int">
+
+    SELECT COUNT(*)
+    FROM EQUIPMENT E
+    LEFT JOIN EQ_STATUS S
+        ON E.EQ_STATUS = S.EQ_STATUS_NO
+    LEFT JOIN WORKPLACE W
+        ON E.EQ_WPID = W.WP_ID
+
+    WHERE E.EQ_USAGE = 'Y'
+
+    <if test="eqWpid != null and eqWpid != ''">
+        AND E.EQ_WPID = #{eqWpid}
+    </if>
+
+    <if test="eqStatus != 0">
+        AND E.EQ_STATUS = #{eqStatus}
+    </if>
+
+    <if test="searchKeyword != null and searchKeyword != ''">
+        AND (
+            UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
+            OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
+        )
+    </if>
+
 </select>
 
 <!-- 상태별 설비 개수 조회 -->
@@ -275,27 +306,27 @@ ORDER BY ELOG_SDATE DESC
 <!-- 사용여부 기본값 = Y -->
 <insert id="insertEqLog" parameterType="eqDTO">
 
-	INSERT INTO EQ_LOG (
-		ELOG_ID,
-		ELOG_EQID,
-		ELOG_SDATE,
-		ELOG_EDATE,
-		ELOG_REASON,
-		ELOG_CONTENT,
-		ELOG_RESULT,
-		ELOG_WORKER,
-		ELOG_USAGE
-	) VALUES (
-		'ELOG' || ELOG_SEQ.NEXTVAL,
-		#{elogEqid},
-		#{elogSdate},
-		#{elogEdate},
-		#{elogReason},
-		#{elogContent},
-		#{elogResult},
-		#{elogWorker},
-		'Y'
-	)
+    INSERT INTO EQ_LOG (
+        ELOG_ID,
+        ELOG_EQID,
+        ELOG_SDATE,
+        ELOG_EDATE,
+        ELOG_REASON,
+        ELOG_CONTENT,
+        ELOG_RESULT,
+        ELOG_WORKER,
+        ELOG_USAGE
+    ) VALUES (
+        'ELOG' || ELOG_SEQ.NEXTVAL,
+        #{elogEqid},
+        TO_DATE(REPLACE(#{elogSdate}, 'T', ' '), 'YYYY-MM-DD HH24:MI'),
+        TO_DATE(REPLACE(#{elogEdate}, 'T', ' '), 'YYYY-MM-DD HH24:MI'),
+        #{elogReason},
+        #{elogContent},
+        #{elogResult},
+        #{elogWorker},
+        'Y'
+    )
 
 </insert>
 

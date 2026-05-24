@@ -31,8 +31,18 @@ public class EqDAOImpl implements EqDAO {
 	}
 
 	@Override
-	public int selectEqTotalCount() {
-		return sqlSession.selectOne("mapper.P16_equipment.selectEqTotalCount");
+	public int selectEqTotalCount(EqDTO eqDTO) {
+
+	    Map<String, Object> paramMap = new HashMap<String, Object>();
+
+	    paramMap.put("eqWpid", eqDTO.getEqWpid());
+	    paramMap.put("eqStatus", eqDTO.getEqStatus());
+	    paramMap.put("searchKeyword", eqDTO.getSearchKeyword());
+
+	    return sqlSession.selectOne(
+	            "mapper.P16_equipment.selectEqTotalCount",
+	            paramMap
+	    );
 	}
 
 	@Override

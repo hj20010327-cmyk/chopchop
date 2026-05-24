@@ -11,7 +11,7 @@ public interface EqDAO {
 
 	List<EqDTO> selectEqList(EqDTO eqDTO, PageInfo pageInfo);
 
-	int selectEqTotalCount();
+	int selectEqTotalCount(EqDTO eqDTO);
 
 	int selectEqCountByStatus(int eqStatus);
 	

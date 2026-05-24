@@ -63,6 +63,14 @@ public class EqDetailController {
         return "redirect:/equip/detail?eqId=" + eqDTO.getEqId();
     }
     
+    @RequestMapping("/status/update")
+    public String updateStatus(EqDTO eqDTO) {
+
+        eqService.updateEqStatus(eqDTO);
+
+        return "redirect:/equip/detail?eqId=" + eqDTO.getEqId();
+    }
+    
     @RequestMapping("/delete")
     public String deleteEq(String eqId) {
 

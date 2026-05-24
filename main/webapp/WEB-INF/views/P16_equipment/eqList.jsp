@@ -20,41 +20,50 @@
             </a>
         </div>
     </div>
+<div class="card-wrap eqCard">
 
-    <div style="display:flex; gap:16px; margin:50px 0 35px;">
-
-        <div style="width:171px; height:130px; border:1px solid var(--dark-gray); border-radius:8px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;">
-            <div style="font-size:18px; font-weight:700;">가용 설비</div>
-            <div style="font-size:42px; font-weight:800;">${totalCount}</div>
-        </div>
-
-        <div style="width:171px; height:130px; border-radius:8px; background-color:var(--success); color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;">
-            <div style="font-size:18px; font-weight:700;">가동 중 설비</div>
-            <div style="font-size:42px; font-weight:800;">${runCount}</div>
-        </div>
-
-        <div style="width:171px; height:130px; border-radius:8px; background-color:#777; color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;">
-            <div style="font-size:18px; font-weight:700;">정지 설비</div>
-            <div style="font-size:42px; font-weight:800;">${stopCount}</div>
-        </div>
-
-        <div style="width:171px; height:130px; border-radius:8px; background-color:var(--warning); color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;">
-            <div style="font-size:18px; font-weight:700;">점검 중 설비</div>
-            <div style="font-size:42px; font-weight:800;">${checkCount}</div>
-        </div>
-
-        <div style="width:171px; height:130px; border-radius:8px; background-color:var(--danger); color:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:15px;">
-            <div style="font-size:18px; font-weight:700;">고장 설비</div>
-            <div style="font-size:42px; font-weight:800;">${brokenCount}</div>
-        </div>
-
+    <div class="card info eq-all"
+         data-card-type="all">
+        <div class="card-title">전체 설비</div>
+        <div class="card-value">${totalCount}</div>
+        <div class="card-subtitle">전체 설비</div>
     </div>
+
+    <div class="card success eq-card"
+         data-card-type="10">
+        <div class="card-title">가동 중 설비</div>
+        <div class="card-value">${runCount}</div>
+        <div class="card-subtitle">정상 가동 설비</div>
+    </div>
+
+    <div class="card info eq-card"
+         data-card-type="20">
+        <div class="card-title">정지 설비</div>
+        <div class="card-value">${stopCount}</div>
+        <div class="card-subtitle">설비 정지 상태</div>
+    </div>
+
+    <div class="card warning eq-card"
+         data-card-type="30">
+        <div class="card-title">점검 중 설비</div>
+        <div class="card-value">${checkCount}</div>
+        <div class="card-subtitle">점검 진행 설비</div>
+    </div>
+
+    <div class="card danger eq-card"
+         data-card-type="40">
+        <div class="card-title">고장 설비</div>
+        <div class="card-value">${brokenCount}</div>
+        <div class="card-subtitle">즉시 조치 필요</div>
+    </div>
+
+</div>
 
     <form class="search-box"
         action="${pageContext.request.contextPath}/equip/list"
         method="get"
         style="width:100%; justify-content:space-between;">
-
+        
         <div style="display:flex; gap:20px;">
 
             <div class="search-item">
@@ -113,8 +122,7 @@
             </div>
 
             <button type="submit"
-                class="btn btn-main"
-                style="height:36px;">
+                class="btn btn-main">
                 검색
             </button>
 
@@ -149,27 +157,27 @@
                         <td>${eqp.runRate}</td>
 
                         <td>
-                            <c:choose>
-                                <c:when test="${eqp.eqStatus == 10}">
-                                    <span class="status status-success">• 가동중</span>
-                                </c:when>
-
-                                <c:when test="${eqp.eqStatus == 20}">
-                                    <span class="status status-info">• 정지</span>
-                                </c:when>
-
-                                <c:when test="${eqp.eqStatus == 30}">
-                                    <span class="status status-warning">•  점검중</span>
-                                </c:when>
-
-                                <c:when test="${eqp.eqStatus == 40}">
-                                    <span class="status status-danger">•  고장</span>
-                                </c:when>
-
-                                <c:otherwise>
-                                    <span class="status">비가동</span>
-                                </c:otherwise>
-                            </c:choose>
+					<c:choose>
+					    <c:when test="${eqp.eqStatus == 10}">
+					        <span class="status-back status-back-success">가동중</span>
+					    </c:when>
+					
+					    <c:when test="${eqp.eqStatus == 20}">
+					        <span class="status-back status-back-info">정지</span>
+					    </c:when>
+					
+					    <c:when test="${eqp.eqStatus == 30}">
+					        <span class="status-back status-back-warning">점검중</span>
+					    </c:when>
+					
+					    <c:when test="${eqp.eqStatus == 40}">
+					        <span class="status-back status-back-danger">고장</span>
+					    </c:when>
+					
+					    <c:otherwise>
+					        <span class="status-back status-back-info">비가동</span>
+					    </c:otherwise>
+					</c:choose>
                         </td>
 
                     </tr>
@@ -192,3 +200,105 @@
     <jsp:include page="/WEB-INF/views/common/paging.jsp" />
 
 </div>
+
+<style>
+.table tbody tr:hover .eqId {
+    color: var(--main-green);
+    text-decoration: underline;
+}
+
+.card {
+    cursor: pointer;
+    width: 155px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.card.info:hover,
+.card.info.active {
+    border: 1px solid var(--dark-gray);
+    background-color: var(--dark-gray);
+}
+
+.card.success:hover,
+.card.success.active {
+    background-color: var(--success);
+}
+
+.card.safe:hover,
+.card.safe.active {
+    background-color: var(--safe);
+}
+
+.card.warning:hover,
+.card.warning.active {
+    background-color: var(--warning);
+}
+
+.card.danger:hover,
+.card.danger.active {
+    background-color: var(--danger);
+}
+
+.card:hover div,
+.card.active div {
+    color: white !important;
+}
+</style>
+
+<script>
+window.addEventListener("load", () => {
+    bindCardFilter();
+});
+
+function bindCardFilter() {
+
+    const allCard =
+        document.querySelector(".eqCard .eq-all");
+
+    const eqCards =
+        document.querySelectorAll(".eqCard .eq-card");
+
+    const form =
+        document.querySelector(".search-box");
+
+    const statusSelect =
+        document.querySelector("select[name='eqStatus']");
+
+    if (!allCard || !eqCards.length || !form || !statusSelect) {
+        return;
+    }
+
+    const currentStatus =
+        statusSelect.value;
+
+    // active 복원
+    if (currentStatus == "0") {
+        allCard.classList.add("active");
+    } else {
+        eqCards.forEach(card => {
+            if (card.dataset.cardType == currentStatus) {
+                card.classList.add("active");
+            }
+        });
+    }
+
+    // 전체 설비 클릭
+    allCard.addEventListener("click", () => {
+        statusSelect.value = "0";
+        form.submit();
+    });
+
+    // 상태 카드 클릭
+    eqCards.forEach(card => {
+        card.addEventListener("click", () => {
+            statusSelect.value = card.dataset.cardType;
+            form.submit();
+        });
+    });
+}
+</script>

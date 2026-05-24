@@ -57,12 +57,10 @@
 					<div class="grid-wrap">
 						<div class="search-item">
 							<label>점검 사유 <span class="red">*</span></label>
-							<select name="elogReason" required>
-								<option value="">사유 선택</option>
-								<option value="정기점검">정기점검</option>
-								<option value="수리">수리</option>
-								<option value="기타">기타</option>
-							</select>
+					    <input type="text"
+					           name="elogReason"
+					           required
+					           placeholder="점검 사유를 입력하세요">
 						</div>
 
 						<div class="search-item">
@@ -73,17 +71,24 @@
 					</div>
 
 					<div class="grid-wrap">
-						<div class="search-item">
-							<label>점검자 <span class="red">*</span></label>
-							<input type="text" name="elogWorker" required
-								placeholder="점검자 EMP_ID">
-						</div>
+					<div class="search-item">
+					    <label>점검자</label>
+					
+					    <input type="text"
+					           value="${sessionScope.loginUser.empName}(${sessionScope.loginUser.empId})"
+					           readonly>
+					
+					    <input type="hidden"
+					           name="elogWorker"
+					           value="${sessionScope.loginUser.empId}">
+					</div>
 					</div>
 
 					<div class="search-item">
 						<label>상세 내용</label>
 						<textarea name="elogContent"
-							placeholder="설비 점검 상세 내용을 입력하세요."></textarea>
+							      style="height:180px;"
+								  placeholder="설비 점검 상세 내용을 입력하세요."></textarea>
 					</div>
 
 				</div>

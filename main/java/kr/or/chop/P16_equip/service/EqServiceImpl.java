@@ -23,8 +23,8 @@ public class EqServiceImpl implements EqService {
 	}
 
 	@Override
-	public int selectEqTotalCount() {
-		return eqDAO.selectEqTotalCount();
+	public int selectEqTotalCount(EqDTO eqDTO) {
+	    return eqDAO.selectEqTotalCount(eqDTO);
 	}
 
 	@Override
