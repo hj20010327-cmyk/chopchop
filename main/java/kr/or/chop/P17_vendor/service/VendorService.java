@@ -8,17 +8,19 @@ import kr.or.chop.common.pagination.PageInfo;
 
 public interface VendorService {
 
-	int selectVendorCount(VendorDTO vendorDTO);
-	
-	List<VendorDTO> selectVendorList(VendorDTO vendorDTO, PageInfo pageInfo);
-	
-	int insertVendor(VendorDTO vendorDTO);
-	
-	VendorDTO selectVendorDetail(String vendorId);
-	
-	int updateVendor(VendorDTO vendorDTO);
+    List<VendorDTO> selectVendorList(VendorDTO search, PageInfo pageInfo);
 
-	int deleteVendor(String vendorId);
-	
-	List<VendorIoDTO> selectVendorIoList(String vendorId);
+    int selectVendorCount(VendorDTO search);
+
+    int insertVendor(VendorDTO vendor);
+
+    VendorDTO selectVendorDetail(String vendorId);
+
+    int updateVendor(VendorDTO vendor);
+
+    int deleteVendor(String vendorId);
+
+    int selectVendorIoCount(String vendorId);
+
+    List<VendorIoDTO> selectVendorIoList(String vendorId, PageInfo pageInfo);
 }

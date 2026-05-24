@@ -7,7 +7,7 @@
         <div>
             <h2 class="page-title">거래처 수정</h2>
             <p class="page-subtitle">
-                거래처 정보를 수정할 수 있습니다.
+                ${vendor.vendorName}(${vendor.vendorId})의 정보를 수정할 수 있습니다.
             </p>
         </div>
 
@@ -37,32 +37,13 @@
 
                 <button type="submit"
                         class="btn btn-main">
-                    수정완료
+                    수정
                 </button>
             </div>
         </div>
 
-        <div class="grid-wrap">
-            <div class="grid search-item">
-                <label>거래처 코드</label>
-
-                <input type="text"
-                       value="${vendor.vendorId}"
-                       readonly>
-            </div>
-
-            <div class="grid search-item">
-                <label>거래처 이름 <span class="red">*</span></label>
-
-                <input type="text"
-                       name="vendorName"
-                       value="${vendor.vendorName}"
-                       required>
-            </div>
-        </div>
-
-        <div class="grid-wrap">
-            <div class="grid search-item">
+        <div class="grid-wrap vendor-row">
+            <div class="grid search-item vendor-type">
                 <label>유형 <span class="red">*</span></label>
 
                 <select name="vendorType" required>
@@ -83,7 +64,18 @@
                 </select>
             </div>
 
-            <div class="grid search-item">
+            <div class="grid search-item vendor-name">
+                <label>거래처 이름 <span class="red">*</span></label>
+
+                <input type="text"
+                       name="vendorName"
+                       value="${vendor.vendorName}"
+                       required>
+            </div>
+        </div>
+
+        <div class="grid-wrap vendor-row">
+            <div class="grid search-item vendor-contact">
                 <label>연락처 <span class="red">*</span></label>
 
                 <input type="text"
@@ -91,10 +83,8 @@
                        value="${vendor.vendorTel}"
                        required>
             </div>
-        </div>
 
-        <div class="grid-wrap">
-            <div class="grid search-item">
+            <div class="grid search-item vendor-email">
                 <label>이메일</label>
 
                 <input type="text"
@@ -105,16 +95,24 @@
 
         <div class="vendor-address-wrap">
 
-            <div class="grid search-item">
+            <div class="search-item">
                 <label>주소 <span class="red">*</span></label>
 
                 <div class="vendor-address-row">
                     <input type="text"
+                           name="vendorZipcode"
+                           value="${vendor.vendorZipcode}"
+                           placeholder="우편번호"
+                           readonly
+                           class="vendor-zipcode">
+
+                    <input type="text"
                            name="vendorAddr"
                            value="${vendor.vendorAddr}"
-                           placeholder="주소 조회"
+                           placeholder="기본주소"
                            required
-                           readonly>
+                           readonly
+                           class="vendor-base-addr">
 
                     <button type="button"
                             class="btn btn-main"
@@ -124,21 +122,12 @@
                 </div>
             </div>
 
-            <div class="search-item keyword">
+            <div class="search-item">
                 <input type="text"
                        name="vendorAddrDetail"
                        value="${vendor.vendorAddrDetail}"
                        placeholder="상세주소 입력 (선택)"
                        class="vendor-detail-addr">
-            </div>
-
-            <div class="search-item">
-                <input type="text"
-                       name="vendorZipcode"
-                       value="${vendor.vendorZipcode}"
-                       placeholder="우편 번호"
-                       readonly
-                       class="vendor-zipcode">
             </div>
 
         </div>
@@ -148,6 +137,34 @@
 </div>
 
 <style>
+    .vendor-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 24px;
+    }
+
+    .vendor-type {
+        width: 220px;
+    }
+
+    .vendor-type select {
+        width: 100%;
+        min-width: 100% !important;
+    }
+
+    .vendor-name,
+    .vendor-contact,
+    .vendor-email {
+        flex: 1;
+    }
+
+    .vendor-name input,
+    .vendor-contact input,
+    .vendor-email input {
+        width: 100%;
+        min-width: 100% !important;
+    }
+
     .vendor-address-wrap {
         display: flex;
         flex-direction: column;
@@ -156,15 +173,23 @@
 
     .vendor-address-row {
         display: flex;
+        align-items: center;
         gap: 8px;
     }
 
-    .vendor-detail-addr {
-        width: 500px;
+    .vendor-zipcode {
+        width: 160px;
+        min-width: 160px !important;
     }
 
-    .vendor-zipcode {
-        width: 300px;
+    .vendor-base-addr {
+        flex: 1;
+        min-width: 0 !important;
+    }
+
+    .vendor-detail-addr {
+        width: 100%;
+        min-width: 0 !important;
     }
 </style>
 

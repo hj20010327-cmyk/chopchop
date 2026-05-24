@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.RowBounds;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,45 +17,59 @@ import kr.or.chop.common.pagination.PageInfo;
 public class VendorDAOImpl implements VendorDAO {
 
 	@Autowired
-	private SqlSession sqlSession;
+	private SqlSessionTemplate sqlSession;
+
+	private static final String NAMESPACE = "mapper.P17_vendor.";
 
 	@Override
-	public int selectVendorCount(VendorDTO vendorDTO) {
-		return sqlSession.selectOne("mapper.P17_vendor.selectVendorCount", vendorDTO);
+	public List<VendorDTO> selectVendorList(VendorDTO search, PageInfo pageInfo) {
+
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		param.put("vendorDTO", search);
+		param.put("page", pageInfo);
+
+		return sqlSession.selectList(NAMESPACE + "selectVendorList", param);
 	}
 
 	@Override
-	public List<VendorDTO> selectVendorList(VendorDTO vendorDTO, PageInfo pageInfo) {
-
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("vendorDTO", vendorDTO);
-		paramMap.put("page", pageInfo);
-
-		return sqlSession.selectList("mapper.P17_vendor.selectVendorList", paramMap);
+	public int selectVendorCount(VendorDTO search) {
+		return sqlSession.selectOne(NAMESPACE + "selectVendorCount", search);
 	}
 
 	@Override
-	public int insertVendor(VendorDTO vendorDTO) {
-		return sqlSession.insert("mapper.P17_vendor.insertVendor", vendorDTO);
+	public int insertVendor(VendorDTO vendor) {
+		return sqlSession.insert(NAMESPACE + "insertVendor", vendor);
 	}
 
 	@Override
 	public VendorDTO selectVendorDetail(String vendorId) {
-		return sqlSession.selectOne("mapper.P17_vendor.selectVendorDetail", vendorId);
+		return sqlSession.selectOne(NAMESPACE + "selectVendorDetail", vendorId);
 	}
 
 	@Override
-	public int updateVendor(VendorDTO vendorDTO) {
-		return sqlSession.update("mapper.P17_vendor.updateVendor", vendorDTO);
+	public int updateVendor(VendorDTO vendor) {
+		return sqlSession.update(NAMESPACE + "updateVendor", vendor);
 	}
 
 	@Override
 	public int deleteVendor(String vendorId) {
-		return sqlSession.update("mapper.P17_vendor.deleteVendor", vendorId);
+		return sqlSession.update(NAMESPACE + "deleteVendor", vendorId);
 	}
 
 	@Override
-	public List<VendorIoDTO> selectVendorIoList(String vendorId) {
-		return sqlSession.selectList("mapper.P17_vendor.selectVendorIoList", vendorId);
+	public int selectVendorIoCount(String vendorId) {
+		return sqlSession.selectOne(NAMESPACE + "selectVendorIoCount", vendorId);
+	}
+
+	@Override
+	public List<VendorIoDTO> selectVendorIoList(String vendorId, PageInfo pageInfo) {
+
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		param.put("vendorId", vendorId);
+		param.put("page", pageInfo);
+
+		return sqlSession.selectList(NAMESPACE + "selectVendorIoList", param);
 	}
 }

@@ -78,7 +78,7 @@
 						<th>거래처 코드</th>
 						<th>거래처명</th>
 						<th>유형</th>
-						<th>번호</th>
+						<th>연락처</th>
 						<th>주소</th>
 					</tr>
 				</thead>

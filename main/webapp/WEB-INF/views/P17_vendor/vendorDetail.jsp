@@ -19,30 +19,21 @@
 	<div class="btn-row">
 		<div class="left">
 			<a class="btn btn-white"
-				href="${pageContext.request.contextPath}/vendor/list">
-				목록
-			</a>
+				href="${pageContext.request.contextPath}/vendor/list"> 목록 </a>
 		</div>
 
 		<div class="right">
 			<a class="btn btn-main"
 				href="${pageContext.request.contextPath}/vendor/edit?vendorId=${vendor.vendorId}">
-				수정
-			</a>
+				수정 </a>
 
 			<form action="${pageContext.request.contextPath}/vendor/delete"
-				method="post"
-				style="display: inline;"
+				method="post" style="display: inline;"
 				onsubmit="return confirm('삭제하시겠습니까?');">
 
-				<input type="hidden"
-					name="vendorId"
-					value="${vendor.vendorId}">
+				<input type="hidden" name="vendorId" value="${vendor.vendorId}">
 
-				<button type="submit"
-					class="btn btn-red">
-					삭제
-				</button>
+				<button type="submit" class="btn btn-red">삭제</button>
 			</form>
 		</div>
 	</div>
@@ -51,9 +42,7 @@
 
 		<div class="content-content-content">
 
-			<div class="content-content-content-title">
-				거래처 상세정보
-			</div>
+			<div class="content-content-content-title">거래처 상세정보</div>
 
 			<div class="info-table-wrap">
 				<table class="info-table">
@@ -71,8 +60,7 @@
 						<tr>
 							<th>유형</th>
 
-							<td>
-								<c:choose>
+							<td><c:choose>
 									<c:when test="${vendor.vendorType == 'S'}">
 										공급업체
 									</c:when>
@@ -88,8 +76,7 @@
 									<c:otherwise>
 										-
 									</c:otherwise>
-								</c:choose>
-							</td>
+								</c:choose></td>
 
 							<th>전화번호</th>
 							<td>${vendor.vendorTel}</td>
@@ -98,8 +85,7 @@
 						<tr>
 							<th>이메일</th>
 
-							<td>
-								<c:choose>
+							<td><c:choose>
 									<c:when test="${not empty vendor.vendorEmail}">
 										${vendor.vendorEmail}
 									</c:when>
@@ -107,13 +93,11 @@
 									<c:otherwise>
 										-
 									</c:otherwise>
-								</c:choose>
-							</td>
+								</c:choose></td>
 
 							<th>우편번호</th>
 
-							<td>
-								<c:choose>
+							<td><c:choose>
 									<c:when test="${not empty vendor.vendorZipcode}">
 										${vendor.vendorZipcode}
 									</c:when>
@@ -121,8 +105,7 @@
 									<c:otherwise>
 										-
 									</c:otherwise>
-								</c:choose>
-							</td>
+								</c:choose></td>
 						</tr>
 
 						<tr>
@@ -130,8 +113,7 @@
 
 							<td colspan="3">
 								<div class="vendor-address-detail-row">
-									<span>
-										<c:choose>
+									<span> <c:choose>
 											<c:when test="${not empty vendor.vendorAddr}">
 												${vendor.vendorAddr}
 												${vendor.vendorAddrDetail}
@@ -144,12 +126,9 @@
 									</span>
 
 									<c:if test="${not empty vendor.vendorAddr}">
-										<button type="button"
-											class="btn btn-main"
-											id="vendorMapToggleBtn"
-											onclick="showVendorMap()">
-											지도보기
-										</button>
+										<button type="button" class="btn btn-none"
+											id="vendorMapToggleBtn" onclick="showVendorMap()">
+											지도보기</button>
 									</c:if>
 								</div>
 							</td>
@@ -160,14 +139,7 @@
 				</table>
 
 				<div id="vendorMap"
-					style="
-						display: none;
-						width: 80%;
-						height: 350px;
-						margin: 20px auto 0;
-						border-radius: 8px;
-						overflow: hidden;
-					">
+					style="display: none; width: 80%; height: 350px; margin: 20px auto 0; border-radius: 8px; overflow: hidden;">
 				</div>
 
 			</div>
@@ -176,9 +148,7 @@
 
 		<div class="content-content-content">
 
-			<div class="content-content-content-title">
-				거래처별 입출고 이력
-			</div>
+			<div class="content-content-content-title">거래처별 입출고 이력</div>
 
 			<div class="table-wrap">
 
@@ -204,8 +174,7 @@
 
 								<td>${io.ioId}</td>
 
-								<td>
-									<c:choose>
+								<td><c:choose>
 										<c:when test="${io.ioType == 'IN'}">
 											<span class="status status-safe">입고</span>
 										</c:when>
@@ -217,17 +186,14 @@
 										<c:otherwise>
 											<span class="status">${io.ioType}</span>
 										</c:otherwise>
-									</c:choose>
-								</td>
+									</c:choose></td>
 
 								<td>${io.itemName}(${io.itemId})</td>
 
 								<td>${io.ioReason}</td>
 
-								<td>
-									<fmt:formatDate value="${io.ioDate}"
-										pattern="yyyy-MM-dd HH:mm"/>
-								</td>
+								<td><fmt:formatDate value="${io.ioDate}"
+										pattern="yyyy-MM-dd HH:mm" /></td>
 
 								<td>${io.ioQty}</td>
 
@@ -239,10 +205,8 @@
 
 						<c:if test="${empty vendorIoList}">
 							<tr>
-								<td colspan="7"
-									style="text-align: center;">
-									해당 거래처의 입출고 이력이 없습니다.
-								</td>
+								<td colspan="7" style="text-align: center;">해당 거래처의 입출고 이력이
+									없습니다.</td>
 							</tr>
 						</c:if>
 
@@ -251,7 +215,7 @@
 				</table>
 
 			</div>
-
+			<jsp:include page="/WEB-INF/views/common/paging.jsp" />
 		</div>
 
 	</div>
@@ -259,26 +223,25 @@
 </div>
 
 <style>
-	.vendor-address-detail-row {
-		display: inline-flex;
-		align-items: center;
-		gap: 12px;
-		flex-wrap: wrap;
-	}
+.vendor-address-detail-row {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
 </style>
 
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47bbd47c04e70af1e13f9280c52c609b&libraries=services"></script>
+<script
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=47bbd47c04e70af1e13f9280c52c609b&libraries=services"></script>
 
 <script>
 	let vendorMapLoaded = false;
 
 	function showVendorMap() {
 
-		const mapBox =
-			document.querySelector("#vendorMap");
+		const mapBox = document.querySelector("#vendorMap");
 
-		const mapBtn =
-			document.querySelector("#vendorMapToggleBtn");
+		const mapBtn = document.querySelector("#vendorMapToggleBtn");
 
 		if (mapBox.style.display === "block") {
 
@@ -295,8 +258,7 @@
 			return;
 		}
 
-		const address =
-			"${vendor.vendorAddr}";
+		const address = "${vendor.vendorAddr}";
 
 		if (!address || address.trim() === "") {
 
@@ -308,28 +270,22 @@
 			return;
 		}
 
-		const geocoder =
-			new kakao.maps.services.Geocoder();
+		const geocoder = new kakao.maps.services.Geocoder();
 
 		geocoder.addressSearch(address, function(result, status) {
 
 			if (status === kakao.maps.services.Status.OK) {
 
-				const coords =
-					new kakao.maps.LatLng(
-						result[0].y,
-						result[0].x
-					);
+				const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-				const map =
-					new kakao.maps.Map(mapBox, {
-						center: coords,
-						level: 3
-					});
+				const map = new kakao.maps.Map(mapBox, {
+					center : coords,
+					level : 3
+				});
 
 				new kakao.maps.Marker({
-					map: map,
-					position: coords
+					map : map,
+					position : coords
 				});
 
 				map.setCenter(coords);
