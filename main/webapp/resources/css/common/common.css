@@ -290,6 +290,8 @@ textarea:focus {
     font-weight: 400;
     line-height: 1.5;
     color: var(--dark-gray);
+    
+    text-align: right;
 }
 
 .card-wrap {
