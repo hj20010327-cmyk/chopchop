@@ -44,8 +44,10 @@ public class IoServiceImpl implements IoService {
 
 		if ("IN".equals(ioDTO.getIoType())) {
 
-			// 1. LOT 생성
-			ioDAO.insertLotByIo(ioDTO);
+			if(ioDTO.getIoWorker() != null) {
+				// 1. LOT 생성
+				ioDAO.insertLotByIo(ioDTO);
+			}
 
 			// 2. 방금 생성된 LOT 번호 가져오기
 			String lotId = ioDAO.selectLastLotId();
