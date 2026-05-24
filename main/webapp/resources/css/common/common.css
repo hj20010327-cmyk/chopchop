@@ -181,7 +181,7 @@ textarea:focus {
 
 .btn {
     min-width: 45px;
-    min-height: 26px;
+    height: 32px;
     padding: 5px 15px;
 
     border-radius: 4px;
