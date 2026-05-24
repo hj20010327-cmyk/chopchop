@@ -26,7 +26,7 @@
             <div class="right">
                 <a class="btn btn-white"
                    href="${pageContext.request.contextPath}/bom/list"
-                   onclick="return confirm('BOM 등록을 취소하시겠습니까?');">
+                   onclick="return confirm('확인을 누르시면 입력한 내용이 모두 사라집니다.\n정말로 취소하시겠습니까?');">
                     취소
                 </a>
 

@@ -31,7 +31,7 @@
 
             <a class="btn btn-red"
                href="${pageContext.request.contextPath}/routing/delete?routId=${rout.routId}"
-               onclick="return confirm('해당 라우팅을 삭제하시겠습니까?');">
+               onclick="return confirm('라우팅(${rout.routId})을 삭제하시겠습니까?');">
                 삭제
             </a>
         </div>
@@ -41,8 +41,26 @@
     <div class="content-content">
         <div class="content-content-content">
 
-            <div class="content-content-content-title">
-                라우팅 상세 정보
+            <div class="rout-title-row">
+                <div class="content-content-content-title">
+                    라우팅 상세 정보
+                </div>
+
+                <div>
+                    <c:choose>
+                        <c:when test="${rout.itemType == 20}">
+                            <span class="status-back status-back-warning"> • 반제품 </span>
+                        </c:when>
+
+                        <c:when test="${rout.itemType == 30}">
+                            <span class="status-back status-back-success"> • 완제품 </span>
+                        </c:when>
+
+                        <c:otherwise>
+                            <span class="status-back status-back-info"> - </span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
 
             <div class="info-table-wrap">
@@ -65,25 +83,18 @@
                         </tr>
 
                         <tr>
-                            <th>품목 유형</th>
-                            <td>
-                            	<c:choose>
-								    <c:when test="${rout.itemType == 20}">
-								        반제품
-								    </c:when>
-								
-								    <c:when test="${rout.itemType == 30}">
-								        완제품
-								    </c:when>
-								
-								    <c:otherwise>
-								        -
-								    </c:otherwise>
-								</c:choose>
-                            </td>
-
                             <th>라우팅 설명</th>
-                            <td>${rout.routContent}</td>
+                            <td colspan="3">
+                                <c:choose>
+                                    <c:when test="${empty rout.routContent}">
+                                        -
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        ${rout.routContent}
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -259,8 +270,19 @@
 
 </div>
 
-
 <style>
+    .rout-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 16px;
+    }
+
+    .rout-title-row .content-content-content-title {
+        margin-bottom: 0;
+    }
+
     .routing-section-title-row {
         margin-bottom: 16px;
 

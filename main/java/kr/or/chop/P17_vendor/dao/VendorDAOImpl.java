@@ -72,4 +72,9 @@ public class VendorDAOImpl implements VendorDAO {
 
 		return sqlSession.selectList(NAMESPACE + "selectVendorIoList", param);
 	}
+
+	@Override
+	public List<VendorDTO> selectVendorTypeSummary() {
+		return sqlSession.selectList(NAMESPACE + "selectVendorTypeSummary");
+	}
 }

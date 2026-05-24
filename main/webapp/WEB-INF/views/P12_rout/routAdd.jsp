@@ -25,7 +25,8 @@
 
             <div class="right">
                 <a class="btn btn-white"
-                   href="${pageContext.request.contextPath}/routing/list">
+                   href="${pageContext.request.contextPath}/routing/list"
+                   onclick="return confirm('확인을 누르시면 입력한 내용이 모두 사라집니다.\n정말로 취소하시겠습니까?');">
                     취소
                 </a>
 
@@ -36,35 +37,56 @@
             </div>
         </div>
 
-        <div class="grid-wrap rout-grid-wrap">
+        <div class="rout-form-wrap">
 
-            <div class="grid search-item">
-                <label>라우팅명 <span class="red">*</span></label>
-                <input type="text"
-                       name="routName"
-                       required
-                       placeholder="라우팅명을 입력하세요.">
+            <div class="rout-form-row">
+                <div class="search-item rout-type-item">
+                    <label>품목 유형 <span class="red">*</span></label>
+
+                    <select id="itemTypeFilter">
+                        <option value="">전체</option>
+                        <option value="20">반제품</option>
+                        <option value="30">완제품</option>
+                    </select>
+                </div>
+
+                <div class="search-item rout-item-select">
+                    <label>생산 품목 <span class="red">*</span></label>
+
+                    <select name="routItem"
+                            id="routItemSelect"
+                            required>
+                        <option value="">품목 선택</option>
+
+                        <c:forEach var="item" items="${routItemList}">
+                            <option value="${item.itemId}"
+                                    data-item-type="${item.itemType}">
+                                ${item.itemName} (${item.itemId})
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
             </div>
 
-            <div class="grid search-item">
-                <label>생산 품목 <span class="red">*</span></label>
-                <select name="routItem"
-                        required>
-                    <option value="">품목 선택</option>
+            <div class="rout-form-row">
+                <div class="search-item rout-name-item">
+                    <label>라우팅명 <span class="red">*</span></label>
 
-                    <c:forEach var="item" items="${routItemList}">
-                        <option value="${item.itemId}">
-                            ${item.itemName} (${item.itemId})
-                        </option>
-                    </c:forEach>
-                </select>
+                    <input type="text"
+                           name="routName"
+                           required
+                           placeholder="라우팅명을 입력하세요.">
+                </div>
             </div>
 
-            <div class="grid search-item rout-content-item">
-                <label>라우팅 설명</label>
-                <textarea name="routContent"
-                          class="rout-content-textarea"
-                          placeholder="라우팅 설명을 입력하세요."></textarea>
+            <div class="rout-form-row">
+                <div class="search-item rout-content-item">
+                    <label>라우팅 설명</label>
+
+                    <input type="text"
+                           name="routContent"
+                           placeholder="라우팅 설명을 입력하세요.">
+                </div>
             </div>
 
         </div>
@@ -88,6 +110,7 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th style="width: 70px;">이동</th>
                         <th style="width: 80px;">순서</th>
                         <th style="width: 180px;">공정명</th>
                         <th style="width: 180px;">작업장 타입</th>
@@ -98,7 +121,7 @@
 
                 <tbody id="selectedProcBody">
                     <tr id="emptyProcRow">
-                        <td colspan="5" style="text-align: center;">
+                        <td colspan="6" style="text-align: center;">
                             추가된 공정이 없습니다.
                         </td>
                     </tr>
@@ -110,8 +133,6 @@
 
 </div>
 
-
-<!-- 공정 추가 모달 -->
 <div class="modal-bg" id="procModalBg">
     <div class="modal-box proc-modal-box">
 
@@ -174,42 +195,50 @@
     </div>
 </div>
 
-
 <style>
-    .rout-grid-wrap {
-        display: grid;
-        grid-template-columns: 200px 400px;
-        column-gap: 24px;
-        row-gap: 18px;
-        width: 624px;
+    .rout-form-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 760px;
     }
 
-    .rout-grid-wrap .grid {
-        width: 100%;
-        min-width: 0;
+    .rout-form-row {
+        display: flex;
+        gap: 0;
     }
 
-    .rout-grid-wrap .grid input,
-    .rout-grid-wrap .grid select,
-    .rout-grid-wrap .grid textarea {
+    .rout-form-row .search-item {
+        margin-right: 24px;
+    }
+
+    .rout-form-row .search-item:last-child {
+        margin-right: 0;
+    }
+
+    .rout-type-item {
+        width: 200px;
+    }
+
+    .rout-item-select {
+        width: 536px;
+    }
+
+    .rout-name-item,
+    .rout-content-item {
+        width: 760px;
+    }
+
+    .rout-form-wrap input,
+    .rout-form-wrap select {
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
         box-sizing: border-box;
     }
 
-    .rout-content-item {
-        grid-column: 1 / 3;
-    }
-
-    .rout-content-textarea {
-        min-height: 100px;
-        resize: none;
-    }
-
     .routing-section-title-row {
         margin: 48px 0 16px;
-
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
@@ -227,26 +256,56 @@
         opacity: 0.5;
     }
 
+    .drag-cell {
+        text-align: center;
+    }
+
     .drag-handle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
         color: #888;
         font-weight: 700;
         cursor: grab;
-        margin-right: 8px;
+    }
+
+    #emptyProcRow {
+        cursor: pointer;
+    }
+
+    #emptyProcRow:hover td {
+        color: var(--main-green);
+        text-decoration: underline;
+        background-color: #f8faf9;
+    }
+
+    .remove-row-btn {
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 50%;
+        background-color: #f1f3f5;
+        color: #666;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .remove-row-btn:hover {
+        background-color: #dee2e6;
+        color: #333;
+        transform: scale(1.05);
     }
 
     .modal-bg {
         display: none;
-
         position: fixed;
-        top: 0;
-        left: 0;
+        inset: 0;
         z-index: 9999;
-
-        width: 100%;
-        height: 100%;
-
         background: rgba(0, 0, 0, 0.35);
-
         align-items: center;
         justify-content: center;
     }
@@ -258,7 +317,6 @@
     .modal-box {
         width: 520px;
         padding: 24px;
-
         background: #fff;
         border-radius: 10px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
@@ -268,7 +326,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-
         margin-bottom: 20px;
     }
 
@@ -280,7 +337,6 @@
     .modal-close {
         border: 0;
         background: transparent;
-
         font-size: 28px;
         line-height: 1;
         cursor: pointer;
@@ -312,19 +368,20 @@
 
     .modal-btn-row {
         margin-top: 24px;
-
         display: flex;
         justify-content: flex-end;
         gap: 8px;
     }
 </style>
 
-
 <script>
     window.addEventListener("load", function() {
 
         const routForm = document.getElementById("routForm");
         const selectedProcBody = document.getElementById("selectedProcBody");
+
+        const itemTypeFilter = document.getElementById("itemTypeFilter");
+        const routItemSelect = document.getElementById("routItemSelect");
 
         const procModalBg = document.getElementById("procModalBg");
         const openProcModalBtn = document.getElementById("openProcModalBtn");
@@ -335,6 +392,27 @@
         const modalProcName = document.getElementById("modalProcName");
         const modalProcWpType = document.getElementById("modalProcWpType");
         const modalProcContent = document.getElementById("modalProcContent");
+
+        bindEmptyRowEvent();
+
+        itemTypeFilter.addEventListener("change", function() {
+            const selectedType = itemTypeFilter.value;
+            const options = routItemSelect.querySelectorAll("option");
+
+            routItemSelect.value = "";
+
+            options.forEach(function(option) {
+                if (option.value === "") {
+                    option.hidden = false;
+                    return;
+                }
+
+                const itemType = option.dataset.itemType;
+
+                option.hidden =
+                    selectedType !== "" && itemType !== selectedType;
+            });
+        });
 
         openProcModalBtn.addEventListener("click", function() {
             openProcModal();
@@ -415,6 +493,16 @@
             modalProcContent.value = "";
         }
 
+        function bindEmptyRowEvent() {
+            const emptyRow = document.getElementById("emptyProcRow");
+
+            if (emptyRow) {
+                emptyRow.onclick = function() {
+                    openProcModal();
+                };
+            }
+        }
+
         function addProcessRow(proc) {
 
             const emptyRow = document.getElementById("emptyProcRow");
@@ -428,23 +516,30 @@
             tr.draggable = true;
 
             tr.innerHTML =
-                '<td class="step-cell"></td>' +
-                '<td>' +
+                '<td class="drag-cell">' +
                     '<span class="drag-handle">≡</span>' +
+                '</td>' +
+
+                '<td class="step-cell"></td>' +
+
+                '<td>' +
                     escapeHtml(proc.procName) +
                     '<input type="hidden" name="procIdList" value="' + escapeAttr(proc.procId) + '">' +
                     '<input type="hidden" name="procNameList" value="' + escapeAttr(proc.procName) + '">' +
                 '</td>' +
+
                 '<td>' +
                     escapeHtml(proc.wpTypeName) +
                     '<input type="hidden" name="procWpTypeList" value="' + escapeAttr(proc.procWpType) + '">' +
                 '</td>' +
+
                 '<td>' +
                     escapeHtml(proc.procContent) +
                     '<input type="hidden" name="procContentList" value="' + escapeAttr(proc.procContent) + '">' +
                 '</td>' +
+
                 '<td>' +
-                    '<button type="button" class="btn btn-white remove-btn">삭제</button>' +
+                    '<button type="button" class="remove-row-btn remove-btn">✕</button>' +
                 '</td>';
 
             selectedProcBody.appendChild(tr);
@@ -456,12 +551,21 @@
         function bindRowEvent(row) {
 
             const removeBtn = row.querySelector(".remove-btn");
+            const dragHandle = row.querySelector(".drag-handle");
 
             if (removeBtn) {
-                removeBtn.addEventListener("click", function() {
+                removeBtn.addEventListener("click", function(e) {
+                    e.stopPropagation();
+
                     row.remove();
                     refreshStep();
                     showEmptyRowIfNeeded();
+                });
+            }
+
+            if (dragHandle) {
+                dragHandle.addEventListener("click", function(e) {
+                    e.stopPropagation();
                 });
             }
 
@@ -491,10 +595,12 @@
             if (rows.length === 0) {
                 selectedProcBody.innerHTML =
                     '<tr id="emptyProcRow">' +
-                        '<td colspan="5" style="text-align: center;">' +
+                        '<td colspan="6" style="text-align: center;">' +
                             '추가된 공정이 없습니다.' +
                         '</td>' +
                     '</tr>';
+
+                bindEmptyRowEvent();
             }
         }
 

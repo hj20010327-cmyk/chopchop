@@ -11,8 +11,20 @@
 		SELECT COUNT(*)
 		FROM vendor
 		WHERE vendor_usage = 'Y'
-			<if test="searchType != null and searchType != ''">
-				and vendor_type = #{searchType}
+			<if test="searchTypes != null and searchTypes.size() > 0">
+			    AND vendor_type IN
+			    <foreach collection="searchTypes"
+			             item="type"
+			             open="("
+			             separator=","
+			             close=")">
+			        #{type}
+			    </foreach>
+			</if>
+			
+			<if test="(searchTypes == null or searchTypes.size() == 0)
+			          and searchType != null and searchType != ''">
+			    AND vendor_type = #{searchType}
 			</if>
 			<if test="searchKeyword != null and searchKeyword != ''">
 				and ( upper(vendor_name) like trim(upper('%' || #{searchKeyword} || '%')) 
@@ -44,8 +56,20 @@
 		vendor_usage AS vendorUsage
 		FROM vendor
 		WHERE vendor_usage = 'Y'
-			<if test="vendorDTO.searchType != null and vendorDTO.searchType != ''">
-				and vendor_type = #{vendorDTO.searchType}
+			<if test="vendorDTO.searchTypes != null and vendorDTO.searchTypes.size() > 0">
+			    AND vendor_type IN
+			    <foreach collection="vendorDTO.searchTypes"
+			             item="type"
+			             open="("
+			             separator=","
+			             close=")">
+			        #{type}
+			    </foreach>
+			</if>
+			
+			<if test="(vendorDTO.searchTypes == null or vendorDTO.searchTypes.size() == 0)
+			          and vendorDTO.searchType != null and vendorDTO.searchType != ''">
+			    AND vendor_type = #{vendorDTO.searchType}
 			</if>
 			<if test="vendorDTO.searchKeyword != null and vendorDTO.searchKeyword != ''">
 				and ( upper(vendor_name) like trim(upper('%' || #{vendorDTO.searchKeyword} || '%')) 
@@ -183,6 +207,20 @@
 	    )
 	    WHERE RN BETWEEN #{page.startRow}
 	    AND #{page.endRow}
+	
+	</select>
+	
+	<!-- 거래처 유형별 개수 -->
+	<select id="selectVendorTypeSummary"
+	        resultType="kr.or.chop.P17_vendor.dto.VendorDTO">
+	
+	    SELECT
+	        vendor_type AS vendorType,
+	        COUNT(*) AS vendorTypeCount
+	    FROM vendor
+	    WHERE vendor_usage = 'Y'
+	    GROUP BY vendor_type
+	    ORDER BY vendor_type
 	
 	</select>
 

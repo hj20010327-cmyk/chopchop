@@ -13,46 +13,51 @@ import kr.or.chop.common.pagination.PageInfo;
 @Service
 public class VendorServiceImpl implements VendorService {
 
-    @Autowired
-    private VendorDAO vendorDAO;
+	@Autowired
+	private VendorDAO vendorDAO;
 
-    @Override
-    public List<VendorDTO> selectVendorList(VendorDTO search, PageInfo pageInfo) {
-        return vendorDAO.selectVendorList(search, pageInfo);
-    }
+	@Override
+	public List<VendorDTO> selectVendorList(VendorDTO search, PageInfo pageInfo) {
+		return vendorDAO.selectVendorList(search, pageInfo);
+	}
 
-    @Override
-    public int selectVendorCount(VendorDTO search) {
-        return vendorDAO.selectVendorCount(search);
-    }
+	@Override
+	public int selectVendorCount(VendorDTO search) {
+		return vendorDAO.selectVendorCount(search);
+	}
 
-    @Override
-    public int insertVendor(VendorDTO vendor) {
-        return vendorDAO.insertVendor(vendor);
-    }
+	@Override
+	public int insertVendor(VendorDTO vendor) {
+		return vendorDAO.insertVendor(vendor);
+	}
 
-    @Override
-    public VendorDTO selectVendorDetail(String vendorId) {
-        return vendorDAO.selectVendorDetail(vendorId);
-    }
+	@Override
+	public VendorDTO selectVendorDetail(String vendorId) {
+		return vendorDAO.selectVendorDetail(vendorId);
+	}
 
-    @Override
-    public int updateVendor(VendorDTO vendor) {
-        return vendorDAO.updateVendor(vendor);
-    }
+	@Override
+	public int updateVendor(VendorDTO vendor) {
+		return vendorDAO.updateVendor(vendor);
+	}
 
-    @Override
-    public int deleteVendor(String vendorId) {
-        return vendorDAO.deleteVendor(vendorId);
-    }
+	@Override
+	public int deleteVendor(String vendorId) {
+		return vendorDAO.deleteVendor(vendorId);
+	}
 
-    @Override
-    public int selectVendorIoCount(String vendorId) {
-        return vendorDAO.selectVendorIoCount(vendorId);
-    }
+	@Override
+	public int selectVendorIoCount(String vendorId) {
+		return vendorDAO.selectVendorIoCount(vendorId);
+	}
 
-    @Override
-    public List<VendorIoDTO> selectVendorIoList(String vendorId, PageInfo pageInfo) {
-        return vendorDAO.selectVendorIoList(vendorId, pageInfo);
-    }
+	@Override
+	public List<VendorIoDTO> selectVendorIoList(String vendorId, PageInfo pageInfo) {
+		return vendorDAO.selectVendorIoList(vendorId, pageInfo);
+	}
+
+	@Override
+	public List<VendorDTO> selectVendorTypeSummary() {
+		return vendorDAO.selectVendorTypeSummary();
+	}
 }

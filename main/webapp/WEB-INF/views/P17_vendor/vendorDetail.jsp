@@ -29,7 +29,7 @@
 
 			<form action="${pageContext.request.contextPath}/vendor/delete"
 				method="post" style="display: inline;"
-				onsubmit="return confirm('삭제하시겠습니까?');">
+				onclick="return confirm('거래처(${vendor.vendorId})를 삭제하시겠습니까?');">
 
 				<input type="hidden" name="vendorId" value="${vendor.vendorId}">
 

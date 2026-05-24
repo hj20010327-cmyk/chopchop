@@ -5,10 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.chop.P17_vendor.dto.VendorDTO;
 import kr.or.chop.P17_vendor.service.VendorService;
@@ -24,28 +21,43 @@ public class VendorListController {
 
     @RequestMapping("/list")
     public String vendorList(
-            VendorDTO vendorDTO,
-            @RequestParam(value = "page", defaultValue = "1") 
-            int currentPage,
+            VendorDTO search,
+            Integer page,
             Model model) {
 
-        int listCount = vendorService.selectVendorCount(vendorDTO);
+        int currentPage = 1;
 
-        PageInfo pageInfo = Pagination.getPageInfo(
-                listCount,
-                currentPage,
-                5,
-                10
-        );
+        if(page != null) {
+            currentPage = page;
+        }
+
+        int listCount =
+                vendorService.selectVendorCount(search);
+
+        PageInfo pageInfo =
+                Pagination.getPageInfo(
+                        listCount,
+                        currentPage,
+                        5,
+                        10
+                );
 
         List<VendorDTO> vendorList =
-                vendorService.selectVendorList(vendorDTO, pageInfo);
+                vendorService.selectVendorList(search, pageInfo);
+
+        int totalVendorCount =
+                vendorService.selectVendorCount(new VendorDTO());
+
+        List<VendorDTO> vendorTypeSummary =
+                vendorService.selectVendorTypeSummary();
 
         model.addAttribute("vendorList", vendorList);
-        model.addAttribute("search", vendorDTO);
+        model.addAttribute("search", search);
         model.addAttribute("page", pageInfo);
+
+        model.addAttribute("totalVendorCount", totalVendorCount);
+        model.addAttribute("vendorTypeSummary", vendorTypeSummary);
 
         return "P17_vendor/vendorList.tiles";
     }
-    
 }

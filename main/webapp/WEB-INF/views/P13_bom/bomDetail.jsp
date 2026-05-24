@@ -32,7 +32,7 @@
 
             <a class="btn btn-red"
                href="${pageContext.request.contextPath}/bom/delete?bomId=${bom.bomId}"
-               onclick="return confirm('해당 BOM을 삭제하시겠습니까?');">
+               onclick="return confirm('BOM(${bom.bomId})을 삭제하시겠습니까?');">
                 삭제
             </a>
         </div>

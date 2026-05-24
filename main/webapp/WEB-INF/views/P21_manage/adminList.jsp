@@ -83,7 +83,14 @@
 		</div>
 
 		<div class="search-btn-area">
-			<button type="submit" class="btn btn-main">검색</button>
+			<button type="submit" class="btn btn-main">
+				검색
+			</button>
+			
+			<a class="btn btn-white"
+			   href="${pageContext.request.contextPath}/admin/list">
+			    초기화
+			</a>
 		</div>
 	</form>
 

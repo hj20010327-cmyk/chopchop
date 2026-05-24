@@ -38,7 +38,7 @@
 
             <a class="btn btn-red"
                href="${pageContext.request.contextPath}/defect/delete?defTypeId=${def.defTypeId}"
-               onclick="return confirm('삭제하시겠습니까?');">
+               onclick="return confirm('불량유형(${def.defTypeId})을 삭제하시겠습니까?');">
                 삭제
             </a>
 

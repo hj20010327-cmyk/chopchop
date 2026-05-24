@@ -25,7 +25,7 @@
         <div class="search-btn-area form-btn-area">
             <a class="btn btn-white"
 			   href="${pageContext.request.contextPath}/admin/detail?empId=${admin.empId}"
-			   onclick="return confirm('취소하시겠습니까? 작성 중인 내용은 저장되지 않습니다.');">
+			   onclick="return confirm('확인을 누르시면 입력한 내용이 모두 사라집니다.\n정말로 취소하시겠습니까?');">
 			    취소
 			</a>
 

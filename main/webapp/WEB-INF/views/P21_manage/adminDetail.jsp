@@ -31,7 +31,7 @@
 
             <form action="${pageContext.request.contextPath}/admin/delete"
                   method="post"
-                  onsubmit="return confirm('해당 사원을 삭제 처리하시겠습니까?');">
+                  onclick="return confirm('사원(${emp.empId})을 삭제하시겠습니까?');">
 
                 <input type="hidden"
                        name="empId"

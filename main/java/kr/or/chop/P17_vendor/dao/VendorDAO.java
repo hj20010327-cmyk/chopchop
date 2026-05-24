@@ -23,4 +23,6 @@ public interface VendorDAO {
     int selectVendorIoCount(String vendorId);
 
     List<VendorIoDTO> selectVendorIoList(String vendorId, PageInfo pageInfo);
+    
+    List<VendorDTO> selectVendorTypeSummary();
 }
