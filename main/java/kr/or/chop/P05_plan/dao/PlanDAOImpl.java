@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import kr.or.chop.P05_plan.dto.PlanDTO;
+import kr.or.chop.P06_work.dto.WorkDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Repository
@@ -40,6 +41,26 @@ public class PlanDAOImpl implements PlanDAO {
 	@Override
 	public int insertPlan(PlanDTO planDTO) {
 		return sqlSession.insert("mapper.P05_plan.insertPlan", planDTO);
+	}
+
+	@Override
+	public PlanDTO selectPlanDetail(PlanDTO planDTO) {
+		return sqlSession.selectOne("mapper.P05_plan.selectPlanDetail", planDTO);
+	}
+
+	@Override
+	public List<WorkDTO> selectWorkList(PlanDTO planDTO) {
+		return sqlSession.selectList("mapper.P05_plan.selectWorkList", planDTO);
+	}
+	
+	@Override
+	public int updatePlan(PlanDTO planDTO) {
+		return sqlSession.update("mapper.P05_plan.updatePlan", planDTO);
+	}
+
+	@Override
+	public int deletePlan(PlanDTO planDTO) {
+		return sqlSession.update("mapper.P05_plan.deletePlan", planDTO);
 	}
 
 }

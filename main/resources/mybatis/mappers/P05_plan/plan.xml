@@ -41,7 +41,7 @@
 	                            p.plan_status = 30
 	                        </when>
 	
-	                        <when test="cardType == 'stop'">
+	                        <when test="cardType == 'delay'">
 	                            p.plan_status = 40
 	                        </when>
 	
@@ -63,7 +63,7 @@
 					p.plan_id planId,
 					p.plan_item planItem,
 					i.item_name planItemName,
-					i.item_unit planItemNnit,
+					i.item_unit planItemUnit,
 					p.plan_fin_qty planFinQty,
 					p.plan_wp_qty planWpQty,
 					p.plan_sdate planSdate,
@@ -74,14 +74,14 @@
 					p.plan_cdate planCdate,
 					p.plan_mdate planMdate
 				FROM plan p
-					LEFT OUTER JOIN item i ON p.plan_item = i.ITEM_ID
+					LEFT OUTER JOIN item i ON p.plan_item = i.item_id
 					LEFT OUTER JOIN emp d ON d.emp_id = p.plan_director
-				WHERE plan_usage = 'Y'	
+				WHERE p.plan_usage = 'Y'
 					<if test="(planDTO.planSearchSdate != null and planDTO.planSearchSdate != '')">
-						AND p.plan_edate <![CDATA[<]]>= #{planDTO.planSearchSdate}					
+						AND p.plan_edate <![CDATA[>=]]> TO_DATE(#{planDTO.planSearchSdate}, 'YYYY-MM-DD')
 					</if>
 					<if test="(planDTO.planSearchEdate != null and planDTO.planSearchEdate != '')">
-						AND p.plan_sdate <![CDATA[<]]>= #{planDTO.planSearchEdate}					
+						AND p.plan_sdate <![CDATA[<=]]> TO_DATE(#{planDTO.planSearchEdate}, 'YYYY-MM-DD')
 					</if>
 					<if test="planDTO.searchType != null and planDTO.searchType != ''">
 						AND p.plan_status = #{planDTO.searchType}
@@ -89,55 +89,53 @@
 					<if test="planDTO.searchKeyword != null and planDTO.searchKeyword != ''">
 						AND (
 							UPPER(p.plan_id) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
-							or UPPER(p.plan_item) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
-							or UPPER(i.item_name) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
+							OR UPPER(p.plan_item) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
+							OR UPPER(i.item_name) LIKE TRIM(UPPER('%' || #{planDTO.searchKeyword} || '%'))
 						)
 					</if>
+					<if test="planDTO.cardTypes != null and planDTO.cardTypes.size() > 0">
+						AND (
+							<foreach collection="planDTO.cardTypes" item="cardType" separator=" OR ">
+								<choose>
+									<when test="cardType == 'ing'">
+										p.plan_status = 20
+									</when>
+									<when test="cardType == 'wait'">
+										p.plan_status = 10
+									</when>
+									<when test="cardType == 'fin'">
+										p.plan_status = 30
+									</when>
+									<when test="cardType == 'delay'">
+										p.plan_status = 40
+									</when>
+									<when test="cardType == 'etc'">
+										p.plan_status = 0
+									</when>
+								</choose>
+							</foreach>
+						)
+					</if>
+				ORDER BY
+					CASE p.plan_status
+						WHEN 40 THEN 1
+						WHEN 20 THEN 2
+						WHEN 10 THEN 3
+						WHEN 30 THEN 4
+						WHEN 0 THEN 5
+						ELSE 6
+					END ASC,
+					CASE 
+						WHEN p.plan_status IN (40, 20, 10) THEN p.plan_edate
+					END ASC,
+					CASE 
+						WHEN p.plan_status IN (30, 0) THEN p.plan_edate
+					END DESC,
+					p.plan_id DESC
 			) plan
-			WHERE 1 = 1
-			
-<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'ing'"> -->
-<!-- 				AND plan.plan_status = 20 -->
-<!-- 			</if> -->
-<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'wait'"> -->
-<!-- 				AND plan.plan_status = 10 -->
-<!-- 			</if> -->
-<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'stop'"> -->
-<!-- 				AND plan.plan_status = 40 -->
-<!-- 			</if> -->
-<!-- 			<if test="planDTO.cardType != null and planDTO.cardType == 'etc'"> -->
-<!-- 				AND plan.plan_status = 0 -->
-<!-- 			</if> -->
-
-			<if test="planDTO.cardTypes != null and planDTO.cardTypes.size() > 0">
-			    AND (
-			        <foreach collection="planDTO.cardTypes" item="cardType" separator=" OR ">
-			            <choose>
-			                <when test="cardType == 'ing'">
-			                    plan.plan_status = 20
-			                </when>
-			
-			                <when test="cardType == 'wait'">
-			                    plan.plan_status = 10
-			                </when>
-			
-			                <when test="cardType == 'fin'">
-			                    plan.plan_status = 30
-			                </when>
-			
-			                <when test="cardType == 'stop'">
-			                    plan.plan_status = 40
-			                </when>
-			
-			                <when test="cardType == 'etc'">
-			                    plan.plan_status = 0
-			                </when>
-			            </choose>
-			        </foreach>
-			    )
-			</if>
+			WHERE rownum <![CDATA[<=]]> #{page.endRow}
 		)
-		WHERE rn BETWEEN #{page.startRow} AND #{page.endRow}
+		WHERE rn <![CDATA[>=]]> #{page.startRow}
 	</select>
 	
 	<select id="selectPlanCardCnt" parameterType="planDTO" resultType="planDTO">
@@ -146,18 +144,18 @@
 	        SUM(CASE WHEN p.plan_status = 20 THEN 1 ELSE 0 END) AS ingCnt,
 	        SUM(CASE WHEN p.plan_status = 10 THEN 1 ELSE 0 END) AS waitCnt,
 	        SUM(CASE WHEN p.plan_status = 30 THEN 1 ELSE 0 END) AS finCnt,
-	        SUM(CASE WHEN p.plan_status = 40 THEN 1 ELSE 0 END) AS stopCnt,
+	        SUM(CASE WHEN p.plan_status = 40 THEN 1 ELSE 0 END) AS delayCnt,
 	        SUM(CASE WHEN p.plan_status = 0 THEN 1 ELSE 0 END) AS etcCnt
 	    FROM plan p
 	        LEFT OUTER JOIN item i ON p.plan_item = i.item_id
 	    WHERE p.plan_usage = 'Y'
 	
 	        <if test="(planSearchSdate != null and planSearchSdate != '')">
-	            AND p.plan_edate <![CDATA[>=]]> #{planSearchSdate}
+	            AND p.plan_edate <![CDATA[>=]]> TO_DATE(#{planDTO.planSearchSdate}, 'YYYY-MM-DD')
 	        </if>
 	
 	        <if test="(planSearchEdate != null and planSearchEdate != '')">
-	            AND p.plan_sdate <![CDATA[<=]]> #{planSearchEdate}
+	            AND p.plan_sdate <![CDATA[<=]]> TO_DATE(#{planDTO.planSearchEdate}, 'YYYY-MM-DD')
 	        </if>
 	
 	        <if test="searchType != null and searchType != ''">
@@ -201,5 +199,105 @@
 		'Y'
 		)
 	</insert>
+	
+	<select id="selectPlanDetail" parameterType="planDTO" resultType="planDTO">
+		SELECT
+			p.plan_id planId,
+			p.plan_item planItem,
+			i.item_type planItemType,
+			i.item_name planItemName,
+			i.item_unit planItemUnit,
+			p.plan_fin_qty planFinQty,
+			p.plan_wp_qty planWpQty,
+<!-- 			NVL(SUM(CASE  -->
+<!-- 				WHEN wo.work_status IN (30, 40, 60) THEN wo.work_prev_qty -->
+<!-- 				ELSE 0 -->
+<!-- 			END), 0) planWpQty, -->
+			NVL(SUM(CASE 
+				WHEN wo.work_status IN (10, 20, 30) THEN wo.work_prev_qty
+				ELSE 0
+			END), 0) planWorkingQty,
+			p.plan_sdate planSdate,
+			p.plan_edate planEdate,
+			p.plan_director planDirector,
+			e.emp_name planDname,
+			p.plan_cdate planCdate,
+			p.plan_mdate planMdate,
+			p.plan_dmsg planDmsg,
+			p.plan_status planStatus
+		FROM plan p
+			LEFT OUTER JOIN item i ON p.plan_item = i.item_id
+			LEFT OUTER JOIN emp e ON p.plan_director = e.emp_id
+			LEFT OUTER JOIN work wo ON p.plan_id = wo.work_plan
+		WHERE p.plan_id = #{planId}
+			AND p.plan_usage = 'Y'
+		GROUP BY
+			p.plan_id,
+			p.plan_item,
+			i.item_type,
+			i.item_name,
+			i.item_unit,
+			p.plan_fin_qty,
+			p.plan_wp_qty,
+			p.plan_sdate,
+			p.plan_edate,
+			p.plan_director,
+			e.emp_name,
+			p.plan_cdate,
+			p.plan_mdate,
+			p.plan_dmsg,
+			p.plan_status
+	</select>
+	
+	<select id="selectWorkList" parameterType="planDTO" resultType="workDTO">
+		SELECT
+			w.work_id workId,
+			w.work_plan workPlan,
+			w.work_order_qty workOrderQty,
+			w.work_prev_qty workPrevQty,
+			w.work_date workDate,
+			w.work_director workDirector,
+			d.emp_name workDname,
+			w.work_worker workWorker,
+			worker.emp_name workWname,
+			w.work_dmsg workDmsg,
+			w.work_wmsg workWmsg,
+			w.work_status workStatus,
+			w.work_cdate workCdate,
+			w.work_mdate workMdate
+		FROM work w
+			LEFT OUTER JOIN emp d ON w.work_director = d.emp_id
+			LEFT OUTER JOIN emp worker ON w.work_worker = worker.emp_id
+		WHERE w.work_plan = #{planId}
+		ORDER BY
+			CASE w.work_status
+				WHEN 20 THEN 1
+				WHEN 10 THEN 2
+				WHEN 30 THEN 3
+				WHEN 50 THEN 4
+				ELSE 5
+			END ASC,
+			w.work_date ASC,
+			w.work_id ASC
+	</select>
+	
+	<update id="updatePlan" parameterType="planDTO">
+		UPDATE plan
+		SET
+			<if test="planStatus == -1">
+				plan_status = 0,
+			</if>
+			plan_fin_qty = #{planFinQty},
+			plan_Sdate = #{planSdate},
+			plan_Edate = #{planEdate},
+			plan_Dmsg = #{planDmsg}
+		WHERE plan_id = #{planId}
+	</update>
+	
+	<update id="deletePlan" parameterType="planDTO">
+		UPDATE plan
+		SET plan_usage = 'N'
+		WHERE plan_id = #{planId}
+	</update>
 	
 </mapper>

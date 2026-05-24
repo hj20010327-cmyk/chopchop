@@ -1,6 +1,7 @@
 package kr.or.chop.P05_plan.dto;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import lombok.Data;
@@ -9,27 +10,30 @@ import lombok.Data;
 public class PlanDTO {
 	
 	private String planId;
+	private String planStatus;
 	
 	private String planItem;
+	private String planItemType;
 	private String planItemName;
 	private String planItemUnit;
 	
 	private int planFinQty;
 	private int planWpQty = 0;
+	private int planWorkingQty;
 	
-	private String planSdate;
-	private String planEdate;
+	private Date planSdate;
+	private Date planEdate;
 	
 	private String planDirector;
 	private String planDname;
 
-	private Date planCdate;
-	private Date planMdate;
+	private Timestamp planCdate;
+	private Timestamp planMdate;
 	
 	private String planDmsg;
 	
-	private Date planSearchSdate;
-	private Date planSearchEdate;
+	private String planSearchSdate;
+	private String planSearchEdate;
 	private Integer searchType;
 	private String searchKeyword;
 	
@@ -39,7 +43,23 @@ public class PlanDTO {
 	private int ingCnt;
 	private int waitCnt;
 	private int finCnt;
-	private int stopCnt;
+	private int delayCnt;
 	private int etcCnt;
+	
+	public int getProgressRate() {
+		if (planFinQty <= 0) {
+			return 0;
+		}
+		
+		return (int) Math.round((planWpQty * 100.0) / planFinQty);
+	}
+	
+	public int getWorkingRate() {
+		if (planFinQty <= 0) {
+			return 0;
+		}
+		
+		return (int) Math.round((planWorkingQty * 100.0) / planFinQty);
+	}
 	
 }

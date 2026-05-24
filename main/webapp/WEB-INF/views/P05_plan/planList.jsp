@@ -41,12 +41,12 @@
 	    </div>
 	
 	    <div class="card danger plan-card"
-	         data-card-type="stop">
-	        <div class="card-title">중단된 계획</div>
-	        <div class="card-value">${planCard.stopCnt}</div>
+	         data-card-type="delay">
+	        <div class="card-title">지연된 계획</div>
+	        <div class="card-value">${planCard.delayCnt}</div>
 	    </div>
 	
-	    <div class="card safe plan-card"
+	    <div class="card info plan-card"
 	         data-card-type="etc">
 	        <div class="card-title">보류된 계획</div>
 	        <div class="card-value">${planCard.etcCnt}</div>
@@ -87,7 +87,7 @@
 				</option>
 				<option value="40"
 					${search.searchType == '40' ? 'selected' : ''}>
-					중단
+					지연
 				</option>
 				<option value="0"
 					${search.searchType == '0' ? 'selected' : ''}>
@@ -145,8 +145,31 @@
 								    ~
 							    ${fn:substring(plan.planEdate, 0, 10)}
 							</td>
-							<td class="span">상태</td>
-							<td>${plan.planCdate}</td>
+							<td>
+								<c:choose>
+									<c:when test="${plan.planStatus == 10}">
+										<span class="status status-warning">• 대기중</span>
+									</c:when>
+									<c:when test="${plan.planStatus == 20}">
+										<span class="status status-success">• 작업중</span>
+									</c:when>
+									<c:when test="${plan.planStatus == 30}">
+										<span class="status status-safe">• 완료</span>
+									</c:when>
+									<c:when test="${plan.planStatus == 40}">
+										<span class="status status-danger">• 지연</span>
+									</c:when>
+									<c:when test="${plan.planStatus == 0}">
+										<span class="status status-info">• 보류</span>
+									</c:when>
+									<c:otherwise>
+										<span class="status status-info">• 기타</span>
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td>
+								<fmt:formatDate value="${plan.planCdate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+							</td>
 							<td class="whId">${wh.whId}</td>
 						</tr>	
 					</c:forEach>
