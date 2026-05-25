@@ -181,7 +181,7 @@ textarea:focus {
 
 .btn {
     min-width: 45px;
-    height: 32px;
+    height: 36px;
     padding: 5px 15px;
 
     border-radius: 4px;
@@ -195,6 +195,8 @@ textarea:focus {
     align-items: center;
 
     cursor: pointer;
+    
+    box-sizing: border-box;
 }
 
 .btn {
@@ -606,7 +608,13 @@ textarea:focus {
 
 .search-btn-area {
     display: flex;
+    align-items: flex-end;
     gap: 8px;
+}
+
+.search-btn-area button {
+	box-sizing: border-box;
+	
 }
 
 
@@ -751,7 +759,7 @@ textarea[readonly]:focus {
 	background:white;
 	border-radius:10px;
 	padding:30px 40px;
-	box-sizing:border-box;
+	box-sizing: border-box;
 }
 
 .modal-title {
