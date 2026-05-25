@@ -23,5 +23,6 @@ public class EmpDTO {
 	private int empInOffice;
 	private Date empHiredate;
 	
+	private String empImg;
 
 }

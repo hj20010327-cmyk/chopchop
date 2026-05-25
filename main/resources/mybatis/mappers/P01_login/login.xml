@@ -18,7 +18,8 @@
 			a.AUTH_NAME empAuthName,
 			e.EMP_FIRST empFirst,
 			e.EMP_INOFFICE empInOffice,
-			e.EMP_HIREDATE empHiredate
+			e.EMP_HIREDATE empHiredate,
+			e.EMP_IMG empImg
 		FROM EMP e
 			LEFT OUTER JOIN DEPT d ON e.EMP_DEPTNO = d.DEPTNO
 			LEFT OUTER JOIN AUTH a ON e.EMP_AUTH = a.AUTH_NO
@@ -45,5 +46,59 @@
 		SET EMP_PW = #{empPw}, EMP_FIRST = 'N'
 		WHERE trim(upper(EMP_ID)) = trim(upper(#{empId}))
 	</update>
+	
+	
+	
+	
+	<select id="selectAllWo" parameterType="empDTO" resultType="kr.or.chop.P01_login.dto.UserWorkDTO">
+		SELECT 
+			W.WORK_ID workId,
+			I.ITEM_ID item, 
+			I.ITEM_NAME itemName,
+			I.ITEM_UNIT itemUnit,
+			W.WORK_ORDER_QTY qty,
+			W.WORK_DIRECTOR directorId,
+			D.EMP_NAME directorName,
+			W.WORK_WORKER workerId, 
+			E.EMP_NAME workerName,
+			W.WORK_STATUS status
+		FROM WORK W
+			LEFT OUTER JOIN PLAN P ON W.WORK_PLAN = P.PLAN_ID
+			LEFT OUTER JOIN ITEM I ON P.PLAN_ITEM = I.ITEM_ID
+			LEFT OUTER JOIN EMP D ON W.WORK_DIRECTOR = D.EMP_ID
+			LEFT OUTER JOIN EMP E ON W.WORK_WORKER = E.EMP_ID
+		WHERE W.WORK_USAGE = 'Y'
+			AND (W.WORK_WORKER = #{empId} or W.WORK_DIRECTOR = #{empId})
+			AND TRUNC(WORK_DATE) = TRUNC(SYSDATE + (9/24))
+	</select>
+	
+	<select id="selectAllQc" parameterType="empDTO" resultType="kr.or.chop.P01_login.dto.UserWorkDTO">
+		SELECT 
+			Q.QC_ID workId,
+			I.ITEM_ID item, 
+			I.ITEM_NAME itemName,
+			I.ITEM_UNIT itemUnit,
+			Q.QC_ORDER_QTY qty,
+			Q.QC_DIRECTOR directorId,
+			D.EMP_NAME directorName,
+			Q.QC_WORKER workerId, 
+			E.EMP_NAME workerName,
+			Q.QC_STATUS status
+		FROM QC W
+			LEFT OUTER JOIN LOT L ON Q.QC_LOT = L.LOT_ID
+			LEFT OUTER JOIN ITEM I ON P.PLAN_ITEM = I.ITEM_ID
+			LEFT OUTER JOIN EMP D ON Q.QC_DIRECTOR = D.EMP_ID
+			LEFT OUTER JOIN EMP E ON Q.QC_WORKER = E.EMP_ID
+		WHERE Q.QC_USAGE = 'Y'
+			AND (Q.QC_WORKER = #{empId} or Q.QC_DIRECTOR = #{empId})
+			AND TRUNC(QC_DATE) = TRUNC(SYSDATE + (9/24))
+	</select>
+	
+	<select id="selectAllSugg" parameterType="empDTO" resultType="suggDTO">
+		SELECT *
+		FROM SUGGESTION
+		WHERE SUGG_USAGE = 'Y' AND SUGG_WRITER = #{empId}
+		ORDER BY SUGG_CDATE DESC
+	</select>
 
 </mapper>

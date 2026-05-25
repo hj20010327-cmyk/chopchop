@@ -48,7 +48,16 @@
     <div class="emp-profile-card">
 
         <div class="emp-profile-left">
-            <div class="emp-profile-img"></div>
+            <div class="emp-profile-img">
+           		<c:choose>
+				    <c:when test="${not empty user.empImg}">
+				        <img src="${pageContext.request.contextPath}/${user.empImg}" alt="프로필 이미지">
+				    </c:when>
+				    <c:otherwise>
+				        <img src="${pageContext.request.contextPath}/upload/P02_login/basic.png" alt="기본 프로필 이미지">
+				    </c:otherwise>
+				</c:choose>
+            </div>
 
             <div>
                 <h3 class="emp-profile-name">${admin.empName}</h3>
@@ -97,6 +106,12 @@
                         <th>부서</th>
                         <td>${admin.deptName}</td>
                     </tr>
+                    <tr>
+                        <th>연락처</th>
+                        <td>
+	                        ${(admin.empTel != null and admin.empTel != '') ? admin.empTel : '-' }
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -111,10 +126,6 @@
                         <td>${admin.empEmail}</td>
                     </tr>
                     <tr>
-                        <th>연락처</th>
-                        <td>${admin.empTel}</td>
-                    </tr>
-                    <tr>
                         <th>가입일</th>
                         <td>${admin.empHiredate}</td>
                     </tr>
@@ -123,9 +134,9 @@
                         <td>
                             <c:choose>
                                 <c:when test="${admin.empAuth == 0}">퇴사자</c:when>
-                                <c:when test="${admin.empAuth == 10}">일반 작업자</c:when>
-                                <c:when test="${admin.empAuth == 20}">현장 관리자</c:when>
-                                <c:when test="${admin.empAuth == 30}">MES 관리자</c:when>
+                                <c:when test="${admin.empAuth == 10}">작업자</c:when>
+                                <c:when test="${admin.empAuth == 20}">관리자</c:when>
+                                <c:when test="${admin.empAuth == 30}">최고관리자</c:when>
                                 <c:otherwise>권한 미지정</c:otherwise>
                             </c:choose>
                         </td>
@@ -215,15 +226,23 @@
         height: 96px;
 
         border-radius: 50%;
-        background-color: #d9d9d9;
+        background-color: white;
     }
+    
+    
+    .emp-profile-img img {
+	    width: 100%;
+	    height: 100%;
+	    object-fit: cover;
+	    display: block;
+	    border-radius: 50%;
+	}
 
     .emp-profile-name {
         margin: 0 0 10px;
 
-        font-size: 24px;
+        font-size: 20px;
         font-weight: 700;
-        color: #222;
     }
 
     .emp-profile-id {
@@ -231,7 +250,7 @@
 
         font-size: 15px;
         font-weight: 500;
-        color: #777;
+        color: var(--dark-gray);
     }
 
     .emp-info-grid {
@@ -290,7 +309,6 @@
     .emp-info-table th {
         width: 32%;
         font-weight: 700;
-        color: #333;
     }
 
     .emp-info-table td {
@@ -330,7 +348,6 @@
 
         font-size: 16px;
         font-weight: 700;
-        color: #222;
     }
 
     .activity-count {
@@ -346,30 +363,30 @@
 
         font-size: 16px;
         font-weight: 700;
-        color: #222;
+        color: black;
     }
 
     .activity-sub {
         margin: 0;
 
         font-size: 12px;
-        color: #777;
+        color: var(--dark-gray);
     }
 
     .activity-wait {
-        color: #f59e0b;
+        color: var(--warning);
     }
 
     .activity-progress {
-        color: #2e7d55;
+        color: var(--success);
     }
 
     .activity-done {
-        color: #777;
+        color: var(--info);
     }
 
     .activity-delay {
-        color: #d32f2f;
+        color: var(--danger);
     }
 
     @media (max-width: 1000px) {
