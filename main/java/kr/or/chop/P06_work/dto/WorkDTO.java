@@ -80,4 +80,13 @@ public class WorkDTO {
     	return (int) Math.round((workPrevQty * 100.0) / workOrderQty);
     }
     
+    // 수량 제한용
+    private int planFinQty;
+    private int planWorkingQty;
+    private int otherWorkingQty;
+    private int editableMaxQty;
+    
+    private Date planSdate;
+    private Date planEdate;
+    
 }

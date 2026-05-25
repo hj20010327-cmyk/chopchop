@@ -337,8 +337,8 @@
 			i.item_name planItemName,
 			i.item_unit planItemUnit,
 			p.plan_fin_qty planFinQty,
-			p.plan_sdate planSdate,
-			p.plan_edate planEdate,
+			TO_CHAR(p.plan_sdate, 'YYYY-MM-DD') planSdateStr,
+			TO_CHAR(p.plan_edate, 'YYYY-MM-DD') planEdateStr,
 			NVL(SUM(
 				CASE
 					WHEN w.work_usage = 'Y'
@@ -380,11 +380,11 @@
 	
 	<select id="selectWorkerList" parameterType="workDTO" resultType="adminDTO">
 		SELECT
-		emp_id AS empId,
-		emp_name AS empName
-		FROM emp
+		e.emp_id AS empId,
+		e.emp_name AS empName
+		FROM emp e
 		<where>
-			emp_inoffice = 0 and emp_deptno = 10
+			e.emp_inoffice = 0 and e.emp_deptno = 10
 			<if test="searchKeyword != null and searchKeyword != ''">
 				AND (
 					UPPER(e.emp_id) LIKE TRIM(UPPER('%' || #{searchKeyword} || '%'))
@@ -392,7 +392,7 @@
 				)
 			</if>
 		</where>
-		ORDER BY emp_id
+		ORDER BY e.emp_id
 	</select>
 	
 	<insert id="insertWork" parameterType="workDTO">
@@ -423,5 +423,101 @@
 			'Y'
 		)
 	</insert>
+	
+	<select id="selectWorkModify" parameterType="string" resultType="workDTO">
+		SELECT
+			w.work_id workId,
+			w.work_plan workPlan,
+	
+			p.plan_item workItem,
+			p.plan_sdate planSdate,
+			p.plan_edate planEdate,
+			
+			i.item_name workItemName,
+			i.item_unit workItemUnit,
+	
+			p.plan_fin_qty planFinQty,
+	
+			NVL((
+				SELECT SUM(w2.work_order_qty)
+				FROM work w2
+				WHERE w2.work_usage = 'Y'
+					AND w2.work_plan = w.work_plan
+			), 0) planWorkingQty,
+	
+			NVL((
+				SELECT SUM(w2.work_order_qty)
+				FROM work w2
+				WHERE w2.work_usage = 'Y'
+					AND w2.work_plan = w.work_plan
+					AND w2.work_id != w.work_id
+			), 0) otherWorkingQty,
+	
+			p.plan_fin_qty - NVL((
+				SELECT SUM(w2.work_order_qty)
+				FROM work w2
+				WHERE w2.work_usage = 'Y'
+					AND w2.work_plan = w.work_plan
+					AND w2.work_id != w.work_id
+			), 0) editableMaxQty,
+	
+			w.work_order_qty workOrderQty,
+			NVL(w.work_prev_qty, 0) workPrevQty,
+			w.work_date workDate,
+	
+			w.work_director workDirector,
+			d.emp_name workDname,
+	
+			w.work_worker workWorker,
+			worker.emp_name workWname,
+	
+			w.work_dmsg workDmsg,
+			w.work_status workStatus,
+			w.work_cdate workCdate,
+			w.work_mdate workMdate
+	
+		FROM work w
+			LEFT OUTER JOIN plan p
+				ON w.work_plan = p.plan_id
+			LEFT OUTER JOIN item i
+				ON p.plan_item = i.item_id
+			LEFT OUTER JOIN emp d
+				ON w.work_director = d.emp_id
+			LEFT OUTER JOIN emp worker
+				ON w.work_worker = worker.emp_id
+	
+		WHERE w.work_usage = 'Y'
+			AND w.work_id = #{workId}
+	</select>
+	
+	<update id="updateWork" parameterType="workDTO">
+		UPDATE work
+		SET
+			work_order_qty = #{workOrderQty},
+			work_worker = #{workWorker},
+			work_dmsg = #{workDmsg},
+			work_date = #{workDate},
+			work_mdate = SYSDATE + (9/24)
+		WHERE work_id = #{workId}
+			AND work_usage = 'Y'
+			AND work_status IN (10, 20, 50)
+	</update>
+	
+	<update id="deleteWork" parameterType="workDTO">
+		UPDATE work
+		SET work_usage = 'N'
+		WHERE work_id = #{workId}
+	</update>
+	
+	<update id="updateWorkResult" parameterType="workDTO">
+		UPDATE work
+		SET
+			work_prev_qty = #{workPrevQty},
+			<if test="workStatus != '' and workStatus != null">
+				work_status = #{workStatus},
+			</if>
+			work_Wmsg = #{workWmsg}
+		WHERE work_id = #{workId}
+	</update>
 
 </mapper>

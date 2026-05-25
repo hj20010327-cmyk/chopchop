@@ -6,17 +6,17 @@
 
 	<div class="header-row">
 		<div>
-			<h2 class="page-title">작업 지시 등록</h2>
-			<p class="page-subtitle">새로운 작업 지시를 작성하세요.</p>
+			<h2 class="page-title">작업 지시 수정</h2>
+			<p class="page-subtitle">선택한 작업 지시(${workDTO.workId})를 작성하세요.</p>
 		</div>
 		<div>
 			<p class="page-route">
-				홈 &gt; 작업관리 &gt; 지시 &gt; 등록
+				홈 &gt; 작업관리 &gt; 지시 &gt; 수정
 			</p>
 		</div>
 	</div>
 
-	<form action="${pageContext.request.contextPath}/work/order/insert"
+	<form action="${pageContext.request.contextPath}/work/order/update?workId=${workDTO.workId}"
 		method="post"
 		class="grid-form"
 		id="workAddForm">
@@ -24,27 +24,25 @@
 		<div class="btn-row">
 			<div class="left"></div>
 			<div class="right">
-				<a class="btn btn-white" href="${pageContext.request.contextPath}/work/list">
+				<a class="btn btn-white" href="${pageContext.request.contextPath}/work/detail?workId=${workDTO.workId}">
 					취소
 				</a>
 
 				<button type="submit" class="btn btn-main">
-					등록
+					수정
 				</button>
 			</div>
 		</div>
 
 		<div class="grid-wrap">
 			<div class="grid search-item">
-				<label>생산 계획 번호 <span class="red">*</span></label>
-				<select id="workPlan" name="workPlan" required>
-					<option value="" disabled selected>생산 계획 코드 선택</option>
-				</select>
+				<label>생산 계획 번호</label>
+				<input type="text" value="${workDTO.workPlan}" readonly>
 			</div>
 
 			<div class="grid search-item">
 				<label>품목</label>
-				<input type="text" id="itemInfo" placeholder="품목명 (품목코드)" readonly>
+				<input type="text" id="itemInfo" value="${workDTO.workItemName} (${workDTO.workItem})" placeholder="품목명 (품목코드)" readonly>
 			</div>
 		</div>
 
@@ -54,10 +52,12 @@
 				<input type="number"
 					name="workOrderQty"
 					id="workOrderQty"
-					placeholder="지시 수량 입력"
+					placeholder="지시 수량 입력 (최대 ${workDTO.editableMaxQty} ${workDTO.workItemUnit})"
 					min="1"
+					max="${workDTO.editableMaxQty}"
 					onkeydown="blockNumberText(event)"
 					oninput="cleanQty(this)"
+					value="${workDTO.workOrderQty}"
 					required>
 			</div>
 
@@ -67,6 +67,9 @@
 					name="workDate"
 					id="workDate"
 					style="width: 350px;"
+					min="${workDTO.planSdate}"
+					max="${workDTO.planEdate}"
+					value="${workDTO.workDate}"
 					required>
 			</div>
 		</div>
@@ -74,14 +77,14 @@
 		<div class="grid-wrap">
 			<div class="grid search-item">
 				<label>작업 지시자</label>
-				<input type="hidden" name="workDirector" value="${sessionScope.loginUser.empId}" placeholder="작업 지시자">
-				<input type="text" value="${sessionScope.loginUser.empName} (${sessionScope.loginUser.empId})" placeholder="작업 지시자" readonly>
+				<input type="text" value="${workDTO.workDname} (${workDTO.workDirector})" placeholder="작업 지시자" readonly>
 			</div>
 			<div class="grid search-item">
 				<label>작업자 <span class="red">*</span></label>
 				<div style="display:flex; gap:10px;">
-					<input type="hidden" id="workWorker" name="workWorker">
+					<input type="hidden" id="workWorker" name="workWorker" value="${workDTO.workWorker}">
 					<input type="text" id="workWorkerText" placeholder="작업자 조회" readonly required
+						value="${workDTO.workWname} (${workDTO.workWorker})"
 						style="min-width: 310px;"
 					>
 					<button type="button"
@@ -99,7 +102,8 @@
 				<textarea name="workDmsg"
 					id="workDmsg"
 					placeholder="작업 지시 전달사항을 입력하세요. (선택)"
-					style="height: 200px;"></textarea>
+					style="height: 200px;"
+					>${workDTO.workDmsg}</textarea>
 			</div>
 		</div>
 
@@ -171,29 +175,19 @@
 <script>
 	window.addEventListener("load", function() {
 		bind();
-		loadPlanList();
-		setToday();
 	});
 	
-	let selectedPlan = null;
-	
 	function bind() {
-		const workPlan = document.querySelector("#workPlan");
 		const workOrderQty = document.querySelector("#workOrderQty");
 		const form = document.querySelector("#workAddForm");
 	
 		const workerSearchBtn = document.querySelector("#workerSearchBtn");
 		const workerModal = document.querySelector("#workerModal");
 		const workerModalClose = document.querySelector("#workerModalClose");
-// 		const workerSearchSubmit = document.querySelector("#workerSearchSubmit");
 		const workerSelectBtn = document.querySelector("#workerSelectBtn");
 		const workerKeyword = document.querySelector("#workerKeyword");
 	
-		workPlan.addEventListener("change", function() {
-			applyPlanInfo();
-		});
-	
-		form.addEventListener("submit", function(e) {
+				form.addEventListener("submit", function(e) {
 			if (!validateForm()) {
 				e.preventDefault();
 				return;
@@ -229,86 +223,7 @@
 			cleanQty(this);
 		});
 	}
-	
-	
-	function loadPlanList() {
-		const workPlan = document.querySelector("#workPlan");
-	
-		workPlan.innerHTML =
-			'<option value="" disabled selected>생산 계획 코드 선택</option>';
-	
-		fetch("${pageContext.request.contextPath}/work/planList")
-			.then(function(response) {
-				return response.json();
-			})
-			.then(function(result) {
-				let html =
-					'<option value="" disabled selected>생산 계획 코드 선택</option>';
-	
-				for (let i = 0; i < result.length; i++) {
-					const plan = result[i];
-	
-					const remainQty =
-						Number(plan.planFinQty) - Number(plan.planWorkingQty);
-	
-					html += '<option value="' + plan.planId + '" ';
-					html += 'data-item-id="' + plan.planItem + '" ';
-					html += 'data-item-name="' + plan.planItemName + '" ';
-					html += 'data-item-unit="' + plan.planItemUnit + '" ';
-					html += 'data-fin-qty="' + plan.planFinQty + '" ';
-					html += 'data-working-qty="' + plan.planWorkingQty + '" ';
-					html += 'data-remain-qty="' + remainQty + '" ';
-					html += 'data-plan-sdate="' + plan.planSdateStr + '" ';
-					html += 'data-plan-edate="' + plan.planEdateStr + '">';
-					html += plan.planId + ' (';
-					html += plan.planWorkingQty + '/' + plan.planFinQty;
-					html += ')';
-					html += '</option>';
-				}
-	
-				workPlan.innerHTML = html;
-			})
-			.catch(function() {
-				alert("생산 계획 목록 조회 실패");
-			});
-	}
-	
-	function applyPlanInfo() {
-		const workPlan = document.querySelector("#workPlan");
-		const itemInfo = document.querySelector("#itemInfo");
-		const workOrderQty = document.querySelector("#workOrderQty");
-		const workDate = document.querySelector("#workDate");
-
-		const option = workPlan.options[workPlan.selectedIndex];
-
-		selectedPlan = {
-			planId: option.value,
-			itemId: option.getAttribute("data-item-id"),
-			itemName: option.getAttribute("data-item-name"),
-			itemUnit: option.getAttribute("data-item-unit"),
-			finQty: Number(option.getAttribute("data-fin-qty")),
-			workingQty: Number(option.getAttribute("data-working-qty")),
-			remainQty: Number(option.getAttribute("data-remain-qty")),
-			planSdate: option.getAttribute("data-plan-sdate"),
-			planEdate: option.getAttribute("data-plan-edate")
-		};
-
-		itemInfo.value =
-			selectedPlan.itemName + " (" + selectedPlan.itemId + ")";
-
-		workOrderQty.value = "";
-		workOrderQty.max = selectedPlan.remainQty;
-		workOrderQty.placeholder =
-			"지시 수량 입력 (최대 " + selectedPlan.remainQty + " " + selectedPlan.itemUnit + ")";
-
-		workDate.min = selectedPlan.planSdate;
-		workDate.max = selectedPlan.planEdate;
-
-		if (!workDate.value || workDate.value < selectedPlan.planSdate || workDate.value > selectedPlan.planEdate) {
-			workDate.value = selectedPlan.planSdate;
-		}
-	}
-	
+		
 	function loadWorkerList(keyword) {
 		const workerTbody = document.querySelector("#workerTbody");
 	
@@ -379,17 +294,10 @@
 	}
 	
 	function validateForm() {
-		const workPlan = document.querySelector("#workPlan");
 		const workOrderQty = document.querySelector("#workOrderQty");
 		const workDate = document.querySelector("#workDate");
 		const workWorker = document.querySelector("#workWorker");
-	
-		if (workPlan.value === "") {
-			alert("생산 계획 번호를 선택하세요.");
-			workPlan.focus();
-			return false;
-		}
-	
+
 		if (workOrderQty.value === "") {
 			alert("지시 수량을 입력하세요.");
 			workOrderQty.focus();
@@ -402,24 +310,28 @@
 			return false;
 		}
 	
-		if (selectedPlan && Number(workOrderQty.value) > selectedPlan.remainQty) {
-			alert("지시 수량은 남은 수량을 초과할 수 없습니다.");
+		const maxQty = Number(workOrderQty.max);
+
+		if (!isNaN(maxQty) && maxQty > 0 && Number(workOrderQty.value) > maxQty) {
+			alert("지시 수량은 최대 " + maxQty + "개까지 입력할 수 있습니다.");
+			workOrderQty.value = maxQty;
 			workOrderQty.focus();
 			return false;
 		}
-	
+		
 		if (workDate.value === "") {
 			alert("작업일을 입력하세요.");
 			workDate.focus();
 			return false;
 		}
 		
-		if (selectedPlan) {
-			if (workDate.value < selectedPlan.planSdate || workDate.value > selectedPlan.planEdate) {
-				alert("작업일은 생산계획 기간 안에서만 선택할 수 있습니다.");
-				workDate.focus();
-				return false;
-			}
+		const minDate = workDate.min;
+		const maxDate = workDate.max;
+
+		if (workDate.value < minDate || workDate.value > maxDate) {
+			alert("작업일은 생산계획 기간 안에서만 선택할 수 있습니다.");
+			workDate.focus();
+			return false;
 		}
 	
 		if (workWorker.value === "") {
@@ -438,14 +350,27 @@
 	}
 	
 	function cleanQty(el) {
-		el.value = el.value.replace(/[-+eE.]/g, "");
-	
-		if (el.value !== "" && Number(el.value) < 1) {
-			el.value = 1;
+		const maxQty = Number(el.max);
+
+		// 숫자 말고 제거
+		el.value = el.value.replace(/[^0-9]/g, "");
+
+		// 빈 값이면 일단 그대로 둠
+		if (el.value === "") {
+			return;
 		}
-	
-		if (selectedPlan && el.value !== "" && Number(el.value) > selectedPlan.remainQty) {
-			el.value = selectedPlan.remainQty;
+
+		let qty = Number(el.value);
+
+		// 1보다 작으면 1
+		if (qty < 1) {
+			el.value = 1;
+			return;
+		}
+
+		// max보다 크면 max로 고정
+		if (!isNaN(maxQty) && maxQty > 0 && qty > maxQty) {
+			el.value = maxQty;
 		}
 	}
 	

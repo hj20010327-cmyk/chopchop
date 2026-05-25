@@ -25,14 +25,17 @@
 			</a>
 		</div>
 		<div>
-			<a class="btn btn-main" href="${pageContext.request.contextPath}/work/edit?workId=${workDTO.workId}">
-				수정
-			</a>
-			<a class="btn btn-red"
-				href="${pageContext.request.contextPath}/work/delete?workId=${workDTO.workId}"
-				onclick="return confirm('작업 지시를 삭제하시겠습니까?');">
-				삭제
-			</a>
+			<c:if test="${(workDTO.workPrevQty <= 0 or workDTO.workPrevQty == null) and workDTO.workStatus != 30}">
+				<a class="btn btn-main" href="${pageContext.request.contextPath}/work/order/edit?workId=${workDTO.workId}">
+					수정
+				</a>
+
+				<a class="btn btn-red"
+					href="${pageContext.request.contextPath}/work/delete?workId=${workDTO.workId}"
+					onclick="return confirm('작업 지시를 삭제하시겠습니까?');">
+					삭제
+				</a>
+			</c:if>
 		</div>
 	</div>
 
@@ -41,7 +44,7 @@
 		<div class="content-content-content">
 			<div class="detail-title-row">
 				<div class="content-content-content-title">작업 지시 상세정보</div>
-				<div>
+				<div style="display: flex; gap: 15px; align-items: flex-end;">
 					<c:choose>
 						<c:when test="${workDTO.workStatus == 10}">
 							<span class="status-back status-back-warning">• 대기중</span>
@@ -62,6 +65,13 @@
 							<span class="status-back status-back-info">• 기타</span>
 						</c:otherwise>
 					</c:choose>
+					
+					<c:if test="${(workDTo.workPrevQty == null or workDTO.workPrevQty < workDTo.workOrderQty)
+									and (workDTO.workStatus != 30) and (workDTO.workStatus != 10)}">
+						<a class="btn btn-orange" href="${pageContext.request.contextPath}/work/result/edit?workId=${workDTO.workId}">
+							결과 수정
+						</a>
+					</c:if>
 				</div>
 			</div>
 
@@ -315,13 +325,13 @@
 						</c:if>
 					</div>
 
-					<div class="qr-box">
-						<div class="qr-title">QR 코드</div>
-						<div class="qr-sub">
-							공정 사진이나<br>
-							설비 정보
-						</div>
-					</div>
+<!-- 					<div class="qr-box"> -->
+<!-- 						<div class="qr-title">QR 코드</div> -->
+<!-- 						<div class="qr-sub"> -->
+<!-- 							공정 사진이나<br> -->
+<!-- 							설비 정보 -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 				</div>
 			</div>
 		</div>
@@ -381,9 +391,7 @@
 	}
 
 	.proc-row {
-		display: grid;
-		grid-template-columns: 52px 1fr 260px;
-		min-height: 58px;
+		display: flex;
 		border-bottom: 1px solid var(--dark-gray);
 	}
 
@@ -394,6 +402,7 @@
 		background-color: var(--main-green);
 		color: #fff;
 		font-weight: 700;
+		width: 70px;
 	}
 
 	.proc-main {
@@ -401,6 +410,7 @@
 		flex-direction: column;
 		justify-content: center;
 		padding: 10px 18px;
+		width: 230px;
 	}
 
 	.proc-name {

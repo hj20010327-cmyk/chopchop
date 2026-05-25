@@ -15,7 +15,7 @@
 		<div>
 		<p class="page-route">홈 > 작업 관리</p>
 		<a class="btn btn-white"
-			href="${pageContext.request.contextPath}/work/add">
+			href="${pageContext.request.contextPath}/work/order/add">
 			작업지시 등록	
 		</a>
 		</div>
@@ -51,9 +51,9 @@
 	    </div>
 	
 	    <div class="card safe work-card"
-	         data-card-type="delay">
+	         data-card-type="fin">
 	        <div class="card-title">완료된 작업</div>
-	        <div class="card-value">${workCard.delayCnt}</div>
+	        <div class="card-value">${workCard.finCnt}</div>
 	        <div class="card-subtitle">금일 기준</div>
 	    </div>
 	

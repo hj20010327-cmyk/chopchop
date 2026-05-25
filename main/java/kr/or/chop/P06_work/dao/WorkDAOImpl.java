@@ -61,5 +61,25 @@ public class WorkDAOImpl implements WorkDAO {
 	public int insertWork(WorkDTO workDTO) {
 		return session.insert("mapper.P06_work.insertWork", workDTO);
 	}
+
+	@Override
+	public WorkDTO selectWorkModify(WorkDTO workDTO) {
+		return session.selectOne("mapper.P06_work.selectWorkModify", workDTO);
+	}
+
+	@Override
+	public int updateWork(WorkDTO workDTO) {
+		return session.update("mapper.P06_work.updateWork", workDTO);
+	}
+
+	@Override
+	public int deleteWork(WorkDTO workDTO) {
+		return session.update("mapper.P06_work.deleteWork", workDTO);
+	}
+
+	@Override
+	public int updateWorkResult(WorkDTO workDTO) {
+		return session.update("mapper.P06_work.updateWorkResult", workDTO);
+	}
 	
 }

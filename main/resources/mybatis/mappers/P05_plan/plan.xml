@@ -297,7 +297,7 @@
 		FROM work w
 			LEFT OUTER JOIN emp d ON w.work_director = d.emp_id
 			LEFT OUTER JOIN emp worker ON w.work_worker = worker.emp_id
-		WHERE w.work_plan = #{planId}
+		WHERE w.work_plan = #{planId} and w.work_usage = 'Y'
 		ORDER BY
 			CASE w.work_status
 				WHEN 20 THEN 1

@@ -55,5 +55,25 @@ public class WorkServiceImpl implements WorkService {
 	public int insertWork(WorkDTO workDTO) {
 		return workDAO.insertWork(workDTO);
 	}
+
+	@Override
+	public WorkDTO selectWorkModify(WorkDTO workDTO) {
+		return workDAO.selectWorkModify(workDTO);
+	}
+
+	@Override
+	public int updateWork(WorkDTO workDTO) {
+		return workDAO.updateWork(workDTO);
+	}
+
+	@Override
+	public int deleteWork(WorkDTO workDTO) {
+		return workDAO.deleteWork(workDTO);
+	}
+
+	@Override
+	public int updateWorkResult(WorkDTO workDTO) {
+		return workDAO.updateWorkResult(workDTO);
+	}
 	
 }

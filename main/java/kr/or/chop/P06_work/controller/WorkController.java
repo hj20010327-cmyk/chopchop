@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.chop.P02_dashboard.service.RefreshService;
 import kr.or.chop.P06_work.dto.WorkDTO;
 import kr.or.chop.P06_work.service.WorkService;
 import kr.or.chop.common.pagination.PageInfo;
@@ -19,6 +20,8 @@ public class WorkController {
 	
 	@Autowired
 	WorkService workService;
+	@Autowired
+	RefreshService refService;
 	
 	@RequestMapping("/list")
 	public String list (
@@ -26,6 +29,8 @@ public class WorkController {
 		WorkDTO workDTO,
 		@RequestParam(value="page", defaultValue="1") int currentPage
 	) {
+		
+		refService.refreshStatus();
 		
 		// 페이징
 		int listCount = workService.selectWorkCount(workDTO);
@@ -57,6 +62,8 @@ public class WorkController {
 			@RequestParam("workId") String workId
 		) {
 		
+		refService.refreshStatus();
+		
 		WorkDTO workDTO = new WorkDTO();
 		workDTO.setWorkId(workId);
 
@@ -72,7 +79,18 @@ public class WorkController {
 	
 	
 	/* ============================ */
+
 	
+	@RequestMapping("/delete")
+	public String delete(
+			@RequestParam("workId") String workId,
+			WorkDTO workDTO
+		) {
+		workDTO.setWorkId(workId);
+		workService.deleteWork(workDTO);
+		
+		return "redirect:/work/list";
+	}
 	
 	
 }

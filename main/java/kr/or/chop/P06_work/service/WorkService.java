@@ -18,5 +18,12 @@ public interface WorkService {
 	public List<PlanDTO> selectWorkPlanList();
 	public List<WorkDTO> selectWorkerList(WorkDTO workDTO);
 	public int insertWork(WorkDTO workDTO);
+	
+	public WorkDTO selectWorkModify(WorkDTO workDTO);
+	public int updateWork(WorkDTO workDTO);
+	
+	public int deleteWork(WorkDTO workDTO);
+	
+	public int updateWorkResult(WorkDTO workDTO);
 
 }
