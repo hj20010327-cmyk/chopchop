@@ -18,7 +18,7 @@
 		<typeAlias type="kr.or.chop.P04_sugg.dto.SuggDTO" alias="suggDTO" />
 		<typeAlias type="kr.or.chop.P05_plan.dto.PlanDTO" alias="planDTO" />
 		<typeAlias type="kr.or.chop.P06_work.dto.WorkDTO" alias="workDTO" />
-<!-- 		<typeAlias type="kr.or.chop.P07_qc.dto.QcDTO" alias="qcDTO" /> -->
+		<typeAlias type="kr.or.chop.P07_qc.dto.QCDTO" alias="qcDTO" />
 		<typeAlias type="kr.or.chop.P08_stock.dto.StockDTO" alias="stockDTO" />
 		<typeAlias type="kr.or.chop.P09_lot.dto.LotDTO" alias="lotDTO" />
 		<typeAlias type="kr.or.chop.P10_io.dto.IoDTO" alias="ioDTO" />
