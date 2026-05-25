@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.chop.P02_dashboard.service.RefreshService;
 import kr.or.chop.P05_plan.dto.PlanDTO;
 import kr.or.chop.P05_plan.service.PlanService;
 import kr.or.chop.common.pagination.PageInfo;
@@ -20,12 +21,17 @@ public class PlanListController {
 	@Autowired
 	PlanService planService;
 	
+	@Autowired
+	RefreshService refService;
+	
 	@RequestMapping("/list")
 	public String list (
 			Model model,
 			PlanDTO planDTO,
 			@RequestParam(value="page", defaultValue="1") int currentPage
 		) {
+		
+		refService.refreshStatus();
 		
 		// 페이징
 		int listCount = planService.selectPlanCount(planDTO);

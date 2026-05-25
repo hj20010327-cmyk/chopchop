@@ -23,6 +23,8 @@ public class PlanDTO {
 	
 	private Date planSdate;
 	private Date planEdate;
+	private String planSdateStr;
+	private String planEdateStr;
 	
 	private String planDirector;
 	private String planDname;

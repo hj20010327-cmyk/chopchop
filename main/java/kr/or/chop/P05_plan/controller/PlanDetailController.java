@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.chop.P02_dashboard.service.RefreshService;
 import kr.or.chop.P05_plan.dto.PlanDTO;
 import kr.or.chop.P05_plan.service.PlanService;
 import kr.or.chop.P06_work.dto.WorkDTO;
@@ -18,6 +19,8 @@ public class PlanDetailController {
 	
 	@Autowired
 	PlanService planService;
+	@Autowired
+	RefreshService refService;
 	
 	@RequestMapping("/detail")
 	public String detail(
@@ -25,6 +28,8 @@ public class PlanDetailController {
 			@RequestParam("planId") String planId,
 			PlanDTO planDTO
 		) {
+		
+		refService.refreshStatus();
 		
 		planDTO.setPlanId(planId);
 		planDTO = planService.selectPlanDetail(planDTO);
