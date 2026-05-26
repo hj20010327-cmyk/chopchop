@@ -123,8 +123,20 @@
 	        FROM DUAL
 	    </selectKey>
 	    
-		INSERT INTO WH_SEC (WH_SEC_ID, WH_SEC_WHID, WH_SEC_QTY, WH_SEC_USAGE)
-		VALUES (#{secId}, #{secWhId}, #{secQty}, 'Y')
+		INSERT INTO WH_SEC (
+			WH_SEC_ID,
+			WH_SEC_WHID,
+			WH_SEC_QTY,
+			WH_SEC_USAGE,
+			WH_SEC_ORDER
+		)
+		VALUES (
+			#{secId},
+			#{secWhId},
+			#{secQty},
+			'Y',
+			#{secOrder}
+		)
 	</insert>
 	
 	<update id="plusWhQty" parameterType="secDTO">
@@ -136,6 +148,18 @@
 	<update id="updateSecImg" parameterType="secDTO">
 		UPDATE WH_SEC
 		SET WH_SEC_IMG = #{secImg}
+		WHERE WH_SEC_ID = #{secId}
+	</update>
+	
+	<update id="updateSecQty" parameterType="secDTO">
+		UPDATE WH_SEC
+		SET WH_SEC_QTY = #{secQty}
+		WHERE WH_SEC_ID = #{secId}
+	</update>
+	
+	<update id="updateSecOrder" parameterType="secDTO">
+		UPDATE WH_SEC
+		SET WH_SEC_ORDER = #{secOrder}
 		WHERE WH_SEC_ID = #{secId}
 	</update>
 

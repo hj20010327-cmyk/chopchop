@@ -26,4 +26,5 @@ public interface WHDAO {
 	public int updateWh(WHDTO whDTO);
 	
 	public int deleteWh(WHDTO whDTO);
+	
 }

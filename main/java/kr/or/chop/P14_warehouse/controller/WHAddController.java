@@ -1,8 +1,5 @@
 package kr.or.chop.P14_warehouse.controller;
 
-import java.io.File;
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +30,17 @@ public class WHAddController {
 	@PostMapping("/insert")
 	public String insertWH(
 	        WHDTO whDTO,
-	        @RequestParam("whImgFile") MultipartFile whImgFile,
+	        @RequestParam("secQtyList") String secQtyList,
 	        HttpServletRequest request
 	) throws Exception {
 		
-		System.out.println("/workplace/add controller.add");
+		System.out.println("/warehouse/insert controller.insertWH");
 		System.out.println("이름 : " + whDTO.getWhName() + ", 유형 : " + whDTO.getWhTypeNo());
+		System.out.println("섹션 수용량 목록 : " + secQtyList);
 		
-//		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/img/P14_warehouse");
-		String uploadPath = "D:/chop_upload/P14_warehouse";
-		String uploadUrl = "/upload/P14_warehouse";
-//		String contextPath = request.getContextPath();
+		whService.insertWHWithSections(whDTO, secQtyList);
 
-	    whService.insertWH(whDTO, whImgFile, uploadPath, uploadUrl);
-
-	    return "redirect:/warehouse/list";
+		return "redirect:/warehouse/list";
 	}
 
 }

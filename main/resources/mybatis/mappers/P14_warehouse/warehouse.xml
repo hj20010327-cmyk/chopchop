@@ -535,7 +535,7 @@
 	    WHERE ws.wh_sec_whid = #{whId}
 	      AND ws.wh_sec_usage = 'Y'
 	
-	    ORDER BY ws.wh_sec_id
+	    ORDER BY NVL(ws.wh_sec_order, 999), ws.wh_sec_id
 	</select>
 	
 	<insert id="insertWH" parameterType="whDTO">

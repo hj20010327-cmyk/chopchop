@@ -17,6 +17,9 @@ public interface SecDAO {
 	
 	public int insertSection(SecDTO secDTO);
 	public int plusWhQty(SecDTO secDTO);
-	public int updateSecImg(SecDTO secDTO);
+//	public int updateSecImg(SecDTO secDTO);
+	
+	int updateSecQty(SecDTO secDTO);
+	int updateSecOrder(SecDTO secDTO);
 	
 }

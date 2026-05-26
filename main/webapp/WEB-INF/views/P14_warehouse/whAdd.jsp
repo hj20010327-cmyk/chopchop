@@ -17,7 +17,8 @@
     <form action="${pageContext.request.contextPath}/warehouse/insert"
           method="post"
           enctype="multipart/form-data"
-          class="grid-form">
+          class="grid-form"
+          onsubmit="return beforeSubmit();">
 		
 		<div class="btn-row">
 			<div class="left"></div>
@@ -64,133 +65,562 @@
 			</div>
 		</div>
 		
-		<div class="search-item">
-			<label style="font-size: 13px; font-weight: 600; color: #555;">
-	   			창고 이미지 (선택)
-	   		</label>
-	   		<div style="display: flex; gap: 15px;">
-				<input type="file" name="whImgFile" id="whImgFile" accept="image/*" style="display: none;">
-				<input type="text" id="fileName" title="선택된 파일 없음" placeholder="선택된 파일 없음" readonly>
-				<div style="display: flex; gap: 10px;">
-					<label type="button" class="btn btn-main" for="whImgFile"
-							style="color: white; font-size: 14px;">이미지 선택</label>
-					<button type="button" class="btn btn-red" id="delImgBtn" onclick="delImg()">삭제</button>
+		
+		<input type="hidden" name="secQtyList" id="secQtyList">
+		
+		<div class="content-content-content section-config">
+			<div class="btn-row">
+				<div class="left content-content-content-title">
+					창고 섹션 설정
 				</div>
-	   		</div>
-			
-			<div id="imgPreviewBox" style="display: none;">
-		        <img id="previewImg" src="" alt="이미지 미리보기"
-		        >
+				<div class="right">
+					<button type="button" class="btn btn-main" onclick="openSecModal()">
+						섹션 추가
+					</button>
+				</div>
 			</div>
-			
-			<div id="noImg"
-			     style="font-size:12px; display: block; margin-top: 8px;">
-			    등록된 사진 없음
+		
+			<div class="section-layout">
+				<div class="map-card"
+						style="display: flex; flex-direction: column; align-items:center;">
+					<h3>창고 영역도</h3>
+					<div id="warehouseMap" class="warehouse-map"></div>
+				</div>
+		
+				<div class="table-wrap">
+					<table class="table">
+						<thead>
+							<tr>
+								<th style="width: 120px;">예상 섹션번호</th>
+								<th style="width: 115px;">수용량(LOT)</th>
+								<th style="width: 105px;">순서</th>
+								<th style="width: 80px;">삭제</th>
+							</tr>
+						</thead>
+						<tbody id="sectionTableBody">
+							<tr id="emptySectionRow">
+								<td colspan="4" style="text-align: center;">
+									등록된 섹션이 없습니다.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
+		
+		<div id="secModal" class="modal-bg">
+			<div class="modal-box">
+				<div class="modal-title" id="secModalTitle">섹션 추가</div>
+		
+				<div class="search-item">
+					<label>섹션 수용량 <span class="red">*</span></label>
+					<input type="number" id="modalSecQty" min="1" placeholder="수용량 입력">
+				</div>
+		
+				<div class="btn-row modal-btn-row">
+					<div class="left"></div>
+					<div class="right">
+						<button type="button" class="btn btn-white" onclick="closeSecModal()">
+							취소
+						</button>
+						<button type="button" class="btn btn-main" id="secModalSaveBtn" onclick="saveSection()">
+							추가
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
 
     </form>
 
 </div>
 
+
 <style>
-	/* ==============================
-	   addImg
-	============================== */
-	
-	#imgPreviewBox {
-	    width: 100%;
-	    display: none;
-	    
-	    align-items: center;
-	    justify-content: flex-start;
-	    overflow: hidden;
-	    margin-top: 8px;
+	.section-config {
+		margin-top: 25px;
+	}
+
+	.section-layout {
+		display: flex;
+		align-items: flex-start;
+		gap: 15px;
+		width: 100%;
 	}
 	
-	#noImg {
-		padding: 0 15px;
+	/* 왼쪽 구역도 크게 */
+	.map-card {
+		width: 50%;
+		height: 445px;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		padding: 20px;
+		background: #fff;
 	}
 	
-	#imgPreviewBox img {
-	    display: none;
-	    width: 80%;
-	    height: 100%;
-	    object-fit: cover;
+	/* 오른쪽 테이블 작게 */
+	.section-layout > .table-wrap {
+		width: 420px;
+	}
+	
+	/* 구역도 높이 증가 */
+	.warehouse-map {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: #fff;
+	}
+	
+	/* SVG 자체도 더 크게 */
+	.wh-svg {
+		width: 100%;
+		max-width: 620px;
+		height: auto;
+		display: block;
+	}
+
+	.wh-border {
+		fill: #fafafa;
+		stroke: #777;
+		stroke-width: 3;
+	}
+
+	.wh-door {
+		fill: #fff;
+		stroke: #777;
+		stroke-width: 2;
+	}
+
+	.sec-box {
+		fill: #fff;
+		stroke: #777;
+		stroke-width: 2;
+		cursor: pointer;
+		transition: 0.15s;
+	}
+
+	.sec-text {
+		font-size: 14px;
+		font-weight: 700;
+		text-anchor: middle;
+		dominant-baseline: middle;
+		fill: #222;
+		pointer-events: none;
+	}
+
+	.sec-sub-text {
+		font-size: 10.5px;
+		font-weight: 600;
+		text-anchor: middle;
+		dominant-baseline: middle;
+		fill: #666;
+		pointer-events: none;
+	}
+
+	.modal-bg {
+		display: none;
+		position: fixed;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.35);
+		z-index: 9999;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-bg.show {
+		display: flex;
+	}
+
+	.modal-box {
+		width: 360px;
+		background: #fff;
+		border-radius: 10px;
+		padding: 22px;
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+	}
+
+	.modal-title {
+		font-size: 18px;
+		font-weight: 700;
+		margin-bottom: 18px;
+	}
+
+	.modal-btn-row {
+		margin-top: 20px;
+	}
+
+	.order-btn {
+		padding: 4px 8px;
+		border: 1px solid #ddd;
+		background: #fff;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+
+	.order-btn:hover {
+		border-color: var(--main-green);
+		color: var(--main-green);
+	}
+
+	.delete-sec-btn {
+		padding: 4px 8px;
+		border: 1px solid var(--danger);
+		color: var(--danger);
+		background: #fff;
+		cursor: pointer;
+		border-radius: 4px;
+	}
+	
+	#sectionTableBody tr:not(#emptySectionRow) {
+		cursor: pointer;
+	}
+	
+	#sectionTableBody tr:not(#emptySectionRow):hover .sec-no-cell {
+		color: var(--main-green);
+		text-decoration: underline;
+		text-underline-offset: 3px;
 	}
 </style>
 
+
 <script>
-	window.addEventListener("load", () => {
-		init();
-	})
-	
-	function init() {
-		bind();
+	let sectionList = [];
+	let editSecIndex = -1;
+
+	window.addEventListener("load", function () {
+		renderAll();
+	});
+
+	function openSecModal() {
+		editSecIndex = -1;
+
+		document.querySelector("#secModalTitle").innerText = "섹션 추가";
+		document.querySelector("#secModalSaveBtn").innerText = "추가";
+
+		document.querySelector("#modalSecQty").value = "";
+		document.querySelector("#secModal").classList.add("show");
+		document.querySelector("#modalSecQty").focus();
 	}
 	
-	function bind() {
-		addImg();
+	function closeSecModal() {
+		document.querySelector("#secModal").classList.remove("show");
+		editSecIndex = -1;
 	}
-	
-	function addImg() {
-		const whImgFile = document.querySelector("#whImgFile");
-		const previewImg = document.querySelector("#previewImg");
-		const imgPreviewBox = document.querySelector("#imgPreviewBox");
-		const noImg = document.querySelector("#noImg");
-		const fileName = document.querySelector("#fileName");
 
-		whImgFile.addEventListener("change", function () {
-		    const file = this.files[0];
+	function openEditSecModal(index) {
+		editSecIndex = index;
 
-		    if (!file) {
-		        previewImg.src = "";
-		        previewImg.style.display = "none";
-		        imgPreviewBox.style.display = "none";
-		        noImg.style.display = "block";
-		        return;
-		    }
+		document.querySelector("#secModalTitle").innerText = "섹션 수정";
+		document.querySelector("#secModalSaveBtn").innerText = "수정";
 
-		    if (!file.type.startsWith("image/")) {
-		        alert("이미지 파일만 등록할 수 있습니다.");
-		        this.value = "";
-		        previewImg.src = "";
-		        previewImg.style.display = "none";
-		        imgPreviewBox.style.display = "none";
-		        noImg.style.display = "block";
-		        return;
-		    }
+		document.querySelector("#modalSecQty").value = sectionList[index].secQty;
+		document.querySelector("#secModal").classList.add("show");
+		document.querySelector("#modalSecQty").focus();
+	}
 
-		    const reader = new FileReader();
+	function saveSection() {
+		const qtyEl = document.querySelector("#modalSecQty");
+		const secQty = Number(qtyEl.value);
 
-		    reader.onload = function (e) {
-		        previewImg.src = e.target.result;
-		        imgPreviewBox.style.display = "flex";
-		        previewImg.style.display = "block";
-		        noImg.style.display = "none";
-		        fileName.value = e.target.result;
-		        fileName.title = e.target.result;
-		    };
+		if (!secQty || secQty <= 0) {
+			alert("섹션 수용량은 1 이상으로 입력하세요.");
+			qtyEl.focus();
+			return;
+		}
 
-		    reader.readAsDataURL(file);
+		if (editSecIndex === -1) {
+			sectionList.push({
+				secQty: secQty
+			});
+		} else {
+			sectionList[editSecIndex].secQty = secQty;
+		}
+
+		closeSecModal();
+		renderAll();
+	}
+
+	function removeSection(index) {
+		if (!confirm("해당 섹션을 삭제하시겠습니까?")) {
+			return;
+		}
+
+		sectionList.splice(index, 1);
+		renderAll();
+	}
+
+	function moveSectionUp(index) {
+		if (index <= 0) return;
+
+		const temp = sectionList[index - 1];
+		sectionList[index - 1] = sectionList[index];
+		sectionList[index] = temp;
+
+		renderAll();
+	}
+
+	function moveSectionDown(index) {
+		if (index >= sectionList.length - 1) return;
+
+		const temp = sectionList[index + 1];
+		sectionList[index + 1] = sectionList[index];
+		sectionList[index] = temp;
+
+		renderAll();
+	}
+
+	function renderAll() {
+		renderWarehouseMap();
+		renderSectionTable();
+		updateWhQty();
+		updateHiddenInput();
+	}
+
+	function updateWhQty() {
+		let total = 0;
+
+		for (let i = 0; i < sectionList.length; i++) {
+			total += Number(sectionList[i].secQty || 0);
+		}
+
+		const whQtyView = document.querySelector("#whQtyView");
+
+		if (whQtyView) {
+			whQtyView.value = total;
+		}
+	}
+
+	function updateHiddenInput() {
+		const secQtyList = sectionList.map(function (sec) {
+			return sec.secQty;
+		}).join(",");
+
+		document.querySelector("#secQtyList").value = secQtyList;
+	}
+
+	function renderSectionTable() {
+		const tbody = document.querySelector("#sectionTableBody");
+		tbody.innerHTML = "";
+
+		if (sectionList.length === 0) {
+			tbody.innerHTML =
+				'<tr id="emptySectionRow">' +
+					'<td colspan="4" style="text-align: center;">등록된 섹션이 없습니다.</td>' +
+				'</tr>';
+			return;
+		}
+
+		for (let i = 0; i < sectionList.length; i++) {
+			const expectedSecNo = 11 + i;
+
+			const tr = document.createElement("tr");
+
+			tr.onclick = function () {
+				openEditSecModal(i);
+			};
+
+			tr.innerHTML =
+				'<td class="sec-no-cell">신규-' + expectedSecNo + '</td>' +
+				'<td>' + sectionList[i].secQty + '</td>' +
+				'<td>' +
+					'<button type="button" class="order-btn" onclick="event.stopPropagation(); moveSectionUp(' + i + ')">▲</button> ' +
+					'<button type="button" class="order-btn" onclick="event.stopPropagation(); moveSectionDown(' + i + ')">▼</button>' +
+				'</td>' +
+				'<td>' +
+					'<button type="button" class="delete-sec-btn" onclick="event.stopPropagation(); removeSection(' + i + ')">삭제</button>' +
+				'</td>';
+
+			tbody.appendChild(tr);
+		}
+	}
+
+	function renderWarehouseMap() {
+		const map = document.querySelector("#warehouseMap");
+		map.innerHTML = "";
+
+		if (sectionList.length === 0) {
+			map.innerHTML = '<div class="empty-map" style="margin-top: 130px;">섹션을 추가하면 구역도가 표시됩니다.</div>';
+			return;
+		}
+
+		const svgNS = "http://www.w3.org/2000/svg";
+		const svg = document.createElementNS(svgNS, "svg");
+
+		svg.setAttribute("viewBox", "0 0 500 360");
+		svg.classList.add("wh-svg");
+
+		svg.appendChild(createSvgEl("rect", {
+			x: 25,
+			y: 25,
+			width: 450,
+			height: 310,
+			rx: 4,
+			class: "wh-border"
+		}));
+
+		svg.appendChild(createSvgEl("rect", {
+			x: 15,
+			y: 150,
+			width: 20,
+			height: 40,
+			class: "wh-door"
+		}));
+
+		svg.appendChild(createSvgEl("rect", {
+			x: 465,
+			y: 150,
+			width: 20,
+			height: 40,
+			class: "wh-door"
+		}));
+
+		const positions = makeSectionPositions(sectionList.length);
+
+		for (let i = 0; i < sectionList.length; i++) {
+			const sec = sectionList[i];
+			const pos = positions[i];
+			const expectedSecNo = 11 + i;
+
+			const group = createSvgEl("g", {
+				class: "sec-group"
+			});
+
+			const rect = createSvgEl("rect", {
+				x: pos.x,
+				y: pos.y,
+				width: pos.w,
+				height: pos.h,
+				rx: 4,
+				class: "sec-box"
+			});
+
+			const text = createSvgEl("text", {
+				x: pos.x + pos.w / 2,
+				y: pos.y + pos.h / 2 - 6,
+				class: "sec-text"
+			});
+			text.textContent = "신규-" + expectedSecNo;
+
+			const subText = createSvgEl("text", {
+				x: pos.x + pos.w / 2,
+				y: pos.y + pos.h / 2 + 15,
+				class: "sec-sub-text"
+			});
+			subText.textContent = "0 / " + sec.secQty + " (LOT)";
+
+			group.appendChild(rect);
+			group.appendChild(text);
+			group.appendChild(subText);
+			svg.appendChild(group);
+		}
+
+		map.appendChild(svg);
+	}
+
+	function createSvgEl(tag, attrs) {
+		const svgNS = "http://www.w3.org/2000/svg";
+		const el = document.createElementNS(svgNS, tag);
+
+		Object.keys(attrs).forEach(function (key) {
+			el.setAttribute(key, attrs[key]);
 		});
-	}
-	
-	function delImg() {
-		const whImgFile = document.querySelector("#whImgFile");
-		const previewImg = document.querySelector("#previewImg");
-		const imgPreviewBox = document.querySelector("#imgPreviewBox");
-		const noImg = document.querySelector("#noImg");
-		const fileName = document.querySelector("#fileName");
-		
-		previewImg.src = "";
-		previewImg.style.display = "none";
-		imgPreviewBox.style.display = "none";
-		whImgFile.value = "";
-		noImg.style.display = "block";
-		fileName.value = "";
-		fileName.title = "선택된 파일 없음";
-		delImg.value = "Y";
+
+		return el;
 	}
 
+	function makeSectionPositions(count) {
+		if (count === 5) {
+			return [
+				{ x: 65, y: 50,  w: 160, h: 75 },
+				{ x: 275, y: 50,  w: 160, h: 75 },
+				{ x: 65, y: 150, w: 160, h: 75 },
+				{ x: 275, y: 150, w: 160, h: 75 },
+				{ x: 65, y: 250, w: 370, h: 60 }
+			];
+		}
+
+		if (count === 6) {
+			return [
+				{ x: 55,  y: 55,  w: 115, h: 100 },
+				{ x: 192, y: 55,  w: 115, h: 100 },
+				{ x: 329, y: 55,  w: 115, h: 100 },
+				{ x: 55,  y: 185, w: 115, h: 100 },
+				{ x: 192, y: 185, w: 115, h: 100 },
+				{ x: 329, y: 185, w: 115, h: 100 }
+			];
+		}
+
+		if (count === 7) {
+			return [
+				{ x: 55,  y: 45,  w: 115, h: 85 },
+				{ x: 192, y: 45,  w: 115, h: 85 },
+				{ x: 329, y: 45,  w: 115, h: 85 },
+				{ x: 55,  y: 155, w: 115, h: 85 },
+				{ x: 192, y: 155, w: 115, h: 85 },
+				{ x: 329, y: 155, w: 115, h: 85 },
+				{ x: 80,  y: 265, w: 340, h: 50 }
+			];
+		}
+
+		if (count === 8) {
+			return makeGridPositions(count, 4, 2);
+		}
+
+		if (count === 9) {
+			return makeGridPositions(count, 3, 3);
+		}
+
+		if (count >= 10) {
+			const cols = 4;
+			const rows = Math.ceil(count / cols);
+			return makeGridPositions(count, cols, rows);
+		}
+
+		return makeGridPositions(count, 2, Math.ceil(count / 2));
+	}
+
+	function makeGridPositions(count, cols, rows) {
+		const startX = 50;
+		const startY = 45;
+		const gap = 14;
+
+		const totalW = 400;
+		const totalH = 270;
+
+		const boxW = (totalW - gap * (cols - 1)) / cols;
+		const boxH = (totalH - gap * (rows - 1)) / rows;
+
+		const arr = [];
+
+		for (let i = 0; i < count; i++) {
+			const row = Math.floor(i / cols);
+			const col = i % cols;
+
+			arr.push({
+				x: startX + col * (boxW + gap),
+				y: startY + row * (boxH + gap),
+				w: boxW,
+				h: boxH
+			});
+		}
+
+		return arr;
+	}
+
+	function beforeSubmit() {
+		updateHiddenInput();
+
+		if (sectionList.length === 0) {
+			alert("섹션을 최소 1개 이상 추가하세요.");
+			return false;
+		}
+
+		return true;
+	}
 </script>

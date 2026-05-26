@@ -14,5 +14,7 @@ public class SecDTO {
 	private String secUsage;
 	private String secImg;
 	
+	private int secOrder;
+	
 	private String delImg;
 }

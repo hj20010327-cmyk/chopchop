@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.chop.P09_lot.dto.LotDTO;
-import kr.or.chop.P14_warehouse.dto.WHDTO;
 import kr.or.chop.P14_warehouse.dto.SecDTO;
+import kr.or.chop.P14_warehouse.dto.WHDTO;
 import kr.or.chop.P14_warehouse.service.SecService;
 import kr.or.chop.P14_warehouse.service.WHService;
-import kr.or.chop.P19_ghp.dto.GlogDTO;
 import kr.or.chop.common.pagination.PageInfo;
 import kr.or.chop.common.pagination.Pagination;
 
@@ -24,6 +23,8 @@ public class SecDetailController {
 
 	@Autowired
 	SecService secService;
+	@Autowired
+	WHService whService;
 	
 
 	@RequestMapping("/detail")
@@ -40,6 +41,11 @@ public class SecDetailController {
 		// secDTO 가져오기
 		secDTO = secService.selectSecDTO(secDTO);
 		
+		// 전체 sec 가져오기
+		WHDTO whDTO = new WHDTO();
+		whDTO.setWhId(secDTO.getSecWhId());
+		List<SecDTO> secList = whService.selectSecList(whDTO);
+		
 		// LOT 개수 가져와서 페이징
 		int listCount = secService.selectLotCount(secDTO);
 		PageInfo pageInfo = Pagination.getPageInfo(listCount, currentPage, 5, 10);
@@ -48,6 +54,7 @@ public class SecDetailController {
 		List<LotDTO> lotList = secService.selectLotList(secDTO, pageInfo);
 		
 		model.addAttribute("secDTO", secDTO);
+		model.addAttribute("secList", secList);
 		model.addAttribute("page", pageInfo);
 		model.addAttribute("lotList", lotList);
 		

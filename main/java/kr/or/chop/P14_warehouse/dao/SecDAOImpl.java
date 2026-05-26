@@ -59,9 +59,19 @@ public class SecDAOImpl implements SecDAO {
 		return sqlSession.update("mapper.P14_warehouse.section.plusWhQty", secDTO);
 	}
 
+//	@Override
+//	public int updateSecImg(SecDTO secDTO) {
+//		return sqlSession.update("mapper.P14_warehouse.section.updateSecImg", secDTO);
+//	}
+	
 	@Override
-	public int updateSecImg(SecDTO secDTO) {
-		return sqlSession.update("mapper.P14_warehouse.section.updateSecImg", secDTO);
+	public int updateSecQty(SecDTO secDTO) {
+		return sqlSession.update("mapper.P14_warehouse.section.updateSecQty", secDTO);
+	}
+
+	@Override
+	public int updateSecOrder(SecDTO secDTO) {
+		return sqlSession.update("mapper.P14_warehouse.section.updateSecOrder", secDTO);
 	}
 
 }

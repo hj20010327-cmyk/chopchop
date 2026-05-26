@@ -24,15 +24,15 @@
 			</a>
 		</div>
 		<div class="right">
-			<a class="btn btn-main" style="display: none;"
-				href="${pageContext.request.contextPath}/warehouse/section/edit?secId=${secDTO.secId}">
-				수정
-			</a>
-			<a class="btn btn-red"
-				href="${pageContext.request.contextPath}/warehouse/section/delete?secId=${secDTO.secId}"
-				onclick="return confirm('섹션(${secDTO.secId})을 삭제하시겠습니까?');">
-				삭제
-			</a>
+<!-- 			<a class="btn btn-main" style="display: none;" -->
+<%-- 				href="${pageContext.request.contextPath}/warehouse/section/edit?secId=${secDTO.secId}"> --%>
+<!-- 				수정 -->
+<!-- 			</a> -->
+<!-- 			<a class="btn btn-red" -->
+<%-- 				href="${pageContext.request.contextPath}/warehouse/section/delete?secId=${secDTO.secId}" --%>
+<%-- 				onclick="return confirm('섹션(${secDTO.secId})을 삭제하시겠습니까?');"> --%>
+<!-- 				삭제 -->
+<!-- 			</a> -->
 		</div>
 	</div>
 	
@@ -75,17 +75,22 @@
 			
 			<div style="display: flex; align-items: flex-start; gap: 15px;">
 				<div class="card" style="width: 50%; padding: 20px;">
-					<div class="content-content-content-title">섹션 이미지</div>
-					<c:if test="${empty secDTO.secImg or secDTO.secImg == ''}">
-						<div style="font-size: 14px; color: var(--dark-gray);">섹션 이미지가 없습니다</div>
-					</c:if>
-					<c:if test="${not empty secDTO.secImg and secDTO.secImg != ''}">
-			        	<div class="info-image">
-							<img src="${pageContext.request.contextPath}${secDTO.secImg}"
-								title="${secDTO.secId}_img" alt="${secDTO.secId}_img"
-								 style="width: 100%;">
-						</div>
-					</c:if>
+					<div class="content-content-content-title">창고 영역도</div>
+				
+					<div id="warehouseMap"
+						class="warehouse-map"
+						data-context-path="${pageContext.request.contextPath}"
+						data-current-sec-id="${secDTO.secId}">
+				
+						<c:forEach var="sec" items="${secList}">
+							<div class="sec-data"
+								data-sec-id="${sec.secId}"
+								data-sec-qty="${sec.secQty}"
+								data-lot-cnt="${sec.secPrevQty}">
+							</div>
+						</c:forEach>
+				
+					</div>
 				</div>
 				
 				<div class="card" style="width: 50%; padding: 20px;">
@@ -199,6 +204,95 @@
 		padding-left: 10px;
 	}
 	
+	
+	
+	
+	
+	.warehouse-map {
+		width: 100%;
+		min-height: 300px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: #fff;
+	}
+	
+	.wh-svg {
+		width: 100%;
+		max-width: 420px;
+		height: auto;
+		display: block;
+	}
+	
+	.wh-border {
+		fill: #fafafa;
+		stroke: #777;
+		stroke-width: 3;
+	}
+	
+	.wh-door {
+		fill: #fff;
+		stroke: #777;
+		stroke-width: 2;
+	}
+	
+	.sec-box {
+		fill: #fff;
+		stroke: #777;
+		stroke-width: 2;
+		cursor: pointer;
+		transition: 0.15s;
+	}
+	
+	.sec-empty,
+	.sec-low,
+	.sec-mid,
+	.sec-high {
+		fill: #fff;
+	}
+	
+	.sec-selected {
+		fill: #e8f4ee !important;
+		stroke: var(--main-green) !important;
+		stroke-width: 2 !important;
+	}
+	
+	.sec-text {
+		font-size: 14px;
+		font-weight: 700;
+		text-anchor: middle;
+		dominant-baseline: middle;
+		fill: #222;
+		pointer-events: none;
+	}
+	
+	.sec-sub-text {
+		font-size: 10.5px;
+		font-weight: 600;
+		text-anchor: middle;
+		dominant-baseline: middle;
+		fill: #666;
+		pointer-events: none;
+	}
+	
+	.sec-group:hover .sec-box {
+		stroke: var(--main-green);
+		stroke-width: 3;
+	}
+	
+	.sec-group:hover .sec-text {
+		fill: var(--main-green);
+	}
+	
+	.sec-group:hover .sec-selected {
+		stroke-width: 4;
+	}
+	
+	.empty-map {
+		color: #999;
+		font-size: 14px;
+	}
+	
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -215,6 +309,7 @@
 	function bind() {
 		moveLot();
 		drawChart();
+		initWarehouseMap();
 	}
 	
 	function moveLot() {
@@ -275,6 +370,214 @@
 	            }
 	        }
 	    });
+	}
+	
+	function initWarehouseMap() {
+		const map = document.querySelector("#warehouseMap");
+
+		if (!map) return;
+
+		const contextPath = map.dataset.contextPath || "";
+		const currentSecId = map.dataset.currentSecId || "";
+
+		const secList = Array.from(map.querySelectorAll(".sec-data")).map(el => {
+			const secQty = Number(el.dataset.secQty || 0);
+			const secPrevQty = Number(el.dataset.lotCnt || 0);
+
+			return {
+				secId: el.dataset.secId,
+				secQty: secQty,
+				secPrevQty: secPrevQty,
+				rate: secQty > 0 ? Math.round((secPrevQty / secQty) * 1000) / 10 : 0
+			};
+		});
+
+		map.innerHTML = "";
+
+		if (secList.length === 0) {
+			map.innerHTML = '<div class="empty-map">등록된 섹션이 없습니다.</div>';
+			return;
+		}
+
+		const svgNS = "http://www.w3.org/2000/svg";
+
+		const svg = document.createElementNS(svgNS, "svg");
+		svg.setAttribute("viewBox", "0 0 500 360");
+		svg.classList.add("wh-svg");
+
+		const border = createSvgEl("rect", {
+			x: 25,
+			y: 25,
+			width: 450,
+			height: 310,
+			rx: 4,
+			class: "wh-border"
+		});
+		svg.appendChild(border);
+
+		svg.appendChild(createSvgEl("rect", {
+			x: 15,
+			y: 150,
+			width: 20,
+			height: 40,
+			class: "wh-door"
+		}));
+
+		svg.appendChild(createSvgEl("rect", {
+			x: 465,
+			y: 150,
+			width: 20,
+			height: 40,
+			class: "wh-door"
+		}));
+
+		const positions = makeSectionPositions(secList.length);
+
+		secList.forEach((sec, index) => {
+			const pos = positions[index];
+
+			const link = createSvgEl("a", {
+				href: contextPath + "/warehouse/section/detail?secId=" + encodeURIComponent(sec.secId)
+			});
+
+			const group = createSvgEl("g", {
+				class: "sec-group"
+			});
+
+			let rectClass = getSectionClass(sec.rate);
+
+			if (sec.secId === currentSecId) {
+				rectClass += " sec-selected";
+			}
+
+			const rect = createSvgEl("rect", {
+				x: pos.x,
+				y: pos.y,
+				width: pos.w,
+				height: pos.h,
+				rx: 4,
+				class: rectClass
+			});
+
+			const text = createSvgEl("text", {
+				x: pos.x + pos.w / 2,
+				y: pos.y + pos.h / 2 - 6,
+				class: "sec-text"
+			});
+			text.textContent = sec.secId;
+
+			const subText = createSvgEl("text", {
+				x: pos.x + pos.w / 2,
+				y: pos.y + pos.h / 2 + 15,
+				class: "sec-sub-text"
+			});
+			subText.textContent = sec.secPrevQty + " / " + sec.secQty + " (LOT)";
+
+			group.appendChild(rect);
+			group.appendChild(text);
+			group.appendChild(subText);
+			link.appendChild(group);
+			svg.appendChild(link);
+		});
+
+		map.appendChild(svg);
+	}
+
+	function createSvgEl(tag, attrs) {
+		const svgNS = "http://www.w3.org/2000/svg";
+		const el = document.createElementNS(svgNS, tag);
+
+		Object.keys(attrs).forEach(key => {
+			el.setAttribute(key, attrs[key]);
+		});
+
+		return el;
+	}
+
+	function getSectionClass(rate) {
+		if (rate >= 80) return "sec-box sec-high";
+		if (rate >= 50) return "sec-box sec-mid";
+		if (rate > 0) return "sec-box sec-low";
+		return "sec-box sec-empty";
+	}
+
+	function makeSectionPositions(count) {
+		if (count === 5) {
+			return [
+				{ x: 65, y: 50,  w: 160, h: 75 },
+				{ x: 275, y: 50,  w: 160, h: 75 },
+				{ x: 65, y: 150, w: 160, h: 75 },
+				{ x: 275, y: 150, w: 160, h: 75 },
+				{ x: 65, y: 250, w: 370, h: 60 }
+			];
+		}
+
+		if (count === 6) {
+			return [
+				{ x: 55,  y: 55,  w: 115, h: 100 },
+				{ x: 192, y: 55,  w: 115, h: 100 },
+				{ x: 329, y: 55,  w: 115, h: 100 },
+				{ x: 55,  y: 185, w: 115, h: 100 },
+				{ x: 192, y: 185, w: 115, h: 100 },
+				{ x: 329, y: 185, w: 115, h: 100 }
+			];
+		}
+
+		if (count === 7) {
+			return [
+				{ x: 55,  y: 45,  w: 115, h: 85 },
+				{ x: 192, y: 45,  w: 115, h: 85 },
+				{ x: 329, y: 45,  w: 115, h: 85 },
+				{ x: 55,  y: 155, w: 115, h: 85 },
+				{ x: 192, y: 155, w: 115, h: 85 },
+				{ x: 329, y: 155, w: 115, h: 85 },
+				{ x: 80,  y: 265, w: 340, h: 50 }
+			];
+		}
+
+		if (count === 8) {
+			return makeGridPositions(count, 4, 2);
+		}
+
+		if (count === 9) {
+			return makeGridPositions(count, 3, 3);
+		}
+
+		if (count >= 10) {
+			const cols = 4;
+			const rows = Math.ceil(count / cols);
+			return makeGridPositions(count, cols, rows);
+		}
+
+		return makeGridPositions(count, 2, Math.ceil(count / 2));
+	}
+
+	function makeGridPositions(count, cols, rows) {
+		const startX = 50;
+		const startY = 45;
+		const gap = 14;
+
+		const totalW = 400;
+		const totalH = 270;
+
+		const boxW = (totalW - gap * (cols - 1)) / cols;
+		const boxH = (totalH - gap * (rows - 1)) / rows;
+
+		const arr = [];
+
+		for (let i = 0; i < count; i++) {
+			const row = Math.floor(i / cols);
+			const col = i % cols;
+
+			arr.push({
+				x: startX + col * (boxW + gap),
+				y: startY + row * (boxH + gap),
+				w: boxW,
+				h: boxH
+			});
+		}
+
+		return arr;
 	}
 	
 </script>
