@@ -1,13 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.emp">
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-	
+<mapper namespace="mapper.P20_report">
+
+    <!-- 품질 리포트 요약 카드 -->
+    <select id="selectQualitySummary"
+            parameterType="qualityReportSearchDTO"
+            resultType="qualityReportSummaryDTO">
+
+        SELECT
+            NVL(SUM(q.qc_qty), 0) AS totalQcQty,
+
+            NVL(SUM(q.qc_pass_qty), 0) AS totalPassQty,
+
+            NVL(
+                SUM(
+                    q.qc_qty - NVL(q.qc_pass_qty, 0)
+                ),
+                0
+            ) AS totalDefectQty,
+
+            ROUND(
+                NVL(
+                    NVL(
+                        SUM(
+                            q.qc_qty - NVL(q.qc_pass_qty, 0)
+                        ),
+                        0
+                    )
+                    / NULLIF(SUM(q.qc_qty), 0)
+                    * 100,
+                    0
+                ),
+                1
+            ) AS defectRate
+
+        FROM qc q
+
+            JOIN lot l
+                ON q.qc_lot = l.lot_id
+
+        WHERE q.qc_usage = 'Y'
+
+        <if test="startDate != null and startDate != ''">
+            AND q.qc_date <![CDATA[ >= ]]>
+                TO_DATE(#{startDate}, 'YYYY-MM-DD')
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND q.qc_date <![CDATA[ < ]]>
+                TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        </if>
+
+        <if test="itemId != null and itemId != ''">
+            AND l.lot_item = #{itemId}
+        </if>
+
+        <if test="defTypeId != null and defTypeId != ''">
+
+            AND EXISTS (
+
+                SELECT 1
+                FROM def_log dl
+
+                WHERE dl.dlog_qcid = q.qc_id
+                  AND dl.dlog_def = #{defTypeId}
+
+            )
+
+        </if>
+
+    </select>
 
 </mapper>
-
-
-
-
