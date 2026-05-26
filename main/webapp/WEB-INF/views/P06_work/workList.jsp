@@ -221,7 +221,7 @@
 	
 	.card {
 		cursor: pointer;
-    	width: 155px;
+    	width: 147px;
 	    	   
 	    display: flex;
 	    flex-direction: column;

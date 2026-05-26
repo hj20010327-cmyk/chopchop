@@ -300,7 +300,9 @@
 											</c:when>
 											<c:otherwise>
 												<c:forEach var="wp" items="${proc.wpList}" varStatus="status">
-													${wp.wpName} (${wp.wpId})<c:if test="${!status.last}">, </c:if>
+													<a class="proc-link" href="${pageContext.request.contextPath}/worplace/detail?wpId=${wp.wpId}">
+														${wp.wpName} (${wp.wpId})
+													</a><c:if test="${!status.last}">, </c:if>
 												</c:forEach>
 											</c:otherwise>
 										</c:choose>
@@ -313,7 +315,9 @@
 											</c:when>
 											<c:otherwise>
 												<c:forEach var="equip" items="${proc.eqList}" varStatus="status">
-													${equip.eqName} (${equip.eqId})<c:if test="${!status.last}">, </c:if>
+													<a class="proc-link" href="${pageContext.request.contextPath}/equip/detail?eqId=${equip.eqId}">
+														${equip.eqName} (${equip.eqId})
+													</a><c:if test="${!status.last}">, </c:if>
 												</c:forEach>
 											</c:otherwise>
 										</c:choose>
@@ -336,6 +340,7 @@
 <!-- 							설비 정보 -->
 <!-- 						</div> -->
 <!-- 					</div> -->
+
 				</div>
 			</div>
 		</div>
@@ -469,6 +474,10 @@
 		font-size: 14px;
 		font-weight: 700;
 		line-height: 1.5;
+	}
+	
+	.proc-link:hover {
+		color: var(--main-green);
 	}
 
 	@media (max-width: 900px) {
