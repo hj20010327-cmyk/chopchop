@@ -38,7 +38,7 @@
 		<typeAlias type="kr.or.chop.P18_defect.dto.DefDTO" alias="defDTO" />
 		<typeAlias type="kr.or.chop.P19_ghp.dto.GhpDTO" alias="ghpDTO" />
 		<typeAlias type="kr.or.chop.P19_ghp.dto.GlogDTO" alias="glogDTO" />
-<!-- 		<typeAlias type="kr.or.chop.P20_report.dto.ReportDTO" alias="reportDTO" /> -->
+		<typeAlias type="kr.or.chop.P20_report.dto.ReportDTO" alias="reportDTO" />
 		<typeAlias type="kr.or.chop.P21_manage.dto.AdminDTO" alias="adminDTO" />
     </typeAliases>
 
