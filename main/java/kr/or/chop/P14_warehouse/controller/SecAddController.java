@@ -72,10 +72,10 @@ public class SecAddController {
 
 //		String uploadPath = request.getSession().getServletContext().getRealPath("/resources/img/P14_warehouse/section");
 //		String contextPath = request.getContextPath();
-		String uploadPath = "D:/chop_upload/P14_warehouse/section";
-		String uploadUrl = "/upload/P14_warehouse/section";
+//		String uploadPath = "D:/chop_upload/P14_warehouse/section";
+//		String uploadUrl = "/upload/P14_warehouse/section";
 		
-		secService.updateSection(secDTO, secImgFile, uploadPath, uploadUrl);
+//		secService.updateSection(secDTO, secImgFile, uploadPath, uploadUrl);
 		return "redirect:/warehouse/section/detail?secId=" + secDTO.getSecId();
 	}
 }

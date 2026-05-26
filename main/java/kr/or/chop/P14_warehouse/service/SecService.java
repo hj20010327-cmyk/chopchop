@@ -19,6 +19,6 @@ public interface SecService {
 	
 	public void insertSection(SecDTO secDTO, MultipartFile secImgFile, String uploadPath, String uploadUrl) throws IllegalStateException, IOException;
 
-	public void updateSection(SecDTO secDTO, MultipartFile secImgFile, String uploadPath, String uploadUrl) throws IllegalStateException, IOException;
+//	public void updateSection(SecDTO secDTO, MultipartFile secImgFile, String uploadPath, String uploadUrl) throws IllegalStateException, IOException;
 
 }
