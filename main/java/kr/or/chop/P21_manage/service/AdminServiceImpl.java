@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.or.chop.P21_manage.dao.AdminDAO;
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
@@ -48,5 +49,10 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public List<AdminDTO> selectDeptSummary() {
 	    return adminDAO.selectDeptSummary();
+	}
+	
+	@Override
+	public AdminActivityDTO selectAdminActivity(String empId) {
+	    return adminDAO.selectAdminActivity(empId);
 	}
 }

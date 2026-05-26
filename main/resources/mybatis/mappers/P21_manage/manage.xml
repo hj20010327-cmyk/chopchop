@@ -190,5 +190,21 @@
 	    ORDER BY d.deptno
 	
 	</select>
+	
+	<select id="selectAdminActivity"
+	        parameterType="string"
+	        resultType="adminActivityDTO">
+	
+	    SELECT
+	        NVL(SUM(CASE WHEN w.work_status = 10 THEN 1 ELSE 0 END), 0) AS waitCount,
+	        NVL(SUM(CASE WHEN w.work_status = 20 THEN 1 ELSE 0 END), 0) AS progressCount,
+	        NVL(SUM(CASE WHEN w.work_status = 30 THEN 1 ELSE 0 END), 0) AS doneCount,
+	        NVL(SUM(CASE WHEN w.work_status = 40 THEN 1 ELSE 0 END), 0) AS delayCount
+	    FROM work w
+	    WHERE w.work_usage = 'Y'
+	      AND w.work_worker = #{empId}
+	      AND w.work_date <![CDATA[>=]]> TRUNC(SYSDATE) - 30
+	
+	</select>
 
 </mapper>

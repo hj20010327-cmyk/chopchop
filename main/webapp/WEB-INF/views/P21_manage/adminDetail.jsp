@@ -31,7 +31,7 @@
 
             <form action="${pageContext.request.contextPath}/admin/delete"
                   method="post"
-                  onclick="return confirm('사원(${emp.empId})을 삭제하시겠습니까?');">
+                  onclick="return confirm('사원(${admin.empId})을 삭제하시겠습니까?');">
 
                 <input type="hidden"
                        name="empId"
@@ -154,25 +154,25 @@
 
             <div class="emp-activity-card">
                 <p class="activity-title">대기 중인 작업</p>
-                <p class="activity-count activity-wait">0 <span>건</span></p>
+                <p class="activity-count activity-wait">${activity.waitCount} <span>건</span></p>
                 <p class="activity-sub">최근 30일 기준</p>
             </div>
 
             <div class="emp-activity-card">
                 <p class="activity-title">진행 중인 작업</p>
-                <p class="activity-count activity-progress">0 <span>건</span></p>
+                <p class="activity-count activity-progress">${activity.progressCount} <span>건</span></p>
                 <p class="activity-sub">최근 30일 기준</p>
             </div>
 
             <div class="emp-activity-card">
                 <p class="activity-title">완료된 작업</p>
-                <p class="activity-count activity-done">0 <span>건</span></p>
+                <p class="activity-count activity-done">${activity.doneCount} <span>건</span></p>
                 <p class="activity-sub">최근 30일 기준</p>
             </div>
 
             <div class="emp-activity-card">
                 <p class="activity-title">지연된 작업</p>
-                <p class="activity-count activity-delay">0 <span>건</span></p>
+                <p class="activity-count activity-delay">${activity.delayCount} <span>건</span></p>
                 <p class="activity-sub">최근 30일 기준</p>
             </div>
 

@@ -2,6 +2,7 @@ package kr.or.chop.P21_manage.service;
 
 import java.util.List;
 
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
@@ -20,4 +21,6 @@ public interface AdminService {
 	int updateAdmin(AdminDTO adminDTO);
 
 	int deleteAdmin(String empId);
+	
+	AdminActivityDTO selectAdminActivity(String empId);
 }

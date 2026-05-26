@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 import kr.or.chop.P21_manage.service.AdminService;
 
@@ -19,8 +20,10 @@ public class AdminDetailController {
     public String adminDetail(String empId, Model model) {
 
         AdminDTO admin = adminService.selectAdminDetail(empId);
+        AdminActivityDTO activity = adminService.selectAdminActivity(empId);
 
         model.addAttribute("admin", admin);
+        model.addAttribute("activity", activity);
 
         return "P21_manage/adminDetail.tiles";
     }

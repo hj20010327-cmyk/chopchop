@@ -41,6 +41,7 @@
 		<typeAlias type="kr.or.chop.P20_report.dto.QualityReportSearchDTO" alias="qualityReportSearchDTO"/>
 		<typeAlias type="kr.or.chop.P20_report.dto.QualityReportSummaryDTO" alias="qualityReportSummaryDTO"/>
 		<typeAlias type="kr.or.chop.P21_manage.dto.AdminDTO" alias="adminDTO" />
+		<typeAlias type="kr.or.chop.P21_manage.dto.AdminActivityDTO" alias="adminActivityDTO" />
     </typeAliases>
 
 </configuration>

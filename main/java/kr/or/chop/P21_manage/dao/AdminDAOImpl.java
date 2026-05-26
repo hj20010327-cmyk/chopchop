@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 import kr.or.chop.P21_manage.dto.AdminDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
@@ -55,5 +56,10 @@ public class AdminDAOImpl implements AdminDAO {
 	@Override
 	public List<AdminDTO> selectDeptSummary() {
 	    return sqlSession.selectList("mapper.P21_manage.selectDeptSummary");
+	}
+	
+	@Override
+	public AdminActivityDTO selectAdminActivity(String empId) {
+	    return sqlSession.selectOne("mapper.P21_manage.selectAdminActivity", empId);
 	}
 }
