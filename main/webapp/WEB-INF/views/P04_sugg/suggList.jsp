@@ -346,7 +346,7 @@ function dateCheck() {
  } 
 
  .suggTitle:hover { 
- 	color: #2d7a46; 
+ 	color:var(--main-green); 
  	text-decoration: underline; 
  } 
 /* .search-box { */

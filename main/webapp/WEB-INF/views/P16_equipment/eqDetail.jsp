@@ -187,20 +187,21 @@
 					<tbody>
 						<c:forEach var="log" items="${eqLogList}">
 							<tr>
-								<td>${log.elogSdate}</td>
+								<td><fmt:formatDate value="${log.elogSdate}"
+										pattern="yyyy-MM-dd HH:mm" /></td>
 
 								<td><c:choose>
 										<c:when test="${empty log.elogEdate}">
                                             -
                                         </c:when>
 										<c:otherwise>
-                                            ${log.elogEdate}
-                                        </c:otherwise>
+											<fmt:formatDate value="${log.elogEdate}" pattern="yyyy-MM-dd HH:mm" />
+										</c:otherwise>
 									</c:choose></td>
 
 								<td>${log.elogReason}</td>
 								<td>${log.elogResult}</td>
-								<td>${log.elogWorker}</td>
+								<td>${log.elogWorkerName}(${log.elogWorker})</td>
 							</tr>
 						</c:forEach>
 
@@ -387,49 +388,41 @@
 			document.querySelector("#stopOverlay").style.display = "none";
 		});
 	}
-	
-	const eqStatusSelect =
-	    document.querySelector("#eqStatusSelect");
+
+	const eqStatusSelect = document.querySelector("#eqStatusSelect");
 
 	if (eqStatusSelect != null) {
 
-	    eqStatusSelect.addEventListener("change", function () {
+		eqStatusSelect.addEventListener("change", function() {
 
-	        const badge =
-	            document.querySelector("#statusBadge");
+			const badge = document.querySelector("#statusBadge");
 
-	        // 기존 색 제거
-	        badge.className = "status-back";
+			// 기존 색 제거
+			badge.className = "status-back";
 
-	        // 점검중
-	        if (this.value == "30") {
+			// 점검중
+			if (this.value == "30") {
 
-	            badge.classList.add(
-	                "status-back-warning"
-	            );
+				badge.classList.add("status-back-warning");
 
-	            badge.innerText = "점검중";
-	        }
+				badge.innerText = "점검중";
+			}
 
-	        // 고장
-	        else if (this.value == "40") {
+			// 고장
+			else if (this.value == "40") {
 
-	            badge.classList.add(
-	                "status-back-danger"
-	            );
+				badge.classList.add("status-back-danger");
 
-	            badge.innerText = "고장";
-	        }
+				badge.innerText = "고장";
+			}
 
-	        // 정지
-	        else if (this.value == "20") {
+			// 정지
+			else if (this.value == "20") {
 
-	            badge.classList.add(
-	                "status-back-info"
-	            );
+				badge.classList.add("status-back-info");
 
-	            badge.innerText = "정지";
-	        }
-	    });
-	}	
+				badge.innerText = "정지";
+			}
+		});
+	}
 </script>

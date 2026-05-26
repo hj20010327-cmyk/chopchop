@@ -23,6 +23,7 @@ public class EqDTO {
 	private String eqManagerName; // EMP_NAME 책임자명
 	private String wpName;        // WP_NAME 작업장명
 	private String wpTypeName;
+	private String elogWorkerName;
 	
 	
 	// 설비 통계 (임시 계산값)
@@ -35,8 +36,8 @@ public class EqDTO {
 
 	private String elogId;        // ELOG_ID 점검코드
 	private String elogEqid;      // ELOG_EQID 설비코드
-	private String elogSdate;     // ELOG_SDATE 점검시작일
-	private String elogEdate;     // ELOG_EDATE 점검종료일
+	private Date elogSdate;     // ELOG_SDATE 점검시작일
+	private Date elogEdate;     // ELOG_EDATE 점검종료일
 	private String elogReason;    // ELOG_REASON 점검사유
 	private String elogContent;   // ELOG_CONTENT 점검내용
 	private String elogResult;    // ELOG_RESULT 점검결과

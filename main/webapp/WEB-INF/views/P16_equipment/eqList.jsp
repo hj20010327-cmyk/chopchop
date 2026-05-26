@@ -125,6 +125,11 @@
                 class="btn btn-main">
                 검색
             </button>
+            
+            <a class="btn btn-white"
+			   href="${pageContext.request.contextPath}/equip/list">
+			    초기화
+		    </a>
 
         </div>
 
@@ -150,7 +155,11 @@
                 <c:forEach var="eqp" items="${eqList}">
                     <tr onclick="location.href='${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}'">
 
-                        <td>${eqp.eqName} (${eqp.eqId})</td>
+                        <td>
+                        	<span class="eqId">
+                       		 ${eqp.eqName} (${eqp.eqId})
+                       		</span>
+                        </td>
                         <td>${eqp.wpName}</td>
                         <td>${eqp.totalTime}시간</td>
                         <td>${eqp.runTime}시간</td>
@@ -247,6 +256,16 @@
 .card:hover div,
 .card.active div {
     color: white !important;
+}
+
+.eqId {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover .eqId {
+    color: var(--main-green);
+    text-decoration: underline;
+    cursor: pointer;
 }
 </style>
 

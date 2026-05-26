@@ -148,25 +148,28 @@ AND E.EQ_USAGE = 'Y'
 
 
 <!-- 	설비 점검 이력 조회용 -->
-<select id="selectEqLogList" parameterType="string"
-resultType="eqDTO">
+<select id="selectEqLogList" parameterType="string" resultType="eqDTO">
 
-SELECT
-	ELOG_ID AS elogId,
-	ELOG_EQID AS elogEqid,
-	ELOG_SDATE AS
-	elogSdate,
-	ELOG_EDATE AS elogEdate,
-	ELOG_REASON AS elogReason,
-	ELOG_CONTENT AS elogContent,
-	ELOG_RESULT AS elogResult,
-	ELOG_WORKER AS
-	elogWorker,
-	ELOG_USAGE AS elogUsage
-FROM EQ_LOG
-WHERE ELOG_EQID = #{eqId}
-AND ELOG_USAGE = 'Y'
-ORDER BY ELOG_SDATE DESC
+    SELECT
+        L.ELOG_ID AS elogId,
+        L.ELOG_EQID AS elogEqid,
+        L.ELOG_SDATE AS elogSdate,
+        L.ELOG_EDATE AS elogEdate,
+        L.ELOG_REASON AS elogReason,
+        L.ELOG_CONTENT AS elogContent,
+        L.ELOG_RESULT AS elogResult,
+        L.ELOG_WORKER AS elogWorker,
+
+        E.EMP_NAME AS elogWorkerName
+
+    FROM EQ_LOG L
+    LEFT JOIN EMP E
+        ON L.ELOG_WORKER = E.EMP_ID
+
+    WHERE L.ELOG_EQID = #{eqId}
+      AND L.ELOG_USAGE = 'Y'
+
+    ORDER BY L.ELOG_SDATE DESC
 
 </select>
 
