@@ -1,7 +1,10 @@
 package kr.or.chop.P16_equip.dto;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -38,7 +41,9 @@ public class EqDTO {
 
 	private String elogId;        // ELOG_ID 점검코드
 	private String elogEqid;      // ELOG_EQID 설비코드
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date elogSdate;     // ELOG_SDATE 점검시작일
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date elogEdate;     // ELOG_EDATE 점검종료일
 	private String elogReason;    // ELOG_REASON 점검사유
 	private String elogContent;   // ELOG_CONTENT 점검내용
