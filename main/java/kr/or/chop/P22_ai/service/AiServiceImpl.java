@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.chop.P22_ai.dao.AiDAO;
 import kr.or.chop.P22_ai.dto.AiInsightDTO;
+import kr.or.chop.P22_ai.dto.AiPredictDashboardDTO;
 import kr.or.chop.P22_ai.dto.AiPredictHistoryDTO;
 import kr.or.chop.P22_ai.dto.AiQualityDTO;
 import kr.or.chop.P22_ai.dto.AiRiskChartDTO;
@@ -51,5 +52,10 @@ public class AiServiceImpl implements AiService {
 	@Override
 	public List<AiPredictHistoryDTO> selectRecentPredictHistory() {
 	    return aiDAO.selectRecentPredictHistory();
+	}
+	
+	@Override
+	public AiPredictDashboardDTO selectPredictDashboard() {
+	    return aiDAO.selectPredictDashboard();
 	}
 }

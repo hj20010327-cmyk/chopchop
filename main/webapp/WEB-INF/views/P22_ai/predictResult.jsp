@@ -38,8 +38,21 @@
 				예측 위험도
 			</p>
 
-			<div class="risk-badge ${riskClass}">
-				${predictResult}
+			<div class="risk-badge ${riskClass}
+			    ${predictResult == 'HIGH' ? 'risk-pulse' : ''}">
+			    ${predictResult}
+			</div>
+			
+			<div class="ai-reason-box">
+
+			    <h3>AI 분석 사유</h3>
+			
+			    <ul>
+			        <c:forEach var="reason" items="${analysisReasons}">
+			            <li>${reason}</li>
+			        </c:forEach>
+			    </ul>
+			
 			</div>
 
 			<div class="predict-info-grid">
@@ -201,5 +214,58 @@
 		gap: 10px;
 
 		margin-top: 30px;
+	}
+	
+	.ai-reason-box {
+	    margin-top: 28px;
+	    padding: 22px 26px;
+	
+	    text-align: left;
+	
+	    border-radius: 14px;
+	    background-color: #f8fafc;
+	    border: 1px solid #e5e7eb;
+	}
+	
+	.ai-reason-box h3 {
+	    margin: 0 0 14px 0;
+	
+	    font-size: 18px;
+	    color: #222;
+	}
+	
+	.ai-reason-box ul {
+	    margin: 0;
+	    padding-left: 20px;
+	}
+	
+	.ai-reason-box li {
+	    margin-bottom: 8px;
+	
+	    font-size: 14px;
+	    color: #444;
+	    line-height: 1.6;
+	}
+	
+	.risk-pulse {
+	    animation: riskPulse 1.5s infinite;
+	}
+	
+	@keyframes riskPulse {
+	
+	    0% {
+	        transform: scale(1);
+	        box-shadow: 0 0 0 rgba(220, 38, 38, 0.0);
+	    }
+	
+	    50% {
+	        transform: scale(1.04);
+	        box-shadow: 0 0 18px rgba(220, 38, 38, 0.28);
+	    }
+	
+	    100% {
+	        transform: scale(1);
+	        box-shadow: 0 0 0 rgba(220, 38, 38, 0.0);
+	    }
 	}
 </style>

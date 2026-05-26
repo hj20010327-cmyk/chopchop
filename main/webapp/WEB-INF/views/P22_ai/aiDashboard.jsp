@@ -18,6 +18,46 @@
             </p>
         </div>
     </div>
+    
+    <div class="weather-card">
+
+	    <div class="weather-top">
+	        <h3>현재 외부 환경</h3>
+	
+	        <span class="weather-state">
+	            ${weatherMain}
+	        </span>
+	    </div>
+	
+	    <div class="weather-info-wrap">
+	
+	        <div class="weather-info">
+	            <p>🌡 외부 온도</p>
+	            <strong>${outsideTemp}℃</strong>
+	        </div>
+	
+	        <div class="weather-info">
+	            <p>💧 외부 습도</p>
+	            <strong>${outsideHumidity}%</strong>
+	        </div>
+	
+	    </div>
+	
+	</div>
+    
+    <c:if test="${predictDashboard.highPredictCount > 0}">
+	    <div class="ai-alert-box">
+	        <div class="ai-alert-icon">⚠</div>
+	
+	        <div>
+	            <strong>최근 AI 예측 이력 중 HIGH 위험이 감지되었습니다.</strong>
+	            <p>
+	                온도, 습도, 설비 가동 시간, 야간 작업 여부를 확인하고
+	                생산 전 설비 및 작업 환경 점검을 권장합니다.
+	            </p>
+	        </div>
+	    </div>
+	</c:if>
 
     <div class="ai-card-grid">
 
@@ -48,6 +88,34 @@
         </div>
 
     </div>
+    
+    <div class="ai-card-grid predict-card-grid">
+
+	    <div class="ai-card">
+	        <p class="ai-card-label">AI 예측 실행 건수</p>
+	        <strong class="ai-card-value">${predictDashboard.totalPredictCount}</strong>
+	        <span class="ai-card-desc">건</span>
+	    </div>
+	
+	    <div class="ai-card">
+	        <p class="ai-card-label">예측 HIGH 건수</p>
+	        <strong class="ai-card-value danger">${predictDashboard.highPredictCount}</strong>
+	        <span class="ai-card-desc">건</span>
+	    </div>
+	
+	    <div class="ai-card">
+	        <p class="ai-card-label">예측 HIGH 비율</p>
+	        <strong class="ai-card-value danger">${predictDashboard.highPredictRate}</strong>
+	        <span class="ai-card-desc">%</span>
+	    </div>
+	
+	    <div class="ai-card">
+	        <p class="ai-card-label">최근 HIGH 발생 시간</p>
+	        <strong class="ai-card-value small-value">${predictDashboard.lastHighCreatedAt}</strong>
+	        <span class="ai-card-desc">예측 이력 기준</span>
+	    </div>
+	
+	</div>
     
     <div class="chart-wrap">
 
@@ -299,6 +367,127 @@
 	.empty-row {
 	    padding: 28px !important;
 	    color: #999 !important;
+	}
+	
+	.predict-card-grid {
+	    margin-top: 16px;
+	}
+	
+	.small-value {
+	    font-size: 20px;
+	}
+	
+	.ai-alert-box {
+	    display: flex;
+	    align-items: flex-start;
+	    gap: 14px;
+	
+	    margin-bottom: 20px;
+	    padding: 18px 22px;
+	
+	    border-radius: 14px;
+	    border: 1px solid #fecaca;
+	    background-color: #fef2f2;
+	}
+	
+	.ai-alert-icon {
+	    width: 36px;
+	    height: 36px;
+	
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	
+	    flex-shrink: 0;
+	
+	    border-radius: 50%;
+	    background-color: #fee2e2;
+	    color: #b91c1c;
+	
+	    font-size: 20px;
+	    font-weight: 900;
+	}
+	
+	.ai-alert-box strong {
+	    display: block;
+	
+	    margin-bottom: 6px;
+	
+	    color: #991b1b;
+	    font-size: 16px;
+	}
+	
+	.ai-alert-box p {
+	    margin: 0;
+	
+	    color: #7f1d1d;
+	    font-size: 14px;
+	    line-height: 1.6;
+	}
+	
+	.weather-card {
+	    margin-bottom: 20px;
+	    padding: 24px;
+	
+	    border-radius: 16px;
+	    background: linear-gradient(
+	        135deg,
+	        #eff6ff,
+	        #dbeafe
+	    );
+	
+	    border: 1px solid #bfdbfe;
+	}
+	
+	.weather-top {
+	    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+	
+	    margin-bottom: 18px;
+	}
+	
+	.weather-top h3 {
+	    margin: 0;
+	
+	    font-size: 20px;
+	    color: #1e3a8a;
+	}
+	
+	.weather-state {
+	    padding: 6px 14px;
+	
+	    border-radius: 999px;
+	    background-color: white;
+	
+	    color: #2563eb;
+	    font-weight: 700;
+	}
+	
+	.weather-info-wrap {
+	    display: flex;
+	    gap: 16px;
+	}
+	
+	.weather-info {
+	    flex: 1;
+	
+	    padding: 18px;
+	
+	    border-radius: 12px;
+	    background-color: rgba(255,255,255,0.7);
+	}
+	
+	.weather-info p {
+	    margin: 0 0 10px 0;
+	
+	    font-size: 14px;
+	    color: #555;
+	}
+	
+	.weather-info strong {
+	    font-size: 28px;
+	    color: #111827;
 	}
 </style>
 

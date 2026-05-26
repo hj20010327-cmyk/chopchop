@@ -196,5 +196,47 @@
 	    WHERE ROWNUM &lt;= 5
 	
 	</select>
+	
+	<select id="selectPredictDashboard"
+	        resultType="kr.or.chop.P22_ai.dto.AiPredictDashboardDTO">
+	
+	    SELECT
+	        COUNT(*) AS totalPredictCount,
+	
+	        SUM(
+	            CASE
+	                WHEN risk_level = 'HIGH' THEN 1
+	                ELSE 0
+	            END
+	        ) AS highPredictCount,
+	
+	        ROUND(
+	            NVL(
+	                SUM(
+	                    CASE
+	                        WHEN risk_level = 'HIGH' THEN 1
+	                        ELSE 0
+	                    END
+	                ) / NULLIF(COUNT(*), 0) * 100,
+	                0
+	            ),
+	            1
+	        ) AS highPredictRate,
+	
+	        NVL(
+	            TO_CHAR(
+	                MAX(
+	                    CASE
+	                        WHEN risk_level = 'HIGH' THEN created_at
+	                    END
+	                ),
+	                'YYYY-MM-DD HH24:MI'
+	            ),
+	            '-'
+	        ) AS lastHighCreatedAt
+	
+	    FROM ai_predict_history
+	
+	</select>
 
 </mapper>

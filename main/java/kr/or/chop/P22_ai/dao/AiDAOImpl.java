@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import kr.or.chop.P22_ai.dto.AiInsightDTO;
+import kr.or.chop.P22_ai.dto.AiPredictDashboardDTO;
 import kr.or.chop.P22_ai.dto.AiPredictHistoryDTO;
 import kr.or.chop.P22_ai.dto.AiQualityDTO;
 import kr.or.chop.P22_ai.dto.AiRiskChartDTO;
@@ -53,5 +54,10 @@ public class AiDAOImpl implements AiDAO {
 	@Override
 	public List<AiPredictHistoryDTO> selectRecentPredictHistory() {
 	    return sqlSession.selectList(NAMESPACE + "selectRecentPredictHistory");
+	}
+	
+	@Override
+	public AiPredictDashboardDTO selectPredictDashboard() {
+	    return sqlSession.selectOne(NAMESPACE + "selectPredictDashboard");
 	}
 }
