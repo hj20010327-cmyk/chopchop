@@ -27,8 +27,8 @@ public class EqDTO {
 	
 	
 	// 설비 통계 (임시 계산값)
-	private int totalTime;        // 전체시간
-	private int runTime;          // 가동시간
+	private double totalTime;        // 전체시간
+	private double runTime;          // 가동시간
 	private String runRate;       // 가동률
 
 

@@ -56,13 +56,49 @@ public class EqDAOImpl implements EqDAO {
 	}
 
 	@Override
-	public List<EqDTO> selectEqLogList(String eqId) {
-		return sqlSession.selectList("mapper.P16_equipment.selectEqLogList", eqId);
+	public int selectEqLogCount(String eqId) {
+	    return sqlSession.selectOne(
+	            "mapper.P16_equipment.selectEqLogCount",
+	            eqId
+	    );
 	}
 
 	@Override
-	public List<EqDTO> selectEqRunList(String eqId) {
-		return sqlSession.selectList("mapper.P16_equipment.selectEqRunList", eqId);
+	public int selectEqRunCount(String eqId) {
+	    return sqlSession.selectOne(
+	            "mapper.P16_equipment.selectEqRunCount",
+	            eqId
+	    );
+	}
+
+	@Override
+	public List<EqDTO> selectEqLogList(String eqId, PageInfo pageInfo) {
+
+	    Map<String, Object> paramMap =
+	            new HashMap<String, Object>();
+
+	    paramMap.put("eqId", eqId);
+	    paramMap.put("page", pageInfo);
+
+	    return sqlSession.selectList(
+	            "mapper.P16_equipment.selectEqLogList",
+	            paramMap
+	    );
+	}
+
+	@Override
+	public List<EqDTO> selectEqRunList(String eqId, PageInfo pageInfo) {
+
+	    Map<String, Object> paramMap =
+	            new HashMap<String, Object>();
+
+	    paramMap.put("eqId", eqId);
+	    paramMap.put("page", pageInfo);
+
+	    return sqlSession.selectList(
+	            "mapper.P16_equipment.selectEqRunList",
+	            paramMap
+	    );
 	}
 
 	@Override

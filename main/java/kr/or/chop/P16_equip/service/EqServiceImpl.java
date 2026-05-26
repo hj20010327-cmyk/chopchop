@@ -38,13 +38,23 @@ public class EqServiceImpl implements EqService {
 	}
 
 	@Override
-	public List<EqDTO> selectEqLogList(String eqId) {
-		return eqDAO.selectEqLogList(eqId);
+	public int selectEqLogCount(String eqId) {
+	    return eqDAO.selectEqLogCount(eqId);
 	}
 
 	@Override
-	public List<EqDTO> selectEqRunList(String eqId) {
-		return eqDAO.selectEqRunList(eqId);
+	public int selectEqRunCount(String eqId) {
+	    return eqDAO.selectEqRunCount(eqId);
+	}
+
+	@Override
+	public List<EqDTO> selectEqLogList(String eqId, PageInfo pageInfo) {
+	    return eqDAO.selectEqLogList(eqId, pageInfo);
+	}
+
+	@Override
+	public List<EqDTO> selectEqRunList(String eqId, PageInfo pageInfo) {
+	    return eqDAO.selectEqRunList(eqId, pageInfo);
 	}
 
 	@Override

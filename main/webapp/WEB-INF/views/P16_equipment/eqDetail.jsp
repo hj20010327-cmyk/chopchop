@@ -195,7 +195,8 @@
                                             -
                                         </c:when>
 										<c:otherwise>
-											<fmt:formatDate value="${log.elogEdate}" pattern="yyyy-MM-dd HH:mm" />
+											<fmt:formatDate value="${log.elogEdate}"
+												pattern="yyyy-MM-dd HH:mm" />
 										</c:otherwise>
 									</c:choose></td>
 
@@ -216,7 +217,26 @@
 				</table>
 			</div>
 
-			<jsp:include page="/WEB-INF/views/common/paging.jsp" />
+			<div class="pagination">
+
+				<c:forEach begin="${mtPage.startPage}" end="${mtPage.endPage}"
+					var="i">
+
+					<c:choose>
+						<c:when test="${i == mtPage.currentPage}">
+							<a class="active">${i}</a>
+						</c:when>
+
+						<c:otherwise>
+							<a
+								href="${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}&mtPage=${i}&runPage=${runPage.currentPage}">
+								${i} </a>
+						</c:otherwise>
+					</c:choose>
+
+				</c:forEach>
+
+			</div>
 
 		</div>
 
@@ -273,7 +293,26 @@
 				</table>
 			</div>
 
-			<jsp:include page="/WEB-INF/views/common/paging.jsp" />
+			<div class="pagination">
+
+				<c:forEach begin="${runPage.startPage}" end="${runPage.endPage}"
+					var="i">
+
+					<c:choose>
+						<c:when test="${i == runPage.currentPage}">
+							<a class="active">${i}</a>
+						</c:when>
+
+						<c:otherwise>
+							<a
+								href="${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}&mtPage=${mtPage.currentPage}&runPage=${i}">
+								${i} </a>
+						</c:otherwise>
+					</c:choose>
+
+				</c:forEach>
+
+			</div>
 
 		</div>
 

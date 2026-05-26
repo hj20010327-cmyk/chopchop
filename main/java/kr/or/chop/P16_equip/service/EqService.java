@@ -17,9 +17,13 @@ public interface EqService {
 
 	EqDTO selectEqDetail(String eqId);
 
-	List<EqDTO> selectEqLogList(String eqId);
+	int selectEqLogCount(String eqId);
 
-	List<EqDTO> selectEqRunList(String eqId);
+	int selectEqRunCount(String eqId);
+
+	List<EqDTO> selectEqLogList(String eqId, PageInfo pageInfo);
+
+	List<EqDTO> selectEqRunList(String eqId, PageInfo pageInfo);
 	
 	void insertEq(EqDTO eqDTO);
 	

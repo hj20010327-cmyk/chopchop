@@ -23,37 +23,92 @@
                 E.EQ_WPID AS eqWpid,
 
                 W.WP_NAME AS wpName,
-
                 S.EQ_STATUS_NAME AS eqStatusName,
 
-                300 AS totalTime,
-                290 AS runTime,
-                '91.2%' AS runRate
+                NVL(
+                    ROUND(
+                        (SYSDATE - MIN(R.EQ_RUN_STIME)) * 24,
+                        1
+                    ),
+                    0
+                ) AS totalTime,
+
+                NVL(
+                    ROUND(
+                        SUM(
+                            (
+                                NVL(R.EQ_RUN_ETIME, SYSDATE)
+                                - R.EQ_RUN_STIME
+                            ) * 24
+                        ),
+                        1
+                    ),
+                    0
+                ) AS runTime,
+
+                NVL(
+                    TO_CHAR(
+                        ROUND(
+                            (
+                                SUM(
+                                    (
+                                        NVL(R.EQ_RUN_ETIME, SYSDATE)
+                                        - R.EQ_RUN_STIME
+                                    ) * 24
+                                )
+                                /
+                                NULLIF(
+                                    (SYSDATE - MIN(R.EQ_RUN_STIME)) * 24,
+                                    0
+                                )
+                            ) * 100,
+                            1
+                        )
+                    ) || '%',
+                    '0%'
+                ) AS runRate
 
             FROM EQUIPMENT E
+
             LEFT JOIN EQ_STATUS S
                 ON E.EQ_STATUS = S.EQ_STATUS_NO
+
             LEFT JOIN WORKPLACE W
                 ON E.EQ_WPID = W.WP_ID
 
-            WHERE E.EQ_USAGE = 'Y'
+            LEFT JOIN EQ_RUN_LOG R
+                ON E.EQ_ID = R.EQ_RUN_EQID
 
-            <if test="eqWpid != null and eqWpid != ''">
-                AND E.EQ_WPID = #{eqWpid}
-            </if>
+            <where>
+                E.EQ_USAGE = 'Y'
 
-            <if test="eqStatus != 0">
-                AND E.EQ_STATUS = #{eqStatus}
-            </if>
+                <if test="eqWpid != null and eqWpid != ''">
+                    AND E.EQ_WPID = #{eqWpid}
+                </if>
 
-            <if test="searchKeyword != null and searchKeyword != ''">
-                AND (
-                    UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
-                    OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
-                )
-            </if>
+                <if test="eqStatus != 0">
+                    AND E.EQ_STATUS = #{eqStatus}
+                </if>
+
+                <if test="searchKeyword != null and searchKeyword != ''">
+                    AND (
+                        UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
+                        OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
+                    )
+                </if>
+            </where>
+
+            GROUP BY
+                E.EQ_ID,
+                E.EQ_NAME,
+                E.EQ_STATUS,
+                E.EQ_SDATE,
+                E.EQ_WPID,
+                W.WP_NAME,
+                S.EQ_STATUS_NAME
 
             ORDER BY E.EQ_ID DESC
+
         ) E2
     )
     WHERE RN BETWEEN #{page.startRow}
@@ -66,27 +121,25 @@
 
     SELECT COUNT(*)
     FROM EQUIPMENT E
-    LEFT JOIN EQ_STATUS S
-        ON E.EQ_STATUS = S.EQ_STATUS_NO
-    LEFT JOIN WORKPLACE W
-        ON E.EQ_WPID = W.WP_ID
 
-    WHERE E.EQ_USAGE = 'Y'
+    <where>
+        E.EQ_USAGE = 'Y'
 
-    <if test="eqWpid != null and eqWpid != ''">
-        AND E.EQ_WPID = #{eqWpid}
-    </if>
+        <if test="eqWpid != null and eqWpid != ''">
+            AND E.EQ_WPID = #{eqWpid}
+        </if>
 
-    <if test="eqStatus != 0">
-        AND E.EQ_STATUS = #{eqStatus}
-    </if>
+        <if test="eqStatus != 0">
+            AND E.EQ_STATUS = #{eqStatus}
+        </if>
 
-    <if test="searchKeyword != null and searchKeyword != ''">
-        AND (
-            UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
-            OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
-        )
-    </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (
+                UPPER(E.EQ_ID) LIKE UPPER('%' || #{searchKeyword} || '%')
+                OR UPPER(E.EQ_NAME) LIKE UPPER('%' || #{searchKeyword} || '%')
+            )
+        </if>
+    </where>
 
 </select>
 
@@ -105,71 +158,152 @@
 <!-- 설비 상세 조회 -->
 <!-- 설비코드 기준 1건 조회 -->
 <!-- 작업장명, 업체명, 책임자명 JOIN -->
+
 <select id="selectEqDetail" parameterType="string" resultType="eqDTO">
 
-SELECT
-	E.EQ_ID AS eqId,
-	E.EQ_NAME AS eqName,
-	E.EQ_STATUS AS eqStatus,
-	E.EQ_SDATE AS eqSdate,
-	E.EQ_WPID AS eqWpid,
-	E.EQ_VENDOR AS eqVendor,
-	E.EQ_MANAGER AS eqManager,
+    SELECT
+        E.EQ_ID AS eqId,
+        E.EQ_NAME AS eqName,
+        E.EQ_STATUS AS eqStatus,
+        E.EQ_SDATE AS eqSdate,
+        E.EQ_WPID AS eqWpid,
+        E.EQ_VENDOR AS eqVendor,
+        E.EQ_MANAGER AS eqManager,
 
-	S.EQ_STATUS_NAME AS eqStatusName,
+        S.EQ_STATUS_NAME AS eqStatusName,
 
-	W.WP_NAME AS wpName,
-	WT.WP_TYPE_NAME AS wpTypeName,
+        W.WP_NAME AS wpName,
+        WT.WP_TYPE_NAME AS wpTypeName,
 
-	V.VENDOR_NAME AS eqVendorName,
+        V.VENDOR_NAME AS eqVendorName,
+        EMP.EMP_NAME AS eqManagerName,
 
-	EMP.EMP_NAME AS eqManagerName,
+        NVL(
+            ROUND(
+                (SYSDATE - MIN(R.EQ_RUN_STIME)) * 24,
+                1
+            ),
+            0
+        ) AS totalTime,
 
-	300 AS totalTime,
-	290 AS runTime,
-	'91.23%' AS runRate
+        NVL(
+            ROUND(
+                SUM(
+                    (
+                        NVL(R.EQ_RUN_ETIME, SYSDATE)
+                        - R.EQ_RUN_STIME
+                    ) * 24
+                ),
+                1
+            ),
+            0
+        ) AS runTime,
 
-FROM EQUIPMENT E
-LEFT JOIN EQ_STATUS S
-	ON E.EQ_STATUS = S.EQ_STATUS_NO
-LEFT JOIN WORKPLACE W
-	ON E.EQ_WPID = W.WP_ID
-LEFT JOIN VENDOR V
-	ON E.EQ_VENDOR = V.VENDOR_ID
-LEFT JOIN EMP EMP
-	ON E.EQ_MANAGER = EMP.EMP_ID
-LEFT JOIN WP_TYPE WT
-	ON W.WP_TYPE = WT.WP_TYPE_NO
+        NVL(
+            TO_CHAR(
+                ROUND(
+                    (
+                        SUM(
+                            (
+                                NVL(R.EQ_RUN_ETIME, SYSDATE)
+                                - R.EQ_RUN_STIME
+                            ) * 24
+                        )
+                        /
+                        NULLIF(
+                            (SYSDATE - MIN(R.EQ_RUN_STIME)) * 24,
+                            0
+                        )
+                    ) * 100,
+                    1
+                )
+            ) || '%',
+            '0%'
+        ) AS runRate
 
-WHERE E.EQ_ID = #{eqId}
-AND E.EQ_USAGE = 'Y'
+    FROM EQUIPMENT E
+
+    LEFT JOIN EQ_STATUS S
+        ON E.EQ_STATUS = S.EQ_STATUS_NO
+
+    LEFT JOIN WORKPLACE W
+        ON E.EQ_WPID = W.WP_ID
+
+    LEFT JOIN VENDOR V
+        ON E.EQ_VENDOR = V.VENDOR_ID
+
+    LEFT JOIN EMP EMP
+        ON E.EQ_MANAGER = EMP.EMP_ID
+
+    LEFT JOIN WP_TYPE WT
+        ON W.WP_TYPE = WT.WP_TYPE_NO
+
+    LEFT JOIN EQ_RUN_LOG R
+        ON E.EQ_ID = R.EQ_RUN_EQID
+
+    WHERE E.EQ_ID = #{eqId}
+      AND E.EQ_USAGE = 'Y'
+
+    GROUP BY
+        E.EQ_ID,
+        E.EQ_NAME,
+        E.EQ_STATUS,
+        E.EQ_SDATE,
+        E.EQ_WPID,
+        E.EQ_VENDOR,
+        E.EQ_MANAGER,
+        S.EQ_STATUS_NAME,
+        W.WP_NAME,
+        WT.WP_TYPE_NAME,
+        V.VENDOR_NAME,
+        EMP.EMP_NAME
 
 </select>
 
+<select id="selectEqLogCount" parameterType="string" resultType="int">
+
+    SELECT COUNT(*)
+    FROM EQ_LOG
+    WHERE ELOG_EQID = #{eqId}
+      AND ELOG_USAGE = 'Y'
+
+</select>
 
 <!-- 	설비 점검 이력 조회용 -->
-<select id="selectEqLogList" parameterType="string" resultType="eqDTO">
+<select id="selectEqLogList" parameterType="map" resultType="eqDTO">
 
-    SELECT
-        L.ELOG_ID AS elogId,
-        L.ELOG_EQID AS elogEqid,
-        L.ELOG_SDATE AS elogSdate,
-        L.ELOG_EDATE AS elogEdate,
-        L.ELOG_REASON AS elogReason,
-        L.ELOG_CONTENT AS elogContent,
-        L.ELOG_RESULT AS elogResult,
-        L.ELOG_WORKER AS elogWorker,
+    SELECT *
+    FROM
+    (
+        SELECT ROWNUM RN,
+               L2.*
+        FROM
+        (
+            SELECT
+                L.ELOG_ID AS elogId,
+                L.ELOG_EQID AS elogEqid,
+                L.ELOG_SDATE AS elogSdate,
+                L.ELOG_EDATE AS elogEdate,
+                L.ELOG_REASON AS elogReason,
+                L.ELOG_CONTENT AS elogContent,
+                L.ELOG_RESULT AS elogResult,
+                L.ELOG_WORKER AS elogWorker,
+                EMP.EMP_NAME AS elogWorkerName,
+                L.ELOG_USAGE AS elogUsage
 
-        E.EMP_NAME AS elogWorkerName
+            FROM EQ_LOG L
 
-    FROM EQ_LOG L
-    LEFT JOIN EMP E
-        ON L.ELOG_WORKER = E.EMP_ID
+            LEFT JOIN EMP EMP
+                ON L.ELOG_WORKER = EMP.EMP_ID
 
-    WHERE L.ELOG_EQID = #{eqId}
-      AND L.ELOG_USAGE = 'Y'
+            WHERE L.ELOG_EQID = #{eqId}
+              AND L.ELOG_USAGE = 'Y'
 
-    ORDER BY L.ELOG_SDATE DESC
+            ORDER BY L.ELOG_SDATE DESC
+        ) L2
+    )
+    WHERE RN BETWEEN #{page.startRow}
+                 AND #{page.endRow}
 
 </select>
 
@@ -186,21 +320,37 @@ AND E.EQ_USAGE = 'Y'
 	
 </select>
 
-<!-- 	설비 가동이력 조회용 -->
-<select id="selectEqRunList" parameterType="string"
-		resultType="eqDTO">
+<select id="selectEqRunCount" parameterType="string" resultType="int">
 
-		SELECT
-		EQ_RUN_NO AS eqRunNo,
-		EQ_RUN_EQID AS eqRunEqid,
-		EQ_RUN_STIME AS eqRunStime,
-		EQ_RUN_ETIME AS eqRunEtime,
-		EQ_STOP_REASON
-		AS eqStopReason
-		FROM EQ_RUN_LOG
-		WHERE EQ_RUN_EQID = #{eqId}
-		ORDER BY
-		EQ_RUN_STIME DESC
+    SELECT COUNT(*)
+    FROM EQ_RUN_LOG
+    WHERE EQ_RUN_EQID = #{eqId}
+
+</select>
+
+<!-- 	설비 가동이력 조회용 -->
+<select id="selectEqRunList" parameterType="map" resultType="eqDTO">
+
+    SELECT *
+    FROM
+    (
+        SELECT ROWNUM RN,
+               R2.*
+        FROM
+        (
+            SELECT
+                EQ_RUN_NO AS eqRunNo,
+                EQ_RUN_EQID AS eqRunEqid,
+                EQ_RUN_STIME AS eqRunStime,
+                EQ_RUN_ETIME AS eqRunEtime,
+                EQ_STOP_REASON AS eqStopReason
+            FROM EQ_RUN_LOG
+            WHERE EQ_RUN_EQID = #{eqId}
+            ORDER BY EQ_RUN_STIME DESC
+        ) R2
+    )
+    WHERE RN BETWEEN #{page.startRow}
+                 AND #{page.endRow}
 
 </select>
 

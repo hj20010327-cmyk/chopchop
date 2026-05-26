@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.chop.P16_equip.dto.EqDTO;
 import kr.or.chop.P16_equip.service.EqService;
+import kr.or.chop.common.pagination.PageInfo;
+import kr.or.chop.common.pagination.Pagination;
 
 @Controller
 @RequestMapping("/equip")
@@ -17,36 +20,62 @@ public class EqDetailController {
 	@Autowired
     EqService eqService;
 
-    @RequestMapping("/detail")
-    public String eqDetail(String eqId, Model model) {
+	@RequestMapping("/detail")
+	public String eqDetail(
+	        String eqId,
+	        @RequestParam(value = "mtPage", defaultValue = "1")
+	        int mtCurrentPage,
+	        @RequestParam(value = "runPage", defaultValue = "1")
+	        int runCurrentPage,
+	        Model model) {
 
-        EqDTO eq = eqService.selectEqDetail(eqId);
+	    EqDTO eq = eqService.selectEqDetail(eqId);
 
-        List<EqDTO> eqLogList = eqService.selectEqLogList(eqId);
-        List<EqDTO> eqRunList = eqService.selectEqRunList(eqId);
+	    int mtCount = eqService.selectEqLogCount(eqId);
+	    PageInfo mtPage = Pagination.getPageInfo(
+	            mtCount,
+	            mtCurrentPage,
+	            5,
+	            5
+	    );
 
-        model.addAttribute("eqp", eq);
-        model.addAttribute("eqLogList", eqLogList);
-        model.addAttribute("eqRunList", eqRunList);
+	    int runCount = eqService.selectEqRunCount(eqId);
+	    PageInfo runPage = Pagination.getPageInfo(
+	            runCount,
+	            runCurrentPage,
+	            5,
+	            5
+	    );
 
-        return "P16_equipment/eqDetail.tiles";
-    }
-    
-    @RequestMapping("/run")
-    public String runEq(String eqId) {
+	    List<EqDTO> eqLogList =
+	            eqService.selectEqLogList(eqId, mtPage);
 
-        EqDTO eqDTO = new EqDTO();
-        eqDTO.setEqId(eqId);
-        eqDTO.setEqStatus(10); // 가동중
+	    List<EqDTO> eqRunList =
+	            eqService.selectEqRunList(eqId, runPage);
 
-        // 설비 상태 변경
-        eqService.updateEqStatus(eqDTO);
+	    model.addAttribute("eqp", eq);
+	    model.addAttribute("eqLogList", eqLogList);
+	    model.addAttribute("eqRunList", eqRunList);
 
-        // 가동이력 시작 등록
-        eqService.insertEqRunLog(eqId);
+	    model.addAttribute("mtPage", mtPage);
+	    model.addAttribute("runPage", runPage);
 
-        return "redirect:/equip/detail?eqId=" + eqId;
-    }
+	    return "P16_equipment/eqDetail.tiles";
+	}
+	
+	@RequestMapping("/run")
+	public String runEq(String eqId) {
+
+	    EqDTO eqDTO = new EqDTO();
+	    eqDTO.setEqId(eqId);
+	    eqDTO.setEqStatus(10);
+
+	    eqService.updateEqStatus(eqDTO);
+
+	    eqService.insertEqRunLog(eqId);
+
+	    return "redirect:/equip/detail?eqId=" + eqId;
+	}
 
     @RequestMapping("/stop")
     public String stopEq(EqDTO eqDTO) {
