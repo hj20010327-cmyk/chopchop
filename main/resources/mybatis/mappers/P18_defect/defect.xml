@@ -144,5 +144,104 @@
 	      AND def_usage = 'Y'
 	
 	</update>
+	
+	
+	
+	
+	<!-- 특정 불량유형 발생 이력 개수 -->
+	<select id="selectDefHistoryCount"
+		parameterType="string"
+		resultType="int">
+	
+		SELECT COUNT(*)
+		FROM def_log
+		WHERE dlog_def = #{value} and dlog_usage = 'Y'
+	</select>
+	
+	<!-- 특정 불량유형 전체 누적 개수 -->
+	<select id="selectDefTotalCnt"
+		parameterType="string"
+		resultType="int">
+	
+		SELECT NVL(SUM(dl.dlog_qty), 0)
+		FROM def_log dl
+		WHERE dl.dlog_def = #{value} and dlog_usage = 'Y'
+	</select>
+	
+	<!-- 특정 불량유형 최근 6개월 월별 발생 추이 - 실제 검사일 기준 -->
+	<select id="selectDefTrend"
+		parameterType="string"
+		resultType="defDTO">
+	
+		SELECT
+			TO_CHAR(M.month_date, 'YYYY-MM') AS trendDate,
+			NVL(D.trendCnt, 0) AS trendCnt
+		FROM
+		(
+			SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -5) AS month_date FROM dual
+			UNION ALL
+			SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -4) AS month_date FROM dual
+			UNION ALL
+			SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -3) AS month_date FROM dual
+			UNION ALL
+			SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -2) AS month_date FROM dual
+			UNION ALL
+			SELECT ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -1) AS month_date FROM dual
+			UNION ALL
+			SELECT TRUNC(SYSDATE, 'MM') AS month_date FROM dual
+		) M
+		LEFT JOIN
+		(
+			SELECT
+				TRUNC(qc.qc_date, 'MM') AS trendMonth,
+				SUM(dl.dlog_qty) AS trendCnt
+			FROM def_log dl
+			JOIN qc qc
+				ON dl.dlog_qcid = qc.qc_id
+			WHERE dl.dlog_def = #{value}
+			  AND dl.dlog_usage = 'Y'
+			  AND qc.qc_usage = 'Y'
+			  AND qc.qc_date IS NOT NULL
+			  AND qc.qc_date >= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -5)
+			  AND qc.qc_date <![CDATA[<]]> ADD_MONTHS(TRUNC(SYSDATE, 'MM'), 1)
+			GROUP BY TRUNC(qc.qc_date, 'MM')
+		) D
+			ON M.month_date = D.trendMonth
+		ORDER BY M.month_date
+	
+	</select>
+	
+	
+	<!-- 특정 불량유형 발생 이력 목록 -->
+	<select id="selectDefHistory"
+		parameterType="map"
+		resultType="defDTO">
+	
+		SELECT *
+		FROM
+		(
+			SELECT ROWNUM RN, H.*
+			FROM
+			(
+				SELECT
+					dl.dlog_id AS dlogId,
+					dl.dlog_qcid AS qcId,
+					dl.dlog_def AS defTypeId,
+					dl.dlog_qty AS defCnt,
+					dl.dlog_action AS dlogAction,
+					dl.dlog_dispose AS dlogDispose,
+					TO_CHAR(qc.qc_date, 'YYYY-MM-DD') AS qcDate
+				FROM def_log dl
+				LEFT JOIN qc qc
+					ON dl.dlog_qcid = qc.qc_id
+				WHERE dl.dlog_def = #{defTypeId}
+				  AND dl.dlog_usage = 'Y'
+				ORDER BY qc.qc_date DESC, dl.dlog_id DESC
+			) H
+		)
+		WHERE RN BETWEEN #{page.startRow}
+		AND #{page.endRow}
+	
+	</select>
 
 </mapper>

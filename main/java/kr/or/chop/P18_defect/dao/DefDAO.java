@@ -17,4 +17,10 @@ public interface DefDAO {
 	int updateDefect(DefDTO defDTO);
 	
 	int deleteDefect(String defTypeId);
+	
+	// 상세 - 추가
+	int selectDefHistoryCount(String defTypeId);
+	int selectDefTotalCnt(String defTypeId);
+	List<DefDTO> selectDefTrend(String defTypeId);
+	List<DefDTO> selectDefHistory(String defTypeId, PageInfo pageInfo);
 }

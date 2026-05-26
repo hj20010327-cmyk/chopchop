@@ -47,4 +47,23 @@ public class DefServiceImpl implements DefService {
 	    return defDAO.deleteDefect(defTypeId);
 	}
 	
+	@Override
+	public int selectDefHistoryCount(String defTypeId) {
+		return defDAO.selectDefHistoryCount(defTypeId);
+	}
+
+	@Override
+	public int selectDefTotalCnt(String defTypeId) {
+		return defDAO.selectDefTotalCnt(defTypeId);
+	}
+
+	@Override
+	public List<DefDTO> selectDefTrend(String defTypeId) {
+		return defDAO.selectDefTrend(defTypeId);
+	}
+
+	@Override
+	public List<DefDTO> selectDefHistory(String defTypeId, PageInfo pageInfo) {
+		return defDAO.selectDefHistory(defTypeId, pageInfo);
+	}
 }

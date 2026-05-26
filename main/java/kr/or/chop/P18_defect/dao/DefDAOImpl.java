@@ -44,12 +44,40 @@ public class DefDAOImpl implements DefDAO{
 		return sqlSession.insert("mapper.P18_defect.insertDef", defDTO);
 	}
 	
+	@Override
 	public int updateDefect(DefDTO defDTO) {
 	    return sqlSession.update("mapper.P18_defect.updateDefect", defDTO);
 	}
-
+	
+	@Override
 	public int deleteDefect(String defTypeId) {
 	    return sqlSession.update("mapper.P18_defect.deleteDefect", defTypeId);
+	}
+
+
+	@Override
+	public int selectDefHistoryCount(String defTypeId) {
+		return sqlSession.selectOne("mapper.P18_defect.selectDefHistoryCount", defTypeId);
+	}
+
+	@Override
+	public int selectDefTotalCnt(String defTypeId) {
+		return sqlSession.selectOne("mapper.P18_defect.selectDefTotalCnt", defTypeId);
+	}
+
+	@Override
+	public List<DefDTO> selectDefTrend(String defTypeId) {
+		return sqlSession.selectList("mapper.P18_defect.selectDefTrend", defTypeId);
+	}
+
+	@Override
+	public List<DefDTO> selectDefHistory(String defTypeId, PageInfo pageInfo) {
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("defTypeId", defTypeId);
+		paramMap.put("page", pageInfo);
+		
+		return sqlSession.selectList("mapper.P18_defect.selectDefHistory", paramMap);
 	}
 	
 }
