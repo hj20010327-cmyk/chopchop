@@ -774,6 +774,10 @@ textarea[readonly]:focus {
 	margin: 0 0 25px;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 
 
 /* ==============================

@@ -87,3 +87,23 @@ function setSnbActiveMenu() {
         }
     });
 }
+
+function openModal(overlay) {
+	if (!overlay) return;
+
+	overlay.style.display = "flex";
+	document.body.classList.add("modal-open");
+}
+
+function closeModal(overlay) {
+	if (!overlay) return;
+
+	overlay.style.display = "none";
+
+	// 열려 있는 overlay가 더 없을 때만 body 스크롤 해제
+	const openedOverlay = document.querySelector(".overlay[style*='display: flex'], .overlay[style*='display: block']");
+
+	if (!openedOverlay) {
+		document.body.classList.remove("modal-open");
+	}
+}
