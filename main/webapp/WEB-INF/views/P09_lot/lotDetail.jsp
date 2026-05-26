@@ -3,6 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<c:choose>
+	<c:when test="${lot.lotQc == 'Y'}">
+		<c:set var="currentSecId" value="${lot.lotAwhsec}" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="currentSecId" value="${lot.lotBwhsec}" />
+	</c:otherwise>
+</c:choose>
+
 <div class="content">
 
 	<div class="header-row">
@@ -36,9 +45,11 @@
 				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
 
 				<div class="content-content-content-title"
-					style="display: flex; gap: 30px;">
-					LOT 상세정보 <span class="btn btn-main" style="cursor: cursor;">
-						QR 코드 </span>
+					style="display: flex; gap: 30px; align-items: center;">
+					LOT 상세정보
+					<button type="button" class="btn btn-main" id="openLotQrModalBtn" data-sec-id="${currentSecId}">
+						QR 코드
+					</button>
 				</div>
 
 				<div>
@@ -279,9 +290,198 @@
 	</div>
 
 </div>
+
+<div class="overlay" id="lotQrModal">
+	<div class="modal lot-qr-modal">
+
+		<div class="modal-header">
+			<div>
+				<h3 class="modal-title">LOT 추적 QR 코드</h3>
+				<p class="modal-subTitle" id="lotQrModalSubTitle">
+					${lot.lotItemName}(${lot.lotId})
+				</p>
+			</div>
+
+			<button type="button"
+					class="modal-close"
+					id="closeLotQrModalBtn">
+				×
+			</button>
+		</div>
+
+		<div class="lot-qr-modal-body">
+			<img id="lotQrImage"
+				 alt="LOT QR 코드"
+				 class="lot-qr-image">
+		</div>
+		
+		<div class="lot-qr-info-wrap">
+			<table class="info-table lot-qr-info-table">
+				<tbody>
+					<tr>
+						<th>LOT 번호</th>
+						<td>${lot.lotId}</td>
+					</tr>
+
+					<tr>
+						<th>품목</th>
+						<td>${lot.lotItemName}</td>
+					</tr>
+
+					<tr>
+						<th>현재 위치</th>
+						<td>
+							<a href="${pageContext.request.contextPath}/warehouse/section/detail?secId=${currentSecId}">
+								${currentSecId}
+							</a>
+						</td>
+					</tr>
+
+					<tr>
+						<th>현재 상태</th>
+						<td>
+							<c:choose>
+								<c:when test="${lot.lotStatus == '10'}">사용가능</c:when>
+								<c:when test="${lot.lotStatus == '20'}">사용중</c:when>
+								<c:when test="${lot.lotStatus == '30'}">사용완료</c:when>
+								<c:when test="${lot.lotStatus == '40'}">검사 전</c:when>
+								<c:when test="${lot.lotStatus == '0'}">폐기</c:when>
+								<c:otherwise>${lot.lotStatus}</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+
+					<tr>
+						<th>가용 수량</th>
+						<td>${lot.lotFqty}EA</td>
+					</tr>
+
+					<tr>
+						<th>유통기한</th>
+						<td>
+							<fmt:formatDate value="${lot.lotExp}"
+								pattern="yyyy-MM-dd HH:mm"/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+	</div>
+</div>
+
+
+
+
 <style>
 	.table tbody tr:hover .ioId {
 	    color: var(--main-green);
 	    text-decoration: underline;
 	}
+	
+	.lot-qr-modal {
+		width: 400px;
+		max-width: calc(100vw - 40px);
+	}
+	
+	.modal-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 20px;
+		margin-bottom: 20px;
+	}
+	
+	.modal-close {
+		font-size: 20px;
+		cursor: pointer;
+		line-height: 1;
+	}
+	
+	.lot-qr-modal-body {
+		min-height: 260px;
+	
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	
+		border: 1px dashed var(--gray);
+		border-radius: 8px;
+		background-color: #fafafa;
+	}
+	
+	.lot-qr-placeholder {
+		color: var(--dark-gray);
+		font-size: 14px;
+	}
+	
+	.lot-qr-image {
+		width: 240px;
+		height: 240px;
+		display: block;
+	}
+	
+	.lot-qr-info-wrap {
+		flex: 1;
+	}
+	
+	.lot-qr-info-table th {
+		width: 110px;
+	}
+	
+	.lot-qr-info-table td {
+		width: auto;
+	}
+	
+	.lot-qr-info-table a:hover {
+		color: var(--main-green);
+		text-decoration: underline;
+	}
+	
+	
 </style>
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+	
+		const openLotQrModalBtn = document.getElementById("openLotQrModalBtn");
+		const lotQrModal = document.getElementById("lotQrModal");
+		const closeLotQrModalBtn = document.getElementById("closeLotQrModalBtn");
+		const lotQrImage = document.getElementById("lotQrImage");
+	
+		const contextPath = "${pageContext.request.contextPath}";
+	
+		if (!openLotQrModalBtn || !lotQrModal || !closeLotQrModalBtn || !lotQrImage) {
+			return;
+		}
+	
+		openLotQrModalBtn.addEventListener("click", function() {
+			const secId = openLotQrModalBtn.dataset.secId;
+	
+			if (!secId) {
+				alert("LOT의 현재 위치 정보가 없습니다.");
+				return;
+			}
+
+			lotQrImage.src = contextPath + "/lot/qr?secId=" + encodeURIComponent(secId);
+	
+			openModal(lotQrModal);
+		});
+	
+		closeLotQrModalBtn.addEventListener("click", function() {
+			closeLotQrModal();
+		});
+	
+		lotQrModal.addEventListener("click", function(e) {
+			if (e.target === lotQrModal) {
+				closeLotQrModal();
+			}
+		});
+	
+		function closeLotQrModal() {
+			closeModal(lotQrModal);
+			lotQrImage.removeAttribute("src");
+		}
+	});
+</script>
