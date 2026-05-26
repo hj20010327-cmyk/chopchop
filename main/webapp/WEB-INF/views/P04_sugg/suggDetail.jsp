@@ -136,7 +136,7 @@
                         color:#555;">
 
                     <span style="margin-right:28px;">
-                        작성자 ${dto.sugg_writer}
+                        작성자 ${dto.empName} (${dto.sugg_writer})
                     </span>
 
                     <span style="margin-right:28px;">
@@ -257,7 +257,7 @@
 							        margin-bottom:8px;">
 							
 							    <strong>
-							        ${comm.empName}
+							         ${comm.empName} (${comm.comm_writer})
 							    </strong>
 							
 							    <div style="

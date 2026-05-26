@@ -118,24 +118,28 @@
 </select>
 
 <select id="selectSuggDetail"  
-		parameterType="int" 
-		resultType="suggDTO">
-	
-	    SELECT
-        sugg_no,
-        sugg_title,
-        sugg_content,
-        sugg_writer,
-        sugg_pw,
-        sugg_answer,
-        sugg_cdate,
-        sugg_mdate,
-        sugg_usage,
-        sugg_file_origin_name,
-        sugg_file_save_name
-    FROM suggestion
-    WHERE sugg_no = #{sugg_no}
-     AND sugg_usage = 'Y'
+        parameterType="int" 
+        resultType="suggDTO">
+
+    SELECT
+        s.sugg_no,
+        s.sugg_title,
+        s.sugg_content,
+        s.sugg_writer,
+        e.emp_name AS empName,
+        s.sugg_pw,
+        s.sugg_answer,
+        s.sugg_cdate,
+        s.sugg_mdate,
+        s.sugg_usage,
+        s.sugg_file_origin_name,
+        s.sugg_file_save_name
+    FROM suggestion s
+    LEFT JOIN emp e
+        ON UPPER(s.sugg_writer) = UPPER(e.emp_id)
+    WHERE s.sugg_no = #{sugg_no}
+      AND s.sugg_usage = 'Y'
+
 </select>
 
 <insert id="insertSugg" parameterType="suggDTO">
