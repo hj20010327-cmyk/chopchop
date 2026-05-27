@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P03_notice">
+
+    <!-- 공지사항 전체 개수 -->
+    <select id="selectNoticeCount"
+            parameterType="noticeDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM notice
+        WHERE not_usage = 'Y'
+
+        <if test="keyword != null and keyword != ''">
+            AND (
+                UPPER(not_title)
+                    LIKE '%' || UPPER(#{keyword}) || '%'
+                OR
+                UPPER(not_writer)
+                    LIKE '%' || UPPER(#{keyword}) || '%'
+            )
+        </if>
+
+        <if test="startDate != null and startDate != ''">
+            <![CDATA[
+            AND not_cdate >=
+                TO_DATE(#{startDate}, 'YYYY-MM-DD')
+            ]]>
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            <![CDATA[
+            AND not_cdate <
+                TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+            ]]>
+        </if>
+
+    </select>
+
+
+    <!-- 공지사항 목록 -->
+    <select id="selectNoticeList"
+            parameterType="map"
+            resultType="noticeDTO">
+
+        SELECT *
+        FROM
+        (
+            SELECT ROWNUM RN,
+                   N.*
+            FROM
+            (
+                SELECT
+                    n.not_no,
+                    n.not_title,
+                    n.not_content,
+                    n.not_writer,
+                    e.emp_name AS empName,
+                    n.NOT_VIEW_CNT,
+                    n.not_cdate,
+                    n.not_mdate,
+                    n.not_usage
+                FROM notice n
+
+                LEFT JOIN emp e
+                    ON UPPER(n.not_writer)
+                    = UPPER(e.emp_id)
+
+                WHERE n.not_usage = 'Y'
+
+                <if test="search.keyword != null and search.keyword != ''">
+                    AND (
+                        UPPER(n.not_title)
+                            LIKE '%' || UPPER(#{search.keyword}) || '%'
+                        OR
+                        UPPER(n.not_writer)
+                            LIKE '%' || UPPER(#{search.keyword}) || '%'
+                        OR
+                        UPPER(e.emp_name)
+                            LIKE '%' || UPPER(#{search.keyword}) || '%'
+                    )
+                </if>
+
+                <if test="search.startDate != null and search.startDate != ''">
+                    <![CDATA[
+                    AND n.not_cdate >=
+                        TO_DATE(
+                            #{search.startDate},
+                            'YYYY-MM-DD'
+                        )
+                    ]]>
+                </if>
+
+                <if test="search.endDate != null and search.endDate != ''">
+                    <![CDATA[
+                    AND n.not_cdate <
+                        TO_DATE(
+                            #{search.endDate},
+                            'YYYY-MM-DD'
+                        ) + 1
+                    ]]>
+                </if>
+
+                ORDER BY n.not_cdate DESC
+
+            ) N
+        )
+        WHERE RN BETWEEN
+              #{page.startRow}
+          AND #{page.endRow}
+
+    </select>
+
+
+    <!-- 공지사항 상세 -->
+    <select id="selectNoticeDetail"
+            parameterType="int"
+            resultType="noticeDTO">
+
+        SELECT
+            n.not_no,
+            n.not_title,
+            n.not_content,
+            n.not_writer,
+            e.emp_name AS empName,
+            n.NOT_VIEW_CNT,
+            n.not_cdate,
+            n.not_mdate,
+            n.not_usage
+        FROM notice n
+
+        LEFT JOIN emp e
+            ON UPPER(n.not_writer)
+            = UPPER(e.emp_id)
+
+        WHERE n.not_no = #{not_no}
+          AND n.not_usage = 'Y'
+
+    </select>
+
+
+	<!-- 공지사항 등록 -->
+	<insert id="insertNotice"
+	        parameterType="noticeDTO">
+	
+	    <selectKey keyProperty="not_no"
+	               resultType="int"
+	               order="BEFORE">
+	        SELECT notice_seq.NEXTVAL
+	        FROM dual
+	    </selectKey>
+	
+	    INSERT INTO notice (
+	        not_no,
+	        not_title,
+	        not_content,
+	        not_writer,
+	        NOT_VIEW_CNT,
+	        not_cdate,
+	        not_usage
+	    )
+	    VALUES (
+	        #{not_no},
+	        #{not_title},
+	        #{not_content},
+	        #{not_writer},
+	        0,
+	        SYSDATE,
+	        'Y'
+	    )
+	
+	</insert>
+
+
+    <!-- 공지사항 수정 -->
+    <update id="updateNotice"
+            parameterType="noticeDTO">
+
+        UPDATE notice
+        SET
+            not_title = #{not_title},
+            not_content = #{not_content},
+            not_mdate = SYSDATE
+        WHERE not_no = #{not_no}
+          AND not_usage = 'Y'
+
+    </update>
+
+
+    <!-- 공지사항 삭제 -->
+    <update id="deleteNotice"
+            parameterType="int">
+
+        UPDATE notice
+        SET
+            not_usage = 'N',
+            not_mdate = SYSDATE
+        WHERE not_no = #{not_no}
+          AND not_usage = 'Y'
+
+    </update>
+
+
+    <!-- 조회수 증가 -->
+    <update id="updateNoticeView"
+            parameterType="int">
+
+        UPDATE notice
+        SET NOT_VIEW_CNT = NOT_VIEW_CNT + 1
+        WHERE not_no = #{not_no}
+
+    </update>
+
+
+    <!-- 첨부파일 등록 -->
+    <insert id="insertNoticeFile"
+            parameterType="kr.or.chop.P03_notice.dto.NoticeFileDTO">
+
+        INSERT INTO notice_file (
+            file_no,
+            not_no,
+            file_origin_name,
+            file_save_name,
+            file_usage
+        )
+        VALUES (
+            notice_file_seq.NEXTVAL,
+            #{not_no},
+            #{file_origin_name},
+            #{file_save_name},
+            'Y'
+        )
+
+    </insert>
+
+
+    <!-- 첨부파일 목록 -->
+    <select id="selectNoticeFileList"
+            parameterType="int"
+            resultType="kr.or.chop.P03_notice.dto.NoticeFileDTO">
+
+        SELECT
+            file_no,
+            not_no,
+            file_origin_name,
+            file_save_name,
+            file_usage
+        FROM notice_file
+        WHERE not_no = #{not_no}
+          AND file_usage = 'Y'
+        ORDER BY file_no ASC
+
+    </select>
+
+
+    <!-- 첨부파일 삭제 -->
+    <update id="deleteNoticeFileByNoticeNo"
+            parameterType="int">
+
+        UPDATE notice_file
+        SET file_usage = 'N'
+        WHERE not_no = #{not_no}
+
+    </update>
+
+</mapper>
