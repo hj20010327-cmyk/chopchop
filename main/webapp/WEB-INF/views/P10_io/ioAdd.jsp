@@ -5,21 +5,14 @@
 <div class="content">
 
 	<div class="header-row">
-
 		<div>
 			<h2 class="page-title">입출고 이력 등록</h2>
-
-			<p class="page-subtitle">
-				새로운 입출고 이력을 등록할 수 있습니다.
-			</p>
+			<p class="page-subtitle">새로운 입출고 이력을 등록할 수 있습니다.</p>
 		</div>
 
 		<div>
-			<p class="page-route">
-				홈 &gt; 입출고관리 &gt; 등록
-			</p>
+			<p class="page-route">홈 &gt; 입출고관리 &gt; 등록</p>
 		</div>
-
 	</div>
 
 	<form action="${pageContext.request.contextPath}/io/insertDo"
@@ -27,95 +20,55 @@
 		style="width:100%; max-width:1050px;">
 
 		<div style="display:flex; justify-content:flex-end; gap:12px;">
-
 			<a class="btn btn-white"
-				href="${pageContext.request.contextPath}/io/list">
-				취소
-			</a>
+				href="${pageContext.request.contextPath}/io/list">취소</a>
 
-			<button type="submit" class="btn btn-main">
-				등록
-			</button>
-
+			<button type="submit" class="btn btn-main" id="submitBtn">등록</button>
 		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
-
 			<div class="grid-wrap">
-
 				<div class="grid search-item"
 					style="display:flex; flex-direction:row; align-items:center; gap:25px;">
-
-					<label>
-						입출고 유형 <span class="red">*</span>
-					</label>
+					<label>입출고 유형 <span class="red">*</span></label>
 
 					<div style="display:flex; justify-content:flex-start; gap:20px; font-size:14px;">
-
 						<div style="display:flex; align-items:center; gap:7px;">
-							<input type="radio" name="ioType" value="IN" checked>
-							입고
+							<input type="radio" name="ioType" value="IN" checked> 입고
 						</div>
 
 						<div style="display:flex; align-items:center; gap:7px;">
-							<input type="radio" name="ioType" value="OUT">
-							출고
+							<input type="radio" name="ioType" value="OUT"> 출고
 						</div>
-
 					</div>
-
 				</div>
-
 			</div>
-
 		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>입출고 사유 <span class="red">*</span></label>
+				<input type="text" name="ioReason" placeholder="입출고 사유 입력">
+			</div>
 
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					입출고 사유 <span class="red">*</span>
-				</label>
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>담당자 <span class="red">*</span></label>
 
 				<input type="text"
-					name="ioReason"
-					placeholder="입출고 사유 입력">
+					id="ioWorkerView"
+					value="${sessionScope.loginUser.empName} (${sessionScope.loginUser.empId})"
+					readonly>
 
+				<input type="hidden"
+					id="ioWorker"
+					name="ioWorker"
+					value="${sessionScope.loginUser.empId}">
 			</div>
-
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					담당자 <span class="red">*</span>
-				</label>
-
-
-					<input type="text"
-						id="ioWorker"
-						value="${sessionScope.loginUser.empName} (${sessionScope.loginUser.empId})"
-						readonly>
-						
-					<input type="hidden"
-						id="ioWorker"
-						name="ioWorker"
-						value="${sessionScope.loginUser.empId}"
-						readonly>
-
-			</div>
-
 		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
-
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					품목유형 <span class="red">*</span>
-				</label>
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>품목유형 <span class="red">*</span></label>
 
 				<select id="itemType" name="itemType">
 					<option value="" disabled selected>품목유형 선택</option>
@@ -123,92 +76,51 @@
 					<option value="20">반제품</option>
 					<option value="30">완제품</option>
 				</select>
-
 			</div>
 
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					품목 <span class="red">*</span>
-				</label>
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>품목 <span class="red">*</span></label>
 
 				<select id="itemId" name="itemId">
 					<option value="" disabled selected>품목 선택</option>
 				</select>
-
 			</div>
-
 		</div>
-		
+
 		<div style="display:flex; gap:40px; margin-bottom:26px;" id="warehouseArea">
-		
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-		
-				<label>
-					창고 <span class="red">*</span>
-				</label>
-				
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>창고 <span class="red">*</span></label>
+
 				<select id="warehouse" name="whId">
 					<option value="" disabled selected>창고 선택</option>
 				</select>
 			</div>
-			
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-				
-				<label>
-					창고 섹션 <span class="red">*</span>
-				</label>
-				
+
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>창고 섹션 <span class="red">*</span></label>
+
 				<select name="whSec" id="whSec">
 					<option value="" disabled selected>섹션 선택</option>
 				</select>
-				
 			</div>
-				
 		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
-
-			<div class="search-item"
-				id="lotArea"
+			<div class="search-item" id="lotArea"
 				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					LOT <span class="red">*</span>
-				</label>
-
-				<select id="ioLot" name="ioLot">
-					<option value="" disabled selected>LOT 선택</option>
-				</select>
-
+				<label>LOT</label>
+				<input type="text" id="ioLot" name="ioLot" placeholder="자동생성" readonly>
 			</div>
 
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					수량 <span class="red">*</span>
-				</label>
-
-				<input type="text"
-					name="ioQty"
-					placeholder="수량 입력">
-
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>수량 <span class="red">*</span></label>
+				<input type="text" name="ioQty" placeholder="수량 입력">
 			</div>
-
 		</div>
 
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
-
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					거래처 타입
-				</label>
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>거래처 타입</label>
 
 				<select id="vendorType" name="vendorType">
 					<option value="" disabled selected>거래처 타입 선택</option>
@@ -216,55 +128,37 @@
 					<option value="C">납품처</option>
 					<option value="E">기타</option>
 				</select>
-
 			</div>
 
-			<div class="search-item"
-				style="display:flex; flex-direction:column; flex:1;">
-
-				<label>
-					거래처
-				</label>
+			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
+				<label>거래처</label>
 
 				<select id="ioVendor" name="ioVendor">
 					<option value="" disabled selected>거래처명(거래처코드) 선택</option>
 				</select>
-
 			</div>
-
 		</div>
 
 		<div class="search-item"
 			style="display:flex; flex-direction:column; margin-bottom:26px;">
-
-			<label>
-				일시 <span class="red">*</span>
-			</label>
+			<label>일시 <span class="red">*</span></label>
 
 			<div>
 				<input type="date" name="ioDay">
 				<input type="time" name="ioTime">
 			</div>
-
 		</div>
 
-		<div class="search-item"
-			style="display:flex; flex-direction:column;">
-
-			<label>
-				비고
-			</label>
+		<div class="search-item" style="display:flex; flex-direction:column;">
+			<label>비고</label>
 
 			<textarea name="ioMsg"
 				placeholder="비고를 입력하세요."
 				style="height:220px;"></textarea>
-
 		</div>
 
 	</form>
-
 </div>
-
 
 <style>
 	input[type="radio"] {
@@ -272,20 +166,21 @@
 		min-width:15px;
 		height:15px;
 	}
-	
+
 	select:disabled {
 		background-color: var(--light-gray);
-    color: #000;
-    cursor: not-allowed;
-    outline: none;
+		color: #000;
+		cursor: not-allowed;
+		outline: none;
 	}
 </style>
 
 <script>
 window.addEventListener("load", function() {
 
-	const ioTypeRadios = document.querySelectorAll("input[name='ioType']");
+	let submitLock = false;
 
+	const ioTypeRadios = document.querySelectorAll("input[name='ioType']");
 	const itemTypeSelect = document.querySelector("#itemType");
 	const itemSelect = document.querySelector("#itemId");
 
@@ -299,36 +194,17 @@ window.addEventListener("load", function() {
 	const qtyLabel = qtyInput.closest(".search-item").querySelector("label");
 
 	const form = document.querySelector("form");
+	const submitBtn = document.querySelector("#submitBtn");
 
-	const workerModal =
-		document.querySelector("#workerModal");
-
-	const workerSearchBtn =
-		document.querySelector("#workerSearchBtn");
-
-	const workerModalClose =
-		document.querySelector("#workerModalClose");
-
-	const workerSearchSubmit =
-		document.querySelector("#workerSearchSubmit");
-
-	const workerTbody =
-		document.querySelector("#workerTbody");
-
-	const workerSelectBtn =
-		document.querySelector("#workerSelectBtn");
-
-	const ioWorkerInput =
-		document.querySelector("#ioWorker");
-	
 	const warehouseArea = document.querySelector("#warehouseArea");
+	const warehouseSelect = document.querySelector("#warehouse");
+	const whSecSelect = document.querySelector("#whSec");
 
 	function getIoType() {
 		return document.querySelector("input[name='ioType']:checked").value;
 	}
 
 	function formatNumber(value) {
-
 		value = String(value).replace(/[^0-9]/g, "");
 
 		if (value === "") {
@@ -339,27 +215,22 @@ window.addEventListener("load", function() {
 	}
 
 	function setQtyRequired(isRequired) {
-
 		if (isRequired) {
 			qtyLabel.innerHTML = '수량 <span class="red">*</span>';
 		} else {
 			qtyLabel.innerHTML = '수량';
 		}
-
 	}
 
 	function changeLotToInput() {
-
 		lotArea.innerHTML =
 			'<label>LOT</label>' +
-			'<input type="text" id="ioLot" name="ioLot" ' +
-			'placeholder="자동생성" readonly>';
+			'<input type="text" id="ioLot" name="ioLot" placeholder="자동생성" readonly>';
 
 		lotTag = document.querySelector("#ioLot");
 	}
 
 	function changeLotToSelect() {
-
 		lotArea.innerHTML =
 			'<label>LOT <span class="red">*</span></label>' +
 			'<select id="ioLot" name="ioLot">' +
@@ -369,48 +240,128 @@ window.addEventListener("load", function() {
 		lotTag = document.querySelector("#ioLot");
 
 		lotTag.addEventListener("change", function() {
-
 			const selectedOption = this.options[this.selectedIndex];
-
-			const lotQty =
-				selectedOption.getAttribute("data-lot-fqty");
+			const lotQty = selectedOption.getAttribute("data-lot-fqty");
 
 			if (lotQty !== null && lotQty !== "") {
 				qtyInput.value = formatNumber(lotQty);
 			}
-
 		});
 	}
 
 	function applyIoTypeMode() {
-
 		qtyInput.value = "";
 
 		if (getIoType() === "IN") {
-
 			changeLotToInput();
 
 			qtyInput.readOnly = false;
 			setQtyRequired(true);
-			
-			// 창고 영역 보이기
+
 			warehouseArea.style.display = "flex";
-
 		} else {
-
 			changeLotToSelect();
 
 			qtyInput.readOnly = true;
 			setQtyRequired(false);
-			
-			// 창고 영역 숨기기
+
 			warehouseArea.style.display = "none";
 
 			if (itemSelect.value !== "") {
 				loadLotList(itemSelect.value);
 			}
-
 		}
+	}
+
+	function loadLotList(itemId) {
+		changeLotToSelect();
+
+		if (itemId === "") {
+			return;
+		}
+
+		fetch("${pageContext.request.contextPath}/io/lotList?itemId="
+			+ encodeURIComponent(itemId))
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(result) {
+				let html = '<option value="" disabled selected>LOT 선택</option>';
+
+				for (let i = 0; i < result.length; i++) {
+					html += '<option value="' + result[i].lotId + '" ';
+					html += 'data-lot-fqty="' + result[i].lotFqty + '">';
+					html += result[i].lotId + ' / 잔량 ' + result[i].lotFqty;
+					html += '</option>';
+				}
+
+				lotTag.innerHTML = html;
+			})
+			.catch(function() {
+				alert("LOT 목록 조회 실패");
+			});
+	}
+
+	function loadWarehouseList(itemId) {
+		warehouseSelect.innerHTML =
+			'<option value="" disabled selected>창고 선택</option>';
+
+		whSecSelect.innerHTML =
+			'<option value="" disabled selected>섹션 선택</option>';
+
+		if (itemId === "") {
+			return;
+		}
+
+		fetch("${pageContext.request.contextPath}/io/warehouseList?itemId="
+			+ encodeURIComponent(itemId))
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(result) {
+				let html = '<option value="" disabled selected>창고 선택</option>';
+
+				for (let i = 0; i < result.length; i++) {
+					html += '<option value="' + result[i].whId + '">';
+					html += result[i].whName + ' (' + result[i].whId + ')';
+					html += '</option>';
+				}
+
+				warehouseSelect.innerHTML = html;
+			})
+			.catch(function() {
+				alert("창고 목록 조회 실패");
+			});
+	}
+
+	function loadWhSecList(whId) {
+		whSecSelect.innerHTML =
+			'<option value="" disabled selected>섹션 선택</option>';
+
+		if (whId === "") {
+			return;
+		}
+
+		fetch("${pageContext.request.contextPath}/io/whSecList?whId="
+			+ encodeURIComponent(whId))
+			.then(function(response) {
+				return response.json();
+			})
+			.then(function(result) {
+				let html = '<option value="" disabled selected>섹션 선택</option>';
+
+				for (let i = 0; i < result.length; i++) {
+					html += '<option value="' + result[i].secId + '">';
+					html += result[i].secId;
+					html += ' (' + result[i].secPrevQty + '/' + result[i].secQty + ')';
+					html += '</option>';
+				}
+
+				whSecSelect.innerHTML = html;
+			})
+			.catch(function() {
+				alert("창고 섹션 조회 실패");
+			});
 	}
 
 	for (let i = 0; i < ioTypeRadios.length; i++) {
@@ -420,7 +371,6 @@ window.addEventListener("load", function() {
 	}
 
 	itemTypeSelect.addEventListener("change", function() {
-
 		const itemType = this.value;
 
 		itemSelect.innerHTML =
@@ -434,6 +384,12 @@ window.addEventListener("load", function() {
 			changeLotToSelect();
 		}
 
+		warehouseSelect.innerHTML =
+			'<option value="" disabled selected>창고 선택</option>';
+
+		whSecSelect.innerHTML =
+			'<option value="" disabled selected>섹션 선택</option>';
+
 		if (itemType === "") {
 			return;
 		}
@@ -444,9 +400,7 @@ window.addEventListener("load", function() {
 				return response.json();
 			})
 			.then(function(result) {
-
-				let html =
-					'<option value="" disabled selected>품목 선택</option>';
+				let html = '<option value="" disabled selected>품목 선택</option>';
 
 				for (let i = 0; i < result.length; i++) {
 					html += '<option value="' + result[i].itemId + '">';
@@ -459,57 +413,23 @@ window.addEventListener("load", function() {
 			.catch(function() {
 				alert("품목 목록 조회 실패");
 			});
-
 	});
 
 	itemSelect.addEventListener("change", function() {
-
 		qtyInput.value = "";
-		
+
 		loadWarehouseList(this.value);
 
 		if (getIoType() === "OUT") {
 			loadLotList(this.value);
 		}
-
 	});
 
-	function loadLotList(itemId) {
-
-		changeLotToSelect();
-
-		if (itemId === "") {
-			return;
-		}
-
-		fetch("${pageContext.request.contextPath}/io/lotList?itemId="
-			+ encodeURIComponent(itemId))
-			.then(function(response) {
-				return response.json();
-			})
-			.then(function(result) {
-
-				let html =
-					'<option value="" disabled selected>LOT 선택</option>';
-
-				for (let i = 0; i < result.length; i++) {
-						
-					html += '<option value="' + result[i].lotId + '" ';
-					html += 'data-lot-fqty="' + result[i].lotFqty + '">';
-					html += result[i].lotId + ' / 잔량 ' + result[i].lotFqty;
-					html += '</option>';
-
-				}
-
-				lotTag.innerHTML = html;
-			})
-			.catch(function() {
-				alert("LOT 목록 조회 실패");
-			});
-	}
+	warehouseSelect.addEventListener("change", function() {
+		loadWhSecList(this.value);
+	});
 
 	vendorTypeSelect.addEventListener("change", function() {
-
 		const vendorType = this.value;
 
 		vendorSelect.innerHTML =
@@ -525,7 +445,6 @@ window.addEventListener("load", function() {
 				return response.json();
 			})
 			.then(function(result) {
-
 				let html =
 					'<option value="" disabled selected>거래처명(거래처코드) 선택</option>';
 
@@ -540,12 +459,9 @@ window.addEventListener("load", function() {
 			.catch(function() {
 				alert("거래처 목록 조회 실패");
 			});
-
 	});
 
-
 	qtyInput.addEventListener("input", function() {
-
 		if (qtyInput.readOnly) {
 			return;
 		}
@@ -561,19 +477,20 @@ window.addEventListener("load", function() {
 	});
 
 	qtyInput.addEventListener("keydown", function(e) {
-
 		if (e.key === "-" || e.key === "e") {
 			e.preventDefault();
 		}
-
 	});
 
 	form.addEventListener("submit", function(e) {
+		if (submitLock) {
+			e.preventDefault();
+			return;
+		}
 
 		const requiredLabels = document.querySelectorAll("label .red");
 
 		for (let i = 0; i < requiredLabels.length; i++) {
-
 			const label = requiredLabels[i].closest("label");
 
 			if (label.offsetParent === null) {
@@ -595,21 +512,16 @@ window.addEventListener("load", function() {
 			}
 
 			if (target.value.trim() === "") {
-
-				alert(label.innerText.replace("*", "").trim()
-					+ " 항목을 입력하세요.");
-
+				alert(label.innerText.replace("*", "").trim() + " 항목을 입력하세요.");
 				target.focus();
 
 				e.preventDefault();
 				return;
 			}
 		}
-		
+
 		if (getIoType() === "IN") {
-
 			if (warehouseSelect.value === "") {
-
 				alert("창고를 선택하세요.");
 				warehouseSelect.focus();
 
@@ -618,157 +530,24 @@ window.addEventListener("load", function() {
 			}
 
 			if (whSecSelect.value === "") {
-
 				alert("창고 섹션을 선택하세요.");
 				whSecSelect.focus();
 
 				e.preventDefault();
 				return;
 			}
-
 		}
-		
-		qtyInput.value =
-			qtyInput.value.replace(/,/g, "");
 
-		ioWorkerInput.value =
-			ioWorkerInput.value.replace(/^.*\((.*)\)$/, "$1");
+		qtyInput.value = qtyInput.value.replace(/,/g, "");
 
+		submitLock = true;
+
+		if (submitBtn) {
+			submitBtn.disabled = true;
+			submitBtn.innerText = "등록 중...";
+		}
 	});
 
-// 	applyIoTypeMode();
-
+	applyIoTypeMode();
 });
-
-
-// function searchRT() {
-// 	const keyword = document.querySelector("#workerKeyword").value;
-// 	loadWorkerList(keyword);
-// }
-
-// function loadWorkerList(keyword) {
-
-// 	fetch(
-// 		"${pageContext.request.contextPath}/io/workerList?keyword="
-// 		+ encodeURIComponent(keyword)
-// 	)
-// 	.then(function(response) {
-// 		return response.json();
-// 	})
-// 	.then(function(result) {
-
-// 		let html = "";
-
-// 		for (let i = 0; i < result.length; i++) {
-
-// 			html += "<tr>";
-
-// 			html += "<td>" + result[i].empId + "</td>";
-
-// 			html += "<td>" + result[i].empName + "</td>";
-
-// 			html += "<td>";
-// 			html += "<input type='radio' ";
-// 			html += "name='workerRadio' ";
-// 			html += "value='" + result[i].empId + "' ";
-// 			html += "data-name='" + result[i].empName + "'>";
-// 			html += "</td>";
-
-// 			html += "</tr>";
-
-// 		}
-		
-// 		if (result.length == 0) {
-// 			html = `
-// 				<tr>
-// 					<td colspan="3">검색 결과가 없습니다.</td>
-// 				</tr>
-// 			`;
-// 		}
-
-// 		workerTbody.innerHTML = html;
-
-// 	});
-
-// }
-
-const warehouseSelect = document.querySelector("#warehouse");
-const whSecSelect = document.querySelector("#whSec");
-
-function loadWarehouseList(itemId) {
-
-	warehouseSelect.innerHTML =
-		'<option value="" disabled selected>창고 선택</option>';
-
-	whSecSelect.innerHTML =
-		'<option value="" disabled selected>섹션 선택</option>';
-
-	if (itemId === "") {
-		return;
-	}
-
-	fetch("${pageContext.request.contextPath}/io/warehouseList?itemId="
-		+ encodeURIComponent(itemId))
-		.then(function(response) {
-			return response.json();
-		})
-		.then(function(result) {
-
-			let html =
-				'<option value="" disabled selected>창고 선택</option>';
-
-			for (let i = 0; i < result.length; i++) {
-				html += '<option value="' + result[i].whId + '">';
-				html += result[i].whName + ' (' + result[i].whId + ')';
-				html += '</option>';
-			}
-
-			warehouseSelect.innerHTML = html;
-		})
-		.catch(function() {
-			alert("창고 목록 조회 실패");
-		});
-}
-
-warehouseSelect.addEventListener("change", function() {
-
-	loadWhSecList(this.value);
-
-});
-
-function loadWhSecList(whId) {
-
-	whSecSelect.innerHTML =
-		'<option value="" disabled selected>섹션 선택</option>';
-
-	if (whId === "") {
-		return;
-	}
-
-	fetch("${pageContext.request.contextPath}/io/whSecList?whId="
-		+ encodeURIComponent(whId))
-		.then(function(response) {
-			return response.json();
-		})
-		.then(function(result) {
-
-			let html =
-				'<option value="" disabled selected>섹션 선택</option>';
-
-			for (let i = 0; i < result.length; i++) {
-				html += '<option value="' + result[i].secId + '">';
-				html += result[i].secId 
-				+ ' (' + result[i].secPrevQty
-				+ '/' + result[i].secQty + ')';
-				html += '</option>';
-			}
-
-			whSecSelect.innerHTML = html;
-		})
-		.catch(function() {
-			alert("창고 섹션 조회 실패");
-		});
-}
-
-
 </script>

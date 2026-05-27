@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.chop.P07_qc.dao.QcDAO;
 import kr.or.chop.P07_qc.dto.QcDTO;
@@ -56,29 +57,36 @@ public class QcServiceImpl implements QcService{
 	}
 	
 	@Override
+	@Transactional
 	public int updateQcResult(QcDTO dto) {
+
+		if (dto.getQcStatus() == 30) {
+			qcDAO.plusStockByQcResult(dto);
+			qcDAO.updateLotByQcResult(dto);
+		}
+
 		int result = qcDAO.updateQcResult(dto);
 
-	    if (dto.getQcStatus() == 30) {
-	        qcDAO.updateLotByQcResult(dto);
-	    }
-	    if (dto.getDefectType() != null) {
+		if (dto.getDefectType() != null) {
+			for (int i = 0; i < dto.getDefectType().length; i++) {
+				QcDTO def = new QcDTO();
 
-	        for (int i = 0; i < dto.getDefectType().length; i++) {
+				def.setQcId(dto.getQcId());
+				def.setDefType(dto.getDefectType()[i]);
+				def.setDefQty(dto.getDefectQty()[i]);
+				def.setDefAction(dto.getDefectAction()[i]);
+				def.setDefDiscard(dto.getDefectDiscard()[i]);
 
-	            QcDTO def = new QcDTO();
+				qcDAO.insertDefLog(def);
+			}
+		}
 
-	            def.setQcId(dto.getQcId());
-	            def.setDefType(dto.getDefectType()[i]);
-	            def.setDefQty(dto.getDefectQty()[i]);
-	            def.setDefAction(dto.getDefectAction()[i]);
-	            def.setDefDiscard(dto.getDefectDiscard()[i]);
+		return result;
+	}
 
-	            qcDAO.insertDefLog(def);
-	        }
-	    }
-
-	    return result;
+	@Override
+	public List<QcDTO> selectDefLogList(String qcId) {
+		return qcDAO.selectDefLogList(qcId);
 	}
 	
 	@Override

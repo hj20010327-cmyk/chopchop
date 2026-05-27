@@ -423,29 +423,28 @@
 
 		MERGE INTO STOCK S
 		USING (
-		SELECT #{itemId} AS ITEM_ID FROM dual
+			SELECT #{itemId} AS ITEM_ID FROM dual
 		) D
 		ON (S.STOCK_ITEM = D.ITEM_ID)
-
+	
 		WHEN MATCHED THEN
 		UPDATE SET
-		S.STOCK_PREV_QTY = NVL(S.STOCK_PREV_QTY, 0) + #{ioQty},
-		S.STOCK_AVAIL_QTY = NVL(S.STOCK_AVAIL_QTY, 0) + #{ioQty}
-
+			S.STOCK_PREV_QTY = NVL(S.STOCK_PREV_QTY, 0) + #{ioQty}
+	
 		WHEN NOT MATCHED THEN
 		INSERT (
-		STOCK_ID,
-		STOCK_ITEM,
-		STOCK_PREV_QTY,
-		STOCK_AVAIL_QTY,
-		STOCK_RESERVE_QTY
+			STOCK_ID,
+			STOCK_ITEM,
+			STOCK_PREV_QTY,
+			STOCK_AVAIL_QTY,
+			STOCK_RESERVE_QTY
 		)
 		VALUES (
-		'STOCK' || STOCK_SEQ.NEXTVAL,
-		#{itemId},
-		#{ioQty},
-		#{ioQty},
-		0
+			'STOCK' || STOCK_SEQ.NEXTVAL,
+			#{itemId},
+			#{ioQty},
+			0,
+			0
 		)
 
 	</update>

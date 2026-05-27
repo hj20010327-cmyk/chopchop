@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <div>
 
     <div class="header-row">
@@ -136,12 +138,55 @@
                             <th>삭제</th>
                         </tr>
                     </thead>
+
                     <tbody id="defectTbody">
-                        <tr>
-                            <td colspan="5" style="text-align:center;">
-                                등록된 불량 상세 내역이 없습니다.
-                            </td>
-                        </tr>
+                        <c:choose>
+                            <c:when test="${empty defLogList}">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;">
+                                        등록된 불량 내역이 없습니다.
+                                    </td>
+                                </tr>
+                            </c:when>
+
+                            <c:otherwise>
+                                <c:forEach var="def" items="${defLogList}">
+                                    <tr class="defect-row">
+                                        <td>
+                                            ${def.defTypeName} (${def.defType})
+                                            <input type="hidden" name="defectType" value="${def.defType}">
+                                        </td>
+
+                                        <td>
+                                            ${def.defQty}
+                                            <input type="hidden"
+                                                class="defectQtyValue"
+                                                name="defectQty"
+                                                value="${def.defQty}">
+                                        </td>
+
+                                        <td>
+                                            ${def.defAction}
+                                            <input type="hidden"
+                                                name="defectAction"
+                                                value="${def.defAction}">
+                                        </td>
+
+                                        <td>
+                                            ${def.defDiscard}
+                                            <input type="hidden"
+                                                class="defectDiscardValue"
+                                                name="defectDiscard"
+                                                value="${def.defDiscard}">
+                                        </td>
+
+                                        <td>
+                                            <button type="button" class="remove-row-btn">✕</button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
                     </tbody>
                 </table>
             </div>
@@ -240,12 +285,12 @@ input[readonly] {
 </style>
 
 <script>
-
 window.addEventListener("load", function() {
     formatQty();
     loadDefectTypeList();
     loadWarehouseList();
     bind();
+    bindDefectRemoveButtons();
     recalcByDefectRows();
 });
 
@@ -445,9 +490,7 @@ function addDefectRow() {
     html += "</td>";
 
     html += "<td>";
-    html += "<button type='button' class='remove-row-btn'>";
-    html += "✕";
-    html += "</button>";
+    html += "<button type='button' class='remove-row-btn'>✕</button>";
     html += "</td>";
 
     html += "</tr>";
@@ -571,13 +614,12 @@ function formatQty() {
     const qcQtyText = document.querySelector("#qcQtyText");
     const qcPassQtyText = document.querySelector("#qcPassQtyText");
 
-    if (qcQtyText) {
+    if (qcQtyText && qcQtyText.value !== "") {
         qcQtyText.value = Number(qcQtyText.value).toLocaleString();
     }
 
-    if (qcPassQtyText) {
+    if (qcPassQtyText && qcPassQtyText.value !== "") {
         qcPassQtyText.value = Number(qcPassQtyText.value).toLocaleString();
     }
 }
-
 </script>

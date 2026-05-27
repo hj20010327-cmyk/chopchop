@@ -101,7 +101,16 @@
             			</span>
             		</c:when>
             	</c:choose>
-            	<a href="${pageContext.request.contextPath}/quality/result/add?qcId=${qc.qcId}" class="btn btn-orange">결과 등록</a>
+            	<a href="${pageContext.request.contextPath}/quality/result/add?qcId=${qc.qcId}" class="btn btn-orange">
+            	<c:choose>
+            		<c:when test="${qc.qcStatus == 30}">
+	            	결과 수정
+            		</c:when>
+            		<c:otherwise>
+            		결과 등록
+            		</c:otherwise>
+            	</c:choose>
+            	</a>
             </div>
             </div>
             
@@ -290,11 +299,29 @@
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td colspan="4" style="text-align:center;">
-                                    등록된 불량 상세 내역이 없습니다.
-                                </td>
-                            </tr>
+                            <c:choose>
+								<c:when test="${empty defLogList}">
+									<tr>
+										<td colspan="4" style="text-align:center;">
+											등록된 불량 상세 내역이 없습니다.
+										</td>
+									</tr>
+								</c:when>
+						
+								<c:otherwise>
+									<c:forEach var="def" items="${defLogList}">
+										<tr>
+											<td>${def.defTypeName}</td>
+											<td>
+												<fmt:formatNumber value="${def.defQty}" pattern="#,###" />
+												EA
+											</td>
+											<td>${def.defAction}</td>
+											<td>${def.defDiscard}</td>
+										</tr>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
                         </tbody>
 
                     </table>

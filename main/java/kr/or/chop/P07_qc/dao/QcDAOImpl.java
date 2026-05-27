@@ -97,5 +97,25 @@ public class QcDAOImpl implements QcDAO {
 	public int insertDefLog(QcDTO dto) {
 		return sqlSession.insert(namespace + "insertDefLog", dto);
 	}
+	
+	@Override
+	public List<QcDTO> selectDefLogList(String qcId) {
+		return sqlSession.selectList(namespace + "selectDefLogList", qcId);
+	}
+
+	@Override
+	public int deleteDefLog(String qcId) {
+		return sqlSession.delete(namespace + "deleteDefLog", qcId);
+	}
+	
+	@Override
+	public int plusStockAvailByQcResult(QcDTO dto) {
+		return sqlSession.update(namespace + "plusStockAvailByQcResult", dto);
+	}
+	
+	@Override
+	public int plusStockByQcResult(QcDTO dto) {
+		return sqlSession.update(namespace + "plusStockByQcResult", dto);
+	}
 
 }

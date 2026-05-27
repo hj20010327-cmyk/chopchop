@@ -30,4 +30,6 @@ public interface QcService {
 	List<QcDTO> selectWarehouseListByItem(String itemId);
 
 	List<QcDTO> selectSectionListByWarehouse(String whId);
+	
+	List<QcDTO> selectDefLogList(String qcId);
 }

@@ -21,4 +21,8 @@ public interface QcDAO {
 	List<QcDTO> selectWarehouseListByItem(String itemId);
 	List<QcDTO> selectSectionListByWarehouse(String whId);
 	int insertDefLog(QcDTO dto);
+	List<QcDTO> selectDefLogList(String qcId);
+	int deleteDefLog(String qcId);
+	int plusStockAvailByQcResult(QcDTO dto);
+	int plusStockByQcResult(QcDTO dto);
 }

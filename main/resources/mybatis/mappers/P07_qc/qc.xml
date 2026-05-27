@@ -126,11 +126,20 @@
             resultType="kr.or.chop.P07_qc.dto.QcDTO">
 
         SELECT
-            NVL(SUM(Q.QC_QTY), 0) AS qcQty,
-            NVL(SUM(Q.QC_PASS_QTY), 0) AS qcPassQty
-        FROM QC Q
-        WHERE Q.QC_USAGE = 'Y'
-        AND TRUNC(Q.QC_DATE) = TRUNC(SYSDATE)
+			NVL(SUM(Q.QC_QTY), 0) AS todayQty,
+			NVL(SUM(Q.QC_PASS_QTY), 0) AS passQty,
+			NVL(SUM(Q.QC_QTY - NVL(Q.QC_PASS_QTY, 0)), 0) AS failQty,
+			CASE
+				WHEN NVL(SUM(Q.QC_QTY), 0) = 0 THEN 0
+				ELSE ROUND(
+					(NVL(SUM(Q.QC_QTY - NVL(Q.QC_PASS_QTY, 0)), 0)
+					/ SUM(Q.QC_QTY)) * 100
+				, 1)
+			END AS failRate
+		FROM QC Q
+		WHERE Q.QC_USAGE = 'Y'
+		AND Q.QC_STATUS = 30
+		AND TRUNC(Q.QC_DATE) = TRUNC(SYSDATE)
 
     </select>
 
@@ -289,7 +298,7 @@
         QC_STATUS = #{qcStatus},
         QC_PASS_QTY = #{qcPassQty},
         QC_WMSG = #{qcWmsg},
-        QC_DATE = #{qcDate}
+        QC_DATE = sysdate + (9/24)
     WHERE QC_ID = #{qcId}
 	
 	</update>
@@ -302,7 +311,7 @@
 	        LOT_CQTY = #{qcQty},
 	        LOT_FQTY = #{qcPassQty},
 	        LOT_AWHSEC = #{awhsec},
-	        LOT_QC = 'Y'
+	        LOT_STATUS = 10
 	    WHERE LOT_ID = #{qcLot}
 	
 	</update>
@@ -319,6 +328,56 @@
 	    ORDER BY DEF_TYPE_ID
 	
 	</select>
+	
+	<select id="selectDefLogList" parameterType="string" resultType="qcDTO">
+
+		SELECT
+			DL.DLOG_QCID AS qcId,
+			DL.DLOG_DEF AS defType,
+			D.DEF_TYPE_NAME AS defTypeName,
+			DL.DLOG_QTY AS defQty,
+			DL.DLOG_ACTION AS defAction,
+			DL.DLOG_DISPOSE AS defDiscard
+		FROM DEF_LOG DL
+		LEFT JOIN DEFECT D
+		ON DL.DLOG_DEF = D.DEF_TYPE_ID
+		WHERE DL.DLOG_QCID = #{qcId}
+		ORDER BY DL.DLOG_ID
+	
+	</select>
+	
+	<update id="plusStockByQcResult"
+	parameterType="qcDTO">
+
+		UPDATE STOCK
+		SET
+			STOCK_PREV_QTY =
+				NVL(STOCK_PREV_QTY, 0) - (#{qcQty} - #{qcPassQty}),
+	
+			STOCK_AVAIL_QTY =
+				NVL(STOCK_AVAIL_QTY, 0) + #{qcPassQty}
+	
+		WHERE STOCK_ITEM = (
+			SELECT LOT_ITEM
+			FROM LOT
+			WHERE LOT_ID = #{qcLot}
+		)
+	
+		AND EXISTS (
+			SELECT 1
+			FROM QC
+			WHERE QC_ID = #{qcId}
+			AND QC_STATUS != 30
+		)
+	
+	</update>
+	
+	<delete id="deleteDefLog" parameterType="string">
+	
+		DELETE FROM DEF_LOG
+		WHERE DLOG_QCID = #{qcId}
+	
+	</delete>
 	
 	<select id="selectWarehouseListByItem"
         parameterType="string"
@@ -388,7 +447,7 @@
 	        DLOG_DISPOSE
 	    )
 	    VALUES (
-	        'DLOG' || DEF_LOG_SEQ.NEXTVAL,
+	        'DLOG' || DLOG_SEQ.NEXTVAL,
 	        #{qcId},
 	        #{defType},
 	        #{defQty},

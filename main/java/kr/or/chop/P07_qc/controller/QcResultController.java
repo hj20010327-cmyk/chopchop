@@ -22,8 +22,10 @@ public class QcResultController {
 	public String resultAdd(String qcId, Model model) {
 
 		QcDTO qc = qcService.selectQcDetail(qcId);
+		List<QcDTO> defLogList = qcService.selectDefLogList(qcId);
 
 		model.addAttribute("qc", qc);
+		model.addAttribute("defLogList", defLogList);
 
 		return "P07_qc/qcResultAdd.tiles";
 	}
