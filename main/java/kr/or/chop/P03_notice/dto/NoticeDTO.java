@@ -21,7 +21,7 @@ public class NoticeDTO {
     private String not_writer;
 
     // 조회수
-    private int not_view;
+    private int not_view_cnt;
 
     // 작성일
     private Date not_cdate;

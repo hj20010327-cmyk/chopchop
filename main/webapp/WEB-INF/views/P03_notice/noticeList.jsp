@@ -109,7 +109,7 @@
 
                             <td>${dto.empName} (${dto.not_writer})</td>
 
-                            <td>${dto.not_view}</td>
+                            <td>${dto.not_view_cnt}</td>
 
                         </tr>
 

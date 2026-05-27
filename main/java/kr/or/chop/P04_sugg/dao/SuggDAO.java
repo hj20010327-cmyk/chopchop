@@ -22,4 +22,6 @@ public interface SuggDAO {
 	    
 	    List<SuggDTO> selectSuggList(SuggDTO suggDTO, PageInfo pageInfo);
 	    
+	    // 조회수 증가
+	    int updateSuggView(int sugg_no);
 }

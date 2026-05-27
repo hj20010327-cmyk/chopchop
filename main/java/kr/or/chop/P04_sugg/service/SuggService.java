@@ -21,4 +21,7 @@ public interface SuggService {
     
     int updateSuggAnswer(SuggDTO dto);
     
+    // 조회수 증가
+    int updateSuggView(int sugg_no);
+    
 }

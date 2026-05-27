@@ -86,7 +86,7 @@
                     </span>
 
                     <span style="margin-right:28px;">
-                        조회수 ${dto.not_view}
+                        조회수 ${dto.not_view_cnt}
                     </span>
 
                     <span id="copyurl"
