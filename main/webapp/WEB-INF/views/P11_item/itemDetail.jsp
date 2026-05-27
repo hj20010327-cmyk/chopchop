@@ -72,13 +72,13 @@
 					<tbody>
 						<tr>
 							<th>품목코드</th>
-							<td colspan="2">${itemDTO.itemId}</td>
+							<td>${itemDTO.itemId}</td>
 							<th>품목명</th>
-							<td colspan="2">${itemDTO.itemName}</td>
+							<td>${itemDTO.itemName}</td>
 						</tr>
 						<tr>
 							<th>저장 창고 유형</th>
-							<td colspan="2">
+							<td>
 								<c:choose>
 									<c:when test="${itemDTO.itemWhType == '10'}">
 										원자재 냉동창고
@@ -107,19 +107,18 @@
 								</c:choose>
 							</td>
 							<th>안전재고</th>
-							<td colspan="2">
+							<td>
 							<fmt:formatNumber value="${itemDTO.safetyStock}"
 									pattern="#,###" />
 							</td>
 						</tr>
 						<tr>
-							
+							<th>규격</th>
+							<td colspan="3">${itemDTO.spec}</td>
 						</tr>
 						<tr>
 							<th>단위</th>
 							<td>${itemDTO.unit}</td>
-							<th>규격</th>
-							<td>${itemDTO.spec}</td>
 							<th>단가(원)</th>
 							<td><fmt:formatNumber value="${itemDTO.unitPrice}"
 									pattern="#,###" /></td>

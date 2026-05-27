@@ -77,11 +77,11 @@
 				<thead>
 					<tr>
 						<th style="width: 130px;">품목 코드</th>
-						<th style="width: 200px;">품목명</th>
+						<th style="width: 150px;">품목명</th>
 						<th style="width: 100px;">품목유형</th>
 						<th style="width: 130px;">안전재고</th>
 						<th style="width: 100px;">단위</th>
-						<th style="width: 100px;">규격</th>
+						<th style="width: 200px;">규격</th>
 						<th style="width: 130px;">단가(원)</th>
 					</tr>
 				</thead>
