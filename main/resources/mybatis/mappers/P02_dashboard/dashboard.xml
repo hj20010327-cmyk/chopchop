@@ -4,23 +4,6 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapper.P02_dashboard">
 
-	<update id="updateWorkStatusAuto">
-		UPDATE work w
-		SET
-			w.work_status =
-				CASE
-					WHEN NVL(w.work_prev_qty, 0) >= w.work_order_qty THEN 30
-					WHEN TRUNC(w.work_date) <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
-						AND NVL(w.work_prev_qty, 0) <![CDATA[<]]> w.work_order_qty THEN 40
-					WHEN TRUNC(w.work_date) <![CDATA[=]]> TRUNC(SYSDATE + (9/24)) THEN 20
-					WHEN TRUNC(w.work_date) <![CDATA[>]]> TRUNC(SYSDATE + (9/24)) THEN 10
-					ELSE 10
-				END,
-			w.work_mdate = SYSDATE + (9/24)
-		WHERE w.work_usage = 'Y' AND w.work_status != 0 AND w.work_status != 30
-	</update>
-
-
 <!-- 오늘 요약 카드 -->
 <select id="selectTodaySummary" resultType="hashmap">
 	SELECT
