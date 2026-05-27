@@ -755,5 +755,73 @@
 		SET STOCK_PREV_QTY = STOCK_PREV_QTY + #{workPrevQty}
 		WHERE STOCK_ITEM = #{workItem}
 	</update>
+	
+	
+	
+	
+	
+	<select id="selectUsableLotQty"
+	        parameterType="kr.or.chop.P06_work.dto.WorkBomDTO"
+	        resultType="int">
+	    SELECT NVL(SUM(lot_fqty), 0)
+	    FROM lot
+	    WHERE lot_item = #{itemId}
+	      AND lot_fqty > 0
+	      AND lot_qc = 'Y'
+	      AND lot_status IN (10, 20)
+	</select>
+	
+	<select id="selectUsableLotList"
+	        parameterType="kr.or.chop.P06_work.dto.WorkBomDTO"
+	        resultType="kr.or.chop.P06_work.dto.WorkLotDTO">
+	    SELECT
+	        lot_id AS lotId,
+	        lot_item AS lotItem,
+	        lot_fqty AS lotFqty
+	    FROM lot
+	    WHERE lot_item = #{itemId}
+	      AND lot_fqty > 0
+	      AND lot_qc = 'Y'
+	      AND lot_status IN (10, 20)
+	    ORDER BY
+	        lot_exp ASC,
+	        lot_etw ASC,
+	        lot_id ASC
+	</select>
+	<insert id="insertLotUse"
+	        parameterType="kr.or.chop.P06_work.dto.WorkLotDTO">
+	    INSERT INTO lot_use (
+	        use_id,
+	        use_work,
+	        use_lot,
+	        use_qty,
+	        use_date,
+	        use_type
+	    )
+	    VALUES (
+	        'USE' || lot_use_seq.NEXTVAL,
+	        #{workId},
+	        #{lotId},
+	        #{useQty},
+	        SYSDATE + (9/24),
+	        #{useType}
+	    )
+	</insert>
+	<update id="updateUsedLot"
+	        parameterType="kr.or.chop.P06_work.dto.WorkLotDTO">
+	    UPDATE lot
+	    SET
+	        lot_fqty = lot_fqty - #{useQty},
+	        lot_status =
+	            CASE
+	                WHEN lot_fqty - #{useQty} = 0 THEN 30
+	                ELSE 20
+	            END
+	    WHERE lot_id = #{lotId}
+	      AND lot_fqty >= #{useQty}
+	      AND lot_status IN (10, 20)
+	</update>
+	
+	
 
 </mapper>

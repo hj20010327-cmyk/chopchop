@@ -5,6 +5,7 @@ import java.util.List;
 import kr.or.chop.P05_plan.dto.PlanDTO;
 import kr.or.chop.P06_work.dto.WorkBomDTO;
 import kr.or.chop.P06_work.dto.WorkDTO;
+import kr.or.chop.P06_work.dto.WorkLotDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 public interface WorkDAO {
@@ -40,4 +41,13 @@ public interface WorkDAO {
 	public int insertLot (WorkDTO workDTO);
 	public int updateStock (WorkDTO workDTO);
 	
+	
+	// LOT 사용 가능 수량 확인
+	public int selectUsableLotQty(WorkBomDTO bomDTO);
+	// 유통기한 빠른 순서로 사용 가능 LOT 조회
+	public List<WorkLotDTO> selectUsableLotList(WorkBomDTO bomDTO);
+	// LOT_USE 이력 등록
+	public int insertLotUse(WorkLotDTO lotDTO);
+	// LOT 잔량/상태 변경
+	public int updateUsedLot(WorkLotDTO lotDTO);
 }

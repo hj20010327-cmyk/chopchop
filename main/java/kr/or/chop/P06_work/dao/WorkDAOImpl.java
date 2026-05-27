@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import kr.or.chop.P05_plan.dto.PlanDTO;
 import kr.or.chop.P06_work.dto.WorkBomDTO;
 import kr.or.chop.P06_work.dto.WorkDTO;
+import kr.or.chop.P06_work.dto.WorkLotDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Repository
@@ -134,6 +135,27 @@ public class WorkDAOImpl implements WorkDAO {
 	@Override
 	public int updateStock(WorkDTO workDTO) {
 		return session.update("mapper.P06_work.updateStock", workDTO);
+	}
+	
+	@Override
+	public int selectUsableLotQty(WorkBomDTO bomDTO) {
+	    Integer result = session.selectOne("mapper.P06_work.selectUsableLotQty", bomDTO);
+	    return result == null ? 0 : result;
+	}
+
+	@Override
+	public List<WorkLotDTO> selectUsableLotList(WorkBomDTO bomDTO) {
+	    return session.selectList("mapper.P06_work.selectUsableLotList", bomDTO);
+	}
+
+	@Override
+	public int insertLotUse(WorkLotDTO lotDTO) {
+	    return session.insert("mapper.P06_work.insertLotUse", lotDTO);
+	}
+
+	@Override
+	public int updateUsedLot(WorkLotDTO lotDTO) {
+	    return session.update("mapper.P06_work.updateUsedLot", lotDTO);
 	}
 	
 	

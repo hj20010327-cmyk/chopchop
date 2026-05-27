@@ -11,6 +11,7 @@ import kr.or.chop.P05_plan.dto.PlanDTO;
 import kr.or.chop.P06_work.dao.WorkDAO;
 import kr.or.chop.P06_work.dto.WorkBomDTO;
 import kr.or.chop.P06_work.dto.WorkDTO;
+import kr.or.chop.P06_work.dto.WorkLotDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Service
@@ -219,7 +220,7 @@ public class WorkServiceImpl implements WorkService {
 	    int newStatus = workDTO.getWorkStatus();
 
 	    // 2. 이미 정산된 작업 재처리 방지
-	    if (oldStatus == 30 || oldStatus == 50) {
+	    if (oldStatus == 30 || oldStatus == 0) {
 	        throw new RuntimeException("이미 결과 처리된 작업지시입니다.");
 	    }
 
@@ -250,7 +251,7 @@ public class WorkServiceImpl implements WorkService {
 	    }
 
 	    // 6. 완료/보류 외 상태는 차단
-	    if (newStatus != 30 && newStatus != 50) {
+	    if (newStatus != 30 && newStatus != 0) {
 	        throw new RuntimeException("처리할 수 없는 작업 상태입니다.");
 	    }
 
@@ -267,6 +268,10 @@ public class WorkServiceImpl implements WorkService {
 	            throw new RuntimeException("재고 정보가 없는 자재입니다: " + bom.getItemName());
 	        }
 
+	        // 완료/보류 수량만큼 실제 LOT 차감
+	        consumeLotForWork(origin, bom);
+
+	        // 기존 STOCK 정산
 	        int result = workDAO.settleReservedStock(bom);
 
 	        if (result == 0) {
@@ -305,6 +310,84 @@ public class WorkServiceImpl implements WorkService {
 	        if (stockResult == 0) {
 	            throw new RuntimeException("완제품 재고 업데이트 실패");
 	        }
+	    }
+	}
+	
+	
+	
+	////////////////////////////////////////////////////////////
+	
+	private void consumeLotForWork(WorkDTO workDTO, WorkBomDTO bom) {
+
+	    int usedQty = bom.getUsedQty();
+
+	    // 보류인데 완료수량이 0이면 실제 사용량도 0일 수 있음
+	    if (usedQty <= 0) {
+	        return;
+	    }
+
+	    // 1. LOT 총량 검증
+	    int usableLotQty = workDAO.selectUsableLotQty(bom);
+
+	    if (usableLotQty < usedQty) {
+	        throw new RuntimeException(
+	            bom.getItemName()
+	            + " 사용 가능한 LOT 수량 부족 / 필요: "
+	            + usedQty
+	            + ", 가능: "
+	            + usableLotQty
+	        );
+	    }
+
+	    // 2. LOT 목록 조회
+	    List<WorkLotDTO> lotList = workDAO.selectUsableLotList(bom);
+
+	    if (lotList == null || lotList.isEmpty()) {
+	        throw new RuntimeException(
+	            bom.getItemName() + " 사용 가능한 LOT이 없습니다."
+	        );
+	    }
+
+	    int remainQty = usedQty;
+
+	    for (WorkLotDTO lot : lotList) {
+
+	        if (remainQty <= 0) {
+	            break;
+	        }
+
+	        int lotFqty = lot.getLotFqty();
+	        int useQty = Math.min(lotFqty, remainQty);
+
+	        lot.setWorkId(workDTO.getWorkId());
+	        lot.setUseQty(useQty);
+	        lot.setUseType(10); // 작업투입
+
+	        int useResult = workDAO.insertLotUse(lot);
+
+	        if (useResult == 0) {
+	            throw new RuntimeException(
+	                bom.getItemName() + " LOT 사용 이력 등록 실패"
+	            );
+	        }
+
+	        int lotResult = workDAO.updateUsedLot(lot);
+
+	        if (lotResult == 0) {
+	            throw new RuntimeException(
+	                bom.getItemName() + " LOT 잔량 차감 실패: " + lot.getLotId()
+	            );
+	        }
+
+	        remainQty -= useQty;
+	    }
+
+	    if (remainQty > 0) {
+	        throw new RuntimeException(
+	            bom.getItemName()
+	            + " LOT 차감 실패 / 미차감 수량: "
+	            + remainQty
+	        );
 	    }
 	}
 	

@@ -363,21 +363,6 @@
 											</c:otherwise>
 										</c:choose>
 									</div>
-
-									<div>
-										<c:choose>
-											<c:when test="${empty proc.eqList}">
-												설비 미지정
-											</c:when>
-											<c:otherwise>
-												<c:forEach var="equip" items="${proc.eqList}" varStatus="status">
-													<a class="proc-link" href="${pageContext.request.contextPath}/equip/detail?eqId=${equip.eqId}">
-														${equip.eqName} (${equip.eqId})
-													</a><c:if test="${!status.last}">, </c:if>
-												</c:forEach>
-											</c:otherwise>
-										</c:choose>
-									</div>
 								</div>
 							</div>
 						</c:forEach>
@@ -475,7 +460,7 @@
 		flex-direction: column;
 		justify-content: center;
 		padding: 10px 18px;
-		width: 230px;
+		width: 455px;
 	}
 
 	.proc-name {
