@@ -19,5 +19,6 @@ public interface ItemDAO {
 	List<LotDTO> selectLotListByItem(String itemId, PageInfo pageInfo);
 	List<String> selectUnitList();
 	List<Map<String, Object>> selectSpecList();
+	int insertStockByItem(ItemDTO itemDTO);
 	
 }

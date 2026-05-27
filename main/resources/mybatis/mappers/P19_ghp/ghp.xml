@@ -106,6 +106,46 @@
 		WHERE G.GHP_ID = #{ghpId}
 
 	</select>
+	
+	<select id="selectTargetList" parameterType="map" resultType="map">
+
+		<choose>
+			<when test="targetType == 'WP'">
+				SELECT
+					WP_TYPE_NO AS "code",
+					WP_TYPE_NAME AS "name"
+				FROM WP_TYPE
+				WHERE 1 = 1
+	
+				<if test="keyword != null and keyword != ''">
+					AND (
+						TO_CHAR(WP_TYPE_NO) LIKE '%' || #{keyword} || '%'
+						OR UPPER(WP_TYPE_NAME) LIKE UPPER('%' || #{keyword} || '%')
+					)
+				</if>
+	
+				ORDER BY WP_TYPE_NO
+			</when>
+	
+			<otherwise>
+				SELECT
+					WH_TYPE_NO AS "code",
+					WH_TYPE_NAME AS "name"
+				FROM WH_TYPE
+				WHERE 1 = 1
+	
+				<if test="keyword != null and keyword != ''">
+					AND (
+						TO_CHAR(WH_TYPE_NO) LIKE '%' || #{keyword} || '%'
+						OR UPPER(WH_TYPE_NAME) LIKE UPPER('%' || #{keyword} || '%')
+					)
+				</if>
+	
+				ORDER BY WH_TYPE_NO
+			</otherwise>
+		</choose>
+	
+	</select>
 
 	<insert id="insertGhp"
 		parameterType="kr.or.chop.P19_ghp.dto.GhpDTO">

@@ -31,7 +31,11 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public int insertItem(ItemDTO itemDTO) {
-		return itemDAO.insertItem(itemDTO);
+		int result = itemDAO.insertItem(itemDTO);
+
+		itemDAO.insertStockByItem(itemDTO);
+
+		return result;
 	}
 
 

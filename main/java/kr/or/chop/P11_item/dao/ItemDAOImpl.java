@@ -86,5 +86,10 @@ public class ItemDAOImpl implements ItemDAO {
 	public List<Map<String, Object>> selectSpecList() {
 		return sqlSession.selectList("mapper.P11_item.selectSpecList");
 	}
+	
+	@Override
+	public int insertStockByItem(ItemDTO itemDTO) {
+		return sqlSession.insert("mapper.P11_item.insertStockByItem", itemDTO);
+	}
 
 }

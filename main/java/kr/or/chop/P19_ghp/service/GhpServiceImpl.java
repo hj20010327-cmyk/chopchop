@@ -1,6 +1,8 @@
 package kr.or.chop.P19_ghp.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,17 @@ public class GhpServiceImpl implements GhpService {
 			dto.setGhpWhType(0);
 			dto.setGhpWpType(0);
 		}
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectTargetList(String targetType, String keyword) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("targetType", targetType);
+		map.put("keyword", keyword);
+
+		return ghpDAO.selectTargetList(map);
 	}
 	
 }

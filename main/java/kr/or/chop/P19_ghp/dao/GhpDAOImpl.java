@@ -56,4 +56,9 @@ public class GhpDAOImpl implements GhpDAO {
 		return sqlSession.update(namespace + "deleteGhp", ghpId);
 	}
 	
+	@Override
+	public List<Map<String, Object>> selectTargetList(Map<String, Object> map) {
+		return sqlSession.selectList(namespace + "selectTargetList", map);
+	}
+	
 }

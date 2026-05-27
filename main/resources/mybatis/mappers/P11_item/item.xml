@@ -100,49 +100,73 @@
 	<insert id="insertItem"
 		parameterType="kr.or.chop.P11_item.dto.ItemDTO">
 
+		<selectKey keyProperty="itemId" resultType="string" order="BEFORE">
+			SELECT
+			<choose>
+				<when test="itemType == 10 or itemType == '10'">
+					'RAW' || raw_seq.NEXTVAL
+				</when>
+	
+				<when test="itemType == 20 or itemType == '20'">
+					'SEMI' || semi_seq.NEXTVAL
+				</when>
+	
+				<when test="itemType == 30 or itemType == '30'">
+					'FIN' || fin_seq.NEXTVAL
+				</when>
+	
+				<when test="itemType == 40 or itemType == '40'">
+					'ETC' || etc_seq.NEXTVAL
+				</when>
+			</choose>
+			FROM dual
+		</selectKey>
+	
 		INSERT INTO item (
-		item_id,
-		item_name,
-		item_type,
-		item_unit,
-		item_spec,
-		item_unit_price,
-		item_whtype,
-		item_usedate,
-		item_safety_stock,
-		item_usage
+			item_id,
+			item_name,
+			item_type,
+			item_unit,
+			item_spec,
+			item_unit_price,
+			item_whtype,
+			item_usedate,
+			item_safety_stock,
+			item_usage
 		)
 		VALUES (
-		<choose>
-			<when test="itemType == 10 or itemType == '10'">
-				'RAW' || raw_seq.NEXTVAL
-			</when>
-
-			<when test="itemType == 20 or itemType == '20'">
-				'SEMI' || semi_seq.NEXTVAL
-			</when>
-
-			<when test="itemType == 30 or itemType == '30'">
-				'FIN' || fin_seq.NEXTVAL
-			</when>
-			
-			<when test="itemType == 40 or itemType == '40'">
-				'ETC' || etc_seq.NEXTVAL
-			</when>
-
-		</choose>
-		,
-		#{itemName},
-		#{itemType},
-		upper(#{unit}),
-		#{spec},
-		#{unitPrice},
-		#{itemWhType},
-		#{useDate},
-		#{safetyStock},
-		'Y'
+			#{itemId},
+			#{itemName},
+			#{itemType},
+			upper(#{unit}),
+			#{spec},
+			#{unitPrice},
+			#{itemWhType},
+			#{useDate},
+			#{safetyStock},
+			'Y'
 		)
-
+	
+	</insert>
+	
+	<insert id="insertStockByItem"
+		parameterType="kr.or.chop.P11_item.dto.ItemDTO">
+	
+		INSERT INTO STOCK (
+			STOCK_ID,
+			STOCK_ITEM,
+			STOCK_PREV_QTY,
+			STOCK_AVAIL_QTY,
+			STOCK_RESERVE_QTY
+		)
+		VALUES (
+			'STOCK' || STOCK_SEQ.NEXTVAL,
+			#{itemId},
+			0,
+			0,
+			0
+		)
+	
 	</insert>
 
 	<select id="selectItemDetail"
