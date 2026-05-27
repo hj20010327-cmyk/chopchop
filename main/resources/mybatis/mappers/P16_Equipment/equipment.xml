@@ -421,6 +421,7 @@
 		FROM VENDOR
 
 		WHERE VENDOR_TYPE = 'E'
+		and vendor_usage  = 'Y' 
 
 		<if test="_parameter != null and _parameter != ''">
 

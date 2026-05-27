@@ -138,7 +138,11 @@
 
 					<tr>
 						<th>작업장</th>
-						<td>${eqp.wpName}</td>
+						<td>
+							<a class="detail-link" href="${pageContext.request.contextPath}/workplace/detail?wpId=${eqp.eqWpid}">
+								${eqp.wpName}
+							</a>
+						</td>
 
 						<th>작업구역</th>
 						<td>${eqp.wpTypeName}</td>
@@ -149,7 +153,11 @@
 						<td>${eqp.eqManagerName}(${eqp.eqManager})</td>
 
 						<th>관리업체</th>
-						<td>${eqp.eqVendorName}(${eqp.eqVendor})</td>
+						<td>
+							<a class="detail-link" href="${pageContext.request.contextPath}/vendor/detail?vendorId=${eqp.eqVendor}">
+								${eqp.eqVendorName}(${eqp.eqVendor})
+							</a>
+						</td>
 					</tr>
 
 				</table>
@@ -437,6 +445,15 @@
 	</div>
 
 </div>
+
+<style>
+
+.detail-link:hover {
+    text-decoration: underline;
+    color: var(--main-green);
+}
+
+</style>
 
 <script>
 	const openStopModal = document.querySelector("#openStopModal");
