@@ -153,7 +153,7 @@
 						</td>
 						<th>등록일시</th>
 						<td>
-							<fmt:formatDate value="${workDTO.workCdate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+							<fmt:formatDate value="${workDTO.workCdate}" pattern="yyyy-MM-dd HH:mm"/>
 						</td>
 					</tr>
 

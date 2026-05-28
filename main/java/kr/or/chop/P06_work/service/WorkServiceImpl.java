@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.chop.P02_dashboard.dao.RefreshDAO;
 import kr.or.chop.P05_plan.dto.PlanDTO;
 import kr.or.chop.P06_work.dao.WorkDAO;
 import kr.or.chop.P06_work.dto.WorkBomDTO;
@@ -19,6 +20,8 @@ public class WorkServiceImpl implements WorkService {
 	
 	@Autowired
 	WorkDAO workDAO;
+	@Autowired
+	RefreshDAO refDAO;
 	
 	@Override
 	public int selectWorkCount(WorkDTO workDTO) {
@@ -147,6 +150,8 @@ public class WorkServiceImpl implements WorkService {
 	        throw new RuntimeException("작업지시 등록 실패");
 	    }
 	    
+//	    refDAO.updatePlanWpQtyOne(workDTO.getWorkPlan());
+	    
 	}
 
 	@Override
@@ -159,6 +164,8 @@ public class WorkServiceImpl implements WorkService {
 	public void updateWork(WorkDTO workDTO) {
 		// 상태 변경
 		workDAO.updateWork(workDTO);
+		
+//		refDAO.updatePlanWpQtyOne(workDTO.getWorkPlan());
 	}
 
 	@Transactional
@@ -203,6 +210,8 @@ public class WorkServiceImpl implements WorkService {
 	    if (deleteResult == 0) {
 	        throw new RuntimeException("작업지시 삭제 실패");
 	    }
+	    
+//	    refDAO.updatePlanWpQtyOne(origin.getWorkPlan());
 	}
 
 	@Transactional
@@ -287,6 +296,8 @@ public class WorkServiceImpl implements WorkService {
 	    if (updateResult == 0) {
 	        throw new RuntimeException("작업 결과 업데이트 실패");
 	    }
+	    
+	    refDAO.updatePlanWpQtyOne(origin.getWorkPlan());
 
 	    // 9. 완료일 때만 완제품 LOT 생성 + 완제품 stock 증가 + 입고 등록
 	    if (newStatus == 30) {

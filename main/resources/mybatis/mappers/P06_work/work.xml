@@ -13,7 +13,11 @@
             LEFT OUTER JOIN emp d ON w.work_director = d.emp_id
             LEFT OUTER JOIN emp worker ON w.work_worker = worker.emp_id
         WHERE w.work_usage = 'Y'
-
+        	<!-- 최초 조회: 검색 기간이 없으면 최근 6개월만 조회 -->
+			<if test="(workSearchSdate == null or workSearchSdate == '') 
+			       and (workSearchEdate == null or workSearchEdate == '')">
+			    AND w.work_date <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+			</if>
             <if test="workSearchSdate != null and workSearchSdate != ''">
                 AND w.work_date <![CDATA[>=]]> TO_DATE(#{workSearchSdate}, 'YYYY-MM-DD')
             </if>
@@ -90,7 +94,11 @@
                     LEFT OUTER JOIN emp d ON w.work_director = d.emp_id
                     LEFT OUTER JOIN emp worker ON w.work_worker = worker.emp_id
                 WHERE w.work_usage = 'Y'
-
+					<!-- 최초 조회: 검색 기간이 없으면 최근 6개월만 조회 -->
+					<if test="(workDTO.workSearchSdate == null or workDTO.workSearchSdate == '') 
+					       and (workDTO.workSearchEdate == null or workDTO.workSearchEdate == '')">
+					    AND w.work_date <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+					</if>
                     <if test="workDTO.workSearchSdate != null and workDTO.workSearchSdate != ''">
                         AND w.work_date <![CDATA[>=]]> TO_DATE(#{workDTO.workSearchSdate}, 'YYYY-MM-DD')
                     </if>
@@ -221,6 +229,20 @@
 	        LEFT OUTER JOIN emp worker ON w.work_worker = worker.emp_id
 	
 	    WHERE w.work_usage = 'Y'
+	    
+	    	<!-- 최초 조회: 검색 기간이 없으면 최근 6개월 기준으로 카드 집계 -->
+			<if test="(workSearchSdate == null or workSearchSdate == '') 
+			       and (workSearchEdate == null or workSearchEdate == '')">
+			    AND w.work_date <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+			</if>
+			
+			<if test="workSearchSdate != null and workSearchSdate != ''">
+			    AND w.work_date <![CDATA[>=]]> TO_DATE(#{workSearchSdate}, 'YYYY-MM-DD')
+			</if>
+			
+			<if test="workSearchEdate != null and workSearchEdate != ''">
+			    AND w.work_date <![CDATA[<]]> TO_DATE(#{workSearchEdate}, 'YYYY-MM-DD') + 1
+			</if>
 	
 	        <if test="searchKeyword != null and searchKeyword != ''">
 	            AND (

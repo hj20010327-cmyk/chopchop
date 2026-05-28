@@ -1,5 +1,6 @@
 package kr.or.chop.P06_work.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,14 @@ public class WorkController {
 	) {
 		
 		refService.refreshStatus();
+		
+		if (workDTO.getWorkSearchSdate() == null || workDTO.getWorkSearchSdate().isEmpty()) {
+			workDTO.setWorkSearchSdate(LocalDate.now().minusMonths(6).toString());
+		}
+		
+		if (workDTO.getWorkSearchEdate() == null || workDTO.getWorkSearchEdate().isEmpty()) {
+			workDTO.setWorkSearchEdate(LocalDate.now().toString());
+		}
 		
 		// 페이징
 		int listCount = workService.selectWorkCount(workDTO);

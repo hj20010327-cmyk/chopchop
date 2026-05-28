@@ -24,44 +24,44 @@
 	<div class="card-wrap workCard">
 		<div class="card info work-all"
 	         data-card-type="all">
-	        <div class="card-title">전체 작업</div>
+	        <div class="card-title">금일 전체 작업</div>
 	        <div class="card-value">${workCard.totalCnt}</div>
-	        <div class="card-subtitle">금일 기준</div>
+	        <div class="card-subtitle">전체 작업</div>
 	    </div>
 	
 	    <div class="card success work-card"
 	         data-card-type="ing">
 	        <div class="card-title">진행 중인 작업</div>
 	        <div class="card-value">${workCard.ingCnt}</div>
-	        <div class="card-subtitle">금일 기준</div>
+	        <div class="card-subtitle">미완료 작업</div>
 	    </div>
 	
 	    <div class="card warning work-card"
 	         data-card-type="wait">
 	        <div class="card-title">대기 중인 작업</div>
 	        <div class="card-value">${workCard.waitCnt}</div>
-			<div class="card-subtitle">금일 기준</div>
+			<div class="card-subtitle">미진행 작업</div>
 	    </div>
 	
 	    <div class="card danger work-card"
 	         data-card-type="delay">
 	        <div class="card-title">지연된 작업</div>
 	        <div class="card-value">${workCard.delayCnt}</div>
-			<div class="card-subtitle">금일 기준</div>
+			<div class="card-subtitle">작업일 초과 작업</div>
 	    </div>
 	
 	    <div class="card safe work-card"
 	         data-card-type="fin">
 	        <div class="card-title">완료된 작업</div>
 	        <div class="card-value">${workCard.finCnt}</div>
-	        <div class="card-subtitle">금일 기준</div>
+	        <div class="card-subtitle">완료된 작업</div>
 	    </div>
 	
 	    <div class="card info work-card"
 	         data-card-type="etc">
 	        <div class="card-title">보류된 작업</div>
 	        <div class="card-value">${workCard.etcCnt}</div>
-	        <div class="card-subtitle">금일 기준</div>
+	        <div class="card-subtitle">검색 기간 내 보류 작업</div>
 	    </div>
 	</div>
 	
