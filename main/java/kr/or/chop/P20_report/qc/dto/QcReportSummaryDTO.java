@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class QcReportSummaryDTO {
 
-    private int totalQcQty;
-    private int totalPassQty;
-    private int totalDefectQty;
+    private long totalQcQty;
+    private long totalPassQty;
+    private long totalDefectQty;
 
     private double defectRate;
 
-    private int highRiskCount;
+    private long highRiskCount;
     private double highRiskRate;
 }
