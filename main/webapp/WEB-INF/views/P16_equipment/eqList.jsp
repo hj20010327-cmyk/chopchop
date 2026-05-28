@@ -78,33 +78,46 @@
         </select>
     </div>
 
-    <div class="search-item">
-        <label>상태</label>
-
-        <select name="eqStatus">
-            <option value="0">전체</option>
-
-            <option value="10"
-                <c:if test="${search.eqStatus == 10}">selected</c:if>>
-                가동중
-            </option>
-
-            <option value="20"
-                <c:if test="${search.eqStatus == 20}">selected</c:if>>
-                정지
-            </option>
-
-            <option value="30"
-                <c:if test="${search.eqStatus == 30}">selected</c:if>>
-                점검중
-            </option>
-
-            <option value="40"
-                <c:if test="${search.eqStatus == 40}">selected</c:if>>
-                고장
-            </option>
-        </select>
-    </div>
+	<div class="search-item">
+	    <label>상태</label>
+	    <select name="eqStatus">
+	        <option value="0"
+	            <c:if test="${search.eqStatus == 0 || empty search.eqStatus}">
+	                selected
+	            </c:if>>
+	            전체
+	        </option>
+	
+	        <option value="10"
+	            <c:if test="${search.eqStatus == 10}">
+	                selected
+	            </c:if>>
+	            가동중
+	        </option>
+	
+	        <option value="20"
+	            <c:if test="${search.eqStatus == 20}">
+	                selected
+	            </c:if>>
+	            정지
+	        </option>
+	
+	        <option value="30"
+	            <c:if test="${search.eqStatus == 30}">
+	                selected
+	            </c:if>>
+	            점검중
+	        </option>
+	
+	        <option value="40"
+	            <c:if test="${search.eqStatus == 40}">
+	                selected
+	            </c:if>>
+	            고장
+	        </option>
+	
+	    </select>
+	</div>
 
     <div class="search-item keyword">
         <label>설비명/설비코드</label>

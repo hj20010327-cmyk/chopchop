@@ -5,41 +5,71 @@
 <mapper namespace="mapper.P02_dashboard">
 
 <!-- 오늘 요약 카드 -->
+<!-- 오늘 요약 카드 : LOT 기준 -->
 <select id="selectTodaySummary" resultType="hashmap">
-	SELECT
-		(
-			SELECT NVL(SUM(NVL(w.work_prev_qty, 0)), 0)
-			FROM work w
-			WHERE w.work_usage = 'Y'
-			  AND TRUNC(w.work_date) = TRUNC(SYSDATE + (9/24))
-		) AS "todayProdQty",
 
+	SELECT
+
+		/* 일일 생산 LOT */
 		(
 			SELECT COUNT(*)
-			FROM work w
-			WHERE w.work_usage = 'Y'
+			FROM lot l
+			INNER JOIN work w
+				ON l.lot_work = w.work_id
+			WHERE TRUNC(w.work_date)
+					= TRUNC(SYSDATE + (9/24))
+			  AND l.lot_status != 0
+		) AS "todayProdLotCnt",
+
+
+		/* 작업 완료 LOT */
+		(
+			SELECT COUNT(*)
+			FROM lot l
+			INNER JOIN work w
+				ON l.lot_work = w.work_id
+			WHERE TRUNC(w.work_date)
+					= TRUNC(SYSDATE + (9/24))
 			  AND w.work_status = 30
-			  AND TRUNC(w.work_date) = TRUNC(SYSDATE + (9/24))
-		) AS "todayDoneCnt",
+			  AND l.lot_status != 0
+		) AS "todayDoneLotCnt",
 
+
+		/* 일일 검사 LOT */
 		(
-			SELECT NVL(SUM(NVL(q.qc_qty, 0)), 0)
+			SELECT COUNT(DISTINCT q.qc_lot)
 			FROM qc q
 			WHERE q.qc_usage = 'Y'
-			  AND TRUNC(q.qc_date) = TRUNC(SYSDATE + (9/24))
-		) AS "todayQcQty",
+			  AND TRUNC(q.qc_date)
+					= TRUNC(SYSDATE + (9/24))
+		) AS "todayQcLotCnt",
 
+
+		/* 일일 불량률 */
 		(
-			SELECT NVL(SUM(NVL(q.qc_qty, 0) - NVL(q.qc_pass_qty, 0)), 0)
+			SELECT ROUND(
+				NVL(
+					SUM(q.qc_qty - q.qc_pass_qty),
+					0
+				)
+				/
+				NULLIF(
+					SUM(q.qc_qty),
+					0
+				)
+				* 100,
+				2
+			)
 			FROM qc q
 			WHERE q.qc_usage = 'Y'
-			  AND TRUNC(q.qc_date) = TRUNC(SYSDATE + (9/24))
-		) AS "todayFailQty"
+			  AND TRUNC(q.qc_date)
+					= TRUNC(SYSDATE + (9/24))
+		) AS "todayFailRate"
+
 	FROM dual
+
 </select>
 
-
-<!-- 창고 적재율 TOP 5 -->
 <!-- 창고 적재율 TOP 5 -->
 <select id="selectWarehouseTopList" resultType="hashmap">
 

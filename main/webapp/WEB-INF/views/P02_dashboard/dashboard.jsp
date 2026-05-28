@@ -109,39 +109,39 @@
 
 			<!-- 오늘 요약 카드 -->
 			<div class="card success dashboard-kpi-card">
-				<div class="card-title">일일 생산 수량</div>
+				<div class="card-title">일일 생산 LOT</div>
 				<div class="card-value">
-					${todaySummary.todayProdQty}
-					<span class="dashboard-unit">건</span>
+					${empty todaySummary.todayProdLotCnt ? 0 : todaySummary.todayProdLotCnt}
+					<span class="dashboard-unit">LOT</span>
 				</div>
-				<div class="card-subtitle">오늘 생산실적 합계</div>
+				<div class="card-subtitle">오늘 작업 기준 LOT</div>
 			</div>
-
+			
 			<div class="card safe dashboard-kpi-card">
-				<div class="card-title">작업 완료 수량</div>
+				<div class="card-title">작업 완료 LOT</div>
 				<div class="card-value">
-					${todaySummary.todayDoneCnt}
-					<span class="dashboard-unit">건</span>
+					${empty todaySummary.todayDoneLotCnt ? 0 : todaySummary.todayDoneLotCnt}
+					<span class="dashboard-unit">LOT</span>
 				</div>
 				<div class="card-subtitle">오늘 완료 작업지시</div>
 			</div>
-
+			
 			<div class="card warning dashboard-kpi-card">
-				<div class="card-title">일일 검사 수량</div>
+				<div class="card-title">일일 검사 LOT</div>
 				<div class="card-value">
-					${todaySummary.todayQcQty}
-					<span class="dashboard-unit">건</span>
+					${empty todaySummary.todayQcLotCnt ? 0 : todaySummary.todayQcLotCnt}
+					<span class="dashboard-unit">LOT</span>
 				</div>
-				<div class="card-subtitle">오늘 품질검사 합계</div>
+				<div class="card-subtitle">오늘 품질검사 LOT</div>
 			</div>
-
+			
 			<div class="card danger dashboard-kpi-card">
-				<div class="card-title">일일 불량 수량</div>
+				<div class="card-title">일일 불량률</div>
 				<div class="card-value">
-					${todaySummary.todayFailQty}
-					<span class="dashboard-unit">건</span>
+					${empty todaySummary.todayFailRate ? 0 : todaySummary.todayFailRate}
+					<span class="dashboard-unit">%</span>
 				</div>
-				<div class="card-subtitle">오늘 불량 수량 합계</div>
+				<div class="card-subtitle">오늘 불량수량 / 검사수량</div>
 			</div>
 
 			<!-- 주간 작업 현황 -->
@@ -223,7 +223,12 @@
 									<c:forEach var="w" items="${todayWorkList}">
 										<tr>
 											<td>${w.workDate}</td>
-											<td>${w.workId}</td>
+											<td>
+												<a class="dashboard-link"
+													href="${pageContext.request.contextPath}/work/detail?workId=${w.workId}">
+													${w.workId}
+												</a>
+											</td>
 											<td>
 												<c:choose>
 													<c:when test="${w.workStatus eq 10}">
@@ -711,5 +716,73 @@
 .table tbody tr:hover{
 	background:#fff;
 	cursor:default;
+}
+
+/* 창고 적재 현황만 스크롤 허용 */
+.warehouse-card{
+	overflow:hidden;
+}
+
+.warehouse-list{
+	max-height:135px;
+	overflow-y:auto;
+	padding-right:4px;
+}
+
+/* 금일 예정 작업만 스크롤 허용 */
+.bottom-work-card{
+	overflow:hidden;
+}
+
+.bottom-work-card .table-wrap{
+	max-height:105px;
+	overflow-y:auto;
+}
+
+/* 스크롤 생겨도 테이블 헤더 고정 */
+.bottom-work-card .dashboard-small-table thead th{
+	position:sticky;
+	top:0;
+	z-index:1;
+}
+
+/* 창고 적재 현황: 카드 높이는 유지하고 내부만 압축 */
+.warehouse-card{
+	overflow:hidden;
+}
+
+.warehouse-list{
+	max-height:140px;
+	overflow-y:auto;
+	padding-right:6px;
+	padding-bottom:4px;
+	gap:4px;
+}
+
+.warehouse-row{
+	padding-bottom:1px;
+}
+
+.warehouse-info{
+	font-size:9.5px;
+	margin-bottom:1px;
+	line-height:14px;
+}
+
+.warehouse-bar{
+	height:5px;
+	margin-bottom:1px;
+}
+
+/* 대시보드 작업코드 링크 */
+.dashboard-link{
+	color: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.dashboard-link:hover{
+	color: var(--main-green);
+	text-decoration: underline;
 }
 </style>
