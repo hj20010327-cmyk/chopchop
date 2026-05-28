@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.or.chop.P01_login.dao.MyDAO;
 import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P01_login.dto.UserWorkDTO;
+import kr.or.chop.P03_notice.dto.NoticeDTO;
 import kr.or.chop.P04_sugg.dto.SuggDTO;
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 
 @Service
 public class MyServiceImpl implements MyService {
@@ -39,6 +41,11 @@ public class MyServiceImpl implements MyService {
 	@Override
 	public List<SuggDTO> selectAllSugg(EmpDTO loginUser) {
 		return myDAO.selectAllSugg(loginUser);
+	}
+	
+	@Override
+	public List<NoticeDTO> selectAllNotice(EmpDTO loginUser) {
+		return myDAO.selectAllNotice(loginUser);
 	}
 
 	@Override
@@ -94,6 +101,11 @@ public class MyServiceImpl implements MyService {
 	@Override
 	public EmpDTO reSelectUserInfo(EmpDTO loginUser) {
 		return myDAO.reSelectUserInfo(loginUser);
+	}
+
+	@Override
+	public AdminActivityDTO workCnt(EmpDTO loginUser) {
+		return myDAO.workCnt(loginUser);
 	}
 	
 }

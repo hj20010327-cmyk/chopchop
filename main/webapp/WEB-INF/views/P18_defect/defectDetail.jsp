@@ -145,7 +145,7 @@
 						        <th style="width: 120px;">불량수량</th>
 						        <th style="width: 140px;">검사일</th>
 						        <th>조치내용</th>
-						        <th>처분내용</th>
+						        <th>폐기여부</th>
                             </tr>
                         </thead>
 
@@ -156,9 +156,7 @@
 						            <td>${his.dlogId}</td>
 						            <td class="toDetail">${his.qcId}</td>
 						            <td>
-						                <strong>
-						                    <fmt:formatNumber value="${his.defCnt}" pattern="#,###" />
-						                </strong>
+					                    <fmt:formatNumber value="${his.defCnt}" pattern="#,###" />
 						            </td>
 						            <td>${his.qcDate}</td>
 						            <td>${empty his.dlogAction ? '-' : his.dlogAction}</td>
@@ -330,7 +328,7 @@ function bindDefHistoryRows() {
                 return;
             }
 
-            location.href = contextPath + "/qc/detail?qcId=" + qcId;
+            location.href = contextPath + "/quality/detail?qcId=" + qcId;
         });
     }
 }

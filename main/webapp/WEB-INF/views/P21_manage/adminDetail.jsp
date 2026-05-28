@@ -150,32 +150,78 @@
     <div class="emp-activity-section">
         <h3 class="emp-section-title">활동 정보</h3>
 
-        <div class="emp-activity-wrap">
+        <div class="emp-activity-wrap card-wrap">
 
-            <div class="emp-activity-card">
-                <p class="activity-title">대기 중인 작업</p>
-                <p class="activity-count activity-wait">${activity.waitCount} <span>건</span></p>
-                <p class="activity-sub">최근 30일 기준</p>
+            <div class="emp-activity-card card warning">
+                <p class="activity-title card-title">대기 중인 작업</p>
+                <p class="activity-count activity-wait card-value">${activity.waitCount} <span>건</span></p>
+                <p class="activity-sub card-subtitle">최근 30일 기준</p>
             </div>
 
-            <div class="emp-activity-card">
-                <p class="activity-title">진행 중인 작업</p>
-                <p class="activity-count activity-progress">${activity.progressCount} <span>건</span></p>
-                <p class="activity-sub">최근 30일 기준</p>
+            <div class="emp-activity-card card success">
+                <p class="activity-title card-title">진행 중인 작업</p>
+                <p class="activity-count activity-progress card-value">${activity.progressCount} <span>건</span></p>
+                <p class="activity-sub card-subtitle">최근 30일 기준</p>
             </div>
 
-            <div class="emp-activity-card">
-                <p class="activity-title">완료된 작업</p>
-                <p class="activity-count activity-done">${activity.doneCount} <span>건</span></p>
-                <p class="activity-sub">최근 30일 기준</p>
+            <div class="emp-activity-card card safe">
+                <p class="activity-title card-title">완료된 작업</p>
+                <p class="activity-count activity-done card-value">${activity.doneCount} <span>건</span></p>
+                <p class="activity-sub card-subtitle">최근 30일 기준</p>
             </div>
 
-            <div class="emp-activity-card">
-                <p class="activity-title">지연된 작업</p>
-                <p class="activity-count activity-delay">${activity.delayCount} <span>건</span></p>
-                <p class="activity-sub">최근 30일 기준</p>
+            <div class="emp-activity-card card danger">
+                <p class="activity-title card-title">지연된 작업</p>
+                <p class="activity-count activity-delay card-value">${activity.delayCount} <span>건</span></p>
+                <p class="activity-sub card-subtitle">최근 30일 기준</p>
             </div>
 
+        </div>
+    </div>
+    
+    <div class="table-section sugg">
+        <h3 class="emp-section-title">작성한 건의 사항</h3>
+        
+        <div class="table-wrap">
+        	<table class="table">
+        		<thead>
+        			<tr>
+        				<th style="width: 75px">번호</th>
+        				<th style="width: 270px">제목</th>
+        				<th style="width: 150px">등록일</th>
+        				<th style="width: 90px">댓글</th>
+        				<th style="width: 90px">조회수</th>
+        				<th style="width: 130px">상태</th>
+        			</tr>
+        		</thead>
+        		
+        		<tbody>
+        			<c:forEach var="sugg" items="${suggList}">
+        				<tr class="clickable-sugg-row" data-sugg-no="${sugg.sugg_no}">
+        					<td>${sugg.sugg_no}</td>
+        					<td class="suggTitle">${sugg.sugg_title}</td>
+        					<td>${sugg.sugg_cdate}</td>
+        					<td>${sugg.comment_count}</td>
+        					<td>${sugg.sugg_view}</td>
+        					<td>
+        						<c:choose>
+									<c:when test="${sugg.sugg_answer == 'Y'}">
+										<span class="status status-success">• 답변 완료</span>
+									</c:when>
+									<c:otherwise>
+										<span class="status status-info">• 답변 대기</span>
+									</c:otherwise>
+								</c:choose>
+        					</td>
+        				</tr>
+        			</c:forEach>
+        			<c:if test="${empty suggList or suggList == null}">
+        				<tr>
+        					<td colspan="6">조회된 건의사항 없음</td>
+        				</tr>
+        			</c:if>
+        		</tbody>
+        	</table>
         </div>
     </div>
 
@@ -316,78 +362,101 @@
         font-weight: 500;
         color: #222;
     }
-
-    .emp-activity-section {
-        margin-top: 10px;
+    
+    .card-wrap {
+    	margin-bottom: 40px;
+    }
+    
+    .card {
+    	width: 200px;	
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	
+    	gap: 10px;
+    }
+    
+    .card-value {
+    	margin: 0px;
+    }
+    
+    .card-value span {
+    	font-weight: 500;
+    	font-size: 18px;
+    	color: black
     }
 
-    .emp-activity-section .emp-section-title {
-        margin-bottom: 20px;
-    }
+/*     .emp-activity-section { */
+/*         margin-top: 10px; */
+/*     } */
 
-    .emp-activity-wrap {
-        display: flex;
-        justify-content: center;
-        gap: 24px;
-    }
+/*     .emp-activity-section .emp-section-title { */
+/*         margin-bottom: 20px; */
+/*     } */
 
-    .emp-activity-card {
-        width: 165px;
-        min-height: 130px;
-        padding: 20px 16px;
+/*     .emp-activity-wrap { */
+/*         display: flex; */
+/*         justify-content: center; */
+/*         gap: 24px; */
+/*     } */
 
-        border: 1px solid var(--gray);
-        border-radius: 8px;
-        background-color: #fff;
+/*     .emp-activity-card { */
+/*         width: 165px; */
+/*         min-height: 130px; */
+/*         padding: 20px 16px; */
 
-        text-align: center;
-    }
+/*         border: 1px solid var(--gray); */
+/*         border-radius: 8px; */
+/*         background-color: #fff; */
 
-    .activity-title {
-        margin: 0 0 14px;
+/*         text-align: center; */
+/*     } */
 
-        font-size: 16px;
-        font-weight: 700;
-    }
+/*     .activity-title { */
+/*         margin: 0 0 14px; */
 
-    .activity-count {
-        margin: 0 0 12px;
+/*         font-size: 16px; */
+/*         font-weight: 700; */
+/*     } */
 
-        font-size: 32px;
-        font-weight: 800;
-        line-height: 1;
-    }
+/*     .activity-count { */
+/*         margin: 0 0 12px; */
 
-    .activity-count span {
-        margin-left: 6px;
+/*         font-size: 32px; */
+/*         font-weight: 800; */
+/*         line-height: 1; */
+/*     } */
 
-        font-size: 16px;
-        font-weight: 700;
-        color: black;
-    }
+/*     .activity-count span { */
+/*         margin-left: 6px; */
 
-    .activity-sub {
-        margin: 0;
+/*         font-size: 16px; */
+/*         font-weight: 700; */
+/*         color: black; */
+/*     } */
 
-        font-size: 12px;
-        color: var(--dark-gray);
-    }
+/*     .activity-sub { */
+/*         margin: 0; */
 
-    .activity-wait {
-        color: var(--warning);
-    }
+/*         font-size: 12px; */
+/*         color: var(--dark-gray); */
+/*     } */
 
-    .activity-progress {
-        color: var(--success);
-    }
+/*     .activity-wait { */
+/*         color: var(--warning); */
+/*     } */
 
-    .activity-done {
-        color: var(--info);
-    }
+/*     .activity-progress { */
+/*         color: var(--success); */
+/*     } */
 
-    .activity-delay {
-        color: var(--danger);
-    }
+/*     .activity-done { */
+/*         color: var(--info); */
+/*     } */
+
+/*     .activity-delay { */
+/*         color: var(--danger); */
+/*     } */
 
     @media (max-width: 1000px) {
         .emp-info-grid {

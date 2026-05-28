@@ -17,8 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P01_login.dto.UserWorkDTO;
 import kr.or.chop.P01_login.service.MyService;
+import kr.or.chop.P03_notice.dto.NoticeDTO;
 import kr.or.chop.P04_sugg.dto.SuggDTO;
-import kr.or.chop.P14_warehouse.dto.WHDTO;
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 import kr.or.chop.P23_alarm.dto.AlarmDTO;
 import kr.or.chop.P23_alarm.service.AlarmService;
 
@@ -55,11 +56,16 @@ public class MyController {
 		
 		List<UserWorkDTO> workList = myService.selectAllWork(loginUser); 
 		List<SuggDTO> suggList = myService.selectAllSugg(loginUser);
+		List<NoticeDTO> notList = myService.selectAllNotice(loginUser);
+		
+		AdminActivityDTO actWork = myService.workCnt(loginUser);
 		
 		model.addAttribute("user", loginUser);
 		model.addAttribute("workList", workList);
 		model.addAttribute("suggList", suggList);
+		model.addAttribute("notList", notList);
 		model.addAttribute("alarmList", alarmList);
+		model.addAttribute("actWork", actWork);
 		
 		return "P01_login/mypage.tiles";
 	}

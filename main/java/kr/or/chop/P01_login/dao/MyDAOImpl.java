@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P01_login.dto.UserWorkDTO;
+import kr.or.chop.P03_notice.dto.NoticeDTO;
 import kr.or.chop.P04_sugg.dto.SuggDTO;
+import kr.or.chop.P21_manage.dto.AdminActivityDTO;
 
 @Repository
 public class MyDAOImpl implements MyDAO {
@@ -30,6 +32,11 @@ public class MyDAOImpl implements MyDAO {
 	public List<SuggDTO> selectAllSugg(EmpDTO loginUser) {
 		return session.selectList("mapper.P01_login.selectAllSugg", loginUser);
 	}
+	
+	@Override
+	public List<NoticeDTO> selectAllNotice(EmpDTO loginUser) {
+		return session.selectList("mapper.P01_login.selectAllNotice", loginUser);
+	}
 
 	@Override
 	public int updateUser(EmpDTO empDTO) {
@@ -44,6 +51,11 @@ public class MyDAOImpl implements MyDAO {
 	@Override
 	public EmpDTO reSelectUserInfo(EmpDTO loginUser) {
 		return session.selectOne("mapper.P01_login.reSelectUserInfo", loginUser);
+	}
+
+	@Override
+	public AdminActivityDTO workCnt(EmpDTO loginUser) {
+		return session.selectOne("mapper.P01_login.workCnt", loginUser);
 	}
 	
 }

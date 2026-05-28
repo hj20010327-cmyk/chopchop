@@ -127,6 +127,34 @@
         
     </div>
     
+    <div class="card-wrap">
+
+            <div class="card warning">
+                <p class="card-title">대기 중인 작업</p>
+                <p class="card-value">${actWork.waitCount} <span>건</span></p>
+                <p class="card-subtitle">최근 30일 기준</p>
+            </div>
+
+            <div class="card success">
+                <p class="card-title">진행 중인 작업</p>
+                <p class="card-value">${actWork.progressCount} <span>건</span></p>
+                <p class="card-subtitle">최근 30일 기준</p>
+            </div>
+
+            <div class="card safe">
+                <p class="card-title">완료된 작업</p>
+                <p class="card-value">${actWork.doneCount} <span>건</span></p>
+                <p class="card-subtitle">최근 30일 기준</p>
+            </div>
+
+            <div class="card danger">
+                <p class="card-title">지연된 작업</p>
+                <p class="card-value">${actWork.delayCount} <span>건</span></p>
+                <p class="card-subtitle">최근 30일 기준</p>
+            </div>
+
+        </div>
+    
     <div class="table-section">
     	<h3 class="emp-section-title">알림 내역</h3>
     	<div class="table-wrap">
@@ -426,6 +454,29 @@
 		color: var(--main-green);
 		text-decoration: underline;
 	}
+	
+	.card-wrap {
+		margin-bottom: 40px;
+	}
+	
+    .card {
+    	width: 200px;	
+    	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	
+    	gap: 10px;
+    }
+    
+    .card-value {
+    	margin: 0px;
+    }
+    
+    .card-value span {
+    	font-weight: 500;
+    	font-size: 18px;
+    	color: black
+    }
 
     @media (max-width: 1000px) {
         .emp-info-grid {

@@ -101,6 +101,13 @@
 		ORDER BY SUGG_CDATE DESC
 	</select>
 	
+	<select id="selectAllNotice" parameterType="empDTO" resultType="noticeDTO">
+		SELECT *
+		FROM NOTICE
+		WHERE NOT_USAGE = 'Y' AND NOT_WRITER = #{empId}
+		ORDER BY NOT_CDATE DESC
+	</select>
+	
 	<update id="updateUser" parameterType="empDTO">
 		UPDATE EMP
 		SET
@@ -136,6 +143,18 @@
 			LEFT OUTER JOIN DEPT d ON e.EMP_DEPTNO = d.DEPTNO
 			LEFT OUTER JOIN AUTH a ON e.EMP_AUTH = a.AUTH_NO
 		WHERE upper(e.EMP_ID) = upper(#{empId})
+	</select>
+	
+	<select id="workCnt" parameterType="empDTO" resultType="adminActivityDTO">
+		SELECT
+	        NVL(SUM(CASE WHEN w.work_status = 10 THEN 1 ELSE 0 END), 0) AS waitCount,
+	        NVL(SUM(CASE WHEN w.work_status = 20 THEN 1 ELSE 0 END), 0) AS progressCount,
+	        NVL(SUM(CASE WHEN w.work_status = 30 THEN 1 ELSE 0 END), 0) AS doneCount,
+	        NVL(SUM(CASE WHEN w.work_status = 40 THEN 1 ELSE 0 END), 0) AS delayCount
+	    FROM work w
+	    WHERE w.work_usage = 'Y'
+	      AND w.work_worker = #{empId}
+	      AND w.work_date <![CDATA[>=]]> TRUNC(SYSDATE) - 30
 	</select>
 
 </mapper>
