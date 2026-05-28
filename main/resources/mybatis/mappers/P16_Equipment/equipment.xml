@@ -46,27 +46,38 @@
 		0
 		) AS runTime,
 
-		NVL(
-		TO_CHAR(
-		ROUND(
-		(
-		SUM(
-		(
-		NVL(R.EQ_RUN_ETIME, SYSDATE)
-		- R.EQ_RUN_STIME
-		) * 24
-		)
-		/
-		NULLIF(
-		(SYSDATE - E.EQ_SDATE) * 24,
-		0
-		)
-		) * 100,
-		1
-		)
-		) || '%',
-		'0%'
-		) AS runRate
+	CASE
+	    WHEN SUM(
+	        (
+	            NVL(R.EQ_RUN_ETIME, SYSDATE)
+	            - R.EQ_RUN_STIME
+	        ) * 24
+	    ) IS NULL
+	    THEN '0%'
+	
+	    ELSE
+	        TO_CHAR(
+	            ROUND(
+	                (
+	                    SUM(
+	                        (
+	                            NVL(R.EQ_RUN_ETIME, SYSDATE)
+	                            - R.EQ_RUN_STIME
+	                        ) * 24
+	                    )
+	                    /
+	                    NULLIF(
+	                        (
+	                            SYSDATE
+	                            - E.EQ_SDATE
+	                        ) * 24,
+	                        0
+	                    )
+	                ) * 100,
+	                1
+	            )
+	        ) || '%'
+	END AS runRate
 
 		FROM EQUIPMENT E
 
@@ -221,28 +232,38 @@
 		0
 		) AS runTime,
 
-		NVL(
-		TO_CHAR(
-		ROUND(
-		(
-		SUM(
-		(
-		NVL(R.EQ_RUN_ETIME, SYSDATE)
-		- R.EQ_RUN_STIME
-		) * 24
-		)
-		/
-
-		NULLIF(
-		(SYSDATE - E.EQ_SDATE) * 24,
-		0
-		)
-		) * 100,
-		1
-		)
-		) || '%',
-		'0%'
-		) AS runRate
+	CASE
+	    WHEN SUM(
+	        (
+	            NVL(R.EQ_RUN_ETIME, SYSDATE)
+	            - R.EQ_RUN_STIME
+	        ) * 24
+	    ) IS NULL
+	    THEN '0%'
+	
+	    ELSE
+	        TO_CHAR(
+	            ROUND(
+	                (
+	                    SUM(
+	                        (
+	                            NVL(R.EQ_RUN_ETIME, SYSDATE)
+	                            - R.EQ_RUN_STIME
+	                        ) * 24
+	                    )
+	                    /
+	                    NULLIF(
+	                        (
+	                            SYSDATE
+	                            - E.EQ_SDATE
+	                        ) * 24,
+	                        0
+	                    )
+	                ) * 100,
+	                1
+	            )
+	        ) || '%'
+	END AS runRate
 
 		FROM EQUIPMENT E
 
@@ -383,33 +404,28 @@
 	</select>
 
 	<!-- 책임자 조회 -->
-	<select id="selectEqManagerList" parameterType="string"
-		resultType="map">
+<select id="selectEqManagerList"
+        parameterType="string"
+        resultType="map">
 
-		SELECT
-		EMP_ID AS "eqManager",
-		EMP_NAME AS "eqManagerName"
-		FROM EMP
+    SELECT
+        E.EMP_ID AS "eqManager",
+        E.EMP_NAME AS "eqManagerName"
+    FROM EMP E
+    JOIN DEPT D
+        ON E.EMP_DEPTNO = D.DEPTNO
+    WHERE D.DEPTNO = 30
 
-		<where>
-			<if test="_parameter != null and _parameter != ''">
+    <if test="_parameter != null and _parameter != ''">
+        AND (
+            UPPER(E.EMP_ID) LIKE UPPER('%' || #{keyword} || '%')
+            OR UPPER(E.EMP_NAME) LIKE UPPER('%' || #{keyword} || '%')
+        )
+    </if>
 
-				AND (
-				UPPER(EMP_ID)
-				LIKE UPPER('%' || #{_parameter} || '%')
+    ORDER BY E.EMP_ID
 
-				OR
-
-				UPPER(EMP_NAME)
-				LIKE UPPER('%' || #{_parameter} || '%')
-				)
-
-			</if>
-		</where>
-
-		ORDER BY EMP_ID
-
-	</select>
+</select>
 
 	<!-- 관리업체 조회 -->
 	<select id="selectEqVendorList" parameterType="string"

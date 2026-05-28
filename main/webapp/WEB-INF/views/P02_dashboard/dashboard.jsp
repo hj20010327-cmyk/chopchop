@@ -166,17 +166,30 @@
 
 		<div class="dashboard-bottom-grid">
 
-			<!-- 공지사항 : 나중에 연결 -->
+			<!-- 공지사항 -->
 			<div class="dashboard-box bottom-card">
 				<div class="dashboard-card-head">
 					<div class="dashboard-box-title">공지사항</div>
-					<a href="#" class="dashboard-more">전체 보기 &gt;</a>
+					<a href="${pageContext.request.contextPath}/notice/list"
+						class="dashboard-more">전체 보기 &gt;</a>
 				</div>
-
+			
 				<ul class="dashboard-list">
-					<li>공지사항 기능 구현 예정</li>
-					<li>추후 공지사항 목록 연동</li>
-					<li>최근 공지 5건 표시 예정</li>
+					<c:choose>
+						<c:when test="${empty recentNoticeList}">
+							<li>등록된 공지사항이 없습니다.</li>
+						</c:when>
+			
+						<c:otherwise>
+							<c:forEach var="n" items="${recentNoticeList}">
+								<li>
+									<a href="${pageContext.request.contextPath}/notice/detail?not_no=${n.notNo}">
+										${n.notTitle}
+									</a>
+								</li>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
 				</ul>
 			</div>
 

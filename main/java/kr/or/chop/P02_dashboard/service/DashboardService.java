@@ -25,5 +25,8 @@ public interface DashboardService {
 
 	// KPI 지표 목록 조회
 	List<Map<String, Object>> selectKpiList();
+	
+	// 최근 공지사항 5개 조회
+	List<Map<String, Object>> selectRecentNoticeList();
 
 }

@@ -54,5 +54,11 @@ public class DashboardDAOImpl implements DashboardDAO {
 	public List<Map<String, Object>> selectKpiList() {
 		return session.selectList("mapper.P02_dashboard.selectKpiList");
 	}
+	
+	// 최근 공지사항 5개 조회
+	@Override
+	public List<Map<String, Object>> selectRecentNoticeList() {
+		return session.selectList("mapper.P02_dashboard.selectRecentNoticeList");
+	}
 
 }

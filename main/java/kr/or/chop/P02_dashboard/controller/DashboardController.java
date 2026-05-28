@@ -30,6 +30,7 @@ public class DashboardController {
 		model.addAttribute("weeklyDefectChart", dashboardService.selectWeeklyDefectChart());
 		model.addAttribute("todayWorkList", dashboardService.selectTodayWorkList());
 		model.addAttribute("kpiList", dashboardService.selectKpiList());
+		model.addAttribute("recentNoticeList", dashboardService.selectRecentNoticeList());
 
 		return "P02_dashboard/dashboard.tiles";
 	}

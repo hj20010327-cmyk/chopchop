@@ -518,6 +518,30 @@
       AND Q.QC_STATUS != 0
       AND Q.QC_STATUS != 30
 
-</update>	
+</update>
+
+<!-- 최근 공지사항 5개 조회 -->
+<select id="selectRecentNoticeList" resultType="hashmap">
+
+	SELECT *
+	FROM (
+		SELECT
+			n.not_no AS "notNo",
+			n.not_title AS "notTitle",
+			n.not_cdate AS "notCdate",
+			e.emp_name AS "empName"
+		FROM notice n
+
+			LEFT JOIN emp e
+				ON UPPER(n.not_writer) = UPPER(e.emp_id)
+
+		WHERE n.not_usage = 'Y'
+
+		ORDER BY n.not_cdate DESC,
+		         n.not_no DESC
+	)
+	WHERE ROWNUM <![CDATA[<=]]> 5
+
+</select>	
 	
 </mapper>

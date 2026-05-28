@@ -136,20 +136,22 @@
 				style="width: 60%;" oninput="loadManagerList()">
 		</div>
 
-		<table class="table">
-
-			<thead>
-				<tr>
-					<th>사원번호</th>
-					<th>사원명</th>
-					<th>선택</th>
-				</tr>
-			</thead>
-
-			<tbody id="managerResultBody">
-			</tbody>
-
-		</table>
+	<div class="modal-table-wrap">
+	    <table class="table">
+	
+	        <thead>
+	            <tr>
+	                <th>사원번호</th>
+	                <th>사원명</th>
+	                <th>선택</th>
+	            </tr>
+	        </thead>
+	
+	        <tbody id="managerResultBody">
+	        </tbody>
+	
+	    </table>
+	</div>
 
 		<div
 			style="display: flex; justify-content: center; gap: 10px; margin-top: 25px;">
@@ -195,21 +197,22 @@
 
 		</div>
 
-		<table class="table">
-
-			<thead>
-				<tr>
-					<th>업체코드</th>
-					<th>업체명</th>
-					<th>선택</th>
-				</tr>
-			</thead>
-
-			<tbody id="vendorResultBody">
-
-			</tbody>
-
-		</table>
+		<div class="modal-table-wrap">
+		    <table class="table">
+		
+		        <thead>
+		            <tr>
+		                <th>업체코드</th>
+		                <th>업체명</th>
+		                <th>선택</th>
+		            </tr>
+		        </thead>
+		
+		        <tbody id="vendorResultBody">
+		        </tbody>
+		
+		    </table>
+		</div>
 
 		<div style="
 			display:flex;
@@ -473,3 +476,14 @@
 		});
 	});
 </script>
+
+<style>
+.modal-table-wrap {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.modal-table-wrap .table {
+    margin-bottom: 0;
+}
+</style>

@@ -56,4 +56,10 @@ public class DashboardServiceImpl implements DashboardService {
 		return dao.selectKpiList();
 	}
 
+	// 최근 공지사항 5개 조회
+	@Override
+	public List<Map<String, Object>> selectRecentNoticeList() {
+		return dao.selectRecentNoticeList();
+	}
+
 }
