@@ -118,4 +118,9 @@ public class QcDAOImpl implements QcDAO {
 		return sqlSession.update(namespace + "plusStockByQcResult", dto);
 	}
 
+	@Override
+	public QcDTO selectLotForQc(String lotId) {
+		return sqlSession.selectOne(namespace + "selectLotForQc", lotId);
+	}
+
 }

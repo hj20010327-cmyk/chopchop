@@ -1,5 +1,7 @@
 package kr.or.chop.P06_work.dto;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data

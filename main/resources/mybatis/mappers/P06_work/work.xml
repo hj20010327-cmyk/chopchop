@@ -259,6 +259,8 @@
 			w.work_status workStatus,
 			w.work_cdate workCdate,
 			w.work_mdate workMdate,
+			
+			l.lot_id lotId,
 	
 			r.rout_id routId,
 			r.rout_name routName,
@@ -273,6 +275,8 @@
 				ON w.work_director = d.emp_id
 			LEFT OUTER JOIN emp worker 
 				ON w.work_worker = worker.emp_id
+			LEFT OUTER JOIN lot l
+				ON l.lot_work = w.work_id
 			LEFT OUTER JOIN routing r
 				ON r.rout_item = p.plan_item
 				AND r.rout_usage = 'Y'
@@ -722,6 +726,12 @@
 	</select>
 	
 	<insert id="insertLot" parameterType="workDTO">
+		
+		<selectKey resultType="string" keyProperty="lotId" order="BEFORE">
+			select 'LOT' || lot_seq.nextval
+			from dual
+		</selectKey>
+	
 	    INSERT INTO lot (
 	        lot_id,
 	        lot_item,
@@ -735,7 +745,7 @@
 	        lot_bwhsec
 	    )
 	    SELECT
-	        'LOT' || lot_seq.NEXTVAL,
+	        #{lotId},
 	        #{workItem},
 	        #{workId},
 	        #{workPrevQty},
@@ -747,6 +757,29 @@
 	        #{lotBwhsec}
 	    FROM item i
 	    WHERE i.item_id = #{workItem}
+	</insert>
+	
+	<insert id="insertIo" parameterType="workDTO">
+		 INSERT INTO IO (
+		 	io_id,
+		 	io_type,
+		 	io_reason,
+		 	io_lot,
+		 	io_qty,
+		 	io_date,
+		 	io_worker,
+		 	io_usage
+		 )
+		 VALUES (
+		 	'IN' || in_seq.nextval,
+		 	'IN',
+		 	'생산',
+		 	#{lotId},
+		 	#{workPrevQty},
+		 	SYSDATE + (9/24),
+		 	#{workWorker},
+		 	'Y'
+		 )
 	</insert>
 	
 	<!-- 작업 완료 시 stock 증가 -->

@@ -103,4 +103,7 @@ public class WorkDTO {
     // BOM
     private List<WorkBomDTO> bomList;
     
+    // 완료 시 생성 LOT
+    private String lotId;
+    
 }

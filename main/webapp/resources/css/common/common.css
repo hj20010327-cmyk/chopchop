@@ -596,7 +596,7 @@ textarea:focus {
 }
 
 .search-item input[type="date"] {
-	min-width: 180px;
+	min-width: 150px;
 }
 .search-item input.short {
 	min-width: 220px;

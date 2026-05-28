@@ -138,15 +138,15 @@
 					</tr>
 
 					<tr>
-						<th>라우팅</th>
+						<th>생산된 LOT</th>
 						<td>
 							<c:choose>
-								<c:when test="${empty workDTO.routId}">
+								<c:when test="${empty workDTO.lotId}">
 									-
 								</c:when>
 								<c:otherwise>
-									<a class="toDetail" href="${pageContext.request.contextPath}/routing/detail?routId=${workDTO.routId}">
-										${workDTO.routName} (${workDTO.routId})
+									<a class="toDetail" href="${pageContext.request.contextPath}/lot/detail?lotId=${workDTO.lotId}">
+										${workDTO.lotId}
 									</a>
 								</c:otherwise>
 							</c:choose>
@@ -235,7 +235,11 @@
 					<tbody>
 						<c:forEach var="bom" items="${workDTO.bomList}">
 							<tr>
-								<td>${bom.itemName} (${bom.itemId})</td>
+								<td>
+									<a class="toDetail" href="${pageContext.request.contextPath}/item/detail?itemId=${bom.itemId}">
+										${bom.itemName} (${bom.itemId})
+									</a>
+								</td>
 								<td>
 									<c:choose>
 										<c:when test="${bom.itemType == 10}">
@@ -288,7 +292,9 @@
 									-
 								</c:when>
 								<c:otherwise>
-									${workDTO.routName} (${workDTO.routId})
+									<a class="toDetail" href="${pageContext.request.contextPath}/routing/detail?routId=${workDTO.routId}">
+										${workDTO.routName} (${workDTO.routId})
+									</a>
 								</c:otherwise>
 							</c:choose>
 						</td>

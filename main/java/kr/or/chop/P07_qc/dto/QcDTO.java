@@ -33,6 +33,8 @@ public class QcDTO {
 	private int lotQty;
 	private String itemId;
 	private String itemName;
+	private String itemQcType;
+	private String itemQcTypeName;
 	
 	private int todayQty;
 	private int passQty;
@@ -66,5 +68,9 @@ public class QcDTO {
 	private int defQty;
 	private String defAction;
 	private String defDiscard;
+	
+	private int inQty;
+	private int disposeQty;
+	
 	
 }

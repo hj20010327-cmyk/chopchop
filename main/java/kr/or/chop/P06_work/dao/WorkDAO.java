@@ -39,6 +39,7 @@ public interface WorkDAO {
 	public int updateWorkResult(WorkDTO workDTO);
 	public String selectAvailableSecId (WorkDTO workDTO);
 	public int insertLot (WorkDTO workDTO);
+	public int insertIo (WorkDTO workDTO);
 	public int updateStock (WorkDTO workDTO);
 	
 	

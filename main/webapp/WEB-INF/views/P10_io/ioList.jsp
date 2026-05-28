@@ -119,7 +119,10 @@
 
                         <td>${io.itemName} (${io.itemId})</td>
 
-                        <td>${io.ioQty} EA</td>
+                        <td>
+                        	<fmt:formatNumber value="${io.ioQty}" pattern="#,###" />
+                        	EA
+                       	</td>
 
                         <td>${io.ioLot}</td>
 

@@ -38,6 +38,17 @@
 
         </div>
 
+        <div style="margin-top:45px;
+            margin-bottom:35px;
+            font-size:20px;
+            font-weight:700;">
+
+            담당자 :
+            ${sessionScope.loginUser.empName}
+            (${sessionScope.loginUser.empId})
+
+        </div>
+
         <input type="hidden"
             name="qcDirector"
             value="${sessionScope.loginUser.empId}">
@@ -59,85 +70,6 @@
 
             </div>
             
-             <div class="search-item"
-                style="display:flex; flex-direction:column; flex:1;">
-
-                <label>
-                    품목
-                </label>
-
-                <input type="text"
-                    id="qcContent"
-                    placeholder="품목명 (품목코드)"
-                    readonly>
-
-            </div>
-        </div>
-
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
-        
-       	 	<div class="search-item"
-                style="display:flex; flex-direction:column; flex:1;">
-
-                <label>
-                    LOT 수량
-                </label>
-
-                <input type="text"
-                    name="lotQty"
-                    id="lotQty"
-                    placeholder="LOT 수량"
-                    readonly>
-
-            </div>
-        
-			<div class="search-item"
-		         style="display:flex; flex-direction:column; flex:1;">
-		
-		      <label>
-		          검사유형
-		      </label>
-		
-		      <input type="hidden"
-				       name="qcType"
-				       id="qcType">
-				
-				<input type="text"
-				       id="qcTypeText"
-				       placeholder="검사유형"
-				       readonly>
-		
-		  	</div>
-
-            <div class="search-item"
-                style="display:flex; flex-direction:column; flex:1;">
-
-                <label>
-                    실제 검사 수량
-                </label>
-
-                <input type="text"
-                    name="qcQty"
-                    id="qcQty"
-                    placeholder="검사 수량"
-                    readonly>
-
-            </div>
-        </div>
-
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
-        
-		 <div class="search-item"
-		         style="display:flex; flex-direction:column; flex:1;">
-		
-		      <label>
-		          담당자
-		      </label>
-		
-		      <input placeholder="담당자" value="${sessionScope.loginUser.empName}(${sessionScope.loginUser.empId})" readonly>
-		
-		  </div>
-
             <div class="search-item"
                 style="display:flex; flex-direction:column; flex:1;">
 
@@ -161,6 +93,75 @@
                 </div>
 
             </div>
+
+            
+
+        </div>
+
+        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        
+        <div class="search-item"
+                style="display:flex; flex-direction:column; flex:1;">
+
+                <label>
+                    검사유형 <span class="red">*</span>
+                </label>
+
+                <select name="qcType">
+
+                    <option value="" disabled selected>
+                        검사 유형 선택
+                    </option>
+
+                    <option value="10">
+                        수입검사
+                    </option>
+
+                    <option value="20">
+                        공정검사
+                    </option>
+
+                    <option value="30">
+                        출하검사
+                    </option>
+
+                    <option value="0">
+                        기타
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="search-item"
+                style="display:flex; flex-direction:column; flex:1;">
+
+                <label>
+                    검사 수량
+                </label>
+
+                <input type="text"
+                    name="qcQty"
+                    id="qcQty"
+                    placeholder="검사 수량"
+                    readonly>
+
+            </div>
+
+            <div class="search-item"
+                style="display:flex; flex-direction:column; flex:1;">
+
+                <label>
+                    품목
+                </label>
+
+                <input type="text"
+                    id="qcContent"
+                    placeholder="품목명 (품목코드)"
+                    readonly>
+
+            </div>
+
         </div>
 
 
@@ -234,14 +235,6 @@
 	.modal .table tbody tr:hover {
 		background-color: var(--white-hover);
 	}
-	
-	.search-item select {
-		width: 270px;
-	}
-	
-	.search-item textarea {
-		width: 90%;
-	}
 </style>
 
 <script>
@@ -250,7 +243,7 @@ window.addEventListener("load", function() {
     bind();
     loadLotList();
     bindLotChange();
-//     setToday();
+    setToday();
 });
 
 function bind() {
@@ -287,13 +280,11 @@ function bind() {
     });
 
     form.addEventListener("submit", function(e) {
+    	
+    	const qty = document.querySelector("#qcQty");
 
-        const qcQty = document.querySelector("#qcQty");
-        const lotQty = document.querySelector("#lotQty");
-
-        qcQty.value = qcQty.value.replaceAll(",", "");
-        lotQty.value = lotQty.value.replaceAll(",", "");
-
+        qty.value = qty.value.replaceAll(",", "");
+    	
         if (!validateForm()) {
             e.preventDefault();
             return;
@@ -381,9 +372,7 @@ function loadLotList() {
                 html += '<option ';
                 html += 'value="' + result[i].lotId + '" ';
                 html += 'data-qty="' + result[i].lotQty + '" ';
-                html += 'data-item="' + result[i].itemName + ' (' + result[i].itemId + ')' + '" ';
-                html += 'data-qctype="' + result[i].itemQcType + '" ';
-                html += 'data-qctypename="' + result[i].itemQcTypeName + '">';
+                html += 'data-item="' + result[i].itemName + ' (' + result[i].itemId + ')' + '">';
                 html += result[i].lotId + ' / ' + result[i].itemName;
                 html += '</option>';
             }
@@ -396,37 +385,27 @@ function loadLotList() {
 }
 
 function bindLotChange() {
-    const lotSelect = document.querySelector("#qcLot");
+	const lotSelect = document.querySelector("#qcLot");
 
     lotSelect.addEventListener("change", function() {
 
         const option = this.options[this.selectedIndex];
 
-        const lotQty = Number(option.dataset.qty);
-        const qcType = option.dataset.qctype;
-        const qcTypeName = option.dataset.qctypename;
-
-        document.querySelector("#lotQty").value =
-            lotQty.toLocaleString();
+        document.querySelector("#qcQty").value =
+            Number(option.dataset.qty).toLocaleString();
 
         document.querySelector("#qcContent").value =
             option.dataset.item;
 
-        document.querySelector("#qcType").value =
-            qcType;
-
-        document.querySelector("#qcTypeText").value =
-            qcTypeName;
-
-        calcQcQty();
     });
 }
 
 function validateForm() {
     const qcLot = document.querySelector("#qcLot");
-    const qcType = document.querySelector("#qcType");
+    const qcType = document.querySelector("select[name='qcType']");
     const qcQty = document.querySelector("#qcQty");
     const qcWorker = document.querySelector("#qcWorker");
+    const qcDate = document.querySelector("input[name='qcDate']");
 
     if (qcLot.value === "") {
         alert("검사대상을 선택하세요.");
@@ -435,8 +414,8 @@ function validateForm() {
     }
 
     if (qcType.value === "") {
-        alert("검사유형이 설정되지 않은 품목입니다.");
-        qcLot.focus();
+        alert("검사유형을 선택하세요.");
+        qcType.focus();
         return false;
     }
 
@@ -452,6 +431,12 @@ function validateForm() {
         return false;
     }
 
+    if (qcDate.value === "") {
+        alert("검사일을 입력하세요.");
+        qcDate.focus();
+        return false;
+    }
+
     return true;
 }
 
@@ -464,34 +449,6 @@ function setToday() {
     const dd = String(today.getDate()).padStart(2, "0");
 
     qcDate.value = yyyy + "-" + mm + "-" + dd;
-}
-
-function calcQcQty() {
-    const lotSelect = document.querySelector("#qcLot");
-    const qcType = document.querySelector("#qcType").value;
-    const qcQty = document.querySelector("#qcQty");
-
-    if (lotSelect.value === "" || qcType === "") {
-        qcQty.value = "";
-        return;
-    }
-
-    const option = lotSelect.options[lotSelect.selectedIndex];
-    const lotQty = Number(option.dataset.qty);
-
-    let resultQty = 0;
-
-    if (qcType === "10") {
-        resultQty = lotQty;
-
-    } else if (qcType === "20") {
-        resultQty = Math.ceil(lotQty * 0.01);
-
-    } else {
-        resultQty = 0;
-    }
-
-    qcQty.value = resultQty.toLocaleString();
 }
 
 </script>

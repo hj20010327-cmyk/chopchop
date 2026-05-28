@@ -288,7 +288,7 @@ public class WorkServiceImpl implements WorkService {
 	        throw new RuntimeException("작업 결과 업데이트 실패");
 	    }
 
-	    // 9. 완료일 때만 완제품 LOT 생성 + 완제품 stock 증가
+	    // 9. 완료일 때만 완제품 LOT 생성 + 완제품 stock 증가 + 입고 등록
 	    if (newStatus == 30) {
 
 	        String lotBwhsec = workDAO.selectAvailableSecId(origin);
@@ -303,6 +303,12 @@ public class WorkServiceImpl implements WorkService {
 
 	        if (lotResult == 0) {
 	            throw new RuntimeException("완제품 LOT 생성 실패");
+	        }
+	        
+	        int ioResult = workDAO.insertIo(origin);
+	        
+	        if (ioResult == 0) {
+	        	throw new RuntimeException("완제품 LOT 입고 실패");
 	        }
 
 	        int stockResult = workDAO.updateStock(origin);

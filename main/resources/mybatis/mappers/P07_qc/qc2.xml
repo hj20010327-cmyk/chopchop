@@ -3,7 +3,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.or.chop.P07_qc">
+<mapper namespace="kr.or.chop.P07_qc2">
 
     <sql id="qcWhere">
         <where>
@@ -139,7 +139,7 @@
 		FROM QC Q
 		WHERE Q.QC_USAGE = 'Y'
 		AND Q.QC_STATUS = 30
-		AND TRUNC(Q.QC_DATE) = TRUNC(SYSDATE + (9/24))
+		AND TRUNC(Q.QC_DATE) = TRUNC(SYSDATE)
 
     </select>
 
@@ -152,7 +152,6 @@
 	        Q.QC_LOT AS qcLot,
 	
 	        L.LOT_ITEM AS itemId,
-	        L.LOT_QTY AS lotQty,
 	        I.ITEM_NAME AS itemName,
 	
 	        Q.QC_TYPE AS qcType,
@@ -253,19 +252,18 @@
 
     </insert>
 
-	<update id="updateQc"
-	        parameterType="kr.or.chop.P07_qc.dto.QcDTO">
-	
-	    UPDATE QC
+    <update id="updateQc"
+            parameterType="kr.or.chop.P07_qc.dto.QcDTO">
+
+        UPDATE QC
 	    SET
+	        QC_TYPE = #{qcType},
 	        QC_DMSG = #{qcDmsg},
-	        QC_ODATE = SYSDATE + (9/24),
+	        QC_ODATE = sysdate + (9/24),
 	        QC_WORKER = #{qcWorker}
 	    WHERE QC_ID = #{qcId}
-	      AND QC_USAGE = 'Y'
-	      AND QC_STATUS IN (10, 20)
-	
-	</update>
+
+    </update>
 
     <update id="deleteQc"
             parameterType="string">
@@ -283,14 +281,10 @@
 			L.LOT_ID AS lotId,
 			L.LOT_QTY AS lotQty,
 			L.LOT_ITEM AS itemId,
-			I.ITEM_NAME AS itemName,
-			I.ITEM_QC_TYPE AS itemQcType,
-			QT.QC_TYPE_NAME AS itemQcTypeName
+			I.ITEM_NAME AS itemName
 		FROM LOT L
 		LEFT JOIN ITEM I
 			ON L.LOT_ITEM = I.ITEM_ID
-		LEFT JOIN QC_TYPE QT
-			ON I.ITEM_QC_TYPE = QT.QC_TYPE_NO
 		WHERE L.LOT_QC = 'N'
 		AND NOT EXISTS (
 			SELECT 1
@@ -316,12 +310,12 @@
 	</update>
 	
 	<update id="updateLotByQcResult"
-	        parameterType="kr.or.chop.P07_qc.dto.QcDTO">
-	
+        parameterType="kr.or.chop.P07_qc.dto.QcDTO">
+
 	    UPDATE LOT
 	    SET
-	        LOT_CQTY = #{inQty},
-	        LOT_FQTY = #{inQty},
+	        LOT_CQTY = #{qcQty},
+	        LOT_FQTY = #{qcPassQty},
 	        LOT_AWHSEC = #{awhsec},
 	        LOT_STATUS = 10,
 	        LOT_QC = 'Y'
@@ -360,28 +354,28 @@
 	</select>
 	
 	<update id="plusStockByQcResult"
-	        parameterType="qcDTO">
+	parameterType="qcDTO">
+
+		UPDATE STOCK
+		SET
+			STOCK_PREV_QTY =
+				NVL(STOCK_PREV_QTY, 0) - (#{qcQty} - #{qcPassQty}),
 	
-	    UPDATE STOCK
-	    SET
-	        STOCK_PREV_QTY =
-	            NVL(STOCK_PREV_QTY, 0) - #{disposeQty},
+			STOCK_AVAIL_QTY =
+				NVL(STOCK_AVAIL_QTY, 0) + #{qcPassQty}
 	
-	        STOCK_AVAIL_QTY =
-	            NVL(STOCK_AVAIL_QTY, 0) + #{inQty}
+		WHERE STOCK_ITEM = (
+			SELECT LOT_ITEM
+			FROM LOT
+			WHERE LOT_ID = #{qcLot}
+		)
 	
-	    WHERE STOCK_ITEM = (
-	        SELECT LOT_ITEM
-	        FROM LOT
-	        WHERE LOT_ID = #{qcLot}
-	    )
-	
-	    AND EXISTS (
-	        SELECT 1
-	        FROM QC
-	        WHERE QC_ID = #{qcId}
-	          AND QC_STATUS != 30
-	    )
+		AND EXISTS (
+			SELECT 1
+			FROM QC
+			WHERE QC_ID = #{qcId}
+			AND QC_STATUS != 30
+		)
 	
 	</update>
 	
@@ -469,42 +463,5 @@
 	    )
 	
 	</insert>
-	
-	
-	
-	
-	
-	
-	<select id="selectLotForQc"
-	        parameterType="string"
-	        resultType="kr.or.chop.P07_qc.dto.QcDTO">
-	
-	    SELECT
-	        L.LOT_ID AS lotId,
-	        L.LOT_QTY AS lotQty,
-	        L.LOT_ITEM AS itemId,
-	        I.ITEM_NAME AS itemName,
-	
-	        I.ITEM_QC_TYPE AS itemQcType,
-	        QT.QC_TYPE_NAME AS itemQcTypeName
-	
-	    FROM LOT L
-	
-	    LEFT JOIN ITEM I
-	        ON L.LOT_ITEM = I.ITEM_ID
-	
-	    LEFT JOIN QC_TYPE QT
-	        ON I.ITEM_QC_TYPE = QT.QC_TYPE_NO
-	
-	    WHERE L.LOT_ID = #{lotId}
-	      AND L.LOT_QC = 'N'
-	      AND NOT EXISTS (
-	          SELECT 1
-	          FROM QC Q
-	          WHERE Q.QC_LOT = L.LOT_ID
-	            AND Q.QC_USAGE = 'Y'
-	      )
-	
-	</select>
 
 </mapper>

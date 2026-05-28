@@ -25,4 +25,6 @@ public interface QcDAO {
 	int deleteDefLog(String qcId);
 	int plusStockAvailByQcResult(QcDTO dto);
 	int plusStockByQcResult(QcDTO dto);
+	
+	QcDTO selectLotForQc(String lotId);
 }

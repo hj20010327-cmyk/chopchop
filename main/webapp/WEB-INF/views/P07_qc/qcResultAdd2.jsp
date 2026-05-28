@@ -20,14 +20,9 @@
         method="post"
         style="width:100%; max-width:1100px;">
 
-		<input type="hidden" name="qcId" value="${qc.qcId}">
-		<input type="hidden" name="qcLot" value="${qc.qcLot}">
-		<input type="hidden" name="qcQty" id="qcQty" value="${qc.qcQty}">
-		<input type="hidden" name="qcType" id="qcType" value="${qc.qcType}">
-		<input type="hidden" name="lotQty" id="lotQty" value="${qc.lotQty}">
-		
-		<input type="hidden" id="savedWhId" value="${qc.whId}">
-		<input type="hidden" id="savedSecId" value="${qc.secId}">
+        <input type="hidden" name="qcId" value="${qc.qcId}">
+        <input type="hidden" name="qcLot" value="${qc.qcLot}">
+        <input type="hidden" name="qcQty" id="qcQty" value="${qc.qcQty}">
 
         <div style="display:flex; justify-content:flex-end; gap:12px;">
             <a class="btn btn-white"
@@ -120,7 +115,7 @@
 
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>폐기 수량</label>
-                <input type="text" id="disposeQty" placeholder="폐기 수량" readonly>
+                <input type="text" id="discardQty" placeholder="폐기 수량" readonly>
             </div>
         </div>
 
@@ -339,7 +334,6 @@ function bind() {
 
 function loadWarehouseList() {
     const itemId = document.querySelector("#itemId").value;
-    const savedWhId = document.querySelector("#savedWhId")?.value || "";
 
     fetch("${pageContext.request.contextPath}/quality/result/warehouseList?itemId="
         + encodeURIComponent(itemId))
@@ -356,28 +350,20 @@ function loadWarehouseList() {
             }
 
             document.querySelector("#whId").innerHTML = html;
-
-            if (savedWhId) {
-                document.querySelector("#whId").value = savedWhId;
-                loadSectionList(savedWhId, true);
-            } else {
-                document.querySelector("#awhsec").innerHTML =
-                    '<option value="">구역 선택</option>';
-            }
+            document.querySelector("#awhsec").innerHTML =
+                '<option value="">구역 선택</option>';
         })
         .catch(function() {
             alert("창고 목록 조회 실패");
         });
 }
 
-function loadSectionList(whId, isInit) {
+function loadSectionList(whId) {
     if (!whId) {
         document.querySelector("#awhsec").innerHTML =
             '<option value="">구역 선택</option>';
         return;
     }
-
-    const savedSecId = document.querySelector("#savedSecId")?.value || "";
 
     fetch("${pageContext.request.contextPath}/quality/result/sectionList?whId="
         + encodeURIComponent(whId))
@@ -399,10 +385,6 @@ function loadSectionList(whId, isInit) {
             }
 
             document.querySelector("#awhsec").innerHTML = html;
-
-            if (isInit && savedSecId) {
-                document.querySelector("#awhsec").value = savedSecId;
-            }
         })
         .catch(function() {
             alert("구역 목록 조회 실패");
@@ -558,7 +540,7 @@ function getDefectTotalQty() {
     return total;
 }
 
-function getDisposeTotalQty() {
+function getDiscardTotalQty() {
     const rows = document.querySelectorAll(".defect-row");
     let total = 0;
 
@@ -576,29 +558,11 @@ function getDisposeTotalQty() {
 
 function recalcByDefectRows() {
     const qcQty = Number(document.querySelector("#qcQty").value);
-    const qcType = document.querySelector("#qcType").value;
-    const lotQty = Number(document.querySelector("#lotQty").value);
 
     const failQty = getDefectTotalQty();
-    const sampleDisposeQty = getDisposeTotalQty();
+    const discardQty = getDiscardTotalQty();
     const passQty = qcQty - failQty;
-
-    let multiplier = 1;
-
-    if (qcType === "20") {
-        multiplier = 100;
-    }
-
-    let inQty = passQty * multiplier;
-    let disposeQty = sampleDisposeQty * multiplier;
-
-    if (inQty > lotQty) {
-        inQty = lotQty;
-    }
-
-    if (disposeQty > lotQty) {
-        disposeQty = lotQty;
-    }
+    const inQty = passQty;
 
     document.querySelector("#qcPassQtyText").value =
         passQty.toLocaleString();
@@ -612,28 +576,15 @@ function recalcByDefectRows() {
     document.querySelector("#inQty").value =
         inQty.toLocaleString();
 
-    document.querySelector("#disposeQty").value =
-        disposeQty.toLocaleString();
+    document.querySelector("#discardQty").value =
+        discardQty.toLocaleString();
 }
 
 function validateForm() {
     const qcQty = Number(document.querySelector("#qcQty").value);
-    const qcType = document.querySelector("#qcType").value;
-    const lotQty = Number(document.querySelector("#lotQty").value);
-
     const passQty = Number(document.querySelector("#qcPassQty").value || 0);
     const failQty = getDefectTotalQty();
-    const sampleDisposeQty = getDisposeTotalQty();
     const awhSec = document.querySelector("#awhsec");
-
-    let multiplier = 1;
-
-    if (qcType === "20") {
-        multiplier = 100;
-    }
-
-    const inQty = passQty * multiplier;
-    const disposeQty = sampleDisposeQty * multiplier;
 
     if (passQty < 0) {
         alert("합격 수량은 0 이상이어야 합니다.");
@@ -647,16 +598,6 @@ function validateForm() {
 
     if (failQty > qcQty) {
         alert("불량 수량 합계는 검사 수량보다 클 수 없습니다.");
-        return false;
-    }
-
-    if (inQty > lotQty) {
-        alert("입고 수량이 LOT 수량보다 클 수 없습니다.");
-        return false;
-    }
-
-    if (disposeQty > lotQty) {
-        alert("폐기 수량이 LOT 수량보다 클 수 없습니다.");
         return false;
     }
 

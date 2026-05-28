@@ -93,7 +93,7 @@
 						<td>${lot.lotId}</td>
 
 						<th>품목</th>
-						<td>${lot.lotItemName}</td>
+						<td>${lot.lotItemName} (${lot.lotItem})</td>
 					</tr>
 
 					<tr>
@@ -104,7 +104,7 @@
 						<td>
 							<c:choose>
 								<c:when test="${lot.lotQc == 'Y'}">
-									<fmt:formatDate value="${lot.lotMfd}"
+									<fmt:formatDate value="${lot.lotEtw}"
 										pattern="yyyy-MM-dd HH:mm"/>
 								</c:when>
 								<c:when test="${lot.lotQc == 'N'}">
@@ -181,7 +181,7 @@
 						<tr>
 							<th style="width: 140px;">작업 코드</th>
 							<th style="width: 140px;">사용수량</th>
-							<th style="width: 160px;">사용일</th>
+							<th style="width: 160px;">사용일시</th>
 							<th style="width: 140px;">사용유형</th>
 							<th>비고</th>
 						</tr>
@@ -250,7 +250,7 @@
 										<td>${use.useQty}EA</td>
 
 										<td><fmt:formatDate value="${use.useDate}"
-												pattern="yyyy-MM-dd" /></td>
+												pattern="yyyy-MM-dd HH:mm" /></td>
 
 										<td>${use.useType}</td>
 
@@ -325,7 +325,7 @@
 
 					<tr>
 						<th>품목</th>
-						<td>${lot.lotItemName}</td>
+						<td><a href="${pageContext.request.contextPath}/item/detail?itemId=${lot.lotItem}">${lot.lotItemName} (${lot.lotItem})</a></td>
 					</tr>
 
 					<tr>

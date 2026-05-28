@@ -131,6 +131,11 @@ public class WorkDAOImpl implements WorkDAO {
 	public int insertLot(WorkDTO workDTO) {
 		return session.insert("mapper.P06_work.insertLot", workDTO);
 	}
+	
+	@Override
+	public int insertIo(WorkDTO workDTO)  {
+		return session.insert("mapper.P06_work.insertIo", workDTO);
+	}
 
 	@Override
 	public int updateStock(WorkDTO workDTO) {

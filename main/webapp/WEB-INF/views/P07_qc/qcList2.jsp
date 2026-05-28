@@ -93,7 +93,6 @@
                 <th>검사유형</th>
                 <th>검사수량</th>
                 <th>합격수량</th>
-                <th>불량률</th>
                 <th>상태</th>
                 <th>검사자</th>
             </tr>
@@ -117,10 +116,16 @@
                             <td>
                             	<c:choose>
                                     <c:when test="${qc.qcType == 10}">
-                                        <span class="status status-warning">전수검사</span>
+                                        <span class="status status-warning">수입검사</span>
                                     </c:when>
                                     <c:when test="${qc.qcType == 20}">
-                                        <span class="status status-safe">샘플검사</span>
+                                        <span class="status status-safe">공정검사</span>
+                                    </c:when>
+                                    <c:when test="${qc.qcType == 30}">
+                                        <span class="status status-success">출하검사</span>
+                                    </c:when>
+                                    <c:when test="${qc.qcType == 0}">
+                                        <span class="status status-danger">기타</span>
                                     </c:when>
                                 </c:choose>
                             </td>
@@ -130,16 +135,6 @@
                             <td>
                             	<fmt:formatNumber value="${qc.qcPassQty}" pattern="#,###" /> EA
                             </td>
-                            <td>
-							    <c:choose>
-							        <c:when test="${qc.qcQty == 0}">
-							            0 %
-							        </c:when>
-							        <c:otherwise>
-							            <fmt:formatNumber value="${((qc.qcQty - qc.qcPassQty) / qc.qcQty) * 100}" pattern="##0.0" /> %
-							        </c:otherwise>
-							    </c:choose>
-							</td>
 
                             <td>
                                 <c:choose>
