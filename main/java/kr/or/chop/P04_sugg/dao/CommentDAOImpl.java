@@ -47,4 +47,21 @@ public class CommentDAOImpl implements CommentDAO {
                 comm_no
         );
     }
+    
+    @Override
+    public int selectChildCommentCount(int comm_no) {
+        return sqlSession.selectOne(
+                namespace + "selectChildCommentCount",
+                comm_no
+        );
+    }
+
+    @Override
+    public int maskComment(int comm_no) {
+        return sqlSession.update(
+                namespace + "maskComment",
+                comm_no
+        );
+    }
+    
 }

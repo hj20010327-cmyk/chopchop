@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.chop.P01_login.dto.EmpDTO;
@@ -163,5 +164,28 @@ public class NoticeEditController {
         noticeService.deleteNotice(not_no);
 
         return "redirect:/notice/list";
+    }
+    
+    // 첨부파일 개별 삭제
+    @PostMapping("/file/delete")
+    @ResponseBody
+    public String deleteFile(
+            int file_no,
+            HttpSession session) {
+
+        EmpDTO loginUser =
+                (EmpDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "LOGIN";
+        }
+
+        if (loginUser.getEmpAuth() < 20) {
+            return "FAIL";
+        }
+
+        noticeService.deleteNoticeFile(file_no);
+
+        return "OK";
     }
 }

@@ -33,4 +33,14 @@ public class CommentServiceImpl implements CommentService {
     public int deleteComment(int comm_no) {
         return commentDAO.deleteComment(comm_no);
     }
+    
+    @Override
+    public int selectChildCommentCount(int comm_no) {
+        return commentDAO.selectChildCommentCount(comm_no);
+    }
+
+    @Override
+    public int maskComment(int comm_no) {
+        return commentDAO.maskComment(comm_no);
+    }
 }

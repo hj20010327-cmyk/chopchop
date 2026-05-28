@@ -62,7 +62,7 @@
     <form class="search-box"
     action="${pageContext.request.contextPath}/equip/list"
     method="get">
-
+    
     <div class="search-item">
         <label>작업장</label>
 
@@ -77,47 +77,6 @@
             </c:forEach>
         </select>
     </div>
-
-	<div class="search-item">
-	    <label>상태</label>
-	    <select name="eqStatus">
-	        <option value="0"
-	            <c:if test="${search.eqStatus == 0 || empty search.eqStatus}">
-	                selected
-	            </c:if>>
-	            전체
-	        </option>
-	
-	        <option value="10"
-	            <c:if test="${search.eqStatus == 10}">
-	                selected
-	            </c:if>>
-	            가동중
-	        </option>
-	
-	        <option value="20"
-	            <c:if test="${search.eqStatus == 20}">
-	                selected
-	            </c:if>>
-	            정지
-	        </option>
-	
-	        <option value="30"
-	            <c:if test="${search.eqStatus == 30}">
-	                selected
-	            </c:if>>
-	            점검중
-	        </option>
-	
-	        <option value="40"
-	            <c:if test="${search.eqStatus == 40}">
-	                selected
-	            </c:if>>
-	            고장
-	        </option>
-	
-	    </select>
-	</div>
 
     <div class="search-item keyword">
         <label>설비명/설비코드</label>
@@ -264,7 +223,6 @@
     color: white !important;
 }
 </style>
-
 <script>
 window.addEventListener("load", () => {
     bindCardFilter();
@@ -281,9 +239,6 @@ function bindCardFilter() {
     const form =
         document.querySelector(".search-box");
 
-    const statusSelect =
-        document.querySelector("select[name='eqStatus']");
-
     if (!allCard || !eqCards.length || !form) {
         return;
     }
@@ -293,11 +248,6 @@ function bindCardFilter() {
 
     const selectedStatusList =
         params.getAll("eqStatusList");
-
-    // 카드 필터를 쓸 때 상태 select는 항상 전체로 표시
-    if (statusSelect) {
-        statusSelect.value = "0";
-    }
 
     // 검색 버튼만 눌러도 기존 카드 선택 유지되도록 form에 hidden input 복원
     syncSelectedStatusToForm(selectedStatusList);
@@ -317,7 +267,6 @@ function bindCardFilter() {
                 card.dataset.cardType;
 
             if (selectedStatusList.includes(cardType)) {
-
                 card.classList.add("active");
             }
         });
@@ -331,10 +280,6 @@ function bindCardFilter() {
         });
 
         allCard.classList.add("active");
-
-        if (statusSelect) {
-            statusSelect.value = "0";
-        }
 
         submitCardFilter([]);
     });
@@ -361,24 +306,14 @@ function bindCardFilter() {
 
                 allCard.classList.add("active");
 
-                if (statusSelect) {
-                    statusSelect.value = "0";
-                }
-
                 submitCardFilter([]);
                 return;
-            }
-
-            // 카드 필터는 hidden으로만 보내고, 상태 select는 전체로 고정
-            if (statusSelect) {
-                statusSelect.value = "0";
             }
 
             submitCardFilter(selectedValues);
         });
     });
 
-    // 현재 선택값을 form hidden input으로 맞춰주는 함수
     function syncSelectedStatusToForm(selectedValues) {
 
         form.querySelectorAll("input[name='eqStatusList']").forEach(input => {
@@ -398,7 +333,6 @@ function bindCardFilter() {
         });
     }
 
-    // 카드 클릭 시 submit
     function submitCardFilter(selectedValues) {
 
         form.querySelectorAll("input[name='eqStatusList']").forEach(input => {

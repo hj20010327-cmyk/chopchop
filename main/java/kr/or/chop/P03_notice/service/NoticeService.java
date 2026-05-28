@@ -58,4 +58,7 @@ public interface NoticeService {
     int deleteNoticeFileByNoticeNo(
             int not_no
     );
+    
+    // 첨부파일 개별 삭제
+    int deleteNoticeFile(int file_no);
 }

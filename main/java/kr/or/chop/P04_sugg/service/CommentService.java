@@ -13,4 +13,10 @@ public interface CommentService {
     int updateComment(CommentDTO dto);
 
     int deleteComment(int comm_no);
+    
+    // 자식 댓글 개수
+    int selectChildCommentCount(int comm_no);
+
+    // 댓글 삭제 표시 처리
+    int maskComment(int comm_no);
 }

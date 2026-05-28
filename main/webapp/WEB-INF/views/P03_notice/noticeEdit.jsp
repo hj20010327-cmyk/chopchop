@@ -21,6 +21,8 @@
         <input type="hidden"
                name="not_no"
                value="${dto.not_no}">
+               
+        
 
         <div class="btn-row"
              style="margin-top:18px; margin-bottom:12px;">
@@ -140,54 +142,72 @@
                                 gap:8px;
                                 flex-wrap:wrap;">
 
-                            <span id="fileName"
-                                  style="
-                                    font-size:14px;
-                                    color:#555;">
-
-                                <c:choose>
-
-                                    <c:when test="${not empty fileList}">
-                                        기존 첨부파일 ${fileList.size()}개
-                                    </c:when>
-
-                                    <c:otherwise>
-                                        선택된 파일 없음
-                                    </c:otherwise>
-
-                                </c:choose>
-
-                            </span>
+						<span id="fileName"
+						      data-count="${fileList.size()}"
+						      style="
+						        font-size:14px;
+						        color:#555;">
+						
+						    <c:choose>
+						
+						        <c:when test="${not empty fileList}">
+						            기존 첨부파일 ${fileList.size()}개
+						        </c:when>
+						
+						        <c:otherwise>
+						            선택된 파일 없음
+						        </c:otherwise>
+						
+						    </c:choose>
+						
+						</span>
 
                         </div>
 
                     </div>
-
-                    <!-- 기존 첨부파일 목록 -->
-                    <c:if test="${not empty fileList}">
-
-                        <div style="
-                                margin-top:14px;
-                                padding-left:88px;
-                                font-size:13px;
-                                color:#555;">
-
-                            <c:forEach var="file" items="${fileList}">
-
-                                <div style="margin-bottom:6px;">
-
-                                    <a href="${pageContext.request.contextPath}/resources/upload/notice/${file.file_save_name}"
-                                       download="${file.file_origin_name}">
-                                        ${file.file_origin_name}
-                                    </a>
-
-                                </div>
-
-                            </c:forEach>
-
-                        </div>
-
-                    </c:if>
+					<!-- 기존 첨부파일 목록 -->
+					<c:if test="${not empty fileList}">
+					
+					    <div style="
+					            margin-top:14px;
+					            padding-left:88px;
+					            font-size:13px;
+					            color:#555;">
+					
+					        <c:forEach var="file" items="${fileList}">
+					
+					            <div id="fileRow_${file.file_no}"
+					                 style="
+					                    display:flex;
+					                    align-items:center;
+					                    gap:10px;
+					                    margin-bottom:8px;">
+					
+					                <a href="${pageContext.request.contextPath}/resources/upload/notice/${file.file_save_name}"
+					                   download="${file.file_origin_name}"
+					                   style="
+					                        text-decoration:none;
+					                        color:#444;">
+					                    ${file.file_origin_name}
+					                </a>
+					
+					                <button type="button"
+					                        class="btn btn-white"
+					                        style="
+					                            height:28px;
+					                            padding:0 10px;
+					                            font-size:12px;"
+					                        onclick="deleteNoticeFile(${file.file_no})">
+					                    삭제
+					                </button>
+					
+					            </div>
+					
+					        </c:forEach>
+					
+					    </div>
+					
+					</c:if>
 
                 </div>
 
@@ -224,5 +244,61 @@ document.querySelector("#uploadFiles")
         this.files.length + "개 파일 선택됨";
 
 });
+
+function deleteNoticeFile(fileNo) {
+
+    if (!confirm("첨부파일을 삭제하시겠습니까?")) {
+        return;
+    }
+
+    fetch("${pageContext.request.contextPath}/notice/file/delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "file_no=" + encodeURIComponent(fileNo)
+    })
+    .then(function(response) {
+        return response.text();
+    })
+    .then(function(result) {
+
+        if (result === "OK") {
+
+            const row =
+                document.querySelector("#fileRow_" + fileNo);
+
+            if (row != null) {
+                row.remove();
+            }
+
+            // 파일 개수 갱신
+            const fileName =
+                document.querySelector("#fileName");
+
+            let count =
+                Number(fileName.dataset.count);
+
+            count--;
+
+            fileName.dataset.count = count;
+
+            if (count > 0) {
+                fileName.innerText =
+                    "기존 첨부파일 " + count + "개";
+            } else {
+                fileName.innerText =
+                    "선택된 파일 없음";
+            }
+
+            alert("첨부파일이 삭제되었습니다.");
+        } else if (result === "LOGIN") {
+            alert("로그인이 필요합니다.");
+            location.href = "${pageContext.request.contextPath}/login";
+        } else {
+            alert("첨부파일 삭제 권한이 없습니다.");
+        }
+    });
+}
 
 </script>

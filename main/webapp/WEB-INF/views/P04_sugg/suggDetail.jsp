@@ -118,7 +118,7 @@
 							        </label>
 							
 							        <button type="submit"
-							                class="btn btn-main">
+							                class="btn btn-orange">
 							            확인
 							        </button>
 							    </form>
@@ -244,116 +244,100 @@
 
                         <c:forEach var="comm" items="${commList}">
 
-                            <tr>
-                                <td style="
-                                		 position:relative;
-                                        border-left:none;
-                                        border-right:none;
-                                        padding:18px 12px;
-                                        text-align:left;
-                                        padding-left:${comm.comm_level * 35 + 12}px;">
-
-							<div style="
-							        display:flex;
-							        justify-content:space-between;
-							        align-items:center;
-							        margin-bottom:8px;">
-							
-							    <strong>
-							         ${comm.empName} (${comm.comm_writer})
-							    </strong>
-							
-							    <div style="
-							            display:flex;
-							            align-items:center;
-							            gap:8px;">
-							
-							        <span style="
-							                font-size:13px;
-							                color:#777;">
-							            ${comm.comm_cdate}
-							        </span>
-							
-							        <c:if test="${sessionScope.loginUser.empId eq comm.comm_writer}">
-							
-							            <form action="${pageContext.request.contextPath}/sugg/comment/delete"
-							                  method="post"
-							                  style="display:inline;">
-							
-							                <input type="hidden"
-							                       name="comm_no"
-							                       value="${comm.comm_no}">
-							
-							                <input type="hidden"
-							                       name="comm_sugg_no"
-							                       value="${dto.sugg_no}">
-							
-							                <button type="submit"
-							                        class="comment-delete-x"
-							                        onclick="return confirm('댓글을 삭제하시겠습니까?');">
-							                    ×
-							                </button>
-							
-							            </form>
-							
-							        </c:if>
-							
-							    </div>
-							
-							</div>
-									
-									<div onclick="showReplyForm(${comm.comm_no})"
-									     style="
-									        padding-left:8px;
-									        line-height:1.7;
-									        cursor:pointer;">
-									    ${comm.comm_content}
-									</div>
-									
-<%-- 									<c:if test="${comm.comm_level < 2}"> --%>
-<!-- 									    <button type="button" -->
-<!-- 									            class="btn-none" -->
-<%-- 									            onclick="showReplyForm(${comm.comm_no})"> --%>
-<!-- 									        답글 -->
-<!-- 									    </button> -->
-<%-- 									</c:if> --%>
-
-
-                                    <!-- 대댓글 / 대대댓글 입력 -->
-                                    <c:if test="${comm.comm_level < 2}">
-
-                                        <form id="replyForm_${comm.comm_no}"
-                                        	  action="${pageContext.request.contextPath}/sugg/comment/add"
-                                              method="post"
-                                              style="
-                                                    display:none;
-                                                    gap:8px;
-                                                    margin-top:10px;">
-
-                                            <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
-                                            <input type="hidden" name="comm_parent" value="${comm.comm_no}">
-                                            <input type="hidden" name="comm_level" value="${comm.comm_level + 1}">
-
-                                            <input type="text"
-                                                   name="comm_content"
-                                                   placeholder="답글을 입력하세요."
-                                                   required
-                                                   style="
-                                                        flex:1;
-                                                        height:34px;
-                                                        border:1px solid #ddd;
-                                                        padding:0 10px;">
-
-                                            <button type="submit"
-                                                    class="btn btn-main">
-                                                작성
-                                            </button>
-
-                                        </form>
-
-                                    </c:if>
-                                </td>
-                            </tr>
+						<tr>
+						    <td style="
+						            border-left:none;
+						            border-right:none;
+						            padding:0;
+						            text-align:left;">
+						
+						        <div class="comment-item level-${comm.comm_level}"
+						             style="margin-left:${comm.comm_level * 36}px;">
+						
+						            <div class="comment-head">
+						
+						                <div class="comment-writer-box">
+						
+						                    <c:if test="${comm.comm_level > 0}">
+						                        <span class="reply-mark">└</span>
+						                    </c:if>
+						
+						                    <strong>
+						                        ${comm.empName} (${comm.comm_writer})
+						                    </strong>
+						
+						                </div>
+						
+						                <div class="comment-right">
+						
+						                    <span class="comment-date">
+						                        ${comm.comm_cdate}
+						                    </span>
+						
+						                    <c:if test="${(sessionScope.loginUser.empId eq comm.comm_writer 
+								            or sessionScope.loginUser.empAuth >= 20)
+								            and comm.comm_content ne '삭제된 댓글입니다.'}">
+						
+						                        <form action="${pageContext.request.contextPath}/sugg/comment/delete"
+						                              method="post"
+						                              style="display:inline;">
+						
+						                            <input type="hidden"
+						                                   name="comm_no"
+						                                   value="${comm.comm_no}">
+						
+						                            <input type="hidden"
+						                                   name="comm_sugg_no"
+						                                   value="${dto.sugg_no}">
+						
+						                            <button type="submit"
+						                                    class="comment-delete-x"
+						                                    onclick="return confirm('댓글을 삭제하시겠습니까?');">
+						                                ×
+						                            </button>
+						
+						                        </form>
+						
+						                    </c:if>
+						
+						                </div>
+						
+						            </div>
+						
+						            <div class="comment-content"
+						                 onclick="showReplyForm(${comm.comm_no})">
+						                ${comm.comm_content}
+						            </div>
+						
+						            <c:if test="${comm.comm_level < 2}">
+						
+						                <form id="replyForm_${comm.comm_no}"
+						                      action="${pageContext.request.contextPath}/sugg/comment/add"
+						                      method="post"
+						                      class="reply-form">
+						
+						                    <input type="hidden" name="comm_sugg_no" value="${dto.sugg_no}">
+						                    <input type="hidden" name="comm_parent" value="${comm.comm_no}">
+						                    <input type="hidden" name="comm_level" value="${comm.comm_level + 1}">
+						
+						                    <input type="text"
+						                           name="comm_content"
+						                           placeholder="답글을 입력하세요."
+						                           required>
+						
+						                    <button type="submit"
+						                            class="btn btn-main">
+						                        작성
+						                    </button>
+						
+						                </form>
+						
+						            </c:if>
+						
+						        </div>
+						
+						    </td>
+						</tr>
 
                         </c:forEach>
 
@@ -402,6 +386,71 @@
 .comment-delete-x:hover {
     color: var(--main-red);
     text-decoration: none;
+}
+.comment-item {
+    padding: 18px 12px;
+    background: #fff;
+}
+
+.comment-item.level-1 {
+    background: #fff;
+}
+
+.comment-item.level-2 {
+    background: #fff;
+}
+
+.comment-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-writer-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.reply-mark {
+    color: #777;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.comment-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-date {
+    font-size: 13px;
+    color: #777;
+}
+
+.comment-content {
+    padding-left: 8px;
+    line-height: 1.7;
+    cursor: pointer;
+}
+
+.comment-content:hover {
+    color: var(--main-green);
+}
+
+.reply-form {
+    display: none;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.reply-form input[type="text"] {
+    flex: 1;
+    height: 34px;
+    border: 1px solid #ddd;
+    padding: 0 10px;
 }
 </style>
 

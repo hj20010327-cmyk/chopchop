@@ -91,5 +91,30 @@ ORDER SIBLINGS BY c.comm_cdate ASC
           AND comm_usage = 'Y'
 
     </update>
+    
+   <!-- 자식 댓글 개수 -->
+<select id="selectChildCommentCount"
+        parameterType="int"
+        resultType="int">
+
+    SELECT COUNT(*)
+    FROM sugg_comment
+    WHERE comm_parent = #{comm_no}
+      AND comm_usage = 'Y'
+
+</select>
+
+<!-- 댓글 삭제 표시 처리 -->
+<update id="maskComment"
+        parameterType="int">
+
+    UPDATE sugg_comment
+    SET
+        comm_content = '삭제된 댓글입니다.',
+        comm_mdate = SYSDATE
+    WHERE comm_no = #{comm_no}
+      AND comm_usage = 'Y'
+
+</update>
 
 </mapper>

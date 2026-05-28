@@ -265,5 +265,16 @@
         WHERE not_no = #{not_no}
 
     </update>
+    
+    <!-- 첨부파일 개별 삭제 -->
+	<update id="deleteNoticeFile"
+	        parameterType="int">
+	
+	    UPDATE notice_file
+	    SET file_usage = 'N'
+	    WHERE file_no = #{file_no}
+	      AND file_usage = 'Y'
+	
+	</update>
 
 </mapper>

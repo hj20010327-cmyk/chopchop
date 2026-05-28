@@ -72,22 +72,6 @@
 
 				<div style="display: flex; align-items: center; gap: 10px;">
 
-					<c:if test="${eqp.eqStatus == 20}">
-						<form
-							action="${pageContext.request.contextPath}/equip/status/update"
-							method="post"
-							style="display: flex; align-items: center; gap: 8px; margin: 0;">
-
-							<input type="hidden" name="eqId" value="${eqp.eqId}"> <select
-								name="eqStatus" id="eqStatusSelect">
-								<option value="20" ${eqp.eqStatus == 20 ? 'selected' : ''}>정지</option>
-								<option value="30">점검중</option>
-								<option value="40">고장</option>
-							</select>
-
-							<button type="submit" class="btn btn-main">변경</button>
-						</form>
-					</c:if>
 
 					<c:choose>
 						<c:when test="${eqp.eqStatus == 10}">
@@ -104,6 +88,22 @@
 						</c:when>
 					</c:choose>
 
+					<c:if test="${eqp.eqStatus == 20}">
+						<form
+							action="${pageContext.request.contextPath}/equip/status/update"
+							method="post"
+							style="display: flex; align-items: center; gap: 8px; margin: 0;">
+
+							<input type="hidden" name="eqId" value="${eqp.eqId}"> <select
+								name="eqStatus" class="search-item select" id="eqStatusSelect">
+								<option value="20" ${eqp.eqStatus == 20 ? 'selected' : ''}>정지</option>
+								<option value="30">점검중</option>
+								<option value="40">고장</option>
+							</select>
+
+							<button type="submit" class="btn btn-main">변경</button>
+						</form>
+					</c:if>
 				</div>
 
 			</div>
@@ -452,7 +452,6 @@
     text-decoration: underline;
     color: var(--main-green);
 }
-
 </style>
 
 <script>
