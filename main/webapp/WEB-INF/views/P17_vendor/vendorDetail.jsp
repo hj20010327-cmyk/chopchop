@@ -174,9 +174,10 @@
 
 						<c:forEach var="io" items="${vendorIoList}">
 
-							<tr>
+							<tr class="movePage" onclick="window.location.href = 
+								'${pageContext.request.contextPath}/io/detail?ioId=${io.ioId}'">
 
-								<td>${io.ioId}</td>
+								<td class="ioId">${io.ioId}</td>
 
 								<td><c:choose>
 										<c:when test="${io.ioType == 'IN'}">
@@ -301,6 +302,11 @@
 		padding: 60px 20px;
 		text-align: center;
 		color: var(--dark-gray);
+	}
+	
+	.movePage:hover .ioId {
+		color: var(--main-green);
+		text-decoration: underline;
 	}
 	
 </style>
