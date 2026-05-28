@@ -1,13 +1,14 @@
-package kr.or.chop.P20_report.dto;
+package kr.or.chop.P20_report.qc.dto;
 
 import lombok.Data;
 
 @Data
-public class QualityReportSummaryDTO {
+public class QcReportSummaryDTO {
 
     private int totalQcQty;
     private int totalPassQty;
     private int totalDefectQty;
+
     private double defectRate;
 
     private int highRiskCount;

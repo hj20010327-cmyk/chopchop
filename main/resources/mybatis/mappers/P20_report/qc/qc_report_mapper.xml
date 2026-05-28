@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P20_report.qc.qc_report_mapper">
+
+    <sql id="qcBaseFrom">
+        FROM qc q
+        JOIN lot l
+            ON q.qc_lot = l.lot_id
+        LEFT JOIN "WORK" w
+            ON l.lot_work = w.work_id
+        LEFT JOIN plan p
+            ON w.work_plan = p.plan_id
+        LEFT JOIN item i
+            ON p.plan_item = i.item_id
+        LEFT JOIN emp e
+            ON q.qc_worker = e.emp_id
+    </sql>
+
+    <sql id="qcBaseWhere">
+        WHERE q.qc_qty IS NOT NULL
+          AND q.qc_pass_qty IS NOT NULL
+          AND q.qc_qty > 0
+
+        <if test="startDate != null and startDate != ''">
+            AND q.qc_date <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+        </if>
+
+        <if test="endDate != null and endDate != ''">
+            AND q.qc_date <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        </if>
+
+        <if test="itemType != null and itemType != ''">
+            AND TO_CHAR(i.item_type) = #{itemType}
+        </if>
+
+        <if test="itemKeyword != null and itemKeyword != ''">
+            AND (
+                UPPER(i.item_name) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(i.item_id) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(l.lot_id) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(q.qc_id) LIKE UPPER('%' || #{itemKeyword} || '%')
+            )
+        </if>
+
+        <if test="riskLevel != null and riskLevel != ''">
+            AND
+            CASE
+                WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 3 THEN 'HIGH'
+                WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 1 THEN 'MEDIUM'
+                ELSE 'LOW'
+            END = #{riskLevel}
+        </if>
+    </sql>
+
+    <select id="selectQcSummary"
+            parameterType="kr.or.chop.P20_report.qc.dto.QcReportSearchDTO"
+            resultType="kr.or.chop.P20_report.qc.dto.QcReportSummaryDTO">
+
+        SELECT
+            NVL(SUM(qc_qty), 0) AS totalQcQty,
+            NVL(SUM(qc_pass_qty), 0) AS totalPassQty,
+            NVL(SUM(defect_qty), 0) AS totalDefectQty,
+
+            NVL(ROUND(
+                (SUM(defect_qty) / NULLIF(SUM(qc_qty), 0)) * 100,
+                2
+            ), 0) AS defectRate,
+
+            NVL(SUM(
+                CASE
+                    WHEN risk_level = 'HIGH' THEN 1
+                    ELSE 0
+                END
+            ), 0) AS highRiskCount,
+
+            NVL(ROUND(
+                (
+                    SUM(
+                        CASE
+                            WHEN risk_level = 'HIGH' THEN 1
+                            ELSE 0
+                        END
+                    ) / NULLIF(COUNT(*), 0)
+                ) * 100,
+                2
+            ), 0) AS highRiskRate
+
+        FROM (
+            SELECT
+                q.qc_qty,
+                q.qc_pass_qty,
+                (q.qc_qty - q.qc_pass_qty) AS defect_qty,
+                CASE
+                    WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 3 THEN 'HIGH'
+                    WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 1 THEN 'MEDIUM'
+                    ELSE 'LOW'
+                END AS risk_level
+            <include refid="qcBaseFrom"/>
+            <include refid="qcBaseWhere"/>
+        )
+
+    </select>
+
+    <select id="selectQcReportCount"
+            parameterType="kr.or.chop.P20_report.qc.dto.QcReportSearchDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        <include refid="qcBaseFrom"/>
+        <include refid="qcBaseWhere"/>
+
+    </select>
+
+    <select id="selectQcReportList"
+            parameterType="map"
+            resultType="kr.or.chop.P20_report.qc.dto.QcReportListDTO">
+
+        SELECT *
+        FROM (
+            SELECT
+                ROWNUM AS rnum,
+                base_data.*
+            FROM (
+                SELECT
+                    q.qc_id AS qcId,
+                    TO_CHAR(q.qc_date, 'YYYY-MM-DD') AS qcDate,
+
+                    l.lot_id AS lotId,
+
+                    i.item_id AS itemId,
+                    i.item_name AS itemName,
+                    TO_CHAR(i.item_type) AS itemType,
+                    TO_CHAR(i.item_qc_type) AS itemQcType,
+
+                    q.qc_qty AS qcQty,
+                    q.qc_pass_qty AS qcPassQty,
+                    (q.qc_qty - q.qc_pass_qty) AS defectQty,
+
+                    ROUND(
+                        ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100,
+                        2
+                    ) AS defectRate,
+
+                    TO_CHAR(q.qc_status) AS qcStatus,
+                    TO_CHAR(q.qc_type) AS qcType,
+
+                    CASE
+                        WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 3 THEN 'HIGH'
+                        WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 1 THEN 'MEDIUM'
+                        ELSE 'LOW'
+                    END AS riskLevel,
+
+                    e.emp_id AS workerId,
+                    e.emp_name AS workerName
+
+                <include refid="qcBaseFrom"/>
+
+                WHERE q.qc_qty IS NOT NULL
+                  AND q.qc_pass_qty IS NOT NULL
+                  AND q.qc_qty > 0
+
+                <if test="search.startDate != null and search.startDate != ''">
+                    AND q.qc_date <![CDATA[>=]]> TO_DATE(#{search.startDate}, 'YYYY-MM-DD')
+                </if>
+
+                <if test="search.endDate != null and search.endDate != ''">
+                    AND q.qc_date <![CDATA[<]]> TO_DATE(#{search.endDate}, 'YYYY-MM-DD') + 1
+                </if>
+
+                <if test="search.itemType != null and search.itemType != ''">
+                    AND TO_CHAR(i.item_type) = #{search.itemType}
+                </if>
+
+                <if test="search.itemKeyword != null and search.itemKeyword != ''">
+                    AND (
+                        UPPER(i.item_name) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(i.item_id) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(l.lot_id) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(q.qc_id) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                    )
+                </if>
+
+                <if test="search.riskLevel != null and search.riskLevel != ''">
+                    AND
+                    CASE
+                        WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 3 THEN 'HIGH'
+                        WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 1 THEN 'MEDIUM'
+                        ELSE 'LOW'
+                    END = #{search.riskLevel}
+                </if>
+
+                ORDER BY q.qc_date DESC, q.qc_id DESC
+            ) base_data
+            WHERE ROWNUM <![CDATA[<=]]> #{page.endRow}
+        )
+        WHERE rnum <![CDATA[>=]]> #{page.startRow}
+
+    </select>
+
+    <select id="selectItemTypeList"
+            resultType="kr.or.chop.P20_report.qc.dto.ReportSelectDTO">
+
+        SELECT DISTINCT
+            TO_CHAR(item_type) AS code,
+            CASE
+                WHEN TO_CHAR(item_type) = '10' THEN '완제품'
+                WHEN TO_CHAR(item_type) = '20' THEN '반제품'
+                WHEN TO_CHAR(item_type) = '30' THEN '원자재'
+                ELSE TO_CHAR(item_type)
+            END AS name
+        FROM item
+        WHERE item_type IS NOT NULL
+        ORDER BY code
+
+    </select>
+
+    <select id="selectDefectTrendList"
+            parameterType="kr.or.chop.P20_report.qc.dto.QcReportSearchDTO"
+            resultType="map">
+
+        SELECT
+            TO_CHAR(q.qc_date, 'YYYY-MM-DD') AS qcDate,
+            NVL(SUM(q.qc_qty), 0) AS qcQty,
+            NVL(SUM(q.qc_pass_qty), 0) AS qcPassQty,
+            NVL(SUM(q.qc_qty - q.qc_pass_qty), 0) AS defectQty,
+            NVL(ROUND(
+                (SUM(q.qc_qty - q.qc_pass_qty) / NULLIF(SUM(q.qc_qty), 0)) * 100,
+                2
+            ), 0) AS defectRate
+        <include refid="qcBaseFrom"/>
+        <include refid="qcBaseWhere"/>
+        GROUP BY TO_CHAR(q.qc_date, 'YYYY-MM-DD')
+        ORDER BY qcDate
+
+    </select>
+
+    <select id="selectRiskChartList"
+            parameterType="kr.or.chop.P20_report.qc.dto.QcReportSearchDTO"
+            resultType="map">
+
+        SELECT
+            risk_level AS riskLevel,
+            COUNT(*) AS riskCount
+        FROM (
+            SELECT
+                CASE
+                    WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 3 THEN 'HIGH'
+                    WHEN ((q.qc_qty - q.qc_pass_qty) / q.qc_qty) * 100 >= 1 THEN 'MEDIUM'
+                    ELSE 'LOW'
+                END AS risk_level
+            <include refid="qcBaseFrom"/>
+            <include refid="qcBaseWhere"/>
+        )
+        GROUP BY risk_level
+        ORDER BY
+            CASE risk_level
+                WHEN 'HIGH' THEN 1
+                WHEN 'MEDIUM' THEN 2
+                WHEN 'LOW' THEN 3
+                ELSE 4
+            END
+
+    </select>
+
+</mapper>

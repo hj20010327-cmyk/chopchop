@@ -1,4 +1,4 @@
-package kr.or.chop.P20_report.dto;
+package kr.or.chop.P20_report.qc.dto;
 
 import lombok.Data;
 
