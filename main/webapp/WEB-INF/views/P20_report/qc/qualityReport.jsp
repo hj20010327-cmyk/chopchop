@@ -18,8 +18,8 @@
     </div>
 
     <form class="search-box"
-          action="${pageContext.request.contextPath}/report/quality"
-          method="get">
+          method="get"
+          action="${pageContext.request.contextPath}/report/quality">
 
         <div class="search-item">
             <label>시작일</label>
@@ -53,31 +53,22 @@
             <label>위험도</label>
             <select name="riskLevel">
                 <option value="">전체</option>
-                <option value="LOW"
-                    <c:if test="${searchDTO.riskLevel == 'LOW'}">selected</c:if>>
-                    LOW
-                </option>
-                <option value="MEDIUM"
-                    <c:if test="${searchDTO.riskLevel == 'MEDIUM'}">selected</c:if>>
-                    MEDIUM
-                </option>
-                <option value="HIGH"
-                    <c:if test="${searchDTO.riskLevel == 'HIGH'}">selected</c:if>>
-                    HIGH
-                </option>
+                <option value="LOW" ${searchDTO.riskLevel eq 'LOW' ? 'selected' : ''}>LOW</option>
+                <option value="MEDIUM" ${searchDTO.riskLevel eq 'MEDIUM' ? 'selected' : ''}>MEDIUM</option>
+                <option value="HIGH" ${searchDTO.riskLevel eq 'HIGH' ? 'selected' : ''}>HIGH</option>
             </select>
         </div>
 
-        <div class="search-item search-grow">
-            <label>검색어</label>
+        <div class="search-item keyword">
+            <label>품목/LOT/QC 검색</label>
             <input type="text"
                    name="itemKeyword"
-                   placeholder="품목명, 품목코드, LOT, QC"
+                   placeholder="내용을 입력하세요."
                    value="${searchDTO.itemKeyword}">
         </div>
 
-        <div class="btn-row report-search-btns">
-            <button type="submit" class="btn btn-main">조회</button>
+        <div class="search-btn-area">
+            <button type="submit" class="btn btn-main">검색</button>
             <a class="btn btn-white"
                href="${pageContext.request.contextPath}/report/quality">
                 초기화
@@ -85,170 +76,219 @@
         </div>
     </form>
 
-    <div class="report-card-grid">
-
-        <div class="report-card">
-            <p class="report-card-title">총 검사 수량</p>
-            <strong class="report-card-value">${summary.totalQcQty}</strong>
+    <div class="card-wrap reportCard">
+        <div class="card success">
+            <div class="card-title">총 검사 수량</div>
+            <div class="card-value">${summary.totalQcQty}</div>
+            <div class="card-subtitle">QC 기준</div>
         </div>
 
-        <div class="report-card">
-            <p class="report-card-title">총 합격 수량</p>
-            <strong class="report-card-value">${summary.totalPassQty}</strong>
+        <div class="card safe">
+            <div class="card-title">총 합격 수량</div>
+            <div class="card-value">${summary.totalPassQty}</div>
+            <div class="card-subtitle">합격</div>
         </div>
 
-        <div class="report-card">
-            <p class="report-card-title">총 불량 수량</p>
-            <strong class="report-card-value">${summary.totalDefectQty}</strong>
+        <div class="card warning">
+            <div class="card-title">총 불량 수량</div>
+            <div class="card-value">${summary.totalDefectQty}</div>
+            <div class="card-subtitle">검사 - 합격</div>
         </div>
 
-        <div class="report-card">
-            <p class="report-card-title">평균 불량률</p>
-            <strong class="report-card-value">${summary.defectRate}%</strong>
+        <div class="card info">
+            <div class="card-title">평균 불량률</div>
+            <div class="card-value">${summary.defectRate}%</div>
+            <div class="card-subtitle">전체 평균</div>
         </div>
 
-        <div class="report-card">
-            <p class="report-card-title">HIGH 위험 건수</p>
-            <strong class="report-card-value danger-text">${summary.highRiskCount}</strong>
+        <div class="card danger-card">
+            <div class="card-title">HIGH 위험 건수</div>
+            <div class="card-value">${summary.highRiskCount}</div>
+            <div class="card-subtitle">AI 기준</div>
         </div>
 
-        <div class="report-card">
-            <p class="report-card-title">HIGH 위험 비율</p>
-            <strong class="report-card-value danger-text">${summary.highRiskRate}%</strong>
+        <div class="card danger-card">
+            <div class="card-title">HIGH 위험 비율</div>
+            <div class="card-value">${summary.highRiskRate}%</div>
+            <div class="card-subtitle">전체 대비</div>
         </div>
-
     </div>
 
-    <div class="grid-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>검사일</th>
-                    <th>QC 코드</th>
-                    <th>LOT</th>
-                    <th>품목명</th>
-                    <th>검사수량</th>
-                    <th>합격수량</th>
-                    <th>불량수량</th>
-                    <th>불량률</th>
-                    <th>위험도</th>
-                    <th>검사자</th>
-                </tr>
-            </thead>
+    <div>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 120px;">검사일</th>
+                        <th style="width: 120px;">QC 코드</th>
+                        <th style="width: 150px;">LOT</th>
+                        <th>품목명</th>
+                        <th style="width: 120px;">검사수량</th>
+                        <th style="width: 120px;">합격수량</th>
+                        <th style="width: 120px;">불량수량</th>
+                        <th style="width: 100px;">불량률</th>
+                        <th style="width: 100px;">위험도</th>
+                        <th style="width: 120px;">검사자</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <c:choose>
-                    <c:when test="${empty qualityList}">
+                <tbody>
+                    <c:forEach var="qc" items="${qualityList}">
                         <tr>
-                            <td colspan="10">조회된 품질 데이터가 없습니다.</td>
+                            <td>${qc.qcDate}</td>
+                            <td>${qc.qcId}</td>
+                            <td>${qc.lotId}</td>
+                            <td class="item-name-cell">${qc.itemName}</td>
+                            <td>${qc.qcQty}</td>
+                            <td>${qc.qcPassQty}</td>
+                            <td>${qc.defectQty}</td>
+                            <td>${qc.defectRate}%</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${qc.riskLevel == 'LOW'}">
+                                        <span class="status status-success">• LOW</span>
+                                    </c:when>
+                                    <c:when test="${qc.riskLevel == 'MEDIUM'}">
+                                        <span class="status status-warning">• MEDIUM</span>
+                                    </c:when>
+                                    <c:when test="${qc.riskLevel == 'HIGH'}">
+                                        <span class="status status-danger">• HIGH</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="status status-info">• 미지정</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>${qc.workerName}</td>
                         </tr>
-                    </c:when>
+                    </c:forEach>
 
-                    <c:otherwise>
-                        <c:forEach var="qc" items="${qualityList}">
-                            <tr>
-                                <td>${qc.qcDate}</td>
-                                <td>${qc.qcId}</td>
-                                <td>${qc.lotId}</td>
-                                <td class="text-left">${qc.itemName}</td>
-                                <td>${qc.qcQty}</td>
-                                <td>${qc.qcPassQty}</td>
-                                <td>${qc.defectQty}</td>
-                                <td>${qc.defectRate}%</td>
-                                <td>
-                                    <span class="risk-badge risk-${qc.riskLevel}">
-                                        ${qc.riskLevel}
-                                    </span>
-                                </td>
-                                <td>${qc.workerName}</td>
-                            </tr>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
+                    <c:if test="${empty qualityList}">
+                        <tr>
+                            <td colspan="10" style="text-align: center;">
+                                조회된 품질 데이터가 없습니다.
+                            </td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
+        </div>
+
+        <jsp:include page="/WEB-INF/views/common/paging.jsp" />
     </div>
-
-    <jsp:include page="/WEB-INF/views/common/paging.jsp" />
 
 </div>
 
 <style>
-    .search-grow {
-        flex: 1;
-        min-width: 220px;
+    .content {
+        min-width: 0;
+        overflow-x: hidden;
     }
 
-    .report-search-btns {
-        align-items: flex-end;
-        margin-left: auto;
-        gap: 8px;
-    }
-
-    .report-card-grid {
+    .reportCard {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
 
-    .report-card {
-        background-color: #fff;
-        border: 1px solid var(--gray);
-        border-radius: 8px;
-        padding: 16px;
+    .reportCard .card {
+        min-width: 0;
         box-sizing: border-box;
     }
 
-    .report-card-title {
-        margin: 0 0 8px 0;
-        color: #666;
-        font-size: 13px;
-        font-weight: 500;
-    }
-
-    .report-card-value {
+    .reportCard .card-value {
         font-size: 22px;
-        font-weight: 700;
-        color: #222;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .danger-text {
+    .danger-card .card-value {
         color: #d93025;
     }
 
-    .text-left {
-        text-align: left;
+    .table-wrap {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        box-sizing: border-box;
     }
 
-    .risk-badge {
-        display: inline-block;
-        min-width: 70px;
-        padding: 4px 8px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
+    .table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    .table th,
+    .table td {
+        white-space: nowrap;
+        vertical-align: middle;
         text-align: center;
     }
 
-    .risk-LOW {
-        background-color: #e8f7ef;
-        color: #168a4a;
+    .table .item-name-cell {
+        text-align: left;
+        white-space: normal;
+        word-break: keep-all;
+        line-height: 1.4;
     }
 
-    .risk-MEDIUM {
-        background-color: #fff4df;
-        color: #b56a00;
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+        width: 90px;
     }
 
-    .risk-HIGH {
-        background-color: #fdecec;
-        color: #d93025;
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        width: 90px;
+    }
+
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        width: 100px;
+    }
+
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+        width: 180px;
+    }
+
+    .table th:nth-child(5),
+    .table td:nth-child(5),
+    .table th:nth-child(6),
+    .table td:nth-child(6),
+    .table th:nth-child(7),
+    .table td:nth-child(7) {
+        width: 90px;
+    }
+
+    .table th:nth-child(8),
+    .table td:nth-child(8),
+    .table th:nth-child(9),
+    .table td:nth-child(9),
+    .table th:nth-child(10),
+    .table td:nth-child(10) {
+        width: 80px;
+    }
+
+    .search-btn-area {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
     }
 
     @media (max-width: 1200px) {
-        .report-card-grid {
+        .reportCard {
             grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 900px) {
+        .reportCard {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
     }
 </style>
