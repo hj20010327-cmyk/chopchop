@@ -480,68 +480,21 @@
 	FROM work_kpi
 </select>
 
-<!-- <update id="updateWorkStatusAuto"> -->
-<!-- 	UPDATE work w -->
-<!-- 	SET -->
-<!-- 		w.work_status = -->
-<!-- 			CASE -->
-<!-- 				WHEN NVL(w.work_prev_qty, 0) >= w.work_order_qty THEN 30 -->
-<!-- 				WHEN TRUNC(w.work_date) <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) -->
-<!-- 					AND NVL(w.work_prev_qty, 0) <![CDATA[<]]> w.work_order_qty THEN 40 -->
-<!-- 				WHEN TRUNC(w.work_date) <![CDATA[=]]> TRUNC(SYSDATE + (9/24)) THEN 20 -->
-<!-- 				WHEN TRUNC(w.work_date) <![CDATA[>]]> TRUNC(SYSDATE + (9/24)) THEN 10 -->
-<!-- 				ELSE 10 -->
-<!-- 			END, -->
-<!-- 		w.work_mdate = SYSDATE + (9/24) -->
-<!-- 	WHERE w.work_usage = 'Y' AND w.work_status != 0 AND w.work_status != 30 -->
-<!-- </update> -->
-
 <update id="updateWorkStatusAuto">
 	UPDATE work w
 	SET
 		w.work_status =
 			CASE
 				WHEN NVL(w.work_prev_qty, 0) >= w.work_order_qty THEN 30
-
-				WHEN w.work_date <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
+				WHEN TRUNC(w.work_date) <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
 					AND NVL(w.work_prev_qty, 0) <![CDATA[<]]> w.work_order_qty THEN 40
-
-				WHEN w.work_date <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
-					AND w.work_date <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 20
-
-				WHEN w.work_date <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 10
-
+				WHEN TRUNC(w.work_date) <![CDATA[=]]> TRUNC(SYSDATE + (9/24)) THEN 20
+				WHEN TRUNC(w.work_date) <![CDATA[>]]> TRUNC(SYSDATE + (9/24)) THEN 10
 				ELSE 10
 			END,
 		w.work_mdate = SYSDATE + (9/24)
-	WHERE w.work_usage = 'Y'
-	  AND w.work_status NOT IN (0, 30)
-	  AND w.work_status !=
-			CASE
-				WHEN NVL(w.work_prev_qty, 0) >= w.work_order_qty THEN 30
-
-				WHEN w.work_date <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
-					AND NVL(w.work_prev_qty, 0) <![CDATA[<]]> w.work_order_qty THEN 40
-
-				WHEN w.work_date <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
-					AND w.work_date <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 20
-
-				WHEN w.work_date <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 10
-
-				ELSE 10
-			END
+	WHERE w.work_usage = 'Y' AND w.work_status != 0 AND w.work_status != 30
 </update>
-
-<!-- <update id="updatePlanWpQty"> -->
-<!-- 	UPDATE plan p -->
-<!-- 	SET p.plan_wp_qty = ( -->
-<!-- 		SELECT NVL(SUM(NVL(w.work_prev_qty, 0)), 0) -->
-<!-- 		FROM work w -->
-<!-- 		WHERE w.work_plan = p.plan_id -->
-<!-- 			AND w.work_status = 30 -->
-<!-- 	) -->
-<!-- 	WHERE p.plan_usage = 'Y' -->
-<!-- </update> -->
 
 <update id="updatePlanWpQty">
 	UPDATE plan p
@@ -549,43 +502,10 @@
 		SELECT NVL(SUM(NVL(w.work_prev_qty, 0)), 0)
 		FROM work w
 		WHERE w.work_plan = p.plan_id
-		  AND w.work_status IN (30, 40, 60)
-		  AND w.work_usage = 'Y'
+			AND w.work_status = 30
 	)
 	WHERE p.plan_usage = 'Y'
-	  AND p.plan_status NOT IN (0, 30)
-	  AND EXISTS (
-		SELECT 1
-		FROM work w
-		WHERE w.work_plan = p.plan_id
-		  AND w.work_usage = 'Y'
-	  )
-	  AND NVL(p.plan_wp_qty, 0) != (
-		SELECT NVL(SUM(NVL(w.work_prev_qty, 0)), 0)
-		FROM work w
-		WHERE w.work_plan = p.plan_id
-		  AND w.work_status IN (30, 40, 60)
-		  AND w.work_usage = 'Y'
-	  )
 </update>
-
-<!-- <update id="updatePlanStatusAuto"> -->
-<!-- 	UPDATE plan p -->
-<!-- 	SET -->
-<!-- 		p.plan_status = -->
-<!-- 			CASE -->
-<!-- 				WHEN NVL(p.plan_wp_qty, 0) >= p.plan_fin_qty THEN 30 -->
-<!-- 				WHEN TRUNC(p.plan_edate) <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) -->
-<!-- 					AND NVL(p.plan_wp_qty, 0) <![CDATA[<]]> p.plan_fin_qty THEN 40 -->
-<!-- 				WHEN TRUNC(p.plan_sdate) <![CDATA[<=]]> TRUNC(SYSDATE + (9/24)) -->
-<!-- 					AND TRUNC(p.plan_edate) <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) -->
-<!-- 					AND NVL(p.plan_wp_qty, 0) <![CDATA[<]]> p.plan_fin_qty THEN 20 -->
-<!-- 				WHEN TRUNC(p.plan_sdate) <![CDATA[>]]> TRUNC(SYSDATE + (9/24)) THEN 10 -->
-<!-- 				ELSE 10 -->
-<!-- 			END, -->
-<!-- 		p.plan_mdate = SYSDATE + (9/24) -->
-<!-- 	WHERE p.plan_usage = 'Y' AND p.plan_status != 0 AND p.plan_status != 30 -->
-<!-- </update> -->
 
 <update id="updatePlanStatusAuto">
 	UPDATE plan p
@@ -593,68 +513,41 @@
 		p.plan_status =
 			CASE
 				WHEN NVL(p.plan_wp_qty, 0) >= p.plan_fin_qty THEN 30
-
-				WHEN p.plan_edate <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
+				WHEN TRUNC(p.plan_edate) <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
 					AND NVL(p.plan_wp_qty, 0) <![CDATA[<]]> p.plan_fin_qty THEN 40
-
-				WHEN p.plan_sdate <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) + 1
-					AND p.plan_edate <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
+				WHEN TRUNC(p.plan_sdate) <![CDATA[<=]]> TRUNC(SYSDATE + (9/24))
+					AND TRUNC(p.plan_edate) <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
 					AND NVL(p.plan_wp_qty, 0) <![CDATA[<]]> p.plan_fin_qty THEN 20
-
-				WHEN p.plan_sdate <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 10
-
+				WHEN TRUNC(p.plan_sdate) <![CDATA[>]]> TRUNC(SYSDATE + (9/24)) THEN 10
 				ELSE 10
 			END,
 		p.plan_mdate = SYSDATE + (9/24)
-	WHERE p.plan_usage = 'Y'
-	  AND p.plan_status NOT IN (0, 30)
-	  AND p.plan_status !=
-			CASE
-				WHEN NVL(p.plan_wp_qty, 0) >= p.plan_fin_qty THEN 30
-
-				WHEN p.plan_edate <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
-					AND NVL(p.plan_wp_qty, 0) <![CDATA[<]]> p.plan_fin_qty THEN 40
-
-				WHEN p.plan_sdate <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) + 1
-					AND p.plan_edate <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
-					AND NVL(p.plan_wp_qty, 0) <![CDATA[<]]> p.plan_fin_qty THEN 20
-
-				WHEN p.plan_sdate <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 10
-
-				ELSE 10
-			END
+	WHERE p.plan_usage = 'Y' AND p.plan_status != 0 AND p.plan_status != 30
 </update>
 
 <update id="updateQcStatusAuto">
-	UPDATE QC Q
-	SET
-		Q.QC_STATUS =
-			CASE
-				WHEN NVL(Q.QC_PASS_QTY, 0) >= NVL(Q.QC_QTY, 0)
-					AND NVL(Q.QC_QTY, 0) > 0 THEN 30
 
-				WHEN Q.QC_DATE <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
-					AND NVL(Q.QC_PASS_QTY, 0) <![CDATA[<]]> NVL(Q.QC_QTY, 0) THEN 40
+    UPDATE QC Q
+    SET
+        Q.QC_STATUS =
+            CASE
+                WHEN NVL(Q.QC_PASS_QTY, 0) >= NVL(Q.QC_QTY, 0)
+                    AND NVL(Q.QC_QTY, 0) > 0 THEN 30
 
-				WHEN Q.QC_DATE <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
-					AND Q.QC_DATE <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) + 1
-					AND NVL(Q.QC_PASS_QTY, 0) <![CDATA[<]]> NVL(Q.QC_QTY, 0) THEN 20
+                WHEN TRUNC(Q.QC_DATE) <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
+                    AND NVL(Q.QC_PASS_QTY, 0) <![CDATA[<]]> NVL(Q.QC_QTY, 0) THEN 40
 
-				WHEN Q.QC_DATE <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 10
+                WHEN TRUNC(Q.QC_DATE) = TRUNC(SYSDATE + (9/24))
+                    AND NVL(Q.QC_PASS_QTY, 0) <![CDATA[<]]> NVL(Q.QC_QTY, 0) THEN 20
 
-				ELSE 10
-			END
-	WHERE Q.QC_USAGE = 'Y'
-	  AND Q.QC_STATUS NOT IN (0, 30)
-	  AND Q.QC_STATUS !=
-			CASE
-				WHEN NVL(Q.QC_PASS_QTY, 0) >= NVL(Q.QC_QTY, 0)
-					AND NVL(Q.QC_QTY, 0) > 0 THEN 30
+                WHEN TRUNC(Q.QC_DATE) <![CDATA[>]]> TRUNC(SYSDATE + (9/24)) THEN 10
 
-				WHEN Q.QC_DATE <![CDATA[<]]> TRUNC(SYSDATE + (9/24))
-					AND NVL(Q.QC_PASS_QTY, 0) <![CDATA[<]]> NVL(Q.QC_QTY, 0) THEN 40
+                ELSE 10
+            END
+    WHERE Q.QC_USAGE = 'Y'
+      AND Q.QC_STATUS != 0
+      AND Q.QC_STATUS != 30
 
-<<<<<<< HEAD
 </update>
 
 <!-- 최근 공지사항 5개 조회 -->
@@ -680,16 +573,5 @@
 	WHERE ROWNUM <![CDATA[<=]]> 5
 
 </select>	
-=======
-				WHEN Q.QC_DATE <![CDATA[>=]]> TRUNC(SYSDATE + (9/24))
-					AND Q.QC_DATE <![CDATA[<]]> TRUNC(SYSDATE + (9/24)) + 1
-					AND NVL(Q.QC_PASS_QTY, 0) <![CDATA[<]]> NVL(Q.QC_QTY, 0) THEN 20
-
-				WHEN Q.QC_DATE <![CDATA[>=]]> TRUNC(SYSDATE + (9/24)) + 1 THEN 10
-
-				ELSE 10
-			END
-</update>
->>>>>>> 6d0432f (조회 refresh 가볍게 수정)
 	
 </mapper>
