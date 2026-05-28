@@ -78,6 +78,8 @@
 		ORDER BY lot_id DESC
 		) I
 	)
+	WHERE RN BETWEEN #{page.startRow}
+	AND #{page.endRow}
 
 	</select>
 
