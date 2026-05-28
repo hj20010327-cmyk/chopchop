@@ -92,7 +92,7 @@
                 <th>LOT</th>
                 <th>검사유형</th>
                 <th>검사수량</th>
-                <th>합격수량</th>
+                <th>입고수량</th>
                 <th>불량률</th>
                 <th>상태</th>
                 <th>검사자</th>
@@ -130,16 +130,7 @@
                             <td>
                             	<fmt:formatNumber value="${qc.qcPassQty}" pattern="#,###" /> EA
                             </td>
-                            <td>
-							    <c:choose>
-							        <c:when test="${qc.qcQty == 0}">
-							            0 %
-							        </c:when>
-							        <c:otherwise>
-							            <fmt:formatNumber value="${((qc.qcQty - qc.qcPassQty) / qc.qcQty) * 100}" pattern="##0.0" /> %
-							        </c:otherwise>
-							    </c:choose>
-							</td>
+							<td>${qc.failRate}%</td>
 
                             <td>
                                 <c:choose>

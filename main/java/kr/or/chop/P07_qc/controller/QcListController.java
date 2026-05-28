@@ -1,5 +1,6 @@
 package kr.or.chop.P07_qc.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,14 @@ public class QcListController {
 	public String qcList(QcDTO qcDTO, Model model, @RequestParam(value = "page", defaultValue = "1") int currentPage) {
 
 		refService.refreshStatus();
+		
+		if (qcDTO.getStartDate() == null || qcDTO.getStartDate().isEmpty()) {
+			qcDTO.setStartDate(LocalDate.now().minusMonths(6).toString());
+		}
+		
+		if (qcDTO.getEndDate() == null || qcDTO.getEndDate().isEmpty()) {
+			qcDTO.setEndDate(LocalDate.now().toString());
+		}
 		
 		int listCount = qcService.selectQcCount(qcDTO);
 

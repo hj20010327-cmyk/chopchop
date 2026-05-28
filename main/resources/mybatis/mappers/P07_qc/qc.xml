@@ -9,13 +9,18 @@
         <where>
             Q.QC_USAGE = 'Y'
 
-            <if test="startDate != null and startDate != ''">
-                AND Q.QC_DATE <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
-            </if>
-
-            <if test="endDate != null and endDate != ''">
-                AND Q.QC_DATE <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
-            </if>
+            <choose>
+			    <when test="startDate != null and startDate != ''">
+			        AND Q.QC_DATE <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+			    </when>
+			    <otherwise>
+			        AND Q.QC_DATE <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+			    </otherwise>
+			</choose>
+			
+			<if test="endDate != null and endDate != ''">
+			    AND Q.QC_DATE <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+			</if>
 
             <if test="status != 0">
                 AND Q.QC_STATUS = #{status}
@@ -67,10 +72,29 @@
 	                Q.QC_WMSG AS qcWmsg,
 	
 	                Q.QC_PASS_QTY AS qcPassQty,
-	
-	                Q.QC_USAGE AS qcUsage
+
+					NVL(D.DEF_QTY, 0) AS failQty,
+					
+					CASE
+					    WHEN NVL(Q.QC_QTY, 0) = 0 THEN 0
+					    ELSE ROUND(
+					        LEAST(NVL(D.DEF_QTY, 0), Q.QC_QTY)
+					        / Q.QC_QTY * 100
+					    , 1)
+					END AS failRate,
+					
+					Q.QC_USAGE AS qcUsage
 	
 	            FROM QC Q
+	            
+	            LEFT JOIN (
+				    SELECT
+				        DLOG_QCID,
+				        SUM(NVL(DLOG_QTY, 0)) AS DEF_QTY
+				    FROM DEF_LOG
+				    GROUP BY DLOG_QCID
+				) D
+				    ON Q.QC_ID = D.DLOG_QCID
 	
 	            LEFT JOIN EMP EW
 	                ON Q.QC_WORKER = EW.EMP_ID
@@ -98,13 +122,18 @@
         <where>
             Q.QC_USAGE = 'Y'
 
-            <if test="startDate != null and startDate != ''">
-                AND Q.QC_DATE <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
-            </if>
-
-            <if test="endDate != null and endDate != ''">
-                AND Q.QC_DATE <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
-            </if>
+            <choose>
+			    <when test="startDate != null and startDate != ''">
+			        AND Q.QC_DATE <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+			    </when>
+			    <otherwise>
+			        AND Q.QC_DATE <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+			    </otherwise>
+			</choose>
+			
+			<if test="endDate != null and endDate != ''">
+			    AND Q.QC_DATE <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+			</if>
 
             <if test="qcStatus != 0">
                 AND Q.QC_STATUS = #{qcStatus}
@@ -122,26 +151,40 @@
     </select>
 
     <select id="selectQcSummary"
-            parameterType="kr.or.chop.P07_qc.dto.QcDTO"
-            resultType="kr.or.chop.P07_qc.dto.QcDTO">
-
-        SELECT
-			NVL(SUM(Q.QC_QTY), 0) AS todayQty,
-			NVL(SUM(Q.QC_PASS_QTY), 0) AS passQty,
-			NVL(SUM(Q.QC_QTY - NVL(Q.QC_PASS_QTY, 0)), 0) AS failQty,
-			CASE
-				WHEN NVL(SUM(Q.QC_QTY), 0) = 0 THEN 0
-				ELSE ROUND(
-					(NVL(SUM(Q.QC_QTY - NVL(Q.QC_PASS_QTY, 0)), 0)
-					/ SUM(Q.QC_QTY)) * 100
-				, 1)
-			END AS failRate
-		FROM QC Q
-		WHERE Q.QC_USAGE = 'Y'
-		AND Q.QC_STATUS = 30
-		AND TRUNC(Q.QC_DATE) = TRUNC(SYSDATE + (9/24))
-
-    </select>
+	        parameterType="kr.or.chop.P07_qc.dto.QcDTO"
+	        resultType="kr.or.chop.P07_qc.dto.QcDTO">
+	
+	    SELECT
+	        NVL(SUM(Q.QC_QTY), 0) AS todayQty,
+	
+	        NVL(SUM(Q.QC_QTY - NVL(D.DEF_QTY, 0)), 0) AS passQty,
+	
+	        NVL(SUM(NVL(D.DEF_QTY, 0)), 0) AS failQty,
+	
+	        CASE
+	            WHEN NVL(SUM(Q.QC_QTY), 0) = 0 THEN 0
+	            ELSE ROUND(
+	                NVL(SUM(NVL(D.DEF_QTY, 0)), 0)
+	                / SUM(Q.QC_QTY) * 100
+	            , 1)
+	        END AS failRate
+	
+	    FROM QC Q
+	
+	    LEFT JOIN (
+	        SELECT
+	            DLOG_QCID,
+	            SUM(NVL(DLOG_QTY, 0)) AS DEF_QTY
+	        FROM DEF_LOG
+	        GROUP BY DLOG_QCID
+	    ) D
+	        ON Q.QC_ID = D.DLOG_QCID
+	
+	    WHERE Q.QC_USAGE = 'Y'
+	      AND Q.QC_STATUS = 30
+	      AND TRUNC(Q.QC_DATE) = TRUNC(SYSDATE + (9/24))
+	
+	</select>
 
     <select id="selectQcDetail"
         parameterType="string"
@@ -183,15 +226,15 @@
 	
 	        Q.QC_USAGE AS qcUsage,
 	
-	        NVL(Q.QC_QTY - NVL(Q.QC_PASS_QTY, 0), 0) AS failQty,
-	
-	        CASE
-	            WHEN NVL(Q.QC_QTY, 0) = 0 THEN 0
-	            ELSE ROUND(
-	                ((Q.QC_QTY - NVL(Q.QC_PASS_QTY, 0))
-	                / Q.QC_QTY) * 100
-	            , 1)
-	        END AS failRate
+	        NVL(D.DEF_QTY, 0) AS failQty,
+			
+			CASE
+			    WHEN NVL(Q.QC_QTY, 0) = 0 THEN 0
+			    ELSE ROUND(
+			        LEAST(NVL(D.DEF_QTY, 0), Q.QC_QTY)
+			        / Q.QC_QTY * 100
+			    , 1)
+			END AS failRate
 	
 	    FROM QC Q
 	
@@ -212,6 +255,15 @@
 	
 	    LEFT JOIN EMP EW
 	        ON Q.QC_WORKER = EW.EMP_ID
+	        
+	    LEFT JOIN (
+		    SELECT
+		        DLOG_QCID,
+		        SUM(NVL(DLOG_QTY, 0)) AS DEF_QTY
+		    FROM DEF_LOG
+		    GROUP BY DLOG_QCID
+		) D
+		    ON Q.QC_ID = D.DLOG_QCID
 	
 	    WHERE Q.QC_ID = #{qcId}
 	
