@@ -91,7 +91,7 @@
 				AND L.lot_exp <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
 			</if>
 		</where>
-		ORDER BY lot_id DESC
+		ORDER BY L.lot_exp
 		) I
 	)
 	WHERE RN BETWEEN #{page.startRow}
