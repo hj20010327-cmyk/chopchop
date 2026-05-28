@@ -81,10 +81,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th style="width: 140px;">라우팅 코드</th>
-                    <th style="width: 180px;">라우팅명</th>
-                    <th style="width: 160px;">품목 코드</th>
-                    <th style="width: 220px;">품목명</th>
+                    <th style="width: 120px;">라우팅 코드</th>
+                    <th style="width: 155px;">라우팅명</th>
+                    <th style="width: 150px;">생산 품목코드</th>
+                    <th style="width: 180px;">생산 품목명</th>
                     <th>설명</th>
                 </tr>
             </thead>

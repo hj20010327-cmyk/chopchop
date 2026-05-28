@@ -75,11 +75,11 @@
                         </tr>
 
                         <tr>
-                            <th>품목 코드</th>
-                            <td>${rout.routItem}</td>
-
                             <th>품목명</th>
                             <td>${rout.itemName}</td>
+                            
+                            <th>품목 코드</th>
+                            <td>${rout.routItem}</td>
                         </tr>
 
                         <tr>
@@ -188,10 +188,10 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th style="width: 80px;">단계</th>
-                            <th style="width: 260px;">공정명</th>
+                            <th style="width: 70px;">단계</th>
+                            <th style="width: 190px;">공정명</th>
                             <th>공정 설명</th>
-                            <th style="width: 180px;">작업장 타입</th>
+                            <th style="width: 125px;">작업장 타입</th>
                             <th style="width: 180px;">사용 설비</th>
                         </tr>
                     </thead>
