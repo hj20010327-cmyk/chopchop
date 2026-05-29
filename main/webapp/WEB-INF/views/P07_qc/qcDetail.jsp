@@ -39,17 +39,18 @@
         </div>
 
         <div class="right">
-
-            <a class="btn btn-main"
-                href="${pageContext.request.contextPath}/quality/edit?qcId=${qc.qcId}">
-                수정
-            </a>
-
-            <a class="btn btn-red"
-                href="${pageContext.request.contextPath}/quality/delete?qcId=${qc.qcId}"
-                onclick="return confirm('품질검사(${qc.qcId})를 삭제하시겠습니까?');">
-                삭제
-            </a>
+			
+			<c:if test="${qc.qcStatus == 10}">
+	            <a class="btn btn-main"
+	                href="${pageContext.request.contextPath}/quality/edit?qcId=${qc.qcId}">
+	                수정
+	            </a>
+	            <a class="btn btn-red"
+	                href="${pageContext.request.contextPath}/quality/delete?qcId=${qc.qcId}"
+	                onclick="return confirm('품질검사(${qc.qcId})를 삭제하시겠습니까?');">
+	                삭제
+	            </a>
+			</c:if>
 
         </div>
 
@@ -101,18 +102,13 @@
             			</span>
             		</c:when>
             	</c:choose>
-            	<a href="${pageContext.request.contextPath}/quality/result/add?qcId=${qc.qcId}" class="btn btn-orange">
-            	<c:choose>
-            		<c:when test="${qc.qcStatus == 30}">
-	            	결과 수정
-            		</c:when>
-            		<c:otherwise>
-            		결과 등록
-            		</c:otherwise>
-            	</c:choose>
-            	</a>
+            		<c:if test="${qc.qcStatus != 30}">
+		            	<a href="${pageContext.request.contextPath}/quality/result/add?qcId=${qc.qcId}" class="btn btn-orange">
+            				결과 등록
+		            	</a>
+            		</c:if>
             </div>
-            </div>
+         </div>
             
 
             <div class="info-table-wrap">

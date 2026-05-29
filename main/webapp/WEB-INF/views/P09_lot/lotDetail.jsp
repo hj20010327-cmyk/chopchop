@@ -263,8 +263,8 @@
 
 								<c:forEach var="use" items="${useList}">
 
-									<tr>
-										<td>${use.useWork}</td>
+									<tr onclick="location.href='${pageContext.request.contextPath}/work/detail?workId=${use.useWork}'">
+										<td class="workId">${use.useWork}</td>
 
 										<td>
 											<fmt:formatNumber value="${use.useQty}"
@@ -404,7 +404,8 @@
 
 
 <style>
-	.table tbody tr:hover .ioId {
+	.table tbody tr:hover .ioId, 
+	.table tbody tr:hover .workId {
 	    color: var(--main-green);
 	    text-decoration: underline;
 	}
