@@ -78,6 +78,64 @@
 					<tr>
 						<th>작업코드</th>
 						<td>${workDTO.workId}</td>
+						
+						<th>생산계획</th>
+						<td>
+							<a class="toDetail" href="${pageContext.request.contextPath}/plan/detail?planId=${workDTO.workPlan}">
+								${workDTO.workPlan}
+							</a>
+						</td>
+						
+					</tr>
+
+					<tr>
+						<th>품목</th>
+						<td>
+							<a class="toDetail" href="${pageContext.request.contextPath}/item/detail?itemId=${workDTO.workItem}">
+								${workDTO.workItemName} (${workDTO.workItem})
+							</a>
+						</td>
+						<th>생산된 LOT</th>
+						<td>
+							<c:choose>
+								<c:when test="${empty workDTO.lotId}">
+									-
+								</c:when>
+								<c:otherwise>
+									<a class="toDetail" href="${pageContext.request.contextPath}/lot/detail?lotId=${workDTO.lotId}">
+										${workDTO.lotId}
+									</a>
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+
+					<tr>
+						<th>지시수량</th>
+						<td>
+							<fmt:formatNumber value="${workDTO.workOrderQty}" pattern="#,###"/>
+							${workDTO.workItemUnit}
+						</td>
+						<th>현재완료수량</th>
+						<td>
+							<fmt:formatNumber value="${workDTO.workPrevQty}" pattern="#,###"/>
+							${workDTO.workItemUnit}
+						</td>
+						
+					</tr>
+					
+					<tr>
+						<th>작업일</th>
+						<td>
+							<fmt:formatDate value="${workDTO.workDate}" pattern="yyyy-MM-dd"/>
+						</td>
+						<th>작업 완료일</th>
+						<td>
+							<fmt:formatDate value="${workDTO.workFdate}" pattern="yyyy-MM-dd"/>
+						</td>
+					</tr>
+
+					<tr>
 						<th>작업자</th>
 						<td>
 							<c:choose>
@@ -88,41 +146,6 @@
 									${workDTO.workWname} (${workDTO.workWorker})
 								</c:otherwise>
 							</c:choose>
-						</td>
-					</tr>
-
-					<tr>
-						<th>생산계획</th>
-						<td>
-							<a class="toDetail" href="${pageContext.request.contextPath}/plan/detail?planId=${workDTO.workPlan}">
-								${workDTO.workPlan}
-							</a>
-						</td>
-						<th>품목</th>
-						<td>
-							<a class="toDetail" href="${pageContext.request.contextPath}/item/detail?itemId=${workDTO.workItem}">
-								${workDTO.workItemName} (${workDTO.workItem})
-							</a>
-						</td>
-					</tr>
-
-					<tr>
-						<th>지시수량</th>
-						<td>
-							<fmt:formatNumber value="${workDTO.workOrderQty}" pattern="#,###"/>
-							${workDTO.workItemUnit}
-						</td>
-						<th>작업일</th>
-						<td>
-							<fmt:formatDate value="${workDTO.workDate}" pattern="yyyy-MM-dd"/>
-						</td>
-					</tr>
-
-					<tr>
-						<th>현재완료수량</th>
-						<td>
-							<fmt:formatNumber value="${workDTO.workPrevQty}" pattern="#,###"/>
-							${workDTO.workItemUnit}
 						</td>
 						<th>담당자</th>
 						<td>
@@ -138,22 +161,13 @@
 					</tr>
 
 					<tr>
-						<th>생산된 LOT</th>
-						<td>
-							<c:choose>
-								<c:when test="${empty workDTO.lotId}">
-									-
-								</c:when>
-								<c:otherwise>
-									<a class="toDetail" href="${pageContext.request.contextPath}/lot/detail?lotId=${workDTO.lotId}">
-										${workDTO.lotId}
-									</a>
-								</c:otherwise>
-							</c:choose>
-						</td>
 						<th>등록일시</th>
 						<td>
 							<fmt:formatDate value="${workDTO.workCdate}" pattern="yyyy-MM-dd HH:mm"/>
+						</td>
+						<th>최종 수정일시</th>
+						<td>
+							<fmt:formatDate value="${workDTO.workMdate}" pattern="yyyy-MM-dd HH:mm"/>
 						</td>
 					</tr>
 

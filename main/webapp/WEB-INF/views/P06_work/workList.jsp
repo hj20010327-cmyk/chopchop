@@ -47,7 +47,7 @@
 	         data-card-type="delay">
 	        <div class="card-title">지연된 작업</div>
 	        <div class="card-value">${workCard.delayCnt}</div>
-			<div class="card-subtitle">작업일 초과 작업</div>
+			<div class="card-subtitle">작업 지연 중인 작업</div>
 	    </div>
 	
 	    <div class="card safe work-card"
@@ -135,14 +135,14 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th>작업지시</th>
-						<th>생산계획</th>
-						<th>품목</th>
-						<th>지시수량</th>
-						<th>완료수량</th>
-						<th>작업자</th>
-						<th>상태</th>
-						<th>작업일</th>
+						<th style="width: 100px;">작업지시</th>
+						<th style="width: 120px;">생산계획</th>
+						<th style="width: 190px;">품목</th>
+						<th style="width: 100px;">지시수량</th>
+						<th style="width: 100px;">완료수량</th>
+						<th style="width: 136px;">작업자</th>
+						<th style="width: 86px;">상태</th>
+						<th>완료일</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -186,7 +186,7 @@
 								</c:choose>
 							</td>
 							<td>
-								<fmt:formatDate value="${work.workDate}" pattern="yyyy-MM-dd"/>
+								<fmt:formatDate value="${work.workFdate}" pattern="yyyy-MM-dd"/>
 							</td>
 						</tr>	
 					</c:forEach>

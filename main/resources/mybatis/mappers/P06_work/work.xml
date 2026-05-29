@@ -81,6 +81,7 @@
                     w.work_order_qty workOrderQty,
                     NVL(w.work_prev_qty, 0) workPrevQty,
                     w.work_date workDate,
+                    w.work_fdate workFdate,
                     w.work_director workDirector,
                     d.emp_name workDname,
                     w.work_worker workWorker,
@@ -156,10 +157,10 @@
                         ELSE 6
                     END ASC,
                     CASE
-                        WHEN w.work_status IN (40, 20, 10) THEN w.work_date
+                        WHEN w.work_status IN (40, 20, 10) THEN w.work_fdate
                     END ASC,
                     CASE
-                        WHEN w.work_status IN (30, 0) THEN w.work_date
+                        WHEN w.work_status IN (30, 0) THEN w.work_fdate
                     END DESC,
                     w.work_id DESC
             ) work_list
@@ -268,6 +269,7 @@
 			w.work_order_qty workOrderQty,
 			NVL(w.work_prev_qty, 0) workPrevQty,
 			w.work_date workDate,
+			w.work_fdate workFdate,
 	
 			w.work_director workDirector,
 			d.emp_name workDname,
@@ -695,6 +697,9 @@
 	            work_status = #{workStatus},
 	        </if>
 	        work_wmsg = #{workWmsg},
+	        <if test="workStatus == 30">
+	        work_fdate = SYSDATE + (9/24),
+	        </if>
 	        work_mdate = SYSDATE + (9/24)
 	    WHERE work_id = #{workId}
 	      AND work_usage = 'Y'

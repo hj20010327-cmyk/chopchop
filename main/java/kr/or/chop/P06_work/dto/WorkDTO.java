@@ -21,6 +21,7 @@ public class WorkDTO {
 	
 	// 작업지시는 시간 안 따지고 일자까지만 따질 거니까 그냥 date로 했음
 	private Date workDate;
+	private Date workFdate;
 	
 	private String workDirector;
 	private String workDname;
