@@ -566,7 +566,7 @@
 	
 	<update id="updateWh" parameterType="whDTO">
 		UPDATE WAREHOUSE
-		SET WH_NAME = #{whName}, WH_TYPE = #{whTypeNo}
+		SET WH_NAME = #{whName}, WH_TYPE = #{whTypeNo}, WH_LOC = #{whLoc}
 		WHERE WH_ID = #{whId}
 	</update>
 	
