@@ -46,4 +46,12 @@ public class EqMtAddController {
 
 	    return "redirect:/equip/detail?eqId=" + eqDTO.getElogEqid();
 	}
+	
+	@RequestMapping("/update")
+	public String updateMt(EqDTO eqDTO) {
+
+	    eqService.updateEqLog(eqDTO);
+
+	    return "redirect:/equip/detail?eqId=" + eqDTO.getElogEqid();
+	}
 }

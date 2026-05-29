@@ -158,5 +158,10 @@ public class EqDAOImpl implements EqDAO {
 	public void updateEqRunLogStop(EqDTO eqDTO) {
 	    sqlSession.update("mapper.P16_equipment.updateEqRunLogStop", eqDTO);
 	}
+	
+	@Override
+	public void updateEqLog(EqDTO eqDTO) {
+	    sqlSession.update("mapper.P16_equipment.updateEqLog", eqDTO);
+	}
 
 }

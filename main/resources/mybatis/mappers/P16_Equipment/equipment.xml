@@ -555,9 +555,6 @@
 		AND EQ_RUN_ETIME IS NULL
 
 	</update>
-
-
-
 	<!-- 설비 수정 -->
 	<!-- 수정 가능 항목만 변경 -->
 	<!-- 설비명 / 작업장 / 업체 / 책임자 -->
@@ -593,6 +590,20 @@
 		UPDATE EQUIPMENT
 		SET EQ_USAGE = 'N'
 		WHERE EQ_ID = #{eqId}
+
+	</update>
+	
+<!--점검이력 수정 -->
+	<update id="updateEqLog" parameterType="eqDTO">
+
+    UPDATE EQ_LOG
+    SET
+        ELOG_EDATE =  #{elogEdate},
+        ELOG_REASON = #{elogReason},
+        ELOG_RESULT = #{elogResult},
+        ELOG_CONTENT = #{elogContent}
+    WHERE ELOG_ID = #{elogId}
+      AND ELOG_USAGE = 'Y'
 
 	</update>
 

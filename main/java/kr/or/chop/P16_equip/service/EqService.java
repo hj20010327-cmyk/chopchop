@@ -46,5 +46,7 @@ public interface EqService {
 	void insertEqRunLog(String eqId);
 
 	void updateEqRunLogStop(EqDTO eqDTO);
+	
+	void updateEqLog(EqDTO eqDTO);
 }
 

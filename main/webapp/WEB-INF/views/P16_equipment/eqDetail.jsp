@@ -184,6 +184,7 @@
 
 					<thead>
 						<tr>
+							<th>설비 점검 코드</th>
 							<th>점검 시작일</th>
 							<th>점검 종료일</th>
 							<th>점검 사유</th>
@@ -194,7 +195,22 @@
 
 					<tbody>
 						<c:forEach var="log" items="${eqLogList}">
-							<tr>
+							<tr onclick="openEqLogModal(this)"
+						    data-elog-id="${log.elogId}"
+						    data-eq-id="${log.elogEqid}"
+						    data-worker="${log.elogWorkerName}(${log.elogWorker})"
+							data-sdate="<fmt:formatDate value='${log.elogSdate}' pattern='yyyy-MM-dd HH:mm' />"
+							data-edate="<fmt:formatDate value='${log.elogEdate}' pattern='yyyy-MM-dd HH:mm' />"
+						    data-reason="${log.elogReason}"
+						    data-result="${log.elogResult}"
+						    data-content="${log.elogContent}">
+						    
+						    <td>
+						        <a class="detail-link"
+						           href="javascript:void(0);">
+						            ${log.elogId}
+						        </a>
+						    </td>
 								<td><fmt:formatDate value="${log.elogSdate}"
 										pattern="yyyy-MM-dd HH:mm" /></td>
 
@@ -446,11 +462,118 @@
 
 </div>
 
+<!-- 점검이력 모달 -->
+<div id="eqLogOverlay" class="overlay">
+
+    <div class="modal" style="width: 620px;">
+
+        <h2 class="modal-title">점검이력 상세</h2>
+
+        <p class="modal-subTitle">
+            점검이력 상세 내용을 확인하고 수정할 수 있습니다.
+        </p>
+
+        <form action="${pageContext.request.contextPath}/equip/mt/update"
+              method="post"
+              id="eqLogForm">
+
+            <input type="hidden" name="elogId" id="modalElogId">
+            <input type="hidden" name="elogEqid" id="modalElogEqid">
+
+            <div class="grid-form">
+
+                <div class="grid-wrap">
+                    <div class="search-item">
+                        <label>점검 시작일</label>
+                        <input type="text" id="modalSdateText" readonly>
+                    </div>
+                    <div class="search-item">
+                        <label>점검 종료일</label>
+                        <input type="text"
+                               id="modalEdateText"
+                               readonly>
+                       	<input type="datetime-local"
+						       name="elogEdate"
+						       id="modalEdate"
+						       style="display:none;">
+                    </div>
+
+                </div>
+
+                <div class="grid-wrap">
+                    <div class="search-item">
+                        <label>점검자</label>
+                        <input type="text" id="modalWorker" readonly>
+                    </div>
+                    <div class="search-item">
+                        <label>점검 결과</label>
+                        <input type="text"
+                               name="elogResult"
+                               id="modalResult"
+                               readonly>
+                    </div>
+                </div>
+
+                <div class="grid-wrap">
+                    <div class="search-item">
+                        <label>점검 사유</label>
+                        <input type="text"
+                               name="elogReason"
+                               id="modalReason"
+                               readonly>
+                    </div>
+                </div>
+
+                <div class="grid-wrap">
+                    <div class="search-item" style="width:100%;">
+                        <label>점검 내용</label>
+                        <textarea name="elogContent"
+                                  id="modalContent"
+                                  readonly
+                                  style="height:160px;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:25px;">
+
+                <button type="button"
+                        class="btn btn-white"
+                        id="closeEqLogModal">
+                    취소
+                </button>
+
+                <button type="button"
+                        class="btn btn-main"
+                        id="editEqLogBtn">
+                    수정
+                </button>
+
+                <button type="submit"
+                        class="btn btn-main"
+                        id="saveEqLogBtn"
+                        style="display:none;">
+                    저장
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
 <style>
 
 .detail-link:hover {
     text-decoration: underline;
     color: var(--main-green);
+}
+
+.search-item input {
+    min-width: 235px;
 }
 </style>
 
@@ -503,7 +626,7 @@
 	if (closeStopModal != null) {
 
 		closeStopModal.addEventListener("click", function() {
-
+		
 			closeModal(document.querySelector("#stopOverlay"));
 		});
 	}
@@ -544,4 +667,125 @@
 			}
 		});
 	}
+	function openEqLogModal(row) {
+
+	    document.querySelector("#modalSdateText").type = "text";
+	    document.querySelector("#modalEdateText").type = "text";
+		
+	    document.querySelector("#modalElogId").value =
+	        row.dataset.elogId;
+
+	    document.querySelector("#modalElogEqid").value =
+	        row.dataset.eqId;
+
+	    document.querySelector("#modalWorker").value =
+	        row.dataset.worker;
+
+	    document.querySelector("#modalSdateText").value =
+	        row.dataset.sdate;
+
+	    document.querySelector("#modalEdateText").value =
+	        row.dataset.edate;
+	    
+	    document.querySelector("#modalEdate").value =
+	        toDateTimeLocal(row.dataset.edate);
+
+	    document.querySelector("#modalReason").value =
+	        row.dataset.reason;
+
+	    document.querySelector("#modalResult").value =
+	        row.dataset.result;
+
+	    document.querySelector("#modalContent").value =
+	        row.dataset.content;
+
+	    setEqLogReadonly(true);
+
+	    document.querySelector("#eqLogOverlay").style.display = "flex";
+	}
+
+	function setEqLogReadonly(readonly) {
+
+	    document.querySelector("#modalReason").readOnly =
+	        readonly;
+
+	    document.querySelector("#modalResult").readOnly =
+	        readonly;
+
+	    document.querySelector("#modalContent").readOnly =
+	        readonly;
+
+	    if (readonly) {
+
+	        // 종료일 text 보여주기
+	        document.querySelector("#modalEdateText")
+	            .style.display = "block";
+
+	        // 종료일 datetime 숨기기
+	        document.querySelector("#modalEdate")
+	            .style.display = "none";
+
+	        document.querySelector("#editEqLogBtn")
+	            .style.display = "inline-block";
+
+	        document.querySelector("#saveEqLogBtn")
+	            .style.display = "none";
+
+	    } else {
+
+	        // 수정모드면 datetime 보여주기
+	        document.querySelector("#modalEdateText")
+	            .style.display = "none";
+
+	        document.querySelector("#modalEdate")
+	            .style.display = "block";
+
+	        document.querySelector("#editEqLogBtn")
+	            .style.display = "none";
+
+	        document.querySelector("#saveEqLogBtn")
+	            .style.display = "inline-block";
+	        
+	        document.querySelector("#modalSdateText")
+	        	.type="datetime-local";
+	    }
+	}
+
+	document.querySelector("#editEqLogBtn")
+	    .addEventListener("click", function () {
+	        setEqLogReadonly(false);
+	    });
+
+	document.querySelector("#closeEqLogModal")
+	    .addEventListener("click", function () {
+	        document.querySelector("#eqLogOverlay").style.display = "none";
+	    });
+
+	function toDateTimeLocal(value) {
+
+	    if (value == null || value == "" || value == "null") {
+	        return "";
+	    }
+
+	    return value.substring(0, 16).replace(" ", "T");
+	}
+
+	document.querySelector("#eqLogForm")
+	    .addEventListener("submit", function (e) {
+
+	        const sdateText =
+	            document.querySelector("#modalSdateText").value;
+
+	        const edate =
+	            document.querySelector("#modalEdate").value;
+
+	        const sdate =
+	            toDateTimeLocal(sdateText);
+
+	        if (edate != "" && sdate != "" && edate < sdate) {
+	            alert("점검 종료일은 점검 시작일보다 빠를 수 없습니다.");
+	            e.preventDefault();
+	            return;
+	        }
+	    });
 </script>

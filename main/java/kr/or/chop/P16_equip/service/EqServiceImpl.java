@@ -111,5 +111,10 @@ public class EqServiceImpl implements EqService {
 	public void updateEqRunLogStop(EqDTO eqDTO) {
 	    eqDAO.updateEqRunLogStop(eqDTO);
 	}
+	
+	@Override
+	public void updateEqLog(EqDTO eqDTO) {
+	    eqDAO.updateEqLog(eqDTO);
+	}
 
 }

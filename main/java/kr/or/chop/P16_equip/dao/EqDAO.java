@@ -47,6 +47,8 @@ public interface EqDAO {
 
 	void updateEqRunLogStop(EqDTO eqDTO);
 	
+	void updateEqLog(EqDTO eqDTO);
+	
 	
 
 }

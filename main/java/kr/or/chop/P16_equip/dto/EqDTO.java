@@ -1,6 +1,7 @@
 package kr.or.chop.P16_equip.dto;
 
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class EqDTO {
 	private String eqId;          // EQ_ID 설비코드
 	private String eqName;        // EQ_NAME 설비명
 	private int eqStatus;         // EQ_STATUS 설비상태번호
-	private Date eqSdate;       // EQ_SDATE 가동시작일
+	private Timestamp eqSdate;       // EQ_SDATE 가동시작일
 	private String eqWpid;        // EQ_WPID 작업장코드
 	private String eqVendor;      // EQ_VENDOR 관리업체코드
 	private String eqManager;     // EQ_MANAGER 책임자(EMP_ID)
