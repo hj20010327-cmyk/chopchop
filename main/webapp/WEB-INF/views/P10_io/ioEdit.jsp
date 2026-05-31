@@ -67,11 +67,20 @@
 				style="display:flex; flex-direction:column; flex:1;">
 
 				<label>입출고 사유 <span class="red">*</span></label>
-
-				<input type="text"
-					name="ioReason"
-					value="${io.ioReason}"
-					placeholder="입출고 사유 입력">
+				
+				<select name="ioReason" id="ioReason">
+					<c:if test="${io.ioType == 'IN'}">
+						<option value="" disabled>입고 사유 선택</option>
+						<option value="구매" ${io.ioReason == '구매' ? selected : '' }>구매</option>
+						<option value="생산" ${io.ioReason == '생산' ? selected : '' }>생산</option>
+					</c:if>
+					<c:if test="${io.ioType == 'OUT'}">
+						<option value="" disabled>출고 사유 선택</option>
+						<option value="판매" ${io.ioReason == '판매' ? selected : '' }>판매</option>
+						<option value="폐기" ${io.ioReason == '폐기' ? selected : '' }>폐기</option>
+					</c:if>
+				</select>
+				
 			</div>
 
 			<div class="search-item"

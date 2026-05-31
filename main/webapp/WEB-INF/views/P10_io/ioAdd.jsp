@@ -48,7 +48,8 @@
 		<div style="display:flex; gap:40px; margin-bottom:26px;">
 			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
 				<label>입출고 사유 <span class="red">*</span></label>
-				<input type="text" name="ioReason" placeholder="입출고 사유 입력">
+				<select name="ioReason" id="ioReason"></select>
+<!-- 				<input type="text" name="ioReason" placeholder="입출고 사유 입력"> -->
 			</div>
 
 			<div class="search-item" style="display:flex; flex-direction:column; flex:1;">
@@ -184,6 +185,8 @@ window.addEventListener("load", function() {
 	const ioTypeRadios = document.querySelectorAll("input[name='ioType']");
 	const itemTypeSelect = document.querySelector("#itemType");
 	const itemSelect = document.querySelector("#itemId");
+	
+	const ioReason = document.querySelector("#ioReason");
 
 	const lotArea = document.querySelector("#lotArea");
 	let lotTag = document.querySelector("#ioLot");
@@ -260,6 +263,12 @@ window.addEventListener("load", function() {
 			setQtyRequired(true);
 
 			warehouseArea.style.display = "flex";
+			
+			ioReason.innerHTML = `
+				<option value='' dsiabled>입고 사유 선택</option>
+				<option value='구매'>구매</option>
+				<option value='생산'>생산</option>
+			`;
 		} else {
 			changeLotToSelect();
 
@@ -271,6 +280,14 @@ window.addEventListener("load", function() {
 			if (itemSelect.value !== "") {
 				loadLotList(itemSelect.value);
 			}
+			
+			ioReason.innerHTML = `
+				<option value='' dsiabled>출고 사유 선택</option>
+				<option value='판매'>판매</option>
+				<option value='폐기'>폐기</option>
+			`;
+			
+			
 		}
 	}
 
