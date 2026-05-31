@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">사원 관리</h2>
-			<p class="page-subtitle">사원 목록을 조회하고 새로운 사원을 등록할 수 있습니다.</p>
+			<p class="page-subtitle">사원 목록을 조회하고 등록하세요.</p>
 		</div>
 
 		<div>

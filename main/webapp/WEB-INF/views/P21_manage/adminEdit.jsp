@@ -6,7 +6,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">사원 수정</h2>
-            <p class="page-subtitle">사원 정보를 수정할 수 있습니다.</p>
+            <p class="page-subtitle">${admin.empName}(${admin.empId})의 정보를 수정하세요.</p>
         </div>
 
         <div>

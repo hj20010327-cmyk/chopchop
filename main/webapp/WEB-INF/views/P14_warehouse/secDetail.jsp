@@ -9,7 +9,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">창고 내 섹션 상세</h2>
-			<p class="page-subtitle">선택한 섹션의 상세 정보를 확인하세요.</p>
+			<p class="page-subtitle">${secDTO.secWhName}(${secDTO.secWhId})의 섹션(${secDTO.secId}) 정보를 확인하세요.</p>
 		</div>
 		
 		<div>

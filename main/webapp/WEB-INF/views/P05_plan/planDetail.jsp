@@ -9,7 +9,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">생산 계획 상세</h2>
-			<p class="page-subtitle">생산 계획의 상세 정보와 작업 지시 목록을 조회할 수 있습니다.</p>
+			<p class="page-subtitle">생산계획(${planDTO.planId})의 상세 정보와 작업지시 목록을 확인하세요.</p>
 		</div>
 		<div>
 			<p class="page-route">

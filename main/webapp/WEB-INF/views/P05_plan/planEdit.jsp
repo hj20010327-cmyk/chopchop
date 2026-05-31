@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">생산 계획 수정</h2>
-			<p class="page-subtitle">선택한 생산 계획(${planDTO.planId})을 수정하세요.</p>
+			<p class="page-subtitle">생산계획(${planDTO.planId})의 내용을 수정하세요.</p>
 		</div>
 		<div>
 			<p class="page-route">

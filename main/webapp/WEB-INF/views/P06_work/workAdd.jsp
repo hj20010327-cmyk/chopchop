@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">작업 지시 등록</h2>
-			<p class="page-subtitle">새로운 작업 지시를 작성하세요.</p>
+			<p class="page-subtitle">새로운 작업 지시를 등록하세요.</p>
 		</div>
 		<div>
 			<p class="page-route">

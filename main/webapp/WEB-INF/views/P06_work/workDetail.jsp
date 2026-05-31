@@ -9,7 +9,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">작업 상세</h2>
-			<p class="page-subtitle">작업 지시 상세 정보와 작업 현황을 조회할 수 있습니다.</p>
+			<p class="page-subtitle">작업지시(${workDTO.workId})의 내용을 확인하고, 결과를 수정하세요.</p>
 		</div>
 		<div>
 			<p class="page-route">

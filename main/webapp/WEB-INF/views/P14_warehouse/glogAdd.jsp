@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">창고 점검이력 등록</h2>
-            <p class="page-subtitle">${whDTO.whName} (${whDTO.whId})의 새로운 점검이력을 등록하세요.</p>
+            <p class="page-subtitle">${whDTO.whName}(${whDTO.whId})의 새로운 위생점검이력을 등록하세요.</p>
         </div>
 
         <div>

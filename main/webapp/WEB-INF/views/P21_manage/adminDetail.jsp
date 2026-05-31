@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">사원 상세</h2>
-            <p class="page-subtitle">사원 정보를 확인하고 관리하세요.</p>
+            <p class="page-subtitle">${admin.empName}(${admin.empId})의 상세 정보를 확인하세요.</p>
         </div>
 
         <div>

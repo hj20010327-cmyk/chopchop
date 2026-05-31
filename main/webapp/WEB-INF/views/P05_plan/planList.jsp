@@ -9,7 +9,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">생산 계획 관리</h2>
-			<p class="page-subtitle">생산 계획을 조회할 수 있습니다.</p>
+			<p class="page-subtitle">생산 계획 내역을 조회하고 등록하세요.</p>
 		</div>
 		
 		<div>

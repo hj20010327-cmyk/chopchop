@@ -8,7 +8,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">창고 점검이력 상세</h2>
-			<p class="page-subtitle">점검이력(${glog.glogId})의 상세 정보를 확인하세요.</p>
+			<p class="page-subtitle">${glog.glogWhName}(${glog.glogWhId})의 위생점검이력(${glog.glogId}) 결과를 확인하세요.</p>
 		</div>
 		
 		<div>

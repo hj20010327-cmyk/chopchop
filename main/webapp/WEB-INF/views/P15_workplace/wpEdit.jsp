@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">작업장 정보 수정</h2>
-            <p class="page-subtitle">작업장 : ${wpDTO.wpName} (${wpDTO.wpId})</p>
+            <p class="page-subtitle">${wpDTO.wpName}(${wpDTO.wpId})의 정보를 수정하세요.</p>
         </div>
 
         <div>

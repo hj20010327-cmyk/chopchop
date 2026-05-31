@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">창고 정보 수정</h2>
-            <p class="page-subtitle">창고 : ${whDTO.whName} (${whDTO.whId})</p>
+            <p class="page-subtitle">${whDTO.whName}(${whDTO.whId})의 정보를 수정하세요.</p>
         </div>
 
         <div>

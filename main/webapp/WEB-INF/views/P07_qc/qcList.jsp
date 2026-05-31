@@ -8,7 +8,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">품질 관리</h2>
-            <p class="page-subtitle">품질 검사 결과를 조회하고 관리합니다.</p>
+            <p class="page-subtitle">품질검사 내역을 조회하고 등록하세요.</p>
         </div>
 
         <div>

@@ -8,7 +8,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">작업장 상세</h2>
-			<p class="page-subtitle">선택한 작업장의 상세 정보를 확인하세요.</p>
+			<p class="page-subtitle">${wpDTO.wpName}(${wpDTO.wpId})의 상세 정보와 점검이력을 확인하세요.</p>
 		</div>
 		
 		<div>

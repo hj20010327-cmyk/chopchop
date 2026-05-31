@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">작업장 점검이력 등록</h2>
-            <p class="page-subtitle">${wpDTO.wpName} (${wpDTO.wpId})의 새로운 점검이력을 등록하세요.</p>
+            <p class="page-subtitle">${wpDTO.wpName}(${wpDTO.wpId})의 새로운 위생점검이력을 등록하세요.</p>
         </div>
 
         <div>

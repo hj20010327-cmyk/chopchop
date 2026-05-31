@@ -115,7 +115,7 @@
 						onclick="window.location.href='${pageContext.request.contextPath}/warehouse/list'">
 					<div class="card-title">창고 적재 현황 (전체 ${whStatusChart.totalWhCnt}개)</div>
 					<div class="chart-total">
-				        냉동 창고: 개<br>냉장 창고: 개<br>상온창고: 개
+				        냉동 창고: ${whCount.FREE}개<br>냉장 창고: ${whCount.REF}개<br>상온 창고: ${whCount.ROOM}개
 				    </div>
 					<div class="chart-box">
 						<canvas id="whStatusChart" class="chart"></canvas>
@@ -124,7 +124,7 @@
 				<div class="card">
 					<div class="card-title">창고 온도 현황</div>
 					<div class="chart-total">
-				        냉동 창고: -18℃ 이하<br>냉장 창고: 0 ~ 10℃<br>상온창고: 15℃ ~ 25℃
+				        냉동 창고: -18℃ 이하<br>냉장 창고: 0 ~ 10℃<br>상온 창고: 15℃ ~ 25℃
 				    </div>
 					<div class="chart-box">
 						<canvas id="whDegreeChart" class="chart"></canvas>
@@ -270,7 +270,7 @@
 								<c:forEach var="notice" items="${recentNoticeList}">
 									<tr class="noticeTr"
 										onclick="window.location.href='${pageContext.request.contextPath}/notice/detail?not_no=${notice.notNo}'">
-										<td class="notTitle title">${notice.notTitle}</td>
+										<td class="notTitle" style="max-width: 230px;"><span class="title">${notice.notTitle}</span></td>
 										<td style="width: 70px;">${notice.empName}</td>
 										<td style="width: 100px;">
 											<fmt:formatDate value="${notice.notCdate}" pattern="yyyy-MM-dd" />
@@ -306,7 +306,7 @@
 										<c:if test="${sugg.suggAnswer != 'Y'}">
 											<td style="width: 55px;" class="status status-info">• 대기</td>
 										</c:if>
-										<td class="title">${sugg.suggTitle}</td>
+										<td style="max-width: 180px;"><span class="title">${sugg.suggTitle}</span></td>
 										<td style="width: 70px;">${sugg.empName}</td>
 										<td style="width: 100px;">
 											<fmt:formatDate value="${sugg.suggCdate}" pattern="yyyy-MM-dd" />
@@ -350,12 +350,14 @@
 									<td>${kpi.lastMonth}%</td>
 
 									<c:choose>
-										<c:when test="${kpi.compareValue >= 0}">
-											<td class="status-success">▲ ${kpi.compareValue}%</td>
+										<c:when test="${kpi.compareValue > 0}">
+											<td  class="${kpi.kpiName != '불량률' ? 'status-success' : 'status-danger'}" >▲ ${kpi.compareValue}%</td>
 										</c:when>
-
+										<c:when test="${kpi.compareValue == 0}">
+											<td class="status-info">- 0.0%</td>
+										</c:when>
 										<c:otherwise>
-											<td class="status-danger">▼ ${kpi.compareValue * -1}%</td>
+											<td class="${kpi.kpiName == '불량률' ? 'status-success' : 'status-danger'}" >▼ ${kpi.compareValue * -1}%</td>
 										</c:otherwise>
 									</c:choose>
 								</tr>
@@ -547,6 +549,8 @@
 	}
 	
 	.title {
+		display: block;
+		width: 100%;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -686,7 +690,7 @@
 				datasets: [
 					{
 						label: '창고 수',
-						data: [19, 1, 0],
+						data: [13, 1, 0],
 						backgroundColor: [
 							'#4caf50',
 							'#ffb300',
@@ -768,7 +772,7 @@
 				datasets: [
 					{
 						label: '창고 수',
-						data: [18, 2, 0],
+						data: [12, 2, 0],
 						backgroundColor: [
 							'#4caf50',
 							'#ffb300',

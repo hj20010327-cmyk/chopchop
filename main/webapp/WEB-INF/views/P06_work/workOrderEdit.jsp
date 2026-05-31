@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">작업 지시 수정</h2>
-			<p class="page-subtitle">선택한 작업 지시(${workDTO.workId})를 작성하세요.</p>
+			<p class="page-subtitle">작업지시(${workDTO.workId})의 내용을 수정하세요.</p>
 		</div>
 		<div>
 			<p class="page-route">

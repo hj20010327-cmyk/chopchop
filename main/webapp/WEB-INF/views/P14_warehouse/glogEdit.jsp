@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">창고 점검이력 수정</h2>
-            <p class="page-subtitle">선택한 점검이력(${glog.glogId})의 내용을 수정하세요.</p>
+            <p class="page-subtitle">${glog.glogWhName}(${glog.glogWhId})의 위생점검이력(${glog.glogId}) 결과를 수정하세요.</p>
         </div>
 
         <div>

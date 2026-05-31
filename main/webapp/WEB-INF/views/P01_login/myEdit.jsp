@@ -6,7 +6,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">내 정보 수정</h2>
-            <p class="page-subtitle">내 정보 ${user.empName}(${user.empId})를 등록하세요.</p>
+            <p class="page-subtitle">내 정보 ${user.empName}(${user.empId})를 수정하세요.</p>
         </div>
 
         <div>
