@@ -841,7 +841,7 @@ body.modal-open {
 .btn-top {
     position: fixed;
     right: 20px;
-    bottom: 80px;
+    bottom: 24px;
     z-index: 1000;
 
     width: 44px;
@@ -931,6 +931,12 @@ body.mobile-snb-open .btn-top {
 	
 	.modal {
 		max-width: 90%;
-	}
+	}	
+
+    .btn-top {
+        right: 20px;
+        bottom: 80px;
+    }
+
 	
 }
