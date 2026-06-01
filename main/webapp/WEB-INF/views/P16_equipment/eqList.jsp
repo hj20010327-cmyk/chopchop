@@ -8,16 +8,18 @@
         <div>
             <h2 class="page-title">설비 관리</h2>
             <p class="page-subtitle">
-                설비 가동 현황을 조회하고 새로운 설비를 등록할 수 있습니다.
+                설비 목록을 조회하고 등록하세요
             </p>
         </div>
 
         <div>
             <p class="page-route">홈 &gt; 설비관리</p>
+           <c:if test="${isAdmin}"> 
             <a class="btn btn-white"
                 href="${pageContext.request.contextPath}/equip/add">
                 설비 등록
             </a>
+           </c:if>
         </div>
     </div>
 <div class="card-wrap eqCard">

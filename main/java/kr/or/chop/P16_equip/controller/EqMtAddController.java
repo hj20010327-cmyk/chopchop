@@ -19,7 +19,20 @@ public class EqMtAddController {
 	EqService eqService;
 
 	@RequestMapping("/add")
-	public String addForm(String eqId, Model model) {
+	public String addForm(String eqId,
+	                      Model model,
+	                      HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		if (loginUser.getEmpAuth() < 20) {
+			return "redirect:/equip/detail?eqId=" + eqId;
+		}
 
 		EqDTO eqp = eqService.selectEqDetail(eqId);
 
@@ -39,6 +52,11 @@ public class EqMtAddController {
 	        return "redirect:/login";
 	    }
 
+	    if (loginUser.getEmpAuth() < 20) {
+	    	return "redirect:/equip/detail?eqId="
+	    			+ eqDTO.getElogEqid();
+	    }
+
 	    // 점검자는 로그인 사용자로 고정
 	    eqDTO.setElogWorker(loginUser.getEmpId());
 
@@ -48,7 +66,20 @@ public class EqMtAddController {
 	}
 	
 	@RequestMapping("/update")
-	public String updateMt(EqDTO eqDTO) {
+	public String updateMt(EqDTO eqDTO,
+	                       HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		if (loginUser.getEmpAuth() < 20) {
+			return "redirect:/equip/detail?eqId="
+					+ eqDTO.getElogEqid();
+		}
 
 	    eqService.updateEqLog(eqDTO);
 
@@ -57,7 +88,19 @@ public class EqMtAddController {
 	
 	@RequestMapping("/delete")
 	public String deleteMt(String elogId,
-	                       String eqId) {
+	                       String eqId,
+	                       HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		if (loginUser.getEmpAuth() < 20) {
+			return "redirect:/equip/detail?eqId=" + eqId;
+		}
 
 	    eqService.deleteEqLog(elogId);
 

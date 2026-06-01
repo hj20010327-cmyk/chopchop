@@ -2,12 +2,15 @@ package kr.or.chop.P16_equip.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P16_equip.dto.EqDTO;
 import kr.or.chop.P16_equip.service.EqService;
 import kr.or.chop.common.pagination.PageInfo;
@@ -25,7 +28,19 @@ public class EqListController {
 	        EqDTO eqDTO,
 	        @RequestParam(value = "page", defaultValue = "1")
 	        int currentPage,
-	        Model model) {
+	        Model model,
+	        HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		boolean isAdmin = false;
+
+		if (loginUser != null
+				&& loginUser.getEmpAuth() >= 20) {
+
+			isAdmin = true;
+		}
 
 	    int listCount = eqService.selectEqTotalCount(eqDTO);
 
@@ -48,6 +63,8 @@ public class EqListController {
 	    model.addAttribute("stopCount", eqService.selectEqCountByStatus(20));
 	    model.addAttribute("checkCount", eqService.selectEqCountByStatus(30));
 	    model.addAttribute("brokenCount", eqService.selectEqCountByStatus(40));
+
+	    model.addAttribute("isAdmin", isAdmin);
 
 	    return "P16_equipment/eqList.tiles";
 	}

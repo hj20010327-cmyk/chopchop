@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">설비 상세</h2>
-			<p class="page-subtitle">설비의 상세 정보와 점검 이력을 알 수 있습니다.</p>
+			<p class="page-subtitle"> ${eqp.eqName}(${eqp.eqId})의 상세 정보와 점검이력, 가동이력을 확인하세요.</p>
 		</div>
 
 		<div>
@@ -22,11 +22,13 @@
 		</div>
 
 		<div>
+			<c:if test="${isAdmin}">
 			<a class="btn btn-main"
 				href="${pageContext.request.contextPath}/equip/edit?eqId=${eqp.eqId}">
 				수정 </a> <a class="btn btn-red"
 				href="${pageContext.request.contextPath}/equip/delete?eqId=${eqp.eqId}"
 				onclick="return confirm('정말 삭제하시겠습니까?');"> 삭제 </a>
+			</c:if>
 		</div>
 	</div>
 
@@ -40,7 +42,7 @@
 				<div style="display: flex; align-items: center; gap: 14px;">
 					<div class="content-content-content-title"
 						style="margin-bottom: 0;">설비 상세정보</div>
-
+					<c:if test="${isAdmin}">
 					<c:choose>
 
 						<c:when test="${eqp.eqStatus eq 10}">
@@ -67,6 +69,7 @@
 						</c:when>
 
 					</c:choose>
+					</c:if>
 
 				</div>
 
@@ -88,7 +91,7 @@
 						</c:when>
 					</c:choose>
 
-					<c:if test="${eqp.eqStatus == 20}">
+					<c:if test="${isAdmin && eqp.eqStatus == 20}">
 						<form
 							action="${pageContext.request.contextPath}/equip/status/update"
 							method="post"
@@ -173,9 +176,11 @@
 				<div class="content-content-content-title" style="margin-bottom: 0;">
 					설비 점검이력</div>
 
+				<c:if test="${isAdmin}">
 				<a class="btn btn-main"
 					href="${pageContext.request.contextPath}/equip/mt/add?eqId=${eqp.eqId}">
 					점검이력 등록 </a>
+				</c:if>
 
 			</div>
 
@@ -483,15 +488,17 @@
       <div class="eqlog-header">
         <h2 class="modal-title">점검이력 상세</h2>
         
+        <c:if test="${isAdmin}">
 		<button type="button"
         class="btn btn-red"
         id="deleteEqLogBtn">
    		 삭제
 		</button>
+		</c:if>
 	  </div>
 
         <p class="modal-subTitle">
-            점검이력 상세 내용을 확인하고 수정할 수 있습니다.
+             ${eqp.eqName}(${eqp.eqId})의 점검이력 상세 정보를 확인하고 수정하세요.
         </p>
 
         <form action="${pageContext.request.contextPath}/equip/mt/update"
@@ -565,6 +572,7 @@
                     취소
                 </button>
 
+				<c:if test="${isAdmin}">
                 <button type="button"
                         class="btn btn-main"
                         id="editEqLogBtn">
@@ -577,6 +585,7 @@
                         style="display:none;">
                     저장
                 </button>
+                </c:if>
 
             </div>
 
@@ -608,7 +617,7 @@
         <h2 class="modal-title">가동이력 상세</h2>
 
         <p class="modal-subTitle">
-            가동이력 상세 내용을 확인하고 종료사유를 수정할 수 있습니다.
+            ${eqp.eqName}(${eqp.eqId})의 가동이력 상세 정보를 확인하고 종료사유를 수정하세요.
         </p>
 
         <form action="${pageContext.request.contextPath}/equip/run/update"
@@ -652,6 +661,7 @@
                     취소
                 </button>
 
+				<c:if test="${isAdmin}">
                 <button type="button"
                         class="btn btn-main"
                         id="editEqRunBtn">
@@ -664,6 +674,7 @@
                         style="display:none;">
                     저장
                 </button>
+                </c:if>
 
             </div>
 
@@ -839,6 +850,12 @@
 	    document.querySelector("#modalContent").readOnly =
 	        readonly;
 
+	    const editBtn =
+	        document.querySelector("#editEqLogBtn");
+
+	    const saveBtn =
+	        document.querySelector("#saveEqLogBtn");
+
 	    if (readonly) {
 
 	        // 종료일 text 보여주기
@@ -849,11 +866,13 @@
 	        document.querySelector("#modalEdate")
 	            .style.display = "none";
 
-	        document.querySelector("#editEqLogBtn")
-	            .style.display = "inline-block";
+	        if (editBtn != null) {
+	            editBtn.style.display = "inline-block";
+	        }
 
-	        document.querySelector("#saveEqLogBtn")
-	            .style.display = "none";
+	        if (saveBtn != null) {
+	            saveBtn.style.display = "none";
+	        }
 
 	    } else {
 
@@ -864,21 +883,28 @@
 	        document.querySelector("#modalEdate")
 	            .style.display = "block";
 
-	        document.querySelector("#editEqLogBtn")
-	            .style.display = "none";
+	        if (editBtn != null) {
+	            editBtn.style.display = "none";
+	        }
 
-	        document.querySelector("#saveEqLogBtn")
-	            .style.display = "inline-block";
-	        
+	        if (saveBtn != null) {
+	            saveBtn.style.display = "inline-block";
+	        }
+
 	        document.querySelector("#modalSdateText")
-	        	.type="datetime-local";
+	            .type = "datetime-local";
 	    }
 	}
 
-	document.querySelector("#editEqLogBtn")
-	    .addEventListener("click", function () {
+	const editEqLogBtn =
+	    document.querySelector("#editEqLogBtn");
+
+	if (editEqLogBtn != null) {
+
+	    editEqLogBtn.addEventListener("click", function () {
 	        setEqLogReadonly(false);
 	    });
+	}
 
 	document.querySelector("#closeEqLogModal")
 	    .addEventListener("click", function () {
@@ -913,15 +939,20 @@
 	        }
 	    });
 	
-	document.querySelector("#deleteEqLogBtn")
-    .addEventListener("click", function () {
+	const deleteEqLogBtn =
+	    document.querySelector("#deleteEqLogBtn");
 
-        if (!confirm("점검이력을 삭제하시겠습니까?")) {
-            return;
-        }
+	if (deleteEqLogBtn != null) {
 
-        document.querySelector("#deleteEqLogForm").submit();
-    });
+	    deleteEqLogBtn.addEventListener("click", function () {
+
+	        if (!confirm("점검이력을 삭제하시겠습니까?")) {
+	            return;
+	        }
+
+	        document.querySelector("#deleteEqLogForm").submit();
+	    });
+	}
 	
 	function openEqRunModal(row) {
 
@@ -950,25 +981,43 @@
 	    document.querySelector("#modalRunReason").readOnly =
 	        readonly;
 
+	    const editBtn =
+	        document.querySelector("#editEqRunBtn");
+
+	    const saveBtn =
+	        document.querySelector("#saveEqRunBtn");
+
 	    if (readonly) {
-	        document.querySelector("#editEqRunBtn").style.display =
-	            "inline-block";
 
-	        document.querySelector("#saveEqRunBtn").style.display =
-	            "none";
+	        if (editBtn != null) {
+	            editBtn.style.display = "inline-block";
+	        }
+
+	        if (saveBtn != null) {
+	            saveBtn.style.display = "none";
+	        }
+
 	    } else {
-	        document.querySelector("#editEqRunBtn").style.display =
-	            "none";
 
-	        document.querySelector("#saveEqRunBtn").style.display =
-	            "inline-block";
+	        if (editBtn != null) {
+	            editBtn.style.display = "none";
+	        }
+
+	        if (saveBtn != null) {
+	            saveBtn.style.display = "inline-block";
+	        }
 	    }
 	}
 
-	document.querySelector("#editEqRunBtn")
-	    .addEventListener("click", function () {
+	const editEqRunBtn =
+	    document.querySelector("#editEqRunBtn");
+
+	if (editEqRunBtn != null) {
+
+	    editEqRunBtn.addEventListener("click", function () {
 	        setEqRunReadonly(false);
 	    });
+	}
 
 	document.querySelector("#closeEqRunModal")
 	    .addEventListener("click", function () {

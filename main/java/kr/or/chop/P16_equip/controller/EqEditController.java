@@ -2,11 +2,14 @@ package kr.or.chop.P16_equip.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P15_workplace.dto.WPDTO;
 import kr.or.chop.P16_equip.dto.EqDTO;
 import kr.or.chop.P16_equip.service.EqService;
@@ -19,7 +22,20 @@ public class EqEditController {
     EqService eqService;
 
     @RequestMapping("/edit")
-    public String editForm(String eqId, Model model) {
+    public String editForm(String eqId,
+                           Model model,
+                           HttpSession session) {
+
+        EmpDTO loginUser =
+                (EmpDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        if (loginUser.getEmpAuth() < 20) {
+            return "redirect:/equip/detail?eqId=" + eqId;
+        }
 
         EqDTO eqp = eqService.selectEqDetail(eqId);
         List<WPDTO> wpList = eqService.selectWpList();
@@ -31,14 +47,23 @@ public class EqEditController {
     }
     
     @RequestMapping("/update")
-    public String updateEq(EqDTO eqDTO) {
+    public String updateEq(EqDTO eqDTO,
+                           HttpSession session) {
+
+        EmpDTO loginUser =
+                (EmpDTO) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        if (loginUser.getEmpAuth() < 20) {
+            return "redirect:/equip/detail?eqId=" + eqDTO.getEqId();
+        }
 
         eqService.updateEq(eqDTO);
 
         return "redirect:/equip/detail?eqId=" + eqDTO.getEqId();
     }
-    
-  
-    
     
 }

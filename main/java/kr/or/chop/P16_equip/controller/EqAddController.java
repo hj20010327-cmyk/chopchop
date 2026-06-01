@@ -3,12 +3,15 @@ package kr.or.chop.P16_equip.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P15_workplace.dto.WPDTO;
 import kr.or.chop.P16_equip.dto.EqDTO;
 import kr.or.chop.P16_equip.service.EqService;
@@ -21,7 +24,19 @@ public class EqAddController {
 	EqService eqService;
 
 	@RequestMapping("/add")
-	public String eqAddForm(Model model) {
+	public String eqAddForm(Model model,
+	                        HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		if (loginUser.getEmpAuth() < 20) {
+			return "redirect:/equip/list";
+		}
 
 	    List<WPDTO> wpList = eqService.selectWpList();
 
@@ -31,7 +46,19 @@ public class EqAddController {
 	}
 
 	@RequestMapping("/insert")
-	public String insertEq(EqDTO eqDTO) {
+	public String insertEq(EqDTO eqDTO,
+	                       HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		if (loginUser == null) {
+			return "redirect:/login";
+		}
+
+		if (loginUser.getEmpAuth() < 20) {
+			return "redirect:/equip/list";
+		}
 
 		eqService.insertEq(eqDTO);
 

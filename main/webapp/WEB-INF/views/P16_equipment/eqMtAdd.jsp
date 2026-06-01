@@ -6,7 +6,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">설비 점검이력 등록</h2>
-			<p class="page-subtitle">새로운 설비 점검이력을 등록해주세요.</p>
+			<p class="page-subtitle"> ${eqp.eqName}(${eqp.eqId})의 새로운 점검이력을 등록하세요</p>
 		</div>
 
 		<div>

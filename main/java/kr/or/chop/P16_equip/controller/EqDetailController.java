@@ -2,12 +2,15 @@ package kr.or.chop.P16_equip.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.chop.P01_login.dto.EmpDTO;
 import kr.or.chop.P16_equip.dto.EqDTO;
 import kr.or.chop.P16_equip.service.EqService;
 import kr.or.chop.common.pagination.PageInfo;
@@ -27,7 +30,19 @@ public class EqDetailController {
 	        int mtCurrentPage,
 	        @RequestParam(value = "runPage", defaultValue = "1")
 	        int runCurrentPage,
-	        Model model) {
+	        Model model,
+	        HttpSession session) {
+
+		EmpDTO loginUser =
+				(EmpDTO) session.getAttribute("loginUser");
+
+		boolean isAdmin = false;
+
+		if (loginUser != null
+				&& loginUser.getEmpAuth() >= 20) {
+
+			isAdmin = true;
+		}
 
 	    EqDTO eq = eqService.selectEqDetail(eqId);
 
@@ -46,7 +61,7 @@ public class EqDetailController {
 	            5,
 	            5
 	    );
-	    
+
 	    List<EqDTO> eqLogList =
 	            eqService.selectEqLogList(eqId, mtPage);
 
@@ -60,11 +75,23 @@ public class EqDetailController {
 	    model.addAttribute("mtPage", mtPage);
 	    model.addAttribute("runPage", runPage);
 
+	    model.addAttribute("isAdmin", isAdmin);
+
 	    return "P16_equipment/eqDetail.tiles";
 	}
 	
 	@RequestMapping("/run")
-	public String runEq(String eqId) {
+	public String runEq(String eqId,
+	                    HttpSession session) {
+
+	    EmpDTO loginUser =
+	            (EmpDTO) session.getAttribute("loginUser");
+
+	    if (loginUser == null
+	            || loginUser.getEmpAuth() < 20) {
+
+	        return "redirect:/equip/detail?eqId=" + eqId;
+	    }
 
 	    EqDTO eqDTO = new EqDTO();
 	    eqDTO.setEqId(eqId);
@@ -78,42 +105,87 @@ public class EqDetailController {
 	}
 	
 	@RequestMapping("/run/update")
-	public String updateRunReason(EqDTO eqDTO) {
+	public String updateRunReason(EqDTO eqDTO,
+	                              HttpSession session) {
+
+	    EmpDTO loginUser =
+	            (EmpDTO) session.getAttribute("loginUser");
+
+	    if (loginUser == null
+	            || loginUser.getEmpAuth() < 20) {
+
+	        return "redirect:/equip/detail?eqId="
+	                + eqDTO.getEqRunEqid();
+	    }
 
 	    eqService.updateEqRunReason(eqDTO);
 
-	    return "redirect:/equip/detail?eqId=" + eqDTO.getEqRunEqid();
+	    return "redirect:/equip/detail?eqId="
+	            + eqDTO.getEqRunEqid();
 	}
 
-    @RequestMapping("/stop")
-    public String stopEq(EqDTO eqDTO) {
+	@RequestMapping("/stop")
+	public String stopEq(EqDTO eqDTO,
+	                     HttpSession session) {
 
-        
-        eqDTO.setEqStatus(20); // 정지
+	    EmpDTO loginUser =
+	            (EmpDTO) session.getAttribute("loginUser");
 
-        // 설비 상태 변경
-        eqService.updateEqStatus(eqDTO);
+	    if (loginUser == null
+	            || loginUser.getEmpAuth() < 20) {
 
-        // 가동이력 종료 처리
-        eqService.updateEqRunLogStop(eqDTO);
+	        return "redirect:/equip/detail?eqId="
+	                + eqDTO.getEqId();
+	    }
 
-        return "redirect:/equip/detail?eqId=" + eqDTO.getEqId();
-    }
+	    eqDTO.setEqStatus(20); // 정지
+
+	    // 설비 상태 변경
+	    eqService.updateEqStatus(eqDTO);
+
+	    // 가동이력 종료 처리
+	    eqService.updateEqRunLogStop(eqDTO);
+
+	    return "redirect:/equip/detail?eqId="
+	            + eqDTO.getEqId();
+	}
     
-    @RequestMapping("/status/update")
-    public String updateStatus(EqDTO eqDTO) {
+	@RequestMapping("/status/update")
+	public String updateStatus(EqDTO eqDTO,
+	                           HttpSession session) {
 
-        eqService.updateEqStatus(eqDTO);
+	    EmpDTO loginUser =
+	            (EmpDTO) session.getAttribute("loginUser");
 
-        return "redirect:/equip/detail?eqId=" + eqDTO.getEqId();
-    }
+	    if (loginUser == null
+	            || loginUser.getEmpAuth() < 20) {
+
+	        return "redirect:/equip/detail?eqId="
+	                + eqDTO.getEqId();
+	    }
+
+	    eqService.updateEqStatus(eqDTO);
+
+	    return "redirect:/equip/detail?eqId="
+	            + eqDTO.getEqId();
+	}
     
-    @RequestMapping("/delete")
-    public String deleteEq(String eqId) {
+	@RequestMapping("/delete")
+	public String deleteEq(String eqId,
+	                       HttpSession session) {
 
-    	eqService.deleteEq(eqId);
+	    EmpDTO loginUser =
+	            (EmpDTO) session.getAttribute("loginUser");
 
-    	return "redirect:/equip/list";
-    }
+	    if (loginUser == null
+	            || loginUser.getEmpAuth() < 20) {
+
+	        return "redirect:/equip/detail?eqId=" + eqId;
+	    }
+
+	    eqService.deleteEq(eqId);
+
+	    return "redirect:/equip/list";
+	}
 	
 }

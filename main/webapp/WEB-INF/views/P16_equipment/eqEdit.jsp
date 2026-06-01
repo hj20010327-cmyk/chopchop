@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">설비 수정</h2>
-			<p class="page-subtitle">설비 정보를 수정해주세요.</p>
+			<p class="page-subtitle"> ${eqp.eqName}(${eqp.eqId})의 정보를 수정하세요.</p>
 		</div>
 
 		<div>
