@@ -73,7 +73,7 @@
 				</div>
 			</div>
 			
-			<div style="display: flex; align-items: flex-start; gap: 15px;">
+			<div class="graph" style="display: flex; align-items: flex-start; gap: 15px;">
 				<div class="card" style="width: 50%; padding: 20px;">
 					<div class="content-content-content-title">창고 영역도</div>
 				
@@ -296,6 +296,24 @@
 		color: #999;
 		font-size: 14px;
 	}
+	
+		
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.graph {
+		flex-direction : column;
+		align-items: center !important;
+	}
+	
+	.graph .card {
+		width: 90% !important;
+	}
+	
+}
 	
 </style>
 

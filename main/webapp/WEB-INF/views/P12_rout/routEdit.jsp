@@ -416,6 +416,43 @@
         justify-content: flex-end;
         gap: 8px;
     }
+    
+    
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	.rout-form-row {
+		width: 100% !important;
+	}
+	
+	.rout-item-select {
+		width: 300px !important;
+	}
+	
+	.rout-name-item, .rout-content-item {
+		width: 620px !important;
+	}
+	
+	.table tr th:nth-child(1), .table tr td:nth-child(1),
+	.table tr th:nth-child(2), .table tr td:nth-child(2),
+	.table tr th:last-child, .table tr td:last-child {
+		width: 65px !important;
+	}
+	
+	.table tr th:nth-child(3), .table tr td:nth-child(3) {
+		width: 145px !important;
+	}
+	
+	.table tr th:nth-child(3), .table tr td:nth-child(3) {
+		width: 145px !important;
+	}
+	
+	.table tr th:nth-child(4), .table tr td:nth-child(4) {
+		width: 100px !important;
+	}
+}
 </style>
 
 <script>

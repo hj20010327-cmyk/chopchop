@@ -251,6 +251,22 @@
 	.card:hover div, .card.active div {
 		color : white !important;
 	}
+	
+	
+	
+	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	.table tr th:nth-child(4), .table tr td:nth-child(4) {
+		width: 120px;
+	}
+}
+	
+	
+	
 </style>
 
 <script>

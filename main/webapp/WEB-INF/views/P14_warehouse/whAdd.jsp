@@ -286,6 +286,34 @@
 		text-decoration: underline;
 		text-underline-offset: 3px;
 	}
+	
+	
+	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.section-layout {
+		flex-direction : column;
+		align-items: center;
+	}
+	
+	.map-card {
+		width: 90%;
+		height: auto;
+	}
+	
+	.empty-map {
+		margin: 50px auto !important;
+	}
+	
+}
+	
+	
+	
+	
 </style>
 
 

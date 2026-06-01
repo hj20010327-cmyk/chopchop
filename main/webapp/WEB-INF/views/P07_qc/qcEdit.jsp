@@ -186,7 +186,7 @@
 
         </div>
 
-        <div class="search-item"
+        <div class="search-item textarea"
             style="display:flex; flex-direction:column;">
 
             <label>
@@ -283,6 +283,30 @@ input[readonly] {
 .search-item textarea {
     width: 90%;
 }
+
+
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	form div {
+		gap: 12px !important;
+	}
+	
+	.search-item, .search-item input {
+		min-width: 0px !important;
+		max-width: 260px !important;
+	}
+	
+	.textarea {
+		min-width: 500px !important;
+		max-width: 700px !important;
+	}
+}
+
+
+
 </style>
 
 <script>

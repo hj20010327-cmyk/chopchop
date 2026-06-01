@@ -186,6 +186,18 @@
 	    text-decoration: underline;
 	}
 	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.table tr th:nth-child(2), .table tr td:nth-child(2) {
+		display: none;
+	}
+	
+}
+	
 </style>
 
 <script>

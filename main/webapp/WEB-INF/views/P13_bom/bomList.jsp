@@ -135,6 +135,29 @@
         color: var(--main-green);
         text-decoration: underline;
     }
+    
+        
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.table tr th, .table tr td {
+		width: 100px;
+	}
+	
+	.table tr th:nth-child(3), .table tr td:nth-child(3),
+	.table tr th:nth-child(4), .table tr td:nth-child(4) {
+		display: none;
+	}
+	
+	.table tr th:last-child, .table tr td:last-child {
+		width: 300px;
+	}
+	
+}
+    
 </style>
 
 <script>

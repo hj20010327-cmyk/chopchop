@@ -196,6 +196,27 @@
     .bom-detail-row {
         cursor: pointer;
     }
+    
+        
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+
+	.table tr th:nth-child(2), .table tr td:nth-child(2),
+	.table tr th:nth-child(3), .table tr td:nth-child(3),
+	.table tr th:nth-child(5), .table tr td:nth-child(5),
+	.table tr th:last-child, .table tr td:last-child {
+		width: 100px !important;
+	}
+	
+	.table tr th:first-child, .table tr td:first-child {
+		width: 150px;
+	}
+	
+}
+
 </style>
 
 <script>

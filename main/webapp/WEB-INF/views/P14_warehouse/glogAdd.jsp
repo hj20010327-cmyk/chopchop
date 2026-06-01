@@ -205,6 +205,20 @@
 		height: 15px;
 	}
 	
+	
+		
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	#ghpStandard {
+		min-width: 400px !important;
+	}
+	
+}
+	
 </style>
 
 <script>

@@ -165,7 +165,7 @@
 						<td>
 							<fmt:formatDate value="${workDTO.workCdate}" pattern="yyyy-MM-dd HH:mm"/>
 						</td>
-						<th>최종 수정일시</th>
+						<th>최종수정일시</th>
 						<td>
 							<fmt:formatDate value="${workDTO.workMdate}" pattern="yyyy-MM-dd HH:mm"/>
 						</td>

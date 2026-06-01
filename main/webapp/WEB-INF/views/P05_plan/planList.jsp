@@ -28,7 +28,7 @@
 	        <div class="card-value">
 	        	<fmt:formatNumber value="${planCard.totalCnt}" type="number" pattern="#,###" />
         	</div>
-        	<div class="card-subtitle">조회 기간 내 전체 계획</div>
+        	<div class="card-subtitle">조회 기간 내<br>전체 계획</div>
 	    </div>
 	
 	    <div class="card safe plan-card"
@@ -194,7 +194,7 @@
 								<td>
 									<fmt:formatDate value="${plan.planCdate}" pattern="yyyy-MM-dd HH:mm"/>
 								</td>
-								<td class="whId">${wh.whId}</td>
+<%-- 								<td class="whId">${wh.whId}</td> --%>
 							</tr>	
 						</c:forEach>
 						
@@ -269,9 +269,18 @@
 
 @media screen and (max-width: 768px) {
 	
-	.card-wrap {
-		flex-wrap: wrap;
-	}
+/* 	.card-wrap { */
+/* 		flex-wrap: wrap; */
+/* 	} */
+	
+/* 	.card { */
+/* 		margin: 0 15px; */
+/* 	} */
+
+	.table tr th:last-child,
+    .table tr td:last-child {
+        display: none !important;
+    }
 	
 }
 	

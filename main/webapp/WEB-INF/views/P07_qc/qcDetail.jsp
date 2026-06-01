@@ -511,6 +511,22 @@
     font-size: 13px;
 }
 
+
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	.qc-defect-wrap {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+
+
+
+
 </style>
 
 <script>

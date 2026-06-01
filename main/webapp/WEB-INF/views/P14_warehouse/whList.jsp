@@ -246,6 +246,20 @@
 		color : white !important;
 	}
 	
+	
+	    
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.table tr th:nth-child(3), .table tr td:nth-child(3) {
+		display: none;
+	}
+	
+}
+	
 </style>
 
 <script>

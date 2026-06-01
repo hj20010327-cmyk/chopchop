@@ -339,6 +339,12 @@
 
 
 <style>
+
+	.content-content-content-title {
+		margin-top: 20px;
+	}
+	
+
     .rout-title-row {
         display: flex;
         justify-content: space-between;
@@ -513,6 +519,29 @@
 	.proc-detail-open:hover .proc-name-cell .muted-text {
 		color: var(--main-green);
 	}
+	
+	
+	
+	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.table tr th:nth-child(2), .table tr td:nth-child(2) {
+		width: 160px !important;
+	}
+	
+	.table tr th:nth-child(4), .table tr td:nth-child(4) {
+		width: 100px !important;
+	}
+	
+	.table tr th:last-child, .table tr td:last-child {
+		width: 145px !important;
+	}
+	
+}
 	
 </style>
 

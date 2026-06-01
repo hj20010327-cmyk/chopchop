@@ -280,4 +280,16 @@
 	    color: var(--main-green);
 	    text-decoration: underline;
 	}
+	
+	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	.table tr th:last-child, .table tr td:last-child {
+		display: none;
+	}
+}
+
 </style>

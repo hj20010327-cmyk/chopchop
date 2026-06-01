@@ -65,7 +65,7 @@
 						<tr>
 							<th>적재량</th>
 							<td>${whDTO.whPrevQty} LOT</td>
-							<th>마지막 점검일</th>
+							<th>마지막 점검</th>
 							<c:if test="${not empty whDTO.lastGlogDate}">
 								<td>${whDTO.lastGlogDate}</td>
 							</c:if>
@@ -91,7 +91,7 @@
 				</div>
 			</div>
 			
-			<div style="display: flex; align-items: flex-start; gap: 15px;">
+			<div class="section" style="display: flex; align-items: flex-start; gap: 15px;">
 				<div class="map-card">
 					<h3>창고 영역도</h3>
 				
@@ -180,7 +180,7 @@
 			</div>
 			
 			<div class="table-wrap">
-				<table class="table">
+				<table class="table glog">
 					<thead>
 						<tr>
 							<th style="width: 140px">점검 이력 번호</th>
@@ -332,6 +332,24 @@
 		color: #999;
 		font-size: 14px;
 	}
+	
+	    
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.section {
+		flex-direction : column;
+	}
+	
+	.glog tr th:nth-child(2), .glog tr td:nth-child(2) {
+		display: none;
+	}
+	
+}
+
 </style>
 
 <script>

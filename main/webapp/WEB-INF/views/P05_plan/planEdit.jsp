@@ -59,7 +59,7 @@
 			</div>
 		</div>
 		
-		<div class="grid-wrap">
+		<div class="grid-wrap date">
 			<div class="grid search-item" style="min-width: 400px;">
 				<label>계획 시작일 <span class="red">*</span></label>
 				<input type="date" name="planSdate" id="planSdate" placeholder="계획 시작 일자" value="${planDTO.planSdate}" onchange="limitDate()" required>
@@ -91,7 +91,20 @@
 		min-width: 15px;
 		height: 15px;
 	}
+
+
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	.date .search-item, .date input {
+		min-width: 300px !important;
+		width: 300px;
+	}
+}
 </style>
+
 
 
 
