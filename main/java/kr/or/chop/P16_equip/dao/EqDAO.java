@@ -49,6 +49,10 @@ public interface EqDAO {
 	
 	void updateEqLog(EqDTO eqDTO);
 	
+	void deleteEqLog(String elogId);
+	
+	void updateEqRunReason(EqDTO eqDTO);
+	
 	
 
 }

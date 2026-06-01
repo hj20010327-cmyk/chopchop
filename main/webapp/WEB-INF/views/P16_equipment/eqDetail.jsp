@@ -305,6 +305,7 @@
 
 					<thead>
 						<tr>
+							<th>가동 번호</th>
 							<th>가동 시작일</th>
 							<th>가동 종료일</th>
 							<th>가동 종료 사유</th>
@@ -313,7 +314,20 @@
 
 					<tbody>
 						<c:forEach var="run" items="${eqRunList}">
-							<tr>
+							<tr
+							onclick="openEqRunModal(this)"
+						    data-run-no="${run.eqRunNo}"
+						    data-eq-id="${run.eqRunEqid}"
+						    data-stime="<fmt:formatDate value='${run.eqRunStime}' pattern='yyyy-MM-dd HH:mm' />"
+						    data-etime="<fmt:formatDate value='${run.eqRunEtime}' pattern='yyyy-MM-dd HH:mm' />"
+						    data-reason="${run.eqStopReason}"
+							>
+								<td>
+									<a class="detail-link"
+									   href="javascript:void(0);">
+										${run.eqRunNo}   
+									</a>
+								</td>
 								<td><fmt:formatDate value="${run.eqRunStime}"
 										pattern="yyyy-MM-dd HH:mm" /></td>
 
@@ -340,7 +354,7 @@
 
 						<c:if test="${empty eqRunList}">
 							<tr>
-								<td colspan="3" style="text-align: center;">조회된 가동이력이 없습니다.
+								<td colspan="4" style="text-align: center;">조회된 가동이력이 없습니다.
 								</td>
 							</tr>
 						</c:if>
@@ -466,8 +480,15 @@
 <div id="eqLogOverlay" class="overlay">
 
     <div class="modal" style="width: 620px;">
-
+      <div class="eqlog-header">
         <h2 class="modal-title">점검이력 상세</h2>
+        
+		<button type="button"
+        class="btn btn-red"
+        id="deleteEqLogBtn">
+   		 삭제
+		</button>
+	  </div>
 
         <p class="modal-subTitle">
             점검이력 상세 내용을 확인하고 수정할 수 있습니다.
@@ -562,6 +583,93 @@
         </form>
 
     </div>
+    
+    <form id="deleteEqLogForm"
+      action="${pageContext.request.contextPath}/equip/mt/delete"
+      method="post">
+
+    <input type="hidden"
+           name="elogId"
+           id="deleteElogId">
+
+    <input type="hidden"
+           name="eqId"
+           id="deleteEqId">
+
+</form>
+
+</div>
+
+<!-- 가동이력 모달 -->
+<div id="eqRunOverlay" class="overlay">
+
+    <div class="modal" style="width: 620px;">
+
+        <h2 class="modal-title">가동이력 상세</h2>
+
+        <p class="modal-subTitle">
+            가동이력 상세 내용을 확인하고 종료사유를 수정할 수 있습니다.
+        </p>
+
+        <form action="${pageContext.request.contextPath}/equip/run/update"
+              method="post"
+              id="eqRunForm">
+
+            <input type="hidden" name="eqRunNo" id="modalRunNo">
+            <input type="hidden" name="eqRunEqid" id="modalRunEqid">
+
+            <div class="grid-form">
+
+                <div class="grid-wrap">
+                    <div class="search-item">
+                        <label>가동 시작일</label>
+                        <input type="text" id="modalRunStime" readonly>
+                    </div>
+
+                    <div class="search-item">
+                        <label>가동 종료일</label>
+                        <input type="text" id="modalRunEtime" readonly>
+                    </div>
+                </div>
+
+                <div class="grid-wrap">
+                    <div class="search-item" style="width:100%;">
+                        <label>가동 종료 사유</label>
+                        <textarea name="eqStopReason"
+                                  id="modalRunReason"
+                                  readonly
+                                  style="height:160px;"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:10px; margin-top:25px;">
+
+                <button type="button"
+                        class="btn btn-white"
+                        id="closeEqRunModal">
+                    취소
+                </button>
+
+                <button type="button"
+                        class="btn btn-main"
+                        id="editEqRunBtn">
+                    수정
+                </button>
+
+                <button type="submit"
+                        class="btn btn-main"
+                        id="saveEqRunBtn"
+                        style="display:none;">
+                    저장
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
@@ -574,6 +682,16 @@
 
 .search-item input {
     min-width: 235px;
+}
+
+.eqlog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.eqlog-header .modal-title {
+    margin-bottom: 0;
 }
 </style>
 
@@ -676,6 +794,12 @@
 	        row.dataset.elogId;
 
 	    document.querySelector("#modalElogEqid").value =
+	        row.dataset.eqId;
+	    
+	    document.querySelector("#deleteElogId").value =
+	        row.dataset.elogId;
+
+	    document.querySelector("#deleteEqId").value =
 	        row.dataset.eqId;
 
 	    document.querySelector("#modalWorker").value =
@@ -787,5 +911,67 @@
 	            e.preventDefault();
 	            return;
 	        }
+	    });
+	
+	document.querySelector("#deleteEqLogBtn")
+    .addEventListener("click", function () {
+
+        if (!confirm("점검이력을 삭제하시겠습니까?")) {
+            return;
+        }
+
+        document.querySelector("#deleteEqLogForm").submit();
+    });
+	
+	function openEqRunModal(row) {
+
+	    document.querySelector("#modalRunNo").value =
+	        row.dataset.runNo;
+
+	    document.querySelector("#modalRunEqid").value =
+	        row.dataset.eqId;
+
+	    document.querySelector("#modalRunStime").value =
+	        row.dataset.stime;
+
+	    document.querySelector("#modalRunEtime").value =
+	        row.dataset.etime;
+
+	    document.querySelector("#modalRunReason").value =
+	        row.dataset.reason;
+
+	    setEqRunReadonly(true);
+
+	    openModal(document.querySelector("#eqRunOverlay"));
+	}
+
+	function setEqRunReadonly(readonly) {
+
+	    document.querySelector("#modalRunReason").readOnly =
+	        readonly;
+
+	    if (readonly) {
+	        document.querySelector("#editEqRunBtn").style.display =
+	            "inline-block";
+
+	        document.querySelector("#saveEqRunBtn").style.display =
+	            "none";
+	    } else {
+	        document.querySelector("#editEqRunBtn").style.display =
+	            "none";
+
+	        document.querySelector("#saveEqRunBtn").style.display =
+	            "inline-block";
+	    }
+	}
+
+	document.querySelector("#editEqRunBtn")
+	    .addEventListener("click", function () {
+	        setEqRunReadonly(false);
+	    });
+
+	document.querySelector("#closeEqRunModal")
+	    .addEventListener("click", function () {
+	        closeModal(document.querySelector("#eqRunOverlay"));
 	    });
 </script>

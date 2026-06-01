@@ -24,7 +24,7 @@ public class EqServiceImpl implements EqService {
 
 	@Override
 	public int selectEqTotalCount(EqDTO eqDTO) {
-	    return eqDAO.selectEqTotalCount(eqDTO);
+		return eqDAO.selectEqTotalCount(eqDTO);
 	}
 
 	@Override
@@ -39,22 +39,22 @@ public class EqServiceImpl implements EqService {
 
 	@Override
 	public int selectEqLogCount(String eqId) {
-	    return eqDAO.selectEqLogCount(eqId);
+		return eqDAO.selectEqLogCount(eqId);
 	}
 
 	@Override
 	public int selectEqRunCount(String eqId) {
-	    return eqDAO.selectEqRunCount(eqId);
+		return eqDAO.selectEqRunCount(eqId);
 	}
 
 	@Override
 	public List<EqDTO> selectEqLogList(String eqId, PageInfo pageInfo) {
-	    return eqDAO.selectEqLogList(eqId, pageInfo);
+		return eqDAO.selectEqLogList(eqId, pageInfo);
 	}
 
 	@Override
 	public List<EqDTO> selectEqRunList(String eqId, PageInfo pageInfo) {
-	    return eqDAO.selectEqRunList(eqId, pageInfo);
+		return eqDAO.selectEqRunList(eqId, pageInfo);
 	}
 
 	@Override
@@ -101,20 +101,29 @@ public class EqServiceImpl implements EqService {
 	public void deleteEq(String eqId) {
 		eqDAO.deleteEq(eqId);
 	}
-	
+
 	@Override
 	public void insertEqRunLog(String eqId) {
-	    eqDAO.insertEqRunLog(eqId);
+		eqDAO.insertEqRunLog(eqId);
 	}
 
 	@Override
 	public void updateEqRunLogStop(EqDTO eqDTO) {
-	    eqDAO.updateEqRunLogStop(eqDTO);
+		eqDAO.updateEqRunLogStop(eqDTO);
 	}
-	
+
 	@Override
 	public void updateEqLog(EqDTO eqDTO) {
-	    eqDAO.updateEqLog(eqDTO);
+		eqDAO.updateEqLog(eqDTO);
+	}
+
+	@Override
+	public void deleteEqLog(String elogId) {
+		eqDAO.deleteEqLog(elogId);
+	}
+	
+	public void updateEqRunReason(EqDTO eqDTO) {
+	    eqDAO.updateEqRunReason(eqDTO);
 	}
 
 }

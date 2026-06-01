@@ -48,5 +48,9 @@ public interface EqService {
 	void updateEqRunLogStop(EqDTO eqDTO);
 	
 	void updateEqLog(EqDTO eqDTO);
+	
+	void deleteEqLog(String elogId);
+	
+	void updateEqRunReason(EqDTO eqDto);
 }
 

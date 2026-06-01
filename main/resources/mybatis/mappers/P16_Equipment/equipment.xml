@@ -330,8 +330,9 @@
 	
 	<select id="selectEqLogCount" parameterType="string" resultType="int">
 		SELECT count(*)
-		FROM eq_run_log
-		WHERE eq_run_eqId = #{eqId}
+		FROM eq_log
+		WHERE ELOG_EQID = #{eqId}
+		AND ELOG_USAGE = 'Y'
 	</select>
 
 	<!-- 설비 점검 이력 조회용 -->
@@ -624,6 +625,26 @@
         ELOG_CONTENT = #{elogContent}
     WHERE ELOG_ID = #{elogId}
       AND ELOG_USAGE = 'Y'
+
+	</update>
+	
+	
+<!-- 	점검이력 삭제 -->
+	<update id="deleteEqLog" parameterType="string">
+
+    UPDATE EQ_LOG
+    SET ELOG_USAGE = 'N'
+    WHERE ELOG_ID = #{elogId}
+
+	</update>
+	
+<!-- 	가동이력 수정 -->
+	<update id="updateEqRunReason"
+        parameterType="eqDTO">
+
+    UPDATE EQ_RUN_LOG
+    SET EQ_STOP_REASON = #{eqStopReason}
+    WHERE EQ_RUN_NO = #{eqRunNo}
 
 	</update>
 

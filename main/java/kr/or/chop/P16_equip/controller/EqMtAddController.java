@@ -54,4 +54,13 @@ public class EqMtAddController {
 
 	    return "redirect:/equip/detail?eqId=" + eqDTO.getElogEqid();
 	}
+	
+	@RequestMapping("/delete")
+	public String deleteMt(String elogId,
+	                       String eqId) {
+
+	    eqService.deleteEqLog(elogId);
+
+	    return "redirect:/equip/detail?eqId=" + eqId;
+	}
 }

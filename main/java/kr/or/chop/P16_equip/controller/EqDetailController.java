@@ -46,7 +46,7 @@ public class EqDetailController {
 	            5,
 	            5
 	    );
-
+	    
 	    List<EqDTO> eqLogList =
 	            eqService.selectEqLogList(eqId, mtPage);
 
@@ -75,6 +75,14 @@ public class EqDetailController {
 	    eqService.insertEqRunLog(eqId);
 
 	    return "redirect:/equip/detail?eqId=" + eqId;
+	}
+	
+	@RequestMapping("/run/update")
+	public String updateRunReason(EqDTO eqDTO) {
+
+	    eqService.updateEqRunReason(eqDTO);
+
+	    return "redirect:/equip/detail?eqId=" + eqDTO.getEqRunEqid();
 	}
 
     @RequestMapping("/stop")

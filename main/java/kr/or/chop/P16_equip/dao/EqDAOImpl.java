@@ -34,17 +34,14 @@ public class EqDAOImpl implements EqDAO {
 	@Override
 	public int selectEqTotalCount(EqDTO eqDTO) {
 
-	    Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
 
-	    paramMap.put("eqWpid", eqDTO.getEqWpid());
-	    paramMap.put("eqStatus", eqDTO.getEqStatus());
-	    paramMap.put("eqStatusList", eqDTO.getEqStatusList());
-	    paramMap.put("searchKeyword", eqDTO.getSearchKeyword());
+		paramMap.put("eqWpid", eqDTO.getEqWpid());
+		paramMap.put("eqStatus", eqDTO.getEqStatus());
+		paramMap.put("eqStatusList", eqDTO.getEqStatusList());
+		paramMap.put("searchKeyword", eqDTO.getSearchKeyword());
 
-	    return sqlSession.selectOne(
-	            "mapper.P16_equipment.selectEqTotalCount",
-	            paramMap
-	    );
+		return sqlSession.selectOne("mapper.P16_equipment.selectEqTotalCount", paramMap);
 	}
 
 	@Override
@@ -59,48 +56,34 @@ public class EqDAOImpl implements EqDAO {
 
 	@Override
 	public int selectEqLogCount(String eqId) {
-	    return sqlSession.selectOne(
-	            "mapper.P16_equipment.selectEqLogCount",
-	            eqId
-	    );
+		return sqlSession.selectOne("mapper.P16_equipment.selectEqLogCount", eqId);
 	}
 
 	@Override
 	public int selectEqRunCount(String eqId) {
-	    return sqlSession.selectOne(
-	            "mapper.P16_equipment.selectEqRunCount",
-	            eqId
-	    );
+		return sqlSession.selectOne("mapper.P16_equipment.selectEqRunCount", eqId);
 	}
 
 	@Override
 	public List<EqDTO> selectEqLogList(String eqId, PageInfo pageInfo) {
 
-	    Map<String, Object> paramMap =
-	            new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
 
-	    paramMap.put("eqId", eqId);
-	    paramMap.put("page", pageInfo);
+		paramMap.put("eqId", eqId);
+		paramMap.put("page", pageInfo);
 
-	    return sqlSession.selectList(
-	            "mapper.P16_equipment.selectEqLogList",
-	            paramMap
-	    );
+		return sqlSession.selectList("mapper.P16_equipment.selectEqLogList", paramMap);
 	}
 
 	@Override
 	public List<EqDTO> selectEqRunList(String eqId, PageInfo pageInfo) {
 
-	    Map<String, Object> paramMap =
-	            new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
 
-	    paramMap.put("eqId", eqId);
-	    paramMap.put("page", pageInfo);
+		paramMap.put("eqId", eqId);
+		paramMap.put("page", pageInfo);
 
-	    return sqlSession.selectList(
-	            "mapper.P16_equipment.selectEqRunList",
-	            paramMap
-	    );
+		return sqlSession.selectList("mapper.P16_equipment.selectEqRunList", paramMap);
 	}
 
 	@Override
@@ -148,20 +131,30 @@ public class EqDAOImpl implements EqDAO {
 	public void deleteEq(String eqId) {
 		sqlSession.update("mapper.P16_equipment.deleteEq", eqId);
 	}
-	
+
 	@Override
 	public void insertEqRunLog(String eqId) {
-	    sqlSession.insert("mapper.P16_equipment.insertEqRunLog", eqId);
+		sqlSession.insert("mapper.P16_equipment.insertEqRunLog", eqId);
 	}
 
 	@Override
 	public void updateEqRunLogStop(EqDTO eqDTO) {
-	    sqlSession.update("mapper.P16_equipment.updateEqRunLogStop", eqDTO);
+		sqlSession.update("mapper.P16_equipment.updateEqRunLogStop", eqDTO);
 	}
-	
+
 	@Override
 	public void updateEqLog(EqDTO eqDTO) {
-	    sqlSession.update("mapper.P16_equipment.updateEqLog", eqDTO);
+		sqlSession.update("mapper.P16_equipment.updateEqLog", eqDTO);
+	}
+
+	@Override
+	public void deleteEqLog(String elogId) {
+		sqlSession.update("mapper.P16_equipment.deleteEqLog", elogId);
+	}
+
+	@Override
+	public void updateEqRunReason(EqDTO eqDTO) {
+		sqlSession.update("mapper.P16_equipment.updateEqRunReason", eqDTO);
 	}
 
 }
