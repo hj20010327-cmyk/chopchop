@@ -29,6 +29,10 @@
 				<tiles:insertAttribute name="content" />
 			</main>
 		</div>
+		
+		<button type="button" id="topBtn" class="btn-top" aria-label="맨 위로 이동">
+		    ↑
+		</button>
 	</div>
 
 	<script src="${pageContext.request.contextPath}/resources/js/common.js"></script>

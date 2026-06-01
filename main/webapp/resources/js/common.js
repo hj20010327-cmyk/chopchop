@@ -233,34 +233,75 @@ function closeModal(overlay) {
 }
 
 /* ==============================
-   페이지 스크롤 위치 저장
+   페이지네이션 전용 스크롤 위치 저장
 ============================== */
 
-window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem(
-        'scrollPosition',
-        window.scrollY
-    );
+document.addEventListener("DOMContentLoaded", function () {
+
+    const pagingLinks = document.querySelectorAll(".pagination a[href]");
+
+    pagingLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+            sessionStorage.setItem("pagingScrollRestore", "Y");
+            sessionStorage.setItem("pagingScrollPath", window.location.pathname);
+            sessionStorage.setItem("pagingScrollPosition", String(window.scrollY));
+        });
+    });
 });
 
 /* ==============================
-   페이지 로드 후 스크롤 복원
+   페이지네이션 이동 후 스크롤 복원
 ============================== */
 
-window.addEventListener('load', () => {
+window.addEventListener("load", function () {
 
-    const scrollPosition =
-        sessionStorage.getItem('scrollPosition');
+    const restoreYn = sessionStorage.getItem("pagingScrollRestore");
+    const savedPath = sessionStorage.getItem("pagingScrollPath");
+    const savedPosition = sessionStorage.getItem("pagingScrollPosition");
 
-    if (scrollPosition !== null) {
-
+    if (
+        restoreYn === "Y" &&
+        savedPath === window.location.pathname &&
+        savedPosition !== null
+    ) {
         window.scrollTo({
-            top: parseInt(scrollPosition),
-            behavior: 'instant'
+            top: parseInt(savedPosition, 10),
+            behavior: "auto"
         });
-
-        sessionStorage.removeItem('scrollPosition');
     }
+
+    sessionStorage.removeItem("pagingScrollRestore");
+    sessionStorage.removeItem("pagingScrollPath");
+    sessionStorage.removeItem("pagingScrollPosition");
+});
+
+/* ==============================
+   맨 위로 버튼
+============================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const topBtn = document.getElementById("topBtn");
+
+    if (!topBtn) return;
+
+    function toggleTopBtn() {
+        if (window.scrollY > 300) {
+            topBtn.classList.add("show");
+        } else {
+            topBtn.classList.remove("show");
+        }
+    }
+
+    topBtn.addEventListener("click", function () {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+
+    window.addEventListener("scroll", toggleTopBtn);
+    toggleTopBtn();
 });
 
 

@@ -790,8 +790,10 @@ body.modal-open {
    toDetail
 ============================== */
 
-.toDetail:hover {
+.toDetail {
 	text-decoration: underline;
+}
+.toDetail:hover {
 	color: var(--main-green);
 }
 
@@ -830,6 +832,46 @@ body.modal-open {
 
 .hidePw {
 	display: none;
+}
+
+/* ==============================
+   TOP BUTTON
+============================== */
+
+.btn-top {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1000;
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    background-color: var(--main-green);
+    color: #fff;
+
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 44px;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: 0.2s ease;
+}
+
+.btn-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.btn-top:hover {
+    background-color: var(--main-green-hover);
+    text-decoration: none;
 }
 
 
