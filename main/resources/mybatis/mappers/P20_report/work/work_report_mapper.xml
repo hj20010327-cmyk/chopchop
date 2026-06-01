@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.P20_report.work.work_report_mapper">
+
+    <sql id="workRiskCase">
+        CASE
+            WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 2 THEN 'RISK'
+            WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 1 THEN 'DELAY'
+            ELSE 'NORMAL'
+        END
+    </sql>
+
+    <sql id="workBaseFrom">
+        FROM "WORK" w
+        JOIN plan p
+            ON w.work_plan = p.plan_id
+        JOIN item i
+            ON p.plan_item = i.item_id
+        LEFT JOIN emp d
+            ON w.work_director = d.emp_id
+        LEFT JOIN emp worker
+            ON w.work_worker = worker.emp_id
+    </sql>
+
+    <sql id="workBaseWhere">
+        WHERE w.work_usage = 'Y'
+          AND w.work_order_qty > 0
+          AND w.work_fdate IS NOT NULL
+
+        <choose>
+            <when test="startDate != null and startDate != ''">
+                AND w.work_date <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+            </when>
+            <otherwise>
+                AND w.work_date <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+            </otherwise>
+        </choose>
+
+        <if test="endDate != null and endDate != ''">
+            AND w.work_date <![CDATA[<]]> TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1
+        </if>
+
+        <if test="workStatus != null and workStatus != ''">
+            AND (
+                <include refid="workRiskCase"/>
+            ) = #{workStatus}
+        </if>
+
+        <if test="itemType != null and itemType != ''">
+            AND TO_CHAR(i.item_type) = #{itemType}
+        </if>
+
+        <if test="itemKeyword != null and itemKeyword != ''">
+            AND (
+                UPPER(w.work_id) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(w.work_plan) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(p.plan_id) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(i.item_id) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(i.item_name) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(d.emp_name) LIKE UPPER('%' || #{itemKeyword} || '%')
+                OR UPPER(worker.emp_name) LIKE UPPER('%' || #{itemKeyword} || '%')
+            )
+        </if>
+    </sql>
+
+    <select id="selectWorkSummary"
+	        parameterType="kr.or.chop.P20_report.work.dto.WorkReportSearchDTO"
+	        resultType="kr.or.chop.P20_report.work.dto.WorkReportSummaryDTO">
+	
+	    SELECT
+	        NVL(SUM(plan_qty), 0) AS totalPlanQty,
+	        NVL(SUM(order_qty), 0) AS totalOrderQty,
+	        NVL(SUM(prod_qty), 0) AS totalProdQty,
+	
+	        NVL(ROUND(
+	            SUM(prod_qty) / NULLIF(SUM(plan_qty), 0) * 100,
+	            2
+	        ), 0) AS achievementRate,
+	
+	        NVL(SUM(delay_count), 0) AS delayCount,
+	        NVL(SUM(risk_count), 0) AS riskCount
+	
+	    FROM (
+	        SELECT
+	            p.plan_id,
+	            MAX(NVL(p.plan_fin_qty, 0)) AS plan_qty,
+	            SUM(NVL(w.work_order_qty, 0)) AS order_qty,
+	            SUM(NVL(w.work_prev_qty, 0)) AS prod_qty,
+	
+	            SUM(
+	                CASE
+	                    WHEN (
+	                        CASE
+	                            WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 2 THEN 'RISK'
+	                            WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 1 THEN 'DELAY'
+	                            ELSE 'NORMAL'
+	                        END
+	                    ) = 'DELAY' THEN 1
+	                    ELSE 0
+	                END
+	            ) AS delay_count,
+	
+	            SUM(
+	                CASE
+	                    WHEN (
+	                        CASE
+	                            WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 2 THEN 'RISK'
+	                            WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 1 THEN 'DELAY'
+	                            ELSE 'NORMAL'
+	                        END
+	                    ) = 'RISK' THEN 1
+	                    ELSE 0
+	                END
+	            ) AS risk_count
+	
+	        <include refid="workBaseFrom"/>
+	        <include refid="workBaseWhere"/>
+	
+	        GROUP BY p.plan_id
+	    )
+	
+	</select>
+
+    <select id="selectWorkReportCount"
+            parameterType="kr.or.chop.P20_report.work.dto.WorkReportSearchDTO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        <include refid="workBaseFrom"/>
+        <include refid="workBaseWhere"/>
+
+    </select>
+
+    <select id="selectWorkReportList"
+            parameterType="map"
+            resultType="kr.or.chop.P20_report.work.dto.WorkReportListDTO">
+
+        SELECT *
+        FROM (
+            SELECT
+                ROWNUM AS rnum,
+                base_data.*
+            FROM (
+                SELECT
+                    w.work_id AS "workId",
+                    TO_CHAR(w.work_date, 'YYYY-MM-DD') AS "workDate",
+
+                    i.item_id AS "itemId",
+                    i.item_name AS "itemName",
+
+                    NVL(p.plan_fin_qty, 0) AS "planQty",
+                    NVL(w.work_order_qty, 0) AS "orderQty",
+                    NVL(w.work_prev_qty, 0) AS "prodQty",
+
+                    CASE
+                        WHEN NVL(w.work_order_qty, 0) = 0 THEN 0
+                        ELSE ROUND(NVL(w.work_prev_qty, 0) / NULLIF(p.plan_fin_qty, 0) * 100, 2)
+                    END AS "achievementRate",
+
+                    <include refid="workRiskCase"/> AS "riskLevel"
+
+                FROM "WORK" w
+                JOIN plan p
+                    ON w.work_plan = p.plan_id
+                JOIN item i
+                    ON p.plan_item = i.item_id
+                LEFT JOIN emp d
+                    ON w.work_director = d.emp_id
+                LEFT JOIN emp worker
+                    ON w.work_worker = worker.emp_id
+
+                WHERE w.work_usage = 'Y'
+                  AND w.work_order_qty > 0
+                  AND w.work_fdate IS NOT NULL
+
+                <choose>
+                    <when test="search.startDate != null and search.startDate != ''">
+                        AND w.work_date <![CDATA[>=]]> TO_DATE(#{search.startDate}, 'YYYY-MM-DD')
+                    </when>
+                    <otherwise>
+                        AND w.work_date <![CDATA[>=]]> ADD_MONTHS(TRUNC(SYSDATE + (9/24)), -6)
+                    </otherwise>
+                </choose>
+
+                <if test="search.endDate != null and search.endDate != ''">
+                    AND w.work_date <![CDATA[<]]> TO_DATE(#{search.endDate}, 'YYYY-MM-DD') + 1
+                </if>
+
+                <if test="search.workStatus != null and search.workStatus != ''">
+                    AND (
+                        <include refid="workRiskCase"/>
+                    ) = #{search.workStatus}
+                </if>
+
+                <if test="search.itemType != null and search.itemType != ''">
+                    AND TO_CHAR(i.item_type) = #{search.itemType}
+                </if>
+
+                <if test="search.itemKeyword != null and search.itemKeyword != ''">
+                    AND (
+                        UPPER(w.work_id) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(w.work_plan) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(p.plan_id) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(i.item_id) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(i.item_name) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(d.emp_name) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                        OR UPPER(worker.emp_name) LIKE UPPER('%' || #{search.itemKeyword} || '%')
+                    )
+                </if>
+
+                ORDER BY w.work_date DESC, w.work_id DESC
+            ) base_data
+            WHERE ROWNUM <![CDATA[<=]]> #{page.endRow}
+        )
+        WHERE rnum <![CDATA[>=]]> #{page.startRow}
+
+    </select>
+
+    <select id="selectWorkRiskChartList"
+            parameterType="kr.or.chop.P20_report.work.dto.WorkReportSearchDTO"
+            resultType="map">
+
+        SELECT
+            risk_level AS "riskLevel",
+            COUNT(*) AS "riskCount"
+        FROM (
+            SELECT
+                <include refid="workRiskCase"/> AS risk_level
+            <include refid="workBaseFrom"/>
+            <include refid="workBaseWhere"/>
+        )
+        GROUP BY risk_level
+        ORDER BY
+            CASE risk_level
+                WHEN 'RISK' THEN 1
+                WHEN 'DELAY' THEN 2
+                WHEN 'NORMAL' THEN 3
+                ELSE 4
+            END
+
+    </select>
+
+    <select id="selectWorkTrendList"
+	        parameterType="kr.or.chop.P20_report.work.dto.WorkReportSearchDTO"
+	        resultType="map">
+	
+	    SELECT
+	        TO_CHAR(w.work_date, 'IYYY') || '-W' || TO_CHAR(w.work_date, 'IW') AS "workDate",
+	
+	        SUM(
+	            CASE
+	                WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 2 THEN 1
+	                ELSE 0
+	            END
+	        ) AS "riskCount",
+	
+	        SUM(
+	            CASE
+	                WHEN TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[>=]]> 1
+	                 AND TRUNC(w.work_fdate) - TRUNC(w.work_date) <![CDATA[<]]> 2 THEN 1
+	                ELSE 0
+	            END
+	        ) AS "delayCount"
+	
+	    <include refid="workBaseFrom"/>
+	    <include refid="workBaseWhere"/>
+	
+	    GROUP BY TO_CHAR(w.work_date, 'IYYY') || '-W' || TO_CHAR(w.work_date, 'IW')
+	    ORDER BY TO_CHAR(w.work_date, 'IYYY') || '-W' || TO_CHAR(w.work_date, 'IW')
+	
+	</select>
+
+    <select id="selectItemTypeList"
+            resultType="kr.or.chop.P20_report.qc.dto.ReportSelectDTO">
+
+        SELECT DISTINCT
+            TO_CHAR(item_type) AS "code",
+            CASE
+                WHEN TO_CHAR(item_type) = '10' THEN '원자재'
+                WHEN TO_CHAR(item_type) = '20' THEN '반제품'
+                WHEN TO_CHAR(item_type) = '30' THEN '완제품'
+                WHEN TO_CHAR(item_type) = '40' THEN '기타자재'
+                ELSE TO_CHAR(item_type)
+            END AS "name"
+        FROM item
+        WHERE item_type IS NOT NULL
+        ORDER BY "code"
+
+    </select>
+    
+    <select id="selectWorkAiTarget"
+	        parameterType="kr.or.chop.P20_report.work.dto.WorkReportSearchDTO"
+	        resultType="kr.or.chop.common.ai.dto.WorkAiPredictRequestDTO">
+	
+	    SELECT *
+	    FROM (
+	        SELECT
+	            NVL(w.work_order_qty, 0) AS "workOrderQty",
+	            NVL(w.work_prev_qty, 0) AS "workPrevQty",
+	            NVL(w.work_status, 0) AS "workStatus",
+	            NVL(p.plan_fin_qty, 0) AS "planFinQty",
+	            NVL(p.plan_wp_qty, 0) AS "planWpQty",
+	            NVL(i.item_type, 0) AS "itemType",
+	
+	            TO_NUMBER(TO_CHAR(w.work_date, 'MM')) AS "workMonth",
+	            TO_NUMBER(TO_CHAR(w.work_date, 'D')) AS "workWeekday",
+	
+	            CASE
+	                WHEN TO_CHAR(w.work_date, 'MM') IN ('06', '07', '08') THEN 1
+	                ELSE 0
+	            END AS "summerFlag",
+	
+	            CASE
+	                WHEN TO_CHAR(w.work_date, 'MM') IN ('12', '01', '02') THEN 1
+	                ELSE 0
+	            END AS "winterFlag",
+	
+	            CASE
+	                WHEN w.work_order_qty >= 5000 THEN 2
+	                WHEN w.work_order_qty >= 3000 THEN 1
+	                ELSE 0
+	            END AS "qtyRiskScore",
+	
+	            CASE
+	                WHEN TO_CHAR(w.work_date, 'MM') = '01' THEN 3
+	                WHEN TO_CHAR(w.work_date, 'MM') IN ('12', '02') THEN 2
+	                WHEN TO_CHAR(w.work_date, 'MM') = '07' THEN 2
+	                WHEN TO_CHAR(w.work_date, 'MM') IN ('06', '08') THEN 1
+	                ELSE 0
+	            END AS "seasonRiskScore"
+	
+	        <include refid="workBaseFrom"/>
+	        <include refid="workBaseWhere"/>
+	
+	        ORDER BY w.work_date DESC, w.work_id DESC
+	    )
+	    WHERE ROWNUM = 1
+	
+	</select>
+
+</mapper>
