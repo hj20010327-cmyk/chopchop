@@ -71,7 +71,7 @@
 
         <!-- 재고 -->
         <div class="snb-group ${uri.contains('/stock/') || uri.contains('/lot/') || uri.contains('/io/') ? 'open' : ''}">
-            <a href="${ctx}/io/list"
+            <a href="${ctx}/stock/list"
                class="snb-menu snb-toggle ${uri.contains('/stock/') || uri.contains('/lot/') || uri.contains('/io/') ? 'active' : ''}">
                 <span class="snb-icon">
                     <svg class="snb-svg" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,10 +142,10 @@
             </a>
 
             <div class="snb-submenu">
-                <a href="${ctx}/report/work" class="snb-submenu-link ${uri.contains('/report/work') ? 'active' : ''}">작업 실적</a>
+                <a href="${ctx}/report/work" class="snb-submenu-link ${uri.contains('/report/work') ? 'active' : ''}">생산</a>
                 <a href="${ctx}/report/quality" class="snb-submenu-link ${uri.contains('/report/quality') ? 'active' : ''}">품질</a>
-                <a href="${ctx}/report/inout" class="snb-submenu-link ${uri.contains('/report/inout') ? 'active' : ''}">입출고</a>
-                <a href="${ctx}/report/facility" class="snb-submenu-link ${uri.contains('/report/facility') ? 'active' : ''}">설비</a>
+                <a href="${ctx}/report/io" class="snb-submenu-link ${uri.contains('/report/inout') ? 'active' : ''}">재고/입출고</a>
+                <a href="${ctx}/report/inspection" class="snb-submenu-link ${uri.contains('/report/facility') ? 'active' : ''}">점검</a>
             </div>
         </div>
 
