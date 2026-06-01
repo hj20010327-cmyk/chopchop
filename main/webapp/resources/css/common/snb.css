@@ -403,4 +403,9 @@ button.snb-menu {
     .mobile-snb-link.logout {
         color: #d44;
     }
+    
+    .btn-top {
+        right: 20px;
+        bottom: 80px;
+    }
 }
