@@ -202,7 +202,7 @@
 
 
 <!-- 모바일 하단 메뉴 버튼 -->
-<button type="button" class="mobile-snb-btn" id="mobileSnbBtn" aria-label="모바일 메뉴 열기">
+<button type="button" class="mobile-snb-btn btn-white" id="mobileSnbBtn" aria-label="모바일 메뉴 열기">
     <span class="mobile-snb-btn-icon">☰</span>
     <span class="mobile-snb-btn-text">메뉴</span>
 </button>

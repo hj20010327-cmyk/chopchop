@@ -200,7 +200,9 @@
 								<td><fmt:formatDate value="${io.ioDate}"
 										pattern="yyyy-MM-dd HH:mm" /></td>
 
-								<td>${io.ioQty}</td>
+								<td>
+									<fmt:formatNumber value="${io.ioQty}" pattern="#,###" />
+								</td>
 
 								<td>${io.ioLot}</td>
 
