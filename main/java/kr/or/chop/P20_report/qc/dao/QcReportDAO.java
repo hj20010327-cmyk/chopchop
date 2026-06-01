@@ -7,6 +7,7 @@ import kr.or.chop.P20_report.qc.dto.QcReportListDTO;
 import kr.or.chop.P20_report.qc.dto.QcReportSearchDTO;
 import kr.or.chop.P20_report.qc.dto.QcReportSummaryDTO;
 import kr.or.chop.P20_report.qc.dto.ReportSelectDTO;
+import kr.or.chop.common.ai.dto.QcAiPredictRequestDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 public interface QcReportDAO {
@@ -22,4 +23,6 @@ public interface QcReportDAO {
     List<Map<String, Object>> selectDefectTrendList(QcReportSearchDTO searchDTO);
 
     List<Map<String, Object>> selectRiskChartList(QcReportSearchDTO searchDTO);
+    
+    QcAiPredictRequestDTO selectQcAiTarget(QcReportSearchDTO searchDTO);
 }

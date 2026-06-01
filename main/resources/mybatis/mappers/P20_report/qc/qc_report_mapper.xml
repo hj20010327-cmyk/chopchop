@@ -315,18 +315,18 @@
             resultType="map">
 
         SELECT
-            TO_CHAR(q.qc_date, 'YYYY-MM-DD') AS qcDate,
-            NVL(SUM(l.lot_qty), 0) AS qcQty,
-            NVL(SUM(q.qc_pass_qty), 0) AS qcPassQty,
-            NVL(SUM(l.lot_qty - q.qc_pass_qty), 0) AS defectQty,
+            TO_CHAR(q.qc_date, 'YYYY-MM-DD') AS "qcDate",
+            NVL(SUM(l.lot_qty), 0) AS "qcQty",
+            NVL(SUM(q.qc_pass_qty), 0) AS "qcPassQty",
+            NVL(SUM(l.lot_qty - q.qc_pass_qty), 0) AS "defectQty",
             NVL(ROUND(
                 (SUM(l.lot_qty - q.qc_pass_qty) / NULLIF(SUM(l.lot_qty), 0)) * 100,
                 2
-            ), 0) AS defectRate
+            ), 0) AS "defectRate"
         <include refid="qcBaseFrom"/>
         <include refid="qcBaseWhere"/>
         GROUP BY TO_CHAR(q.qc_date, 'YYYY-MM-DD')
-        ORDER BY qcDate
+        ORDER BY TO_CHAR(q.qc_date, 'YYYY-MM-DD')
 
     </select>
 
@@ -335,8 +335,8 @@
             resultType="map">
 
         SELECT
-            risk_level AS riskLevel,
-            COUNT(*) AS riskCount
+            risk_level AS "riskLevel",
+            COUNT(*) AS "riskCount"
         FROM (
             SELECT
                 CASE
@@ -357,5 +357,52 @@
             END
 
     </select>
+    
+    <select id="selectQcAiTarget"
+	        parameterType="kr.or.chop.P20_report.qc.dto.QcReportSearchDTO"
+	        resultType="kr.or.chop.common.ai.dto.QcAiPredictRequestDTO">
+	
+	    SELECT *
+	    FROM (
+	        SELECT
+	            NVL(l.lot_qty, 0) AS "lotQty",
+	            NVL(q.qc_qty, l.lot_qty) AS "qcQty",
+	            NVL(i.item_type, 0) AS "itemType",
+	            NVL(i.item_qc_type, 0) AS "itemQcType",
+	            NVL(q.qc_type, 0) AS "qcType",
+	            NVL(w.work_order_qty, 0) AS "workOrderQty",
+	            TO_NUMBER(TO_CHAR(q.qc_date, 'MM')) AS "qcMonth",
+	            TO_NUMBER(TO_CHAR(q.qc_date, 'D')) AS "qcWeekday",
+	
+	            CASE
+	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 3
+	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 2
+	                ELSE 1
+	            END AS "inspectionRiskScore",
+	
+	            CASE
+	                WHEN TO_NUMBER(TO_CHAR(q.qc_date, 'MM')) IN (6, 7, 8) THEN 1
+	                ELSE 0
+	            END AS "summerFlag",
+	
+	            CASE
+	                WHEN TO_NUMBER(TO_CHAR(q.qc_date, 'MM')) IN (12, 1, 2) THEN 1
+	                ELSE 0
+	            END AS "winterFlag"
+	
+	        <include refid="qcBaseFrom"/>
+	        <include refid="qcBaseWhere"/>
+	
+	        ORDER BY
+	            CASE
+	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 1
+	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 2
+	                ELSE 3
+	            END,
+	            q.qc_date DESC
+	    )
+	    WHERE ROWNUM = 1
+	
+	</select>
 
 </mapper>

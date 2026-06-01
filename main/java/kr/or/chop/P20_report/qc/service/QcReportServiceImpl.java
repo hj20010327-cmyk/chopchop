@@ -11,6 +11,7 @@ import kr.or.chop.P20_report.qc.dto.QcReportListDTO;
 import kr.or.chop.P20_report.qc.dto.QcReportSearchDTO;
 import kr.or.chop.P20_report.qc.dto.QcReportSummaryDTO;
 import kr.or.chop.P20_report.qc.dto.ReportSelectDTO;
+import kr.or.chop.common.ai.dto.QcAiPredictRequestDTO;
 import kr.or.chop.common.pagination.PageInfo;
 
 @Service
@@ -47,5 +48,10 @@ public class QcReportServiceImpl implements QcReportService {
     @Override
     public List<Map<String, Object>> selectRiskChartList(QcReportSearchDTO searchDTO) {
         return qcReportDAO.selectRiskChartList(searchDTO);
+    }
+    
+    @Override
+    public QcAiPredictRequestDTO selectQcAiTarget(QcReportSearchDTO searchDTO) {
+        return qcReportDAO.selectQcAiTarget(searchDTO);
     }
 }

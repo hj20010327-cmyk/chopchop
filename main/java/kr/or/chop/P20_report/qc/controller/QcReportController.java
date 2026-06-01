@@ -15,6 +15,9 @@ import kr.or.chop.P20_report.qc.dto.QcReportSearchDTO;
 import kr.or.chop.P20_report.qc.dto.QcReportSummaryDTO;
 import kr.or.chop.P20_report.qc.dto.ReportSelectDTO;
 import kr.or.chop.P20_report.qc.service.QcReportService;
+import kr.or.chop.common.ai.dto.QcAiPredictRequestDTO;
+import kr.or.chop.common.ai.dto.QcAiPredictResponseDTO;
+import kr.or.chop.common.ai.service.QcAiPredictionService;
 import kr.or.chop.common.pagination.PageInfo;
 import kr.or.chop.common.pagination.Pagination;
 
@@ -24,6 +27,8 @@ public class QcReportController {
 
     @Autowired
     private QcReportService qcReportService;
+    @Autowired
+    private QcAiPredictionService qcAiPredictionService;
 
     @RequestMapping("/quality")
     public String qualityReport(
@@ -56,6 +61,20 @@ public class QcReportController {
 
         List<Map<String, Object>> riskChartList =
                 qcReportService.selectRiskChartList(searchDTO);
+        
+        QcAiPredictResponseDTO aiResult = null;
+        String aiErrorMessage = null;
+
+        try {
+            QcAiPredictRequestDTO aiRequestDTO =
+                    qcReportService.selectQcAiTarget(searchDTO);
+
+            if (aiRequestDTO != null) {
+                aiResult = qcAiPredictionService.predict(aiRequestDTO);
+            }
+        } catch (Exception e) {
+            aiErrorMessage = "AI 서버 연결 또는 예측 처리 중 문제가 발생했습니다.";
+        }
 
         model.addAttribute("summary", summary);
         model.addAttribute("qualityList", qualityList);
@@ -64,6 +83,9 @@ public class QcReportController {
         model.addAttribute("riskChartList", riskChartList);
         model.addAttribute("searchDTO", searchDTO);
         model.addAttribute("page", pageInfo);
+        
+        model.addAttribute("aiResult", aiResult);
+        model.addAttribute("aiErrorMessage", aiErrorMessage);
 
         return "P20_report/qc/qualityReport.tiles";
     }

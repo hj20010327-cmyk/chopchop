@@ -1,7 +1,5 @@
 package kr.or.chop.common.ai.dto;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -12,5 +10,12 @@ public class QcAiPredictResponseDTO {
     @JsonProperty("risk_level")
     private String riskLevel;
 
-    private Map<String, Double> probabilities;
+    @JsonProperty("low_prob")
+    private double lowProb;
+
+    @JsonProperty("medium_prob")
+    private double mediumProb;
+
+    @JsonProperty("high_prob")
+    private double highProb;
 }

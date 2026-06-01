@@ -81,7 +81,7 @@
           </div>
     </form>
     
-    <div class="content-content">
+    <div class="content-content" id="qualityReportPdfArea">
     	<div class="content-content-content-title">품질검사 요약 카드</div>
 	    <div class="card-grid">
 		    <div class="card-wrap reportCard">
@@ -131,44 +131,81 @@
 		    </div>
 		    
 		    <div class="card-wrap aiCard">
-		    	<div class="card ai">
-		    		<div class="card-title card-title-big">AI 위험도 현황</div>
-		            <div>
-		            	<div></div>
-		            </div>
-		            <div class="aiType-btn">
-		            	<button type="button" class="btn btn-type active" id="">전체</button>
-		            	<button type="button" class="btn btn-type" id="">LOW</button>
-		            	<button type="button" class="btn btn-type" id="">MEDIUM</button>
-		            	<button type="button" class="btn btn-type" id="">HIGH</button>
-		            </div>
-		    	</div>
-		    </div>
+			    <div class="card ai">
+			        <div class="card-title card-title-big">AI 위험도 현황</div>
+			
+			        <div class="chart-box risk-chart-box">
+			            <canvas id="riskChart"></canvas>
+			        </div>
+			
+			        <div class="aiType-btn">
+					    <button type="button" class="btn btn-type active" data-risk="ALL">전체</button>
+					    <button type="button" class="btn btn-type" data-risk="HIGH">HIGH</button>
+					    <button type="button" class="btn btn-type" data-risk="MEDIUM">MEDIUM</button>
+					    <button type="button" class="btn btn-type" data-risk="LOW">LOW</button>
+					</div>
+			    </div>
+			</div>
 	    </div>
 	    
 	    <div class="card-wrap aiCard">
 	    	<div class="card ai">
 	    		<div class="card-title card-title-big">날짜별 불량률 추이</div>
-	            <div>
-	            	<div></div>
-	            </div>
+	            <div class="chart-box trend-chart-box">
+				    <canvas id="defectTrendChart"></canvas>
+				</div>
 	    	</div>
 	    </div>
 	    
 	    <div class="analysis">
-	    	<div class="analysis-title">
-	    		<div class="content-content-content-title">AI 품질 분석 결과</div>
-	    		<div class="analysis-subtitle">Machine Learning Analysis</div>
-	    	</div>
-	    	<div class="analysis-content">
-	    		일부 생산 구간에서 위험도 증가 패턴이 감지되었습니다.<br>온도, 습도, 설비 가동시간 조건을 우선 확인하세요.
-	    	</div>
-	    </div>
+		    <div class="analysis-title">
+		        <div class="content-content-content-title">AI 품질 분석 결과</div>
+		        <div class="analysis-subtitle">Machine Learning Analysis</div>
+		    </div>
+		
+		    <div class="analysis-content">
+		        <c:choose>
+		            <c:when test="${not empty aiResult}">
+		                예상 위험도 :
+		                <strong>${aiResult.riskLevel}</strong>
+		                <br>
+		
+		                LOW
+						<fmt:formatNumber value="${aiResult.lowProb}" pattern="0.##"/>%
+						/
+						MEDIUM
+						<fmt:formatNumber value="${aiResult.mediumProb}" pattern="0.##"/>%
+						/
+						HIGH
+						<fmt:formatNumber value="${aiResult.highProb}" pattern="0.##"/>%
+		
+		                <br>
+		
+		                <c:choose>
+		                    <c:when test="${aiResult.riskLevel == 'HIGH'}">
+		                        고위험 품질 패턴이 감지되었습니다. LOT 수량, 검사수량, 생산계획 대비 실적을 우선 확인하세요.
+		                    </c:when>
+		                    <c:when test="${aiResult.riskLevel == 'MEDIUM'}">
+		                        중간 수준의 품질 위험이 감지되었습니다. 최근 검사 조건을 점검하는 것이 좋습니다.
+		                    </c:when>
+		                    <c:otherwise>
+		                        현재 조건에서는 품질 위험도가 낮게 예측되었습니다.
+		                    </c:otherwise>
+		                </c:choose>
+		            </c:when>
+		
+		            <c:when test="${not empty aiErrorMessage}">
+		                ${aiErrorMessage}
+		            </c:when>
+		
+		            <c:otherwise>
+		                AI 분석에 사용할 품질 데이터가 없습니다.
+		            </c:otherwise>
+		        </c:choose>
+		    </div>
+		</div>
 	    
     </div>
-    
-    
-
 
     <div class="content-content">
     	<div class="content-content-content-title">불량 발생 이력</div>
@@ -219,7 +256,7 @@
 
                     <c:if test="${empty qualityList}">
                         <tr>
-                            <td colspan="10" style="text-align: center;">
+                            <td colspan="7" style="text-align: center;">
                                 조회된 품질 데이터가 없습니다.
                             </td>
                         </tr>
@@ -229,6 +266,7 @@
         </div>
 
         <jsp:include page="/WEB-INF/views/common/paging.jsp" />
+        
     </div>
 
 </div>
@@ -382,11 +420,20 @@
 		padding-left: 10px;
 	}
 
-
-	
 	.table tr:hover .qcId {
 		color: var(--main-green);
 		text-decoration: underline;
+	}
+	
+	.chart-box {
+	    width: 100%;
+	    height: 260px;
+	    padding: 10px 20px;
+	    box-sizing: border-box;
+	}
+	
+	.trend-chart-box {
+	    height: 300px;
 	}
 	
 	
@@ -398,3 +445,269 @@
         }
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const riskLabels = [
+        <c:forEach var="risk" items="${riskChartList}" varStatus="st">
+            '${risk.riskLevel}'<c:if test="${!st.last}">,</c:if>
+        </c:forEach>
+    ];
+
+    const riskCounts = [
+        <c:forEach var="risk" items="${riskChartList}" varStatus="st">
+            ${risk.riskCount}<c:if test="${!st.last}">,</c:if>
+        </c:forEach>
+    ];
+
+    const trendLabels = [
+        <c:forEach var="trend" items="${defectTrendList}" varStatus="st">
+            '${trend.qcDate}'<c:if test="${!st.last}">,</c:if>
+        </c:forEach>
+    ];
+
+    const trendRates = [
+        <c:forEach var="trend" items="${defectTrendList}" varStatus="st">
+            ${empty trend.defectRate ? 0 : trend.defectRate}<c:if test="${!st.last}">,</c:if>
+        </c:forEach>
+    ];
+
+    const riskCountNums = riskCounts.map(Number);
+    const trendRateNums = trendRates.map(Number);
+
+    const riskColorMap = {
+        LOW: '#2e7d32',
+        MEDIUM: '#f9a825',
+        HIGH: '#d32f2f'
+    };
+
+    const riskCanvas = document.getElementById('riskChart');
+    const trendCanvas = document.getElementById('defectTrendChart');
+
+    let riskChart = null;
+
+    if (riskCanvas) {
+        riskChart = new Chart(riskCanvas, {
+            type: 'bar',
+            data: {
+                labels: riskLabels,
+                datasets: [{
+                    label: '위험도 건수',
+                    data: riskCountNums,
+                    backgroundColor: riskLabels.map(label => riskColorMap[label] || '#999'),
+                    borderColor: riskLabels.map(label => riskColorMap[label] || '#999'),
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    barThickness: 45,
+                    maxBarThickness: 60
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toLocaleString() + '건';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const originRiskLabels = [...riskLabels];
+    const originRiskCounts = [...riskCountNums];
+
+    document.querySelectorAll('.aiType-btn .btn-type').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+
+            document.querySelectorAll('.aiType-btn .btn-type').forEach(function(b) {
+                b.classList.remove('active');
+            });
+
+            this.classList.add('active');
+
+            const selectedRisk = this.dataset.risk;
+
+            let filteredLabels = [];
+            let filteredCounts = [];
+
+            if (selectedRisk === 'ALL') {
+                filteredLabels = originRiskLabels;
+                filteredCounts = originRiskCounts;
+            } else {
+                originRiskLabels.forEach(function(label, index) {
+                    if (label === selectedRisk) {
+                        filteredLabels.push(label);
+                        filteredCounts.push(originRiskCounts[index]);
+                    }
+                });
+            }
+
+            if (!riskChart) {
+                return;
+            }
+
+            riskChart.data.labels = filteredLabels;
+            riskChart.data.datasets[0].data = filteredCounts;
+            riskChart.data.datasets[0].backgroundColor =
+                filteredLabels.map(label => riskColorMap[label] || '#999');
+            riskChart.data.datasets[0].borderColor =
+                filteredLabels.map(label => riskColorMap[label] || '#999');
+
+            riskChart.update();
+        });
+    });
+
+    if (trendCanvas) {
+        new Chart(trendCanvas, {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: '불량률 (%)',
+                    data: trendRateNums,
+                    borderColor: '#2e7d32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.12)',
+                    tension: 0.35,
+                    fill: true,
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#2e7d32',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 10
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 5,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '불량률 ' + context.parsed.y + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    const pdfBtn = document.getElementById('pdfBtn');
+
+    if (pdfBtn) {
+        pdfBtn.addEventListener('click', async function () {
+
+            const pdfArea = document.getElementById('qualityReportPdfArea');
+
+            if (!pdfArea) {
+                alert('PDF 저장 영역을 찾을 수 없습니다.');
+                return;
+            }
+
+            pdfBtn.disabled = true;
+            pdfBtn.innerText = 'PDF 생성 중...';
+
+            try {
+                const { jsPDF } = window.jspdf;
+
+                const canvas = await html2canvas(pdfArea, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: true,
+                    scrollX: 0,
+                    scrollY: 0
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+
+                const pdf = new jsPDF('p', 'mm', 'a4');
+
+                const pageWidth = 210;
+                const pageHeight = 297;
+                const margin = 8;
+
+                const imgWidth = pageWidth - margin * 2;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+
+                let heightLeft = imgHeight;
+                let position = margin;
+
+                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight - margin * 2;
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + margin;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight - margin * 2;
+                }
+
+                pdf.save('품질리포트.pdf');
+
+            } catch (e) {
+                console.error(e);
+                alert('PDF 생성 중 오류가 발생했습니다.');
+            } finally {
+                pdfBtn.disabled = false;
+                pdfBtn.innerText = 'pdf 다운로드';
+            }
+        });
+    }
+
+});
+</script>
