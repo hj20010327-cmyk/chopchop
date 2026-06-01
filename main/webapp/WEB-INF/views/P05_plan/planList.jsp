@@ -263,6 +263,18 @@
 		color : white !important;
 	}
 	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.card-wrap {
+		flex-wrap: wrap;
+	}
+	
+}
+	
 </style>
 
 <script>

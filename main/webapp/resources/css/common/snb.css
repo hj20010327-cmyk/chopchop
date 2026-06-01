@@ -169,3 +169,231 @@ button.snb-menu {
 .snb-group.open .snb-arrow {
     transform: rotate(90deg);
 }
+
+
+/* ==============================
+   모바일 하단 SNB
+============================== */
+
+.mobile-snb-btn,
+.mobile-snb-overlay,
+.mobile-snb-sheet {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+
+    /* 기존 PC 사이드바 숨김 */
+    .snb {
+        display: none !important;
+    }
+
+    /*
+       기존 레이아웃에서 사이드바 때문에 margin-left / padding-left를 주고 있으면
+       모바일에서 반드시 초기화해야 함.
+       프로젝트 실제 클래스명에 맞게 selector만 바꿔서 쓰면 됨.
+    */
+    .main,
+    .content,
+    .container,
+    .page-container {
+        margin-left: 0 !important;
+    }
+
+    body.mobile-snb-open {
+        overflow: hidden;
+    }
+
+    .mobile-snb-btn {
+        display: flex;
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 1200;
+
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+
+        min-width: 72px;
+        height: 48px;
+        padding: 0 16px;
+
+        border: 0;
+        border-radius: 999px;
+
+        background: var(--main-green);
+        color: #fff;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+        cursor: pointer;
+    }
+
+    .mobile-snb-btn-icon {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    .mobile-snb-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1190;
+
+        background: rgba(0, 0, 0, 0.38);
+
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.22s ease, visibility 0.22s ease;
+    }
+
+    .mobile-snb-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-snb-sheet {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1210;
+
+        flex-direction: column;
+
+        max-height: 82vh;
+        padding: 18px 18px 20px;
+
+        border-radius: 22px 22px 0 0;
+        background: #fff;
+
+        transform: translateY(105%);
+        transition: transform 0.28s ease;
+        box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.18);
+    }
+
+    .mobile-snb-sheet.active {
+        transform: translateY(0);
+    }
+
+    .mobile-snb-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding-bottom: 14px;
+        border-bottom: 1px solid #edf0f2;
+    }
+
+    .mobile-snb-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 800;
+        color: #222;
+    }
+
+    .mobile-snb-subtitle {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .mobile-snb-close {
+        width: 34px;
+        height: 34px;
+
+        border: 0;
+        border-radius: 50%;
+
+        background: #f3f5f6;
+        color: #333;
+
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .mobile-snb-body {
+        overflow-y: auto;
+        padding-top: 12px;
+    }
+
+    .mobile-snb-link,
+    .mobile-snb-group-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        width: 100%;
+        min-height: 46px;
+        padding: 0 12px;
+
+        border: 0;
+        border-radius: 12px;
+
+        background: transparent;
+        color: #333;
+
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+
+        cursor: pointer;
+    }
+
+    .mobile-snb-link.active,
+    .mobile-snb-group.open > .mobile-snb-group-btn {
+        background: rgba(0, 128, 96, 0.1);
+        color: var(--main-green);
+    }
+
+    .mobile-snb-arrow {
+        font-size: 22px;
+        transition: transform 0.22s ease;
+    }
+
+    .mobile-snb-group.open .mobile-snb-arrow {
+        transform: rotate(90deg);
+    }
+
+    .mobile-snb-submenu {
+        display: none;
+        padding: 4px 0 8px 12px;
+    }
+
+    .mobile-snb-group.open .mobile-snb-submenu {
+        display: block;
+    }
+
+    .mobile-snb-submenu a {
+        display: block;
+
+        padding: 10px 12px;
+        border-radius: 10px;
+
+        color: #666;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .mobile-snb-submenu a.active {
+        color: var(--main-green);
+        font-weight: 800;
+        background: rgba(0, 128, 96, 0.08);
+    }
+
+    .mobile-snb-bottom {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #edf0f2;
+    }
+
+    .mobile-snb-link.logout {
+        color: #d44;
+    }
+}

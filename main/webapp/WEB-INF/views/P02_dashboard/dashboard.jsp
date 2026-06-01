@@ -67,38 +67,40 @@
 					</div>
 				</div>
 				
-				<div class="card movePage item2" title="작업관리 페이지로 이동"
-						onclick="window.location.href='${pageContext.request.contextPath}/work/list'">
-					<div class="card-title">전체 작업 현황</div>
-					<div class="circle-chart-box">
-						<canvas id="todayWorkProgressChart"></canvas>
-						<div class="circle-chart-text">
-							<strong>${empty todayProgressSummary.todayWorkProgressRate ? 0 : todayProgressSummary.todayWorkProgressRate} </strong>%
+				<div class="items">
+					<div class="card movePage item2" title="작업관리 페이지로 이동"
+							onclick="window.location.href='${pageContext.request.contextPath}/work/list'">
+						<div class="card-title">전체 작업 현황</div>
+						<div class="circle-chart-box">
+							<canvas id="todayWorkProgressChart"></canvas>
+							<div class="circle-chart-text">
+								<strong>${empty todayProgressSummary.todayWorkProgressRate ? 0 : todayProgressSummary.todayWorkProgressRate} </strong>%
+							</div>
 						</div>
-					</div>
-					<div class="progress-subtitle">
-						${empty todayProgressSummary.todayDoneWorkCnt ? 0 : todayProgressSummary.todayDoneWorkCnt}
-						/
-						${empty todayProgressSummary.todayWorkCnt ? 0 : todayProgressSummary.todayWorkCnt}
-						건 완료
-					</div>
-				</div>
-				
-				<div class="card movePage item3" title="품질검사 페이지로 이동"
-						onclick="window.location.href='${pageContext.request.contextPath}/quality/list'">
-					<div class="card-title">전체 품질검사 현황</div>
-					<div class="circle-chart-box">
-						<canvas id="todayQcProgressChart"></canvas>
-						<div class="circle-chart-text">
-							<strong>${empty todayProgressSummary.todayQcProgressRate ? 0 : todayProgressSummary.todayQcProgressRate} </strong>%
-						</div>
-					</div>
-					<div>
 						<div class="progress-subtitle">
-							${empty todayProgressSummary.todayDoneQcCnt ? 0 : todayProgressSummary.todayDoneQcCnt}
+							${empty todayProgressSummary.todayDoneWorkCnt ? 0 : todayProgressSummary.todayDoneWorkCnt}
 							/
-							${empty todayProgressSummary.todayQcCnt ? 0 : todayProgressSummary.todayQcCnt}
+							${empty todayProgressSummary.todayWorkCnt ? 0 : todayProgressSummary.todayWorkCnt}
 							건 완료
+						</div>
+					</div>
+					
+					<div class="card movePage item3" title="품질검사 페이지로 이동"
+							onclick="window.location.href='${pageContext.request.contextPath}/quality/list'">
+						<div class="card-title">전체 품질검사 현황</div>
+						<div class="circle-chart-box">
+							<canvas id="todayQcProgressChart"></canvas>
+							<div class="circle-chart-text">
+								<strong>${empty todayProgressSummary.todayQcProgressRate ? 0 : todayProgressSummary.todayQcProgressRate} </strong>%
+							</div>
+						</div>
+						<div>
+							<div class="progress-subtitle">
+								${empty todayProgressSummary.todayDoneQcCnt ? 0 : todayProgressSummary.todayDoneQcCnt}
+								/
+								${empty todayProgressSummary.todayQcCnt ? 0 : todayProgressSummary.todayQcCnt}
+								건 완료
+							</div>
 						</div>
 					</div>
 				</div>
@@ -405,6 +407,11 @@
 		display: flex;
 	}
 	
+	.items {
+		display: flex;
+		gap: 10px;
+	}
+	
 	.card3-long .item2, .card3-long .item3 {
 		flex: 1 1 0;
 	}
@@ -582,6 +589,26 @@
 	.status {
 		padding: 0px;
 	}
+	
+	
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	.card3-long {
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.card3, .card4, .card2 {
+		flex-wrap: wrap;
+	}
+	.card3 .card, .card4 .card {
+		width: 49%;
+	}
+	
+}
 
 </style>
 

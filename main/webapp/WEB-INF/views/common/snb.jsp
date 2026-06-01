@@ -199,3 +199,131 @@
         </a>
     </div>
 </aside>
+
+
+<!-- 모바일 하단 메뉴 버튼 -->
+<button type="button" class="mobile-snb-btn" id="mobileSnbBtn" aria-label="모바일 메뉴 열기">
+    <span class="mobile-snb-btn-icon">☰</span>
+    <span class="mobile-snb-btn-text">메뉴</span>
+</button>
+
+<!-- 모바일 메뉴 오버레이 -->
+<div class="mobile-snb-overlay" id="mobileSnbOverlay"></div>
+
+<!-- 모바일 바텀시트 메뉴 -->
+<nav class="mobile-snb-sheet" id="mobileSnbSheet" aria-hidden="true">
+
+    <div class="mobile-snb-header">
+        <div>
+            <p class="mobile-snb-title">전체 메뉴</p>
+            <p class="mobile-snb-subtitle">CHOP FOOD MES</p>
+        </div>
+
+        <button type="button" class="mobile-snb-close" id="mobileSnbClose" aria-label="모바일 메뉴 닫기">
+            ×
+        </button>
+    </div>
+
+    <div class="mobile-snb-body">
+
+        <a href="${ctx}/dashboard"
+           class="mobile-snb-link ${uri.contains('/dashboard') ? 'active' : ''}">
+            대시보드
+        </a>
+
+        <div class="mobile-snb-group ${uri.contains('/notice/') || uri.contains('/sugg/') ? 'open' : ''}">
+            <button type="button" class="mobile-snb-group-btn">
+                <span>게시판</span>
+                <span class="mobile-snb-arrow">›</span>
+            </button>
+
+            <div class="mobile-snb-submenu">
+                <a href="${ctx}/notice/list" class="${uri.contains('/notice/') ? 'active' : ''}">공지사항</a>
+                <a href="${ctx}/sugg/list" class="${uri.contains('/sugg/') ? 'active' : ''}">건의사항</a>
+            </div>
+        </div>
+
+        <div class="mobile-snb-group ${uri.contains('/plan/') || uri.contains('/work/') || uri.contains('/quality/') ? 'open' : ''}">
+            <button type="button" class="mobile-snb-group-btn">
+                <span>생산/작업</span>
+                <span class="mobile-snb-arrow">›</span>
+            </button>
+
+            <div class="mobile-snb-submenu">
+                <a href="${ctx}/plan/list" class="${uri.contains('/plan/') ? 'active' : ''}">생산 계획 관리</a>
+                <a href="${ctx}/work/list" class="${uri.contains('/work/') ? 'active' : ''}">작업 관리</a>
+                <a href="${ctx}/quality/list" class="${uri.contains('/quality/') ? 'active' : ''}">품질검사 관리</a>
+            </div>
+        </div>
+
+        <div class="mobile-snb-group ${uri.contains('/stock/') || uri.contains('/lot/') || uri.contains('/io/') ? 'open' : ''}">
+            <button type="button" class="mobile-snb-group-btn">
+                <span>재고</span>
+                <span class="mobile-snb-arrow">›</span>
+            </button>
+
+            <div class="mobile-snb-submenu">
+                <a href="${ctx}/stock/list" class="${uri.contains('/stock/') ? 'active' : ''}">재고 관리</a>
+                <a href="${ctx}/lot/list" class="${uri.contains('/lot/') ? 'active' : ''}">LOT 관리</a>
+                <a href="${ctx}/io/list" class="${uri.contains('/io/') ? 'active' : ''}">입출고 관리</a>
+            </div>
+        </div>
+
+        <div class="mobile-snb-group ${uri.contains('/item/') || uri.contains('/routing/') || uri.contains('/bom/') || uri.contains('/warehouse/') || uri.contains('/workplace/') || uri.contains('/equip/') || uri.contains('/vendor/') || uri.contains('/defect/') || uri.contains('/ghp/') ? 'open' : ''}">
+            <button type="button" class="mobile-snb-group-btn">
+                <span>기준정보</span>
+                <span class="mobile-snb-arrow">›</span>
+            </button>
+
+            <div class="mobile-snb-submenu">
+                <a href="${ctx}/item/list" class="${uri.contains('/item/') ? 'active' : ''}">품목 관리</a>
+                <a href="${ctx}/routing/list" class="${uri.contains('/routing/') ? 'active' : ''}">라우팅 관리</a>
+                <a href="${ctx}/bom/list" class="${uri.contains('/bom/') ? 'active' : ''}">BOM 관리</a>
+                <a href="${ctx}/warehouse/list" class="${uri.contains('/warehouse/') ? 'active' : ''}">창고 관리</a>
+                <a href="${ctx}/workplace/list" class="${uri.contains('/workplace/') ? 'active' : ''}">작업장 관리</a>
+                <a href="${ctx}/equip/list" class="${uri.contains('/equip/') ? 'active' : ''}">설비 관리</a>
+                <a href="${ctx}/vendor/list" class="${uri.contains('/vendor/') ? 'active' : ''}">거래처 관리</a>
+                <a href="${ctx}/defect/list" class="${uri.contains('/defect/') ? 'active' : ''}">불량유형 관리</a>
+                <a href="${ctx}/ghp/list" class="${uri.contains('/ghp/') ? 'active' : ''}">위생 관리</a>
+            </div>
+        </div>
+
+        <div class="mobile-snb-group ${uri.contains('/report/') ? 'open' : ''}">
+            <button type="button" class="mobile-snb-group-btn">
+                <span>리포팅</span>
+                <span class="mobile-snb-arrow">›</span>
+            </button>
+
+            <div class="mobile-snb-submenu">
+                <a href="${ctx}/report/work" class="${uri.contains('/report/work') ? 'active' : ''}">작업 실적</a>
+                <a href="${ctx}/report/quality" class="${uri.contains('/report/quality') ? 'active' : ''}">품질</a>
+                <a href="${ctx}/report/inout" class="${uri.contains('/report/inout') ? 'active' : ''}">입출고</a>
+                <a href="${ctx}/report/facility" class="${uri.contains('/report/facility') ? 'active' : ''}">설비</a>
+            </div>
+        </div>
+
+        <div class="mobile-snb-group ${uri.contains('/admin/') || uri.contains('/alarm/') ? 'open' : ''}">
+            <button type="button" class="mobile-snb-group-btn">
+                <span>관리자</span>
+                <span class="mobile-snb-arrow">›</span>
+            </button>
+
+            <div class="mobile-snb-submenu">
+                <a href="${ctx}/admin/list" class="${uri.contains('/admin/') ? 'active' : ''}">사원 관리</a>
+                <a href="${ctx}/alarm/add" class="${uri.contains('/alarm/') ? 'active' : ''}">알람 생성</a>
+            </div>
+        </div>
+
+        <div class="mobile-snb-bottom">
+            <a href="${ctx}/mypage"
+               class="mobile-snb-link ${uri.contains('/mypage') ? 'active' : ''}">
+                마이페이지
+            </a>
+
+            <a href="${ctx}/logout" class="mobile-snb-link logout">
+                로그아웃
+            </a>
+        </div>
+
+    </div>
+</nav>

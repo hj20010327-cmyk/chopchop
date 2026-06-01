@@ -829,3 +829,29 @@ body.modal-open {
 .hidePw {
 	display: none;
 }
+
+
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	
+	.search-box {
+		gap: 8px;
+	}
+	
+	.search-item input, .search-item select {
+		font-size: 12px;
+	}
+	
+	.search-item input {
+		min-width: 200px;
+	}
+	
+	.search-item input[type="date"] {
+		min-width: 140px;
+	}
+	
+}

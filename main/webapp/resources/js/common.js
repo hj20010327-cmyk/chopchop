@@ -262,3 +262,79 @@ window.addEventListener('load', () => {
         sessionStorage.removeItem('scrollPosition');
     }
 });
+
+
+/* ==============================
+   모바일 하단 사이드바
+============================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const mobileSnbBtn = document.getElementById("mobileSnbBtn");
+    const mobileSnbOverlay = document.getElementById("mobileSnbOverlay");
+    const mobileSnbSheet = document.getElementById("mobileSnbSheet");
+    const mobileSnbClose = document.getElementById("mobileSnbClose");
+
+    if (!mobileSnbBtn || !mobileSnbOverlay || !mobileSnbSheet || !mobileSnbClose) {
+        return;
+    }
+
+    function openMobileSnb() {
+        mobileSnbOverlay.classList.add("active");
+        mobileSnbSheet.classList.add("active");
+        document.body.classList.add("mobile-snb-open");
+        mobileSnbSheet.setAttribute("aria-hidden", "false");
+    }
+
+    function closeMobileSnb() {
+        mobileSnbOverlay.classList.remove("active");
+        mobileSnbSheet.classList.remove("active");
+        document.body.classList.remove("mobile-snb-open");
+        mobileSnbSheet.setAttribute("aria-hidden", "true");
+    }
+
+    mobileSnbBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        openMobileSnb();
+    });
+
+    mobileSnbClose.addEventListener("click", function (e) {
+        e.stopPropagation();
+        closeMobileSnb();
+    });
+
+    mobileSnbOverlay.addEventListener("click", function () {
+        closeMobileSnb();
+    });
+
+    mobileSnbSheet.addEventListener("click", function (e) {
+        e.stopPropagation();
+    });
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            closeMobileSnb();
+        }
+    });
+
+    const groupButtons = mobileSnbSheet.querySelectorAll(".mobile-snb-group-btn");
+
+    groupButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+
+            const group = btn.closest(".mobile-snb-group");
+
+            if (!group) return;
+
+            group.classList.toggle("open");
+        });
+    });
+
+    const mobileLinks = mobileSnbSheet.querySelectorAll("a[href]");
+
+    mobileLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+            closeMobileSnb();
+        });
+    });
+});
