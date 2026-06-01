@@ -840,8 +840,8 @@ body.modal-open {
 
 .btn-top {
     position: fixed;
-    right: 24px;
-    bottom: 24px;
+    right: 20px;
+    bottom: 80px;
     z-index: 1000;
 
     width: 44px;
@@ -872,6 +872,10 @@ body.modal-open {
 .btn-top:hover {
     background-color: var(--main-green-hover);
     text-decoration: none;
+}
+
+body.mobile-snb-open .btn-top {
+    display: none;
 }
 
 

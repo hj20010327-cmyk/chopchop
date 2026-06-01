@@ -209,7 +209,7 @@ button.snb-menu {
         position: fixed;
         right: 18px;
         bottom: 18px;
-        z-index: 1200;
+        z-index: 2000;
 
         align-items: center;
         justify-content: center;
@@ -241,7 +241,7 @@ button.snb-menu {
         display: block;
         position: fixed;
         inset: 0;
-        z-index: 1190;
+        z-index: 3000;
 
         background: rgba(0, 0, 0, 0.38);
 
@@ -261,7 +261,7 @@ button.snb-menu {
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 1210;
+        z-index: 3010;
 
         flex-direction: column;
 
