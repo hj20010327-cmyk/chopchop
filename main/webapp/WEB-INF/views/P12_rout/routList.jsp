@@ -134,17 +134,134 @@
 
 @media screen and (max-width: 768px) {
 	
-	.table tr th, .table tr td {
-		width: 100px;
-	}
+/* 	.table tr th, .table tr td { */
+/* 		width: 100px; */
+/* 	} */
 	
-	.table tr th:nth-child(3), .table tr td:nth-child(3),
-	.table tr th:nth-child(4), .table tr td:nth-child(4) {
-		display: none;
-	}
+/* 	.table tr th:nth-child(3), .table tr td:nth-child(3), */
+/* 	.table tr th:nth-child(4), .table tr td:nth-child(4) { */
+/* 		display: none; */
+/* 	} */
 	
-	.table tr th:last-child, .table tr td:last-child {
-		width: 300px;
+/* 	.table tr th:last-child, .table tr td:last-child { */
+/* 		width: 300px; */
+/* 	} */
+
+	.content {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 14px;
+	}
+
+	.header-row > div:last-child {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 10px;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	.search-box {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		width: 100%;
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.search-item,
+	.search-item.keyword {
+		width: 100%;
+	}
+
+	.search-item select,
+	.search-item input {
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.search-btn-area {
+		width: 100%;
+		display: flex;
+		gap: 8px;
+		justify-content: flex-end;
+	}
+
+	.search-btn-area .btn {
+		flex: 1;
+		text-align: center;
+	}
+
+	.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 620px;
+	}
+
+	.table th,
+	.table td {
+		padding: 6px 4px;
+		font-size: 11px;
+		line-height: 1.25;
+		white-space: nowrap;
+	}
+
+	.table th {
+		font-size: 10px;
+		font-weight: 600;
+	}
+
+	.table tr {
+		height: 36px;
+	}
+
+	.table tr th:nth-child(1),
+	.table tr td:nth-child(1) {
+		width: 90px !important;
+	}
+
+	.table tr th:nth-child(2),
+	.table tr td:nth-child(2) {
+		width: 100px !important;
+	}
+
+	.table tr th:nth-child(3),
+	.table tr td:nth-child(3) {
+		width: 100px !important;
+	}
+
+	.table tr th:nth-child(4),
+	.table tr td:nth-child(4) {
+		width: 110px !important;
+	}
+
+	.table tr th:nth-child(5),
+	.table tr td:nth-child(5) {
+		width: 220px !important;
+		white-space: normal;
+		word-break: break-word;
 	}
 	
 }

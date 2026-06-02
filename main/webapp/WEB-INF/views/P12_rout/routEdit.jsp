@@ -423,35 +423,213 @@
 ============================== */
 
 @media screen and (max-width: 768px) {
+
+	.content {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	.btn-row {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.btn-row .right {
+		width: 100%;
+		display: flex;
+		gap: 8px;
+	}
+
+	.btn-row .right .btn {
+		flex: 1;
+		text-align: center;
+	}
+
+	.rout-form-wrap {
+		width: 100% !important;
+		gap: 14px;
+	}
+
 	.rout-form-row {
 		width: 100% !important;
+		flex-direction: column;
+		gap: 14px;
+	}
+
+	.rout-form-row .search-item {
+		width: 100% !important;
+		margin-right: 0 !important;
+	}
+
+	.rout-form-wrap input,
+	.rout-form-wrap select {
+		width: 100% !important;
+		box-sizing: border-box;
 	}
 	
-	.rout-item-select {
-		width: 300px !important;
+	.routing-section-title-row > div {
+		width: 100%;
+		text-align: left;
 	}
 	
-	.rout-name-item, .rout-content-item {
-		width: 620px !important;
+	.routing-section-title-row .content-content-content-title,
+	.routing-section-title-row .page-subtitle {
+		text-align: left;
 	}
-	
-	.table tr th:nth-child(1), .table tr td:nth-child(1),
-	.table tr th:nth-child(2), .table tr td:nth-child(2),
-	.table tr th:last-child, .table tr td:last-child {
-		width: 65px !important;
+
+	.routing-section-title-row {
+		margin: 28px 0 14px;
+		flex-direction: column;
+		gap: 12px;
 	}
-	
-	.table tr th:nth-child(3), .table tr td:nth-child(3) {
-		width: 145px !important;
+
+	.routing-section-title-row .btn {
+		width: 40%;
+		text-align: center;
 	}
-	
-	.table tr th:nth-child(3), .table tr td:nth-child(3) {
-		width: 145px !important;
+
+	.content-content-content-title {
+		font-size: 18px;
 	}
-	
-	.table tr th:nth-child(4), .table tr td:nth-child(4) {
+
+	.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 620px;
+	}
+
+	.table th,
+	.table td {
+		padding: 6px 4px;
+		font-size: 11px;
+		line-height: 1.25;
+		white-space: nowrap;
+	}
+
+	.table th {
+		font-size: 10px;
+		font-weight: 600;
+	}
+
+	.table tr {
+		height: 36px;
+	}
+
+	.table tr th:nth-child(1),
+	.table tr td:nth-child(1),
+	.table tr th:nth-child(2),
+	.table tr td:nth-child(2),
+	.table tr th:last-child,
+	.table tr td:last-child {
+		width: 55px !important;
+	}
+
+	.table tr th:nth-child(3),
+	.table tr td:nth-child(3) {
+		width: 130px !important;
+	}
+
+	.table tr th:nth-child(4),
+	.table tr td:nth-child(4) {
 		width: 100px !important;
 	}
+
+	.table tr th:nth-child(5),
+	.table tr td:nth-child(5) {
+		width: 210px !important;
+		white-space: normal;
+		word-break: break-word;
+	}
+
+	.drag-handle {
+		width: 24px;
+		height: 24px;
+		font-size: 14px;
+	}
+
+	.remove-row-btn {
+		width: 26px;
+		height: 26px;
+		font-size: 14px;
+	}
+
+	/* 모달 */
+	.overlay {
+		padding: 16px;
+		box-sizing: border-box;
+		align-items: flex-start;
+		overflow-y: auto;
+	}
+
+	.modal {
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-top: 40px;
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.modal-header {
+		margin-bottom: 14px;
+	}
+
+	.modal-header h3 {
+		font-size: 18px;
+	}
+
+	.modal-close {
+		font-size: 24px;
+	}
+
+	.modal-body {
+		gap: 12px;
+	}
+
+	.modal-body input,
+	.modal-body select,
+	.modal-body textarea {
+		width: 100% !important;
+		font-size: 14px;
+		box-sizing: border-box;
+	}
+
+	.proc-content-textarea {
+		min-height: 90px;
+	}
+
+	.modal-btn-row {
+		display: flex;
+		gap: 8px;
+	}
+
+	.modal-btn-row .btn {
+		flex: 1;
+		text-align: center;
+	}
+
 }
 </style>
 

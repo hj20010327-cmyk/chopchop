@@ -19,7 +19,7 @@
         <div class="left">
             <a class="btn btn-white"
                href="${pageContext.request.contextPath}/routing/list">
-                목록
+                목록으로
             </a>
         </div>
 
@@ -539,16 +539,300 @@
 
 @media screen and (max-width: 768px) {
 	
-	.table tr th:nth-child(2), .table tr td:nth-child(2) {
-		width: 160px !important;
+	.content {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	.btn-row {
+		justify-content: space-around;
+		gap: 55px;
+	}
+
+	.btn-row .left,
+	.btn-row .right {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		gap: 8px;
 	}
 	
-	.table tr th:nth-child(4), .table tr td:nth-child(4) {
-		width: 100px !important;
+	.status-back {
+		font-size: 10px;
+	}
+
+	.btn-row .btn {
+		text-align: center;
+	}
+
+	.content-content-content {
+		padding: 10px;
+		box-sizing: border-box;
+	}
+
+	.rout-title-row,
+	.routing-section-title-row {
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.content-content-content-title {
+		font-size: 18px;
+		margin-top: 10px;
+	}
+
+	/* 상세 정보는 2개씩 유지 */
+	.info-table {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	.info-table th,
+	.info-table td {
+		padding: 9px 6px;
+		font-size: 10px;
+		word-break: break-word;
+	}
+
+	.info-table th {
+		width: 25%;
+		white-space: nowrap;
+	}
+
+	.info-table td {
+		width: 30%;
+	}
+
+	.info-table td[colspan="3"] {
+		width: 75%;
+	}
+
+	/* 공정 흐름 카드 축소 */
+	.flow-card-wrap {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		gap: 8px;
+		padding-bottom: 8px;
+	}
+
+	.flow-flow-item {
+		margin-right: 0;
+		margin-bottom: 0;
+		flex: 0 0 auto;
+	}
+
+	.flow-inline-arrow {
+		margin-right: 8px;
+		font-size: 20px;
+	}
+
+	.flow-card {
+		width: 115px;
+		min-height: 82px;
+		padding: 34px 10px 12px;
+	}
+
+	.step-badge {
+		width: 24px;
+		height: 24px;
+		font-size: 12px;
+	}
+
+	.flow-card-title {
+		font-size: 13px;
+		margin-bottom: 4px;
+	}
+
+	.flow-card-code {
+		font-size: 11px;
+	}
+
+	/* 단계 정보 테이블 축소 */
+	.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 620px;
+	}
+
+	.table th,
+	.table td {
+		padding: 6px 4px;
+		font-size: 11px;
+		line-height: 1.25;
+		white-space: nowrap;
+	}
+
+	.table th {
+		font-size: 10px;
+		font-weight: 600;
+	}
+
+	.table tr {
+		height: 36px;
+	}
+
+	.table tr th:nth-child(1),
+	.table tr td:nth-child(1) {
+		width: 45px !important;
+	}
+
+	.table tr th:nth-child(2),
+	.table tr td:nth-child(2) {
+		width: 130px !important;
+	}
+
+	.table tr th:nth-child(3),
+	.table tr td:nth-child(3) {
+		width: 180px !important;
+		white-space: normal;
+		word-break: break-word;
+	}
+
+	.table tr th:nth-child(4),
+	.table tr td:nth-child(4) {
+		width: 90px !important;
+	}
+
+	.table tr th:nth-child(5),
+	.table tr td:nth-child(5) {
+		width: 130px !important;
+	}
+
+	.muted-text {
+		font-size: 10px;
+	}
+
+	/* 모달 */
+	.proc-detail-modal {
+		width: calc(100vw - 32px);
+		max-width: calc(100vw - 32px);
+		max-height: calc(100vh - 60px);
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.modal-header {
+		gap: 10px;
+	}
+
+	.modal-title {
+		font-size: 18px;
+	}
+
+	.modal-subTitle {
+		font-size: 12px;
+		line-height: 1.4;
+	}
+
+	.proc-detail-info-table th,
+	.proc-detail-info-table td {
+		display: table-cell;
+		font-size: 12px;
+		padding: 8px 6px;
+	}
+
+	.proc-detail-info-table th {
+		width: 90px;
 	}
 	
-	.table tr th:last-child, .table tr td:last-child {
-		width: 145px !important;
+	.overlay {
+		padding: 16px;
+		box-sizing: border-box;
+		align-items: flex-start;
+		overflow-y: auto;
+	}
+	
+	.proc-detail-modal {
+		width: 100% !important;
+		max-width: 100% !important;
+		max-height: none !important;
+		margin-top: 40px;
+		padding: 16px;
+		box-sizing: border-box;
+		border-radius: 10px;
+	}
+	
+	.modal-header {
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 10px;
+		margin-bottom: 14px;
+	}
+	
+	.modal-title {
+		font-size: 18px;
+	}
+	
+	.modal-subTitle {
+		font-size: 12px;
+		line-height: 1.4;
+	}
+	
+	.modal-close {
+		font-size: 22px;
+		min-width: 28px;
+		height: 28px;
+	}
+	
+	.proc-detail-info-wrap {
+		width: 100%;
+		overflow-x: visible;
+	}
+	
+	.proc-detail-info-table {
+		width: 100%;
+		table-layout: fixed;
+	}
+	
+	.proc-detail-info-table th,
+	.proc-detail-info-table td {
+		font-size: 12px;
+		padding: 8px 6px;
+		line-height: 1.5;
+		word-break: break-word;
+		white-space: normal;
+	}
+	
+	.proc-detail-info-table th {
+		width: 32%;
+	}
+	
+	.proc-detail-info-table td {
+		width: 68%;
+	}
+	
+	.proc-detail-info-table a {
+		display: inline-block;
+		margin-bottom: 4px;
+		word-break: break-word;
+	}
+	
+	#procDetailContent {
+		min-height: 80px;
 	}
 	
 }
@@ -562,7 +846,6 @@
 		const procDetailModal = document.getElementById("procDetailModal");
 	
 		const closeProcDetailModalBtn = document.getElementById("closeProcDetailModalBtn");
-		const cancelProcDetailModalBtn = document.getElementById("cancelProcDetailModalBtn");
 	
 		const procDetailModalSubTitle = document.getElementById("procDetailModalSubTitle");
 		const procDetailRouting = document.getElementById("procDetailRouting");
@@ -589,9 +872,6 @@
 			closeProcDetailModal();
 		});
 	
-		cancelProcDetailModalBtn.addEventListener("click", function() {
-			closeProcDetailModal();
-		});
 	
 		procDetailModal.addEventListener("click", function(e) {
 			if (e.target === procDetailModal) {

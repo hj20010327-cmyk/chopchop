@@ -34,7 +34,7 @@
 			display:flex;
 			justify-content:flex-end;
 			gap:12px;
-		">
+		" class="btn-media">
 
 			<a class="btn btn-white"
 				href="${pageContext.request.contextPath}/item/list">
@@ -393,7 +393,6 @@ window.addEventListener("load", function() {
 			// [{spec:"50EA, 5kg", itemName:"새우만두"}, ...]
 			specArray = result;
 
-			console.log("규격 목록:", specArray);
 		})
 		.catch(function(error) {
 			console.log("규격 목록 조회 실패", error);
@@ -573,8 +572,6 @@ window.addEventListener("load", function() {
 	const form = document.querySelector("form");
 
 	form.addEventListener("submit", function() {
-		
-		form.addEventListener("submit", function(e) {
 
 		    const targets = this.querySelectorAll("input[type=text], textarea");
 
@@ -648,3 +645,92 @@ window.addEventListener("load", function() {
 
 });
 </script>
+
+<style>
+@media screen and (max-width: 768px) {
+
+	.content {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	form {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+
+	/* 버튼 영역 */
+	.btn-media {
+		display: flex !important;
+		justify-content: flex-end !important;
+		flex-direction: row !important;
+		gap: 8px !important;
+	}
+
+	form > div:first-child .btn {
+		text-align: center;
+	}
+
+	/* 모든 행 세로 배치 */
+	form > div[style*="display:flex"]:not(.btn-media) {
+		flex-direction: column !important;
+		gap: 14px !important;
+		margin-bottom: 14px !important;
+	}
+
+	.search-item {
+		width: 100%;
+	}
+
+	.search-item input,
+	.search-item select {
+		width: 100% !important;
+		box-sizing: border-box;
+	}
+
+	/* 품목명 48% 제거 */
+	input[name="itemName"] {
+		width: 100% !important;
+	}
+
+	/* 자동완성 */
+	#unitAutoBox,
+	#specAutoBox {
+		max-height: 140px;
+		font-size: 12px;
+	}
+
+	label {
+		font-size: 13px;
+	}
+
+	input,
+	select {
+		font-size: 14px;
+		min-height: 30px;
+	}
+
+	.unit-option,
+	.spec-option {
+		padding: 8px 10px !important;
+		font-size: 12px !important;
+	}
+}
+</style>

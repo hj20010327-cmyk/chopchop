@@ -77,29 +77,29 @@
 							<td>${itemDTO.itemName}</td>
 						</tr>
 						<tr>
-							<th>저장 창고 유형</th>
+							<th>창고 유형</th>
 							<td>
 								<c:choose>
 									<c:when test="${itemDTO.itemWhType == '10'}">
-										원자재 냉동창고
+										냉동창고(원)
 									</c:when>
 									<c:when test="${itemDTO.itemWhType == '20'}">
-										원자재 냉장창고
+										냉장창고(원)
 									</c:when>
 									<c:when test="${itemDTO.itemWhType == '30'}">
-										원자재 상온창고
+										상온창고(원)
 									</c:when>
 									<c:when test="${itemDTO.itemWhType == '40'}">
-										반제품 냉장창고
+										냉장창고(반)
 									</c:when>
 									<c:when test="${itemDTO.itemWhType == '50'}">
-										반제품 냉동창고
+										냉동창고(반)
 									</c:when>
 									<c:when test="${itemDTO.itemWhType == '60'}">
-										완제품 냉동창고
+										냉동창고(완)
 									</c:when>
 									<c:when test="${itemDTO.itemWhType == '70'}">
-										기타 자재 상온 창고
+										상온창고(기타)
 									</c:when>
 									<c:otherwise>
 										-
@@ -203,4 +203,160 @@
 	    color: var(--main-green);
 	    text-decoration: underline;
 	}
+
+	.info-table-wrap {
+		width: 100%;
+		overflow-x: auto;
+	}
+
+	.table {
+		min-width: 760px;
+	}
+
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+
+	.content {
+		padding: 10px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 14px;
+	}
+
+	.header-row > div:last-child {
+		width: 100%;
+		align-items: flex-end;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	.btn-row {
+		gap: 10px;
+		align-items: stretch;
+	}
+
+	.btn-row .left,
+	.btn-row .right {
+		width: 38%;
+		display: flex;
+		gap: 8px;
+		justify-content: space-around;
+	}
+
+	.btn-row .btn {
+		text-align: center;
+	}
+
+	.content-content {
+		width: 100%;
+	}
+
+	.content-content-content {
+		width: 100%;
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.content-content-content > div:first-child {
+		align-items: flex-start !important;
+		gap: 10px;
+	}
+
+	.content-content-content-title {
+		font-size: 18px;
+	}
+
+	.info-table-wrap {
+		overflow-x: visible;
+	}
+
+
+	.info-table {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	.info-table th,
+	.info-table td {
+		padding: 10px 8px;
+		font-size: 13px;
+		word-break: break-word;
+	}
+
+	.info-table th {
+		width: 20%;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.info-table td {
+		width: 25%;
+		font-size: 10px;
+	}
+
+	/* 규격 행 */
+	.info-table td[colspan="3"] {
+		width: 75%;
+	}
+
+	.content-content-content:nth-of-type(2) {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 620px;
+	}
+
+	.table th,
+	.table td {
+		white-space: nowrap;
+/* 		font-size: 12px; */
+/* 		padding: 10px 8px; */
+		padding: 6px 4px;
+		font-size: 11px;
+		line-height: 1.2;
+	}
+	
+	.table th {
+		font-size: 10px;
+		font-weight: 600;
+	}
+
+	.status {
+		font-size: 10px;
+		padding: 2px 6px;
+	}
+
+	.table tr {
+		height: 36px;
+	}
+
+	.lotId {
+		font-size: 11px;
+	}
+
+	.status-back {
+		white-space: nowrap;
+		font-size: 9px;
+	}
+}
 </style>

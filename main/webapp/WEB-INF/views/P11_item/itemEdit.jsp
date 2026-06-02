@@ -23,7 +23,7 @@
 
 		<input type="hidden" name="itemId" value="${itemDTO.itemId}">
 
-		<div style="display:flex; justify-content:flex-end; gap:12px;">
+		<div style="display:flex; justify-content:flex-end; gap:12px;" class="btn-media">
 
 			<a class="btn btn-white"
 				href="${pageContext.request.contextPath}/item/detail?itemId=${itemDTO.itemId}">
@@ -130,10 +130,6 @@
 
 				<label>단위 <span class="red">*</span></label>
 
-<!-- 				<input type="text" -->
-<!-- 					name="unit" -->
-<%-- 					value="${itemDTO.unit}" --%>
-<!-- 					placeholder="단위 입력"> -->
 				<div class="unit-wrap" style="position:relative; width:100%;">
 
 					<input type="text"
@@ -170,10 +166,6 @@
 
 				<label>규격 <span class="red">*</span></label>
 
-<!-- 				<input type="text" -->
-<!-- 					name="spec" -->
-<%-- 					value="${itemDTO.spec}" --%>
-<!-- 					placeholder="규격 입력"> -->
 					<div class="spec-wrap" style="position:relative; width:100%;">
 
 					<input type="text"
@@ -581,3 +573,90 @@ window.addEventListener("load", function() {
 
 });
 </script>
+
+<style>
+@media screen and (max-width: 768px) {
+
+	.content {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	form {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+
+	.btn-media {
+		display: flex !important;
+		justify-content: flex-end !important;
+		flex-direction: row !important;
+		gap: 8px !important;
+		margin-bottom: 14px !important;
+	}
+
+	.btn-media .btn {
+		text-align: center;
+	}
+
+	form > div[style*="display:flex"]:not(.btn-media) {
+		flex-direction: column !important;
+		gap: 14px !important;
+		margin-bottom: 14px !important;
+	}
+
+	.search-item {
+		width: 100%;
+	}
+
+	.search-item input,
+	.search-item select {
+		width: 100% !important;
+		box-sizing: border-box;
+	}
+
+	input[name="itemName"] {
+		width: 100% !important;
+	}
+
+	#unitAutoBox,
+	#specAutoBox {
+		max-height: 140px;
+		font-size: 12px;
+	}
+
+	label {
+		font-size: 13px;
+	}
+
+	input,
+	select {
+		font-size: 14px;
+		min-height: 30px;
+	}
+
+	.unit-option,
+	.spec-option {
+		padding: 8px 10px !important;
+		font-size: 12px !important;
+	}
+}
+</style>

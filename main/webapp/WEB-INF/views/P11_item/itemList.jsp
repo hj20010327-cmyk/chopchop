@@ -147,42 +147,164 @@
 
 @media screen and (max-width: 768px) {
 	
-	.table tr th:nth-child(1), .table tr td:nth-child(1) {
-		width: 100px !important;
+.content {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.header-row {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 14px;
+	}
+
+	.header-row > div:last-child {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 10px;
+	}
+
+	.page-title {
+		font-size: 22px;
+	}
+
+	.page-subtitle {
+		font-size: 13px;
+	}
+
+	.page-route {
+		font-size: 12px;
+	}
+
+	.search-box {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		width: 100%;
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.search-item {
+		width: 100%;
+	}
+
+	.search-item select,
+	.search-item input {
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.search-item.keyword {
+		width: 100%;
+	}
+
+	.search-btn-area {
+		width: 100%;
+		display: flex;
+		gap: 8px;
+		justify-content: flex-end;
+	}
+
+	.search-btn-area .btn {
+		flex: 1;
+		text-align: center;
+	}
+
+	.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 700px;
+	}
+
+	.table th,
+	.table td {
+		padding: 6px 4px;
+		font-size: 11px;
+		line-height: 1.2;
+		white-space: nowrap;
+	}
+
+	.table th {
+		font-size: 10px;
+		font-weight: 600;
+	}
+
+	.table tr {
+		height: 36px;
+	}
+
+	.itemId {
+		font-size: 11px;
 	}
 	
-	.table tr th:nth-child(2), .table tr td:nth-child(2) {
-		width: 190px !important;
+	.table tr th:nth-child(1),
+	.table tr td:nth-child(1) {
+		width: 90px !important;
 	}
 	
-	.table tr th:nth-child(3), .table tr td:nth-child(3) {
-		width: 115px !important;
+	.table tr th:nth-child(2),
+	.table tr td:nth-child(2) {
+		width: 120px !important;
 	}
 	
-}
+	.table tr th:nth-child(3),
+	.table tr td:nth-child(3) {
+		width: 70px !important;
+	}
+	
+	.table tr th:nth-child(4),
+	.table tr td:nth-child(4) {
+		width: 90px !important;
+	}
+	
+	.table tr th:nth-child(5),
+	.table tr td:nth-child(5) {
+		width: 60px !important;
+	}
+	
+	.table tr th:nth-child(6),
+	.table tr td:nth-child(6) {
+		width: 130px !important;
+	}
+	
+	.table tr th:nth-child(7),
+	.table tr td:nth-child(7) {
+		width: 90px !important;
+	}
+		
 	
 </style>
 
 <script>
 	window.addEventListener('load', function () {
+	
 		document.querySelector("form").addEventListener("submit", function(e) {
-
+	
 		    const targets = this.querySelectorAll("input[type=text], textarea");
-
+	
 		    for (let i = 0; i < targets.length; i++) {
-
-		        if (targets[i].value.trim() === "") {
-
+	
+		        if (targets[i].value !== "" && targets[i].value.trim() === "") {
+	
 		            alert("공백만 입력할 수 없습니다.");
-
+	
 		            targets[i].focus();
-
+	
 		            e.preventDefault();
 		            return false;
 		        }
+	
+		        targets[i].value = targets[i].value.trim();
 		    }
 		});
-		
+	
 		document.querySelectorAll("input, textarea").forEach(el => {
 		    el.addEventListener("blur", function() {
 		        this.value = this.value.trim();
