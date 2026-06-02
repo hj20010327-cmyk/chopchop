@@ -377,7 +377,22 @@
         gap: 8px;
         margin-top: 24px;
     }
+
+
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: flex-start;
+	}
+	
+	.grid-wrap input[type="text"] {
+		width: 80vw;
+	}
+}
+
 </style>
+
 
 <script>
     let editingRow = null;

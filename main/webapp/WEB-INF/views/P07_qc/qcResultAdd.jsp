@@ -41,11 +41,11 @@
             </button>
         </div>
 
-        <div style="margin-top:45px; margin-bottom:35px; font-size:20px; font-weight:700;">
-            검사자 : ${qc.workerName} (${qc.qcWorker})
-        </div>
+<!--         <div style="margin-top:45px; margin-bottom:35px; font-size:20px; font-weight:700;"> -->
+<%--             검사자 : ${qc.workerName} (${qc.qcWorker}) --%>
+<!--         </div> -->
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>검사 코드</label>
                 <input type="text" value="${qc.qcId}" readonly>
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>품목</label>
                 <input type="text" value="${qc.itemName} (${qc.itemId})" readonly>
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class='status'>
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>검사 상태 <span class="red">*</span></label>
 
@@ -84,7 +84,7 @@
             </div>
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>합격 수량</label>
                 <input type="text" id="qcPassQtyText" value="${qc.qcPassQty}" readonly>
@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>입고 창고 <span class="red">*</span></label>
                 <select id="whId">
@@ -113,7 +113,7 @@
             </div>
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
             <div class="search-item" style="display:flex; flex-direction:column; flex:1;">
                 <label>입고 수량</label>
                 <input type="text" id="inQty" placeholder="입고 수량" readonly>
@@ -288,6 +288,27 @@ input[readonly] {
     color: #333;
     transform: scale(1.05);
 }
+
+
+
+@media screen and (max-width: 480px) {
+	.column {
+		flex-direction: column;
+	}
+	
+	.textarea {
+		min-width: 0px !important;
+	}
+	
+	.status label {
+		margin-top: 15px;
+	}
+	
+	.status div {
+		flex-wrap: wrap;
+	}
+}
+
 </style>
 
 <script>

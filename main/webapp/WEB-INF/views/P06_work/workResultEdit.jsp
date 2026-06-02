@@ -93,6 +93,15 @@
 
 </div>
 
+<style>
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+	}
+}
+</style>
+
 <script>
 	window.addEventListener("load", function() {
 		bindResultEdit();

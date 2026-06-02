@@ -459,6 +459,52 @@
 	
 }
 
+@media screen and (max-width: 480px) {
+	
+	.row1 .btn-row {
+		flex-direction: column;
+	}
+	
+	.row2 {
+		flex-wrap: wrap;
+	}
+	
+	.card-grid {
+		flex-direction: column;
+	}
+	
+	.reportCard {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+ 		max-width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+	
+	.reportCard .card {
+		min-width: 150px;
+	}
+	
+	.analysis-subtitle {
+		display: none;
+	}
+	
+		.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 760px;
+		white-space: nowrap;
+	}
+	
+}
+
 
 </style>
 

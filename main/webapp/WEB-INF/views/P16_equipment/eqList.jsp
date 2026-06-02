@@ -224,6 +224,24 @@
 .card.active div {
     color: white !important;
 }
+
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media screen and (max-width: 768px) {
+	
+	.table tr th:nth-child(4), .table tr td:nth-child(4) {
+		display: none;
+	}
+	
+}
+
+@media screen and (max-width: 480px) {
+	.card-wrap {
+		flex-wrap: wrap;
+	}
+}
 </style>
 <script>
 window.addEventListener("load", () => {

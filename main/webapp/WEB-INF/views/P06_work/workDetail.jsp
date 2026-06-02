@@ -559,5 +559,18 @@
 			border-left: none;
 			border-top: 1px solid var(--gray);
 		}
+		
+		
+	    .table-wrap {
+			width: 100%;
+			overflow-x: auto;
+			overflow-y: hidden;
+			-webkit-overflow-scrolling: touch;
+		}
+	
+		.table {
+			min-width: 760px;
+			white-space: nowrap;
+		}
 	}
 </style>

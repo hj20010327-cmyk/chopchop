@@ -705,6 +705,14 @@
     margin-bottom: 0;
 }
 
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: flex-start;
+	}
+}
+
 </style>
 
 <script>

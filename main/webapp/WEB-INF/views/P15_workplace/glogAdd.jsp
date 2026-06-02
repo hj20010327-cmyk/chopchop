@@ -95,7 +95,7 @@
 		</div>
 		
 		<div class="grid-wrap">
-			<div class="grid search-item">
+			<div class="grid search-item timeGrid">
 				<label>점검 일시 <span class="red">*</span></label>
 				<div style="display: flex; gap: 10px;">
 					<input type="date" name="glogDay" id="glogDay" placeholder="점검 날짜" required>
@@ -154,7 +154,7 @@
 		
 				
 		<div class="grid-wrap">
-			<div class="grid search-item">
+			<div class="grid search-item timeGrid">
 				<label>조치 일시 (선택)</label>
 				<div style="display: flex; gap: 10px;">
 					<input type="date" name="glogAday" id="ghpAday">
@@ -218,6 +218,27 @@
 		min-width: 400px !important;
 	}
 	
+}
+
+
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: flex-start;
+	}
+	
+	.grid-wrap input[type="text"] {
+		width: 80vw;
+	}
+	
+	#ghpStandard {
+		min-width: 45vw !important;
+	}
+	
+	.timeGrid div {
+		flex-direction: column;
+	}
 }
 	
 </style>

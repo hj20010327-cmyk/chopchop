@@ -7,14 +7,14 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">위생 관리</h2>
-			<p class="page-subtitle">위생관리기준을 조회하고 새로운 관리기준을 등록하세요..</p>
+			<p class="page-subtitle">위생관리기준을 조회하고 새로운 관리기준을 등록하세요.</p>
 		</div>
 
 		<div>
 			<p class="page-route">홈 &gt; 위생 관리</p>
-			<a class="btn btn-white"
+			<a class="btn btn-white addBtn"
 				href="${pageContext.request.contextPath}/ghp/add">
-				위생 기준 등록
+				기준 등록
 			</a>
 		</div>
 	</div>
@@ -141,6 +141,22 @@
 		display: none;
 	}
 	
+	.addBtn {
+		margin-left: 20px;
+		min-width: 72px;
+	}
+	
+	.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 760px;
+		white-space: nowrap;
+	}
 }
 </style>
 

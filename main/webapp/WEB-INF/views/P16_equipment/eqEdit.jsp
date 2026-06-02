@@ -216,6 +216,25 @@
 </div>
 
 
+<style>
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: flex-start;
+	}
+	
+	.grid-wrap input {
+		width: 80vw;
+	}
+	
+	.grid-wrap input[readonly] {
+		width: 60vw;
+	}
+}
+</style>
+
+
 <script>
 	document
 			.querySelector("#openManagerModal")

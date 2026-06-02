@@ -286,6 +286,37 @@
 		width: 200px;
 	}
 }
+
+@media screen and (max-width: 768px) {
+	
+	.table tr th:nth-child(2), .table tr td:nth-child(2) {
+		display: none;
+	}
+	
+	.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 760px;
+		white-space: nowrap;
+	}
+	
+	.search-item input {
+		max-width: 300px;
+	}
+	
+}
+
+
+@media screen and (max-width: 480px) {
+	.card-wrap {
+		flex-wrap: wrap;
+	}
+}
 </style>
 
 <script>

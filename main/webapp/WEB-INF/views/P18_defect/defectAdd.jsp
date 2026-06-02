@@ -82,4 +82,15 @@
         min-height: 120px;
         box-sizing: border-box;
     }
+    
+
+@media screen and (max-width: 480px) {
+	input {
+		width: 80% !important;
+	}
+	
+	.defect-action-textarea-add {
+		width: 80vw;
+	}
+}
 </style>

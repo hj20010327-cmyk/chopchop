@@ -419,11 +419,77 @@
         height: 300px;
     }
 
-    @media (max-width: 900px) {
-        .reportCard {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+/* ==============================
+   Mobile Layout
+============================== */
+
+@media (max-width: 900px) {
+    .reportCard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+@media screen and (max-width: 940px) {
+	
+	.card-value {
+		font-size: 20px !important;
+	}
+	
+	.reportCard .card {
+		width: 150px;
+	}
+	
+	.table tr th:nth-child(3), .table tr td:nth-child(3) {
+		display: none;
+	}
+	
+}
+
+@media screen and (max-width: 480px) {
+	
+	.row1 .btn-row {
+		flex-direction: column;
+	}
+	
+	.row2 {
+		flex-wrap: wrap;
+	}
+	
+	.card-grid {
+		flex-direction: column;
+	}
+	
+	.reportCard {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+ 		max-width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+	
+	.reportCard .card {
+		min-width: 150px;
+	}
+	
+	.analysis-subtitle {
+		display: none;
+	}
+	
+		.table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 760px;
+		white-space: nowrap;
+	}
+	
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

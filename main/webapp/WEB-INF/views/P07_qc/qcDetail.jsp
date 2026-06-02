@@ -134,7 +134,7 @@
                             		${qc.qcLot}	
                             	</a>
                             </td>
-                            <th>품목(코드)</th>
+                            <th>품목</th>
                             <td>
                             	<a class="toDetail"
                             		href="${pageContext.request.contextPath}/item/detail?itemId=${qc.itemId}">

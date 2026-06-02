@@ -75,7 +75,8 @@
                         border-bottom:1px solid #ddd;
                         padding:10px 24px;
                         font-size:12px;
-                        color:#555;">
+                        color:#555;"
+                     class="infoSec">
 
                     <span style="margin-right:28px;">
                         작성자 ${dto.empName} (${dto.not_writer})
@@ -144,3 +145,23 @@ document.querySelector("#copyurl").addEventListener("click", function () {
     alert("URL이 복사되었습니다.");
 });
 </script>
+
+<style>
+@media screen and (max-width: 480px) {
+	
+	.infoSec {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+	}
+	
+	.infoSec span {
+		margin: 0px !important;
+	}
+	
+	.infoSec span:nth-child(2n-1) {
+		margin-right: 30px !important;
+	}
+}
+
+</style>

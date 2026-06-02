@@ -268,21 +268,32 @@
 ============================== */
 
 @media screen and (max-width: 768px) {
-	
-/* 	.card-wrap { */
-/* 		flex-wrap: wrap; */
-/* 	} */
-	
-/* 	.card { */
-/* 		margin: 0 15px; */
-/* 	} */
 
 	.table tr th:last-child,
     .table tr td:last-child {
         display: none !important;
     }
+    
+    .table-wrap {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table {
+		min-width: 760px;
+		white-space: nowrap;
+	}
 	
 }
+
+@media screen and (max-width: 480px) {
+	.card-wrap {
+		flex-wrap: wrap;
+	}
+}
+
 	
 </style>
 

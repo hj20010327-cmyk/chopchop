@@ -103,6 +103,13 @@
 		width: 300px;
 	}
 }
+
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+	}
+}
 </style>
 
 

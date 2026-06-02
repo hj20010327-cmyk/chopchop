@@ -61,7 +61,7 @@
 
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
 
             <div class="search-item"
                 style="display:flex; flex-direction:column; flex:1;">
@@ -137,7 +137,7 @@
 
         </div>
 
-        <div style="display:flex; gap:40px; margin-bottom:26px;">
+        <div style="display:flex; gap:40px; margin-bottom:26px;" class="column">
 
             <div class="search-item"
                 style="display:flex; flex-direction:column; flex:1;">
@@ -305,6 +305,28 @@ input[readonly] {
 	}
 }
 
+
+@media screen and (max-width: 480px) {
+	.column {
+		flex-direction: column;
+	}
+	
+	.textarea {
+		min-width: 0px !important;
+	}
+}
+
+
+
+@media screen and (max-width: 480px) {
+	.column {
+		flex-direction: column;
+	}
+	
+	.textarea {
+		min-width: 0px !important;
+	}
+}
 
 
 </style>

@@ -99,7 +99,7 @@
 					</tr>
 
 					<tr>
-						<th>거래처이름(코드)</th>
+						<th>거래처</th>
 						<td>
 							<c:choose>
 								<c:when test="${not empty lot.lotVendor}">

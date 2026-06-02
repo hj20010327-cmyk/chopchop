@@ -165,6 +165,14 @@
 	.modal .table tbody tr:hover {
 		background-color: var(--white-hover);
 	}
+	
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+	}
+}
+	
 </style>
 
 

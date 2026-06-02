@@ -202,6 +202,13 @@
 	background-color: var(--white-hover);
 	cursor: pointer;
 }
+
+@media screen and (max-width: 480px) {
+	.form-row {
+		display: flex !important;
+		flex-direction: column !important;
+	}
+}
 </style>
 
 <script>

@@ -319,6 +319,17 @@
 	
 }
 
+@media screen and (max-width: 480px) {
+	.def-summary-grid {
+		diplay: flex;
+		flex-direction: column;
+	}
+	
+	.def-summary-grid div {
+		width: 100% !important;
+	}
+}
+
 </style>
 
 <script>

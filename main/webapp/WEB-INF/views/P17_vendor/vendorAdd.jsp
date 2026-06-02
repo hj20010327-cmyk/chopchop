@@ -228,6 +228,19 @@
 	    height: 100%;
 	    object-fit: cover;
 	}
+	
+		
+@media screen and (max-width: 480px) {
+	.grid-wrap {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: flex-start;
+	}
+	
+	.grid-wrap input {
+		width: 80vw !important;
+	}
+}
 </style>
 
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

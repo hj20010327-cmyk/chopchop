@@ -137,7 +137,8 @@
                         border-bottom:1px solid #ddd;
                         padding:10px 24px;
                         font-size:12px;
-                        color:#555;">
+                        color:#555;"
+                     class="infoSec">
 
                     <span style="margin-right:28px;">
                         작성자 ${dto.empName} (${dto.sugg_writer})
@@ -461,6 +462,20 @@
 	.titleSec {
 		display: flex;
 		flex-direction: column;
+	}
+	
+	.infoSec {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+	}
+	
+	.infoSec span {
+		margin: 0px !important;
+	}
+	
+	.infoSec span:nth-child(2n-1) {
+		margin-right: 30px !important;
 	}
 }
 
