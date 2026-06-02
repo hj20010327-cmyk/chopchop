@@ -7,8 +7,8 @@
 
 	<div class="header-row">
 		<div>
-			<h2 class="page-title">GHP 기준 상세</h2>
-			<p class="page-subtitle">선택한 GHP 기준정보를 확인합니다.</p>
+			<h2 class="page-title">위생 관리 기준 상세</h2>
+			<p class="page-subtitle">${ghp.ghpName}(${ghp.ghpId})의 상세 정보를 확인하세요.</p>
 		</div>
 
 		<div>
@@ -49,7 +49,7 @@
 				<table class="info-table">
 					<tbody>
 						<tr>
-							<th>기준ID</th>
+							<th>기준코드</th>
 							<td>${ghp.ghpId}</td>
 
 							<th>기준명</th>

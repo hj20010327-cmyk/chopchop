@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">BOM 관리</h2>
-            <p class="page-subtitle">생산 품목 기준의 BOM 구성을 조회합니다.</p>
+            <p class="page-subtitle">BOM 목록을 조회하고 등록하세요.</p>
         </div>
 
         <div>

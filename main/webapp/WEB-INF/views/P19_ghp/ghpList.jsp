@@ -7,7 +7,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">위생 관리</h2>
-			<p class="page-subtitle">작업장 및 창고의 위생 기준정보를 관리합니다.</p>
+			<p class="page-subtitle">위생관리기준을 조회하고 새로운 관리기준을 등록하세요..</p>
 		</div>
 
 		<div>
@@ -36,7 +36,7 @@
 		</div>
 
 		<div class="search-item keyword">
-			<label>기준ID / 기준명 / 대상 검색</label>
+			<label>기준코드 / 기준명 / 대상 검색</label>
 			<input type="text"
 				name="searchKeyword"
 				value="${search.searchKeyword}"
@@ -49,7 +49,7 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th style="width: 95px;">기준ID</th>
+				<th style="width: 95px;">기준코드</th>
 				<th style="width: 280px;">기준명</th>
 				<th style="width: 90px;">구분</th>
 				<th style="width: 220px;">대상</th>

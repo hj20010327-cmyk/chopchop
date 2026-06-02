@@ -7,7 +7,7 @@
         <div>
             <h2 class="page-title">거래처 수정</h2>
             <p class="page-subtitle">
-                ${vendor.vendorName}(${vendor.vendorId})의 정보를 수정할 수 있습니다.
+                ${vendor.vendorName}(${vendor.vendorId})의 정보를 수정하세요.
             </p>
         </div>
 

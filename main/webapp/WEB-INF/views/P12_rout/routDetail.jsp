@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">라우팅 상세</h2>
-            <p class="page-subtitle">선택한 라우팅의 공정 흐름을 확인합니다.</p>
+            <p class="page-subtitle">${rout.routName}(${rout.routId})의 상세 정보를 확인하세요.</p>
         </div>
 
         <div>

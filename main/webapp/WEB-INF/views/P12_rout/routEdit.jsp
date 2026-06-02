@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">라우팅 수정</h2>
-            <p class="page-subtitle">라우팅 공정 흐름을 수정합니다.</p>
+            <p class="page-subtitle">${rout.routName}(${rout.routId})의 정보를 수정하세요.</p>
         </div>
 
         <div>

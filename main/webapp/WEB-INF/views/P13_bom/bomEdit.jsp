@@ -8,7 +8,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">BOM 수정</h2>
-            <p class="page-subtitle">BOM 기본 정보와 투입 품목을 수정할 수 있습니다.</p>
+            <p class="page-subtitle">BOM(${bom.bomId})의 정보를 수정하세요.</p>
         </div>
 
         <div>

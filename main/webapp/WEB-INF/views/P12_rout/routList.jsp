@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">라우팅 관리</h2>
-            <p class="page-subtitle">생산 품목별 공정 흐름을 조회하고 관리합니다.</p>
+            <p class="page-subtitle">라우팅 목록을 조회하고 등록하세요.</p>
         </div>
 
         <div>

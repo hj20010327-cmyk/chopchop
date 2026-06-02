@@ -7,7 +7,7 @@
         <div>
             <h2 class="page-title">불량 유형 수정</h2>
             <p class="page-subtitle">
-                불량 유형 정보를 수정할 수 있습니다.
+                ${def.defTypeName}(${${def.defTypeId}})의 정보를 수정하세요.
             </p>
         </div>
 

@@ -31,7 +31,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">불량 유형 관리</h2>
-            <p class="page-subtitle">불량 유형을 조회하고 새로운 불량 유형을 등록할 수 있습니다.</p>
+            <p class="page-subtitle">불량 유형을 조회하고 등록하세요.</p>
         </div>
 
         <div>
@@ -127,6 +127,13 @@
     </div>
 
 </div>
+
+<style>
+	.defList:hover .defTypeId {
+		color: var(--main-green);
+		text-decoration: underline;
+	}
+</style>
 
 <script>
     window.addEventListener("load", function () {

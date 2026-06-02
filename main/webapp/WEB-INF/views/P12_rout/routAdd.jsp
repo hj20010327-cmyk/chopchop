@@ -7,7 +7,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">라우팅 등록</h2>
-            <p class="page-subtitle">생산 품목별 공정 흐름을 등록합니다.</p>
+            <p class="page-subtitle">새로운 라우팅과 하위 공정을 등록하세요.</p>
         </div>
 
         <div>

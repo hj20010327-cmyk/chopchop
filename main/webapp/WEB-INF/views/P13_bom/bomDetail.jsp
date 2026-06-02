@@ -8,7 +8,7 @@
     <div class="header-row">
         <div>
             <h2 class="page-title">BOM 상세</h2>
-            <p class="page-subtitle">BOM 기본 정보와 구성 품목을 확인할 수 있습니다.</p>
+            <p class="page-subtitle">BOM(${bom.bomId})의 상세 정보를 확인하세요.</p>
         </div>
 
         <div>

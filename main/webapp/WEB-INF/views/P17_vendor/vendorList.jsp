@@ -9,7 +9,7 @@
 			<h2 class="page-title">거래처 관리</h2>
 
 			<p class="page-subtitle">
-				거래처를 조회하고 새로운 거래처를 등록할 수 있습니다.
+				거래처 목록을 조회하고 등록하세요.
 			</p>
 		</div>
 		

@@ -10,7 +10,7 @@
             <h2 class="page-title">불량 유형 상세</h2>
 
             <p class="page-subtitle">
-                선택한 불량 유형의 상세 정보를 확인하세요.
+                ${def.defTypeName}(${def.defTypeId})의 상세 정보를 확인하세요.
             </p>
         </div>
         
@@ -39,7 +39,7 @@
 
             <a class="btn btn-red"
                href="${pageContext.request.contextPath}/defect/delete?defTypeId=${def.defTypeId}"
-               onclick="return confirm('불량유형(${def.defTypeId})을 삭제하시겠습니까?');">
+               onclick="return confirm('${def.defTypeName}(${def.defTypeId})을 삭제하시겠습니까?');">
                 삭제
             </a>
 
@@ -60,11 +60,11 @@
                     <tbody>
 
                         <tr>
-                            <th>불량 유형명</th>
-                            <td>${def.defTypeName}</td>
-
                             <th>유형 코드</th>
                             <td>${def.defTypeId}</td>
+
+                            <th>불량 유형명</th>
+                            <td>${def.defTypeName}</td>
                         </tr>
 
                         <tr>
@@ -154,7 +154,7 @@
 						        <tr class="defHistoryRow"
 						            data-qc-id="${his.qcId}">
 						            <td>${his.dlogId}</td>
-						            <td class="toDetail">${his.qcId}</td>
+						            <td class="qcId">${his.qcId}</td>
 						            <td>
 					                    <fmt:formatNumber value="${his.defCnt}" pattern="#,###" />
 						            </td>
@@ -290,7 +290,7 @@
     cursor: pointer;
 }
 
-.defHistoryRow:hover .toDetail {
+.defHistoryRow:hover .qcId {
     color: var(--main-green);
     text-decoration: underline;
 }

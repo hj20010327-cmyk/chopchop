@@ -8,7 +8,7 @@
 	<div class="header-row">
 		<div>
 			<h2 class="page-title">거래처 상세</h2>
-			<p class="page-subtitle">선택한 거래처의 상세 정보를 확인하세요.</p>
+			<p class="page-subtitle">${vendor.vendorName}(${vendor.vendorId})의 상세 정보를 확인하세요.</p>
 		</div>
 
 		<div>
