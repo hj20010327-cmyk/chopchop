@@ -54,8 +54,8 @@
         <if test="riskLevel != null and riskLevel != ''">
             AND
             CASE
-                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'HIGH'
-                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 'MEDIUM'
+                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 'HIGH'
+                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'MEDIUM'
                 ELSE 'LOW'
             END = #{riskLevel}
         </if>
@@ -104,8 +104,8 @@
                 (l.lot_qty - q.qc_pass_qty) AS defect_qty,
 
                 CASE
-                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'HIGH'
-                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 'MEDIUM'
+                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 'HIGH'
+                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'MEDIUM'
                     ELSE 'LOW'
                 END AS risk_level
 
@@ -160,8 +160,8 @@
             <if test="riskLevel != null and riskLevel != ''">
                 AND
                 CASE
-                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'HIGH'
-                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 'MEDIUM'
+                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 'HIGH'
+                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'MEDIUM'
                     ELSE 'LOW'
                 END = #{riskLevel}
             </if>
@@ -218,8 +218,8 @@
                     TO_CHAR(q.qc_type) AS qcType,
 
                     CASE
-                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'HIGH'
-                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 'MEDIUM'
+                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 'HIGH'
+                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'MEDIUM'
                         ELSE 'LOW'
                     END AS riskLevel,
 
@@ -278,8 +278,8 @@
                 <if test="search.riskLevel != null and search.riskLevel != ''">
                     AND
                     CASE
-                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'HIGH'
-                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 'MEDIUM'
+                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 'HIGH'
+                        WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'MEDIUM'
                         ELSE 'LOW'
                     END = #{search.riskLevel}
                 </if>
@@ -340,8 +340,8 @@
         FROM (
             SELECT
                 CASE
-                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'HIGH'
-                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 'MEDIUM'
+                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 'HIGH'
+                    WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 'MEDIUM'
                     ELSE 'LOW'
                 END AS risk_level
             <include refid="qcBaseFrom"/>
@@ -375,8 +375,8 @@
 	            TO_NUMBER(TO_CHAR(q.qc_date, 'D')) AS "qcWeekday",
 	
 	            CASE
-	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 3
-	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 1 THEN 2
+	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 6 THEN 3
+	                WHEN ((l.lot_qty - q.qc_pass_qty) / NULLIF(l.lot_qty, 0)) * 100 >= 3 THEN 2
 	                ELSE 1
 	            END AS "inspectionRiskScore",
 	
