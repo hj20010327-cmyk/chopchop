@@ -123,7 +123,7 @@
                     <tr onclick="location.href='${pageContext.request.contextPath}/equip/detail?eqId=${eqp.eqId}'">
 
                         <td>
-                        	<span class="toDetail">
+                        	<span class="eqId">
                        		 ${eqp.eqName} (${eqp.eqId})
                        		</span>
                         </td>
@@ -178,6 +178,11 @@
 </div>
 
 <style>
+.table tbody tr:hover .eqId {
+    color: var(--main-green);
+    text-decoration: underline;
+}
+
 .card {
     cursor: pointer;
     width: 155px;

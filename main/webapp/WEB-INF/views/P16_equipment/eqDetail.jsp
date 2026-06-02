@@ -211,7 +211,7 @@
 						    data-content="${log.elogContent}">
 						    
 						    <td>
-						        <a class="toDetail"
+						        <a class="detail-link"
 						           href="javascript:void(0);">
 						            ${log.elogId}
 						        </a>
@@ -328,7 +328,7 @@
 						    data-reason="${run.eqStopReason}"
 							>
 								<td>
-									<a class="toDetail"
+									<a class="detail-link"
 									   href="javascript:void(0);">
 										${run.eqRunNo}   
 									</a>
@@ -685,6 +685,11 @@
 </div>
 
 <style>
+
+.table tbody tr:hover .detail-link {
+    color: var(--main-green);
+    text-decoration: underline;
+}
 
 .search-item input {
     min-width: 235px;

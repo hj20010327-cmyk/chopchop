@@ -101,7 +101,7 @@
 
                             <td>${dto.not_no}</td>
 
-                            <td class="toDetail">
+                            <td class="noticeTitle">
                                 ${dto.not_title}
                             </td>
 
@@ -175,7 +175,7 @@ function dateCheck() {
     transition: 0.2s;
 }
 
-.noticeTitle:hover {
+.table tbody tr:hover .noticeTitle {
     color: var(--main-green);
     text-decoration: underline;
 }

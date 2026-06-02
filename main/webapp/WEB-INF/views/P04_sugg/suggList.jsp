@@ -126,7 +126,7 @@
 								${dto.sugg_no}
 							</td>
 
-							<td class="toDetail">
+							<td class="suggTitle">
 							
 							    <c:choose>
 							
@@ -281,6 +281,11 @@
 		display: none;
 	}
 	
+}
+
+.table tbody tr:hover .suggTitle {
+    color: var(--main-green);
+    text-decoration: underline;
 }
 
 </style>
