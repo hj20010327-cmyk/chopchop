@@ -278,15 +278,35 @@
 	
 	.table tr th:nth-child(5), .table tr td:nth-child(5),
 	.table tr th:nth-child(6), .table tr td:nth-child(6) {
-		display: none;
+			display: none;
+		}
+		
 	}
 	
-}
+	.table tbody tr:hover .suggTitle {
+	    color: var(--main-green);
+	    text-decoration: underline;
+	}
 
-.table tbody tr:hover .suggTitle {
-    color: var(--main-green);
-    text-decoration: underline;
-}
+	.table-wrap {
+		overflow-x: visible !important;
+	}
+
+	.content-content-content {
+		overflow-x: visible !important;
+	}
+
+	/* common.css의 min-width 제거 */
+	.table {
+		min-width: 0 !important;
+		width: 100% !important;
+	}
+
+	.table th,
+	.table td {
+		white-space: normal !important;
+		word-break: keep-all;
+	}
 
 </style>
 

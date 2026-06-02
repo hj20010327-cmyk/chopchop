@@ -309,7 +309,15 @@
 		max-width: 300px;
 	}
 	
+	.search-box input[name="searchKeyword"] {
+		width: 260px !important;
+		max-width: 260px !important;
+		min-width: 0 !important;
+	}
+	
 }
+
+
 
 
 @media screen and (max-width: 480px) {

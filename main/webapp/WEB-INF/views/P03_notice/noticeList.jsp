@@ -191,5 +191,25 @@ function dateCheck() {
 	.table {
 		font-size: 12px;
 	}
+	
+		.table-wrap {
+		overflow-x: visible !important;
+	}
+
+	.content-content-content {
+		overflow-x: visible !important;
+	}
+
+	/* common.css의 min-width 제거 */
+	.table {
+		min-width: 0 !important;
+		width: 100% !important;
+	}
+
+	.table th,
+	.table td {
+		white-space: normal !important;
+		word-break: keep-all;
+	}
 }
 </style>
