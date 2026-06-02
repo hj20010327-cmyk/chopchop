@@ -7,6 +7,7 @@ public class InspectionReportListDTO {
 
     private String inspectionType;
     private String targetType;
+    private String targetName;
 
     private String inspectionDate;
     private String inspectionResult;

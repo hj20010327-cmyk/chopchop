@@ -202,11 +202,11 @@
                 <thead>
                     <tr>
                         <th style="width: 120px;">점검일</th>
+                        <th style="width: 220px;">대상</th>
                         <th style="width: 120px;">점검유형</th>
-                        <th style="width: 140px;">대상유형</th>
-                        <th style="width: 140px;">점검결과</th>
-                        <th>점검사유/조치</th>
-                        <th style="width: 120px;">위험도</th>
+                        <th>점검결과</th>
+                        <th style="width: 180px">점검사유/조치</th>
+                        <th style="width: 110px;">위험도</th>
                     </tr>
                 </thead>
 
@@ -214,8 +214,24 @@
                     <c:forEach var="inspection" items="${inspectionList}">
                         <tr>
                             <td>${inspection.inspectionDate}</td>
-                            <td>${inspection.inspectionType}</td>
-                            <td>${inspection.targetType}</td>
+                            <td>${inspection.targetName}</td>
+							<td>
+							    <c:choose>
+							
+							        <c:when test="${inspection.inspectionType == 'EQUIPMENT'}">
+							            설비점검
+							        </c:when>
+							
+							        <c:when test="${inspection.inspectionType == 'GHP'}">
+							            위생점검
+							        </c:when>
+							
+							        <c:otherwise>
+							            ${inspection.inspectionType}
+							        </c:otherwise>
+							
+							    </c:choose>
+							</td>
                             <td>${inspection.inspectionResult}</td>
                             <td>${inspection.inspectionReason}</td>
                             <td>

@@ -9,6 +9,7 @@
 	    SELECT
 	        inspection_type,
 	        target_type,
+	        target_name,
 	        inspection_date,
 	        inspection_result,
 	        inspection_reason,
@@ -22,15 +23,18 @@
 	        SELECT
 	            'EQUIPMENT' AS inspection_type,
 	            'EQUIPMENT' AS target_type,
+	            NVL(eq.eq_name, '설비명 없음') AS target_name,
 	            e.elog_sdate AS inspection_date,
 	            TO_CHAR(e.elog_result) AS inspection_result,
 	            TO_CHAR(e.elog_reason) AS inspection_reason,
 	            CASE
-	                WHEN e.elog_reason = '30' THEN 4
-	                WHEN e.elog_reason = '20' THEN 2
+	                WHEN e.elog_reason = '긴급점검' THEN 4
+	                WHEN e.elog_reason = '소모품 교체' THEN 2
 	                ELSE 0
 	            END AS risk_score
 	        FROM eq_log e
+	        LEFT JOIN equipment eq
+	            ON e.elog_eqid = eq.eq_id
 	        WHERE e.elog_usage = 'Y'
 	
 	        UNION ALL
@@ -42,14 +46,24 @@
 	                WHEN g.glog_wpid IS NOT NULL THEN 'WORKPLACE'
 	                ELSE 'GHP'
 	            END AS target_type,
+	            CASE
+	                WHEN g.glog_whid IS NOT NULL THEN NVL(wh.wh_name, '창고')
+	                WHEN g.glog_wpid IS NOT NULL THEN NVL(wp.wp_name, '작업장')
+	                ELSE 'GHP 공통점검'
+	            END AS target_name,
 	            g.glog_date AS inspection_date,
 	            TO_CHAR(g.glog_result) AS inspection_result,
 	            NVL(g.glog_action, '정상') AS inspection_reason,
 	            CASE
-	                WHEN g.glog_result = '부적합' THEN 3
+	                WHEN LOWER(g.glog_result) = 'fail' THEN 4
+	                WHEN g.glog_result = '부적합' THEN 2
 	                ELSE 0
 	            END AS risk_score
 	        FROM ghp_log g
+	        LEFT JOIN warehouse wh
+	            ON g.glog_whid = wh.wh_id
+	        LEFT JOIN workplace wp
+	            ON g.glog_wpid = wp.wp_id
 	        WHERE g.glog_usage = 'Y'
 	    )
 	</sql>
@@ -156,6 +170,7 @@
                 SELECT
                     inspection_type AS "inspectionType",
                     target_type AS "targetType",
+                    target_name AS "targetName",
                     TO_CHAR(inspection_date, 'YYYY-MM-DD') AS "inspectionDate",
                     inspection_result AS "inspectionResult",
                     inspection_reason AS "inspectionReason",
@@ -266,14 +281,7 @@
 	            <include refid="inspectionBaseData"/>
 	        )
 	        <include refid="inspectionBaseWhere"/>
-	        ORDER BY
-	            CASE risk_level
-	                WHEN 'RISK' THEN 1
-	                WHEN 'WARNING' THEN 2
-	                WHEN 'NORMAL' THEN 3
-	                ELSE 4
-	            END,
-	            inspection_date DESC
+	        ORDER BY inspection_date DESC
 	    )
 	    WHERE ROWNUM = 1
 	
