@@ -147,6 +147,93 @@
 </div>
 
 <style>
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+
+	form {
+		max-width: 100% !important;
+	}
+
+	.form-row {
+		flex-direction: column;
+		gap: 16px;
+		margin-bottom: 18px;
+	}
+
+	.form-row .search-item {
+		width: 100%;
+	}
+
+	.form-row.single .search-item {
+		width: 100%;
+	}
+
+	/* 상단 초기화/생성 버튼 */
+	form > div[style*="justify-content:flex-end"] {
+		gap: 8px !important;
+		margin-bottom: 24px !important;
+		flex-wrap: wrap;
+	}
+
+	/* 수신 대상 input + 조회 버튼 */
+	.target-item > div {
+		flex-direction: column;
+		gap: 8px !important;
+	}
+
+	.target-item input,
+	.target-item button {
+		width: 100%;
+	}
+
+	textarea {
+		height: 180px !important;
+	}
+
+	/* 모달 */
+	.overlay {
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	.modal {
+		width: 100% !important;
+		max-width: 100%;
+		max-height: 90vh;
+		overflow-y: auto;
+		box-sizing: border-box;
+	}
+
+	/* 모달 검색창 */
+	.modal > div[style*="display:flex"] {
+		flex-direction: column;
+		gap: 8px !important;
+	}
+
+	#targetKeyword {
+		width: 100% !important;
+	}
+
+	#targetSearchSubmit {
+		width: 100%;
+	}
+
+	.table-wrap {
+		overflow-x: auto !important;
+	}
+
+	.table {
+		min-width: 520px;
+	}
+	
+	{
+
+ 
+
+}
+}
+
 .form-row {
 	width: 100%;
 	display: flex;
