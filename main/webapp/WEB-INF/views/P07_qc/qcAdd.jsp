@@ -320,11 +320,11 @@ function bind() {
 
     form.addEventListener("submit", function(e) {
     	
-<<<<<<< HEAD
-//     	const targets = this.querySelectorAll("input[type=text], textarea");
-=======
-    	const targets = this.querySelectorAll("input[type=text]");
->>>>>>> 51c116d (품질검사 완료 후 LOT 수량 반영 안 되는 에러 해결)
+// <<<<<<< HEAD
+// //     	const targets = this.querySelectorAll("input[type=text], textarea");
+// =======
+//     	const targets = this.querySelectorAll("input[type=text]");
+// >>>>>>> 51c116d (품질검사 완료 후 LOT 수량 반영 안 되는 에러 해결)
 
 //         for (let i = 0; i < targets.length; i++) {
 
