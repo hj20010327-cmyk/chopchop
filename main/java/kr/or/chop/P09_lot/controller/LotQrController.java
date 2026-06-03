@@ -28,7 +28,7 @@ public class LotQrController {
 			HttpServletResponse response
 	) throws Exception {
 
-		String qrText = "http://192.168.0.75:8080/chop/warehouse/section/detail?secId=" + URLEncoder.encode(secId, "UTF-8");
+		String qrText = "http://116.36.205.25:8017/chop/warehouse/section/detail?secId=" + URLEncoder.encode(secId, "UTF-8");
 
 		int width = 240;
 		int height = 240;
