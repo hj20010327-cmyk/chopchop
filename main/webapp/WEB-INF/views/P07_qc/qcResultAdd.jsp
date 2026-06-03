@@ -363,20 +363,21 @@ function bind() {
     });
 
     form.addEventListener("submit", function(e) {
-//      const targets = this.querySelectorAll("input[type=text], textarea");
+        const targets = this.querySelectorAll("input[type=text]:not([readonly])");
 
-//      for (let i = 0; i < targets.length; i++) {
+        for (let i = 0; i < targets.length; i++) {
+            if (targets[i].value.trim() === "") {
+                alert("공백만 입력할 수 없습니다.");
+                targets[i].focus();
+                e.preventDefault();
+                return false;
+            }
+        }
 
-//          if (targets[i].value.trim() === "") {
-
-//              alert("공백만 입력할 수 없습니다.");
-
-//              targets[i].focus();
-
-//              e.preventDefault();
-//              return false;
-//          }
-//      }
+        if (!validateForm()) {
+            e.preventDefault();
+            return false;
+        }
     });
 }
 
