@@ -19,10 +19,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>유형</th>
-                <th>제목</th>
+                <th style="width: 80px;">유형</th>
+                <th style="width: 220px;">제목</th>
                 <th>내용</th>
-                <th>등록일</th>
+                <th style="width: 150px;">등록일</th>
             </tr>
         </thead>
 
@@ -50,7 +50,9 @@
                             </td>
 
                             <td>${alarm.alarmTitle}</td>
-                            <td>${alarm.alarmContent}</td>
+                            <td class="alarm-content">
+							    ${alarm.alarmContent}
+							</td>
 
                             <td>
                                 <fmt:formatDate value="${alarm.alarmDate}" pattern="yyyy-MM-dd HH:mm"/>
@@ -63,3 +65,12 @@
     </table>
 
 </div>
+
+<style>
+.alarm-content {
+    max-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>

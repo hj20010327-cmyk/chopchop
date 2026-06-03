@@ -111,21 +111,15 @@ document.addEventListener("DOMContentLoaded", function () {
         switch (Number(typeNo)) {
 
             case 10:
-                return "작업지연";
+                return "작업";
 
             case 20:
-                return "재고부족";
+                return "이상";
 
             case 30:
-                return "설비이상";
+                return "점검";
 
             case 40:
-                return "품질이상";
-
-            case 50:
-                return "이상감지";
-
-            case 60:
                 return "일반";
 
             default:
